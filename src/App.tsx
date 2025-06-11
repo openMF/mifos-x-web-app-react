@@ -1,9 +1,13 @@
-import { Button } from "./components/ui/button"
+import { BrowserRouter } from "react-router-dom"
+import AppRoutes from "./router/AppRoutes"
 
 const App = () => {
   return (
     <div>
-      <Button variant="destructive">Test</Button>
+      <BrowserRouter>
+        <AppRoutes/>
+      </BrowserRouter>
+
     </div>
   )
 }
