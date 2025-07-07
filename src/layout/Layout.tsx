@@ -4,8 +4,6 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { Outlet } from "react-router-dom"
 
 const Layout = () => {
-    console.log("Navbar inside layout is rendering");
-
     return (
         <SidebarProvider>
             <div className="flex min-h-screen w-full"> 

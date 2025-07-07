@@ -4,13 +4,15 @@ import { loginFineract } from "@/pages/login/loginApi";
 interface AuthState {
     loading: boolean,
     user: any,
-    error: string|null
+    error: string|null,
+    isAuthenticated: boolean
 }
 
 const initialState: AuthState = {
     loading: false,
     user: null,
     error: null,
+    isAuthenticated: localStorage.getItem("mifosToken") ? true : false
 };
 
 export const loginUser = createAsyncThunk(
@@ -21,7 +23,6 @@ export const loginUser = createAsyncThunk(
     ) => {
         try {
             const data = await loginFineract(username, password);
-            console.log("Login success:", data);
             const encoded = btoa(`${username}:${password}`);
             localStorage.setItem("mifosToken", encoded);
 
@@ -38,6 +39,8 @@ const authSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.user = null;
+            state.isAuthenticated = false;
+            localStorage.removeItem("mifosToken");
         },
     },
     extraReducers: (builder) => {
@@ -49,6 +52,7 @@ const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
+                state.isAuthenticated = true;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
