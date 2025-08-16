@@ -3,10 +3,11 @@ import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
 import { Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
-import ChartOfAccounts from '@/pages/chart-of-accounts/ChartOfAccounts'
-import ViewGlAccounts from '@/pages/chart-of-accounts/ViewGlAccounts'
-import CreateGlAccounts from '@/pages/chart-of-accounts/CreateGlAccounts'
-import EditGlAccounts from '@/pages/chart-of-accounts/EditGlAccounts.'
+import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
+import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
+import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccounts'
+import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
+import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
 
 const AppRoutes = () => {
   return (
@@ -25,6 +26,9 @@ const AppRoutes = () => {
           <Route path='accounting/chart-of-accounts/gl-accounts/create' element={<CreateGlAccounts />} />
           <Route path='accounting/chart-of-accounts/gl-accounts/view/:id' element={<ViewGlAccounts />} />
           <Route path='accounting/chart-of-accounts/gl-accounts/view/:id/edit' element={<EditGlAccounts />} />
+
+          {/* Journal Entries Routes */}
+          <Route path='/accounting/journal-entries/create' element={<CreateJournalEntry />} />
 
         </Route>
       </Route>
