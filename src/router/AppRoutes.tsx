@@ -9,6 +9,7 @@ import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccou
 import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
 import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
+import Notifications from '@/pages/notifications/Notifications'
 
 const AppRoutes = () => {
   return (
@@ -33,6 +34,9 @@ const AppRoutes = () => {
 
           {/* Frequent Postings */}
           <Route path='/accounting/journal-entries/frequent-postings' element={<FrequentPostings />} />
+
+          {/* Notifications Routes */}
+          <Route path='/notifications' element={<Notifications />} />
 
         </Route>
       </Route>
