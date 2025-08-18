@@ -10,6 +10,7 @@ import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
 import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
 import Notifications from '@/pages/notifications/Notifications'
+import Dashboard from '@/pages/home/dashboard/Dashboard'
 
 const AppRoutes = () => {
   return (
@@ -37,6 +38,9 @@ const AppRoutes = () => {
 
           {/* Notifications Routes */}
           <Route path='/notifications' element={<Notifications />} />
+
+          {/* Dashboard */}
+          <Route path="/dashboard" element={<Dashboard />} />
 
         </Route>
       </Route>
