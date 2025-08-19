@@ -11,6 +11,7 @@ import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJo
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
 import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
+import IndividualCollectionSheet from '@/pages/collections/IndividualCollectionSheet'
 
 const AppRoutes = () => {
   return (
@@ -41,6 +42,9 @@ const AppRoutes = () => {
 
           {/* Dashboard */}
           <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Individual Collection Sheet Route */}
+          <Route path='/individual-collection-sheet' element={<IndividualCollectionSheet />} />
 
         </Route>
       </Route>
