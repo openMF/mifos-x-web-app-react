@@ -12,6 +12,7 @@ import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPosti
 import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
 import IndividualCollectionSheet from '@/pages/collections/IndividualCollectionSheet'
+import Navigation from '@/pages/navigation/Navigation'
 
 const AppRoutes = () => {
   return (
@@ -45,6 +46,9 @@ const AppRoutes = () => {
 
           {/* Individual Collection Sheet Route */}
           <Route path='/individual-collection-sheet' element={<IndividualCollectionSheet />} />
+
+          {/* Navigation Routes */}
+          <Route path='/navigation' element={<Navigation />} />
 
         </Route>
       </Route>
