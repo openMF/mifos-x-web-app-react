@@ -1,63 +1,125 @@
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-//   AlertDialogTrigger,
-// } from "@/components/ui/alert-dialog"
+import DropDown from "@/components/custom/navbar/Dropdown";
 
-import { Landmark,Banknote,ChartBar,Shield,Search,Bell,Moon } from 'lucide-react';
-import Dropdown from "./Dropdown";
+import { Landmark, Banknote, ChartBar, Shield, Search, Bell, Moon, User, Sun } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 
 const MfNavbar = () => {
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (path?: string) => {
+    if (!path || path.trim() === "") return;
+    else if (path.startsWith("http")) {
+      window.open(path, "_blank");
+    } else {
+
+      navigate(`/${path.trim()}`);
+    }
+  };
+
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+  }
+
+
   return (
     <div className="flex flex-wrap justify-between items-center h-auto bg-[#1074b9] px-4 py-2 shadow-3xl text-base text-white gap-4">
-      
-      {/* Left - Menu & Sections */}
+
+      {/* Left Menu & Sections */}
       <div className="flex flex-wrap items-center gap-3 min-w-0">
         <SidebarTrigger />
 
-        <Dropdown
+        <DropDown
           name={<span className="flex items-center gap-2"><Landmark /> Institution</span>}
-          options={["Clients", "Groups", "Centers", "Accounting"]}
+          options={[
+            { label: "Clients", path: "clients" },
+            { label: "Groups", path: "groups" },
+            { label: "Centers", path: "centers" },
+            { label: "Accounting", path: "accounting" },
+          ]}
+          onSelect={handleNavigate}
         />
-        <Dropdown
-          name={<span className="flex items-center gap-2"><Banknote /> Accounting</span>}
-          options={["Clients", "Groups", "Centers", "Accounting", "Reports", "Admin", "Self Service"]}
-        />
-        <Dropdown
+        <Button
+          className="flex items-center gap-2 shadow-none bg-transparent hover:bg-[#0e6aa5] hover:text-white dark:text-white"
+          onClick={() => navigate("/accounting")}
+        ><Banknote /> Accounting</Button>
+        <DropDown
           name={<span className="flex items-center gap-2"><ChartBar /> Reports</span>}
-          options={["All", "Clients", "Loans", "Savings", "Funds", "Accounting", "XBRL"]}
+          options={[
+            { label: "All", path: "reports" },
+            { label: "Clients", path: "reports/client" },
+            { label: "Loans", path: "reports/loan" },
+            { label: "Savings", path: "reports/savings" },
+            { label: "Funds", path: "reports/fund" },
+            { label: "Accounting", path: "reports/accounting" },
+          ]}
+          onSelect={handleNavigate}
         />
-        <Dropdown
+        <DropDown
           name={<span className="flex items-center gap-2"><Shield /> Admin</span>}
-          options={["Users", "Organization", "System", "Products", "Templates"]}
+          options={[
+            { label: "Users", path: "appusers" },
+            { label: "Organization", path: "organization" },
+            { label: "System", path: "system" },
+            { label: "Products", path: "products" },
+            { label: "Templates", path: "templates" },
+          ]}
+          onSelect={handleNavigate}
         />
       </div>
 
-      {/* Right - Icons */}
+      {/* Right Icons */}
       <div className="flex items-center gap-4 flex-shrink-0">
         <button className="hover:text-gray-200 transition-colors">
           <Search className="w-5 h-5" />
         </button>
-        <Dropdown
+        <DropDown
           name={<span className="flex items-center gap-1">Language</span>}
-          options={["English", "Spanish", "French", "Italian"]}
+          options={[
+            { label: "English" },
+            { label: "Spanish" },
+            { label: "French" },
+            { label: "Italian" },
+          ]}
+          onSelect={handleNavigate}
         />
-        <button className="hover:text-gray-200 transition-colors">
+        <Button
+          variant="ghost"
+          className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer">
           <Bell className="w-5 h-5" />
-        </button>
-        <button className="hover:text-gray-200 transition-colors">
-          <Moon className="w-5 h-5" />
-        </button>
+        </Button>
+        <Button
+          variant="ghost"
+          className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer"
+          onClick={toggleTheme}
+        >
+          {theme === "light" ? (
+            <Moon className="w-5 h-5" />
+          ) : (
+            <Sun className="w-5 h-5" />
+          )}
+        </Button>
+        <DropDown
+          name={<span className="flex items-center gap-2"><User /></span>}
+          options={[
+            { label: "Help", path: "https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manualsers" },
+            { label: "Profile", path: "profile" },
+            { label: "Settings", path: "settings" },
+            { label: "Sign Out", path: "signout" },
+          ]}
+          onSelect={handleNavigate}
+        />
       </div>
     </div>
   );

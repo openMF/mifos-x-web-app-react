@@ -19,6 +19,9 @@ import ClientApproval from '@/pages/tasks/checker-inbox-and-tasks-tabs/client-ap
 import LoanApproval from '@/pages/tasks/checker-inbox-and-tasks-tabs/loan-approval/LoanApproval'
 import LoanDisbursal from '@/pages/tasks/checker-inbox-and-tasks-tabs/loan-disbursal/LoanDisbursal'
 import RescheduleLoan from '@/pages/tasks/checker-inbox-and-tasks-tabs/reschedule-loan/RescheduleLoan'
+import Profile from '@/pages/profile/Profile'
+import NotFound from '@/pages/not-found/NotFound'
+import Settings from '@/pages/settings/Settings'
 
 const AppRoutes = () => {
   return (
@@ -50,6 +53,10 @@ const AppRoutes = () => {
           {/* Dashboard */}
           <Route path="/dashboard" element={<Dashboard />} />
 
+          {/* Profile and Settings */}
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/settings' element={<Settings />} />
+
           {/* Individual Collection Sheet Route */}
           <Route path='/individual-collection-sheet' element={<IndividualCollectionSheet />} />
 
@@ -68,6 +75,8 @@ const AppRoutes = () => {
 
         </Route>
       </Route>
+
+      <Route path="*" element={<NotFound/>}/>
     </Routes>
   )
 }
