@@ -13,6 +13,12 @@ import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
 import IndividualCollectionSheet from '@/pages/collections/IndividualCollectionSheet'
 import Navigation from '@/pages/navigation/Navigation'
+import CheckerInBoxAndTasks from '@/pages/tasks/checker-inbox-and-tasks/CheckerInBoxAndTasks'
+import CheckerInboxContent from '@/pages/tasks/checker-inbox-and-tasks-tabs/checker-inbox/CheckerInbox'
+import ClientApproval from '@/pages/tasks/checker-inbox-and-tasks-tabs/client-approval/ClientApproval'
+import LoanApproval from '@/pages/tasks/checker-inbox-and-tasks-tabs/loan-approval/LoanApproval'
+import LoanDisbursal from '@/pages/tasks/checker-inbox-and-tasks-tabs/loan-disbursal/LoanDisbursal'
+import RescheduleLoan from '@/pages/tasks/checker-inbox-and-tasks-tabs/reschedule-loan/RescheduleLoan'
 
 const AppRoutes = () => {
   return (
@@ -49,6 +55,16 @@ const AppRoutes = () => {
 
           {/* Navigation Routes */}
           <Route path='/navigation' element={<Navigation />} />
+
+          {/* Checker Inbox and Tasks */}
+          <Route path="/checker-inbox-and-tasks" element={<CheckerInBoxAndTasks />}>
+            <Route path="checker-inbox" element={<CheckerInboxContent />} />
+            <Route path='client-approval' element={<ClientApproval />} />
+            <Route path='loan-approval' element={<LoanApproval />} />
+            <Route path='loan-disbursal' element={<LoanDisbursal />} />
+            <Route path='reschedule-loan' element={<RescheduleLoan />} />
+          </Route>
+
 
         </Route>
       </Route>
