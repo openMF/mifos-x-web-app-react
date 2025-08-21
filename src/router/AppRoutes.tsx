@@ -22,6 +22,7 @@ import RescheduleLoan from '@/pages/tasks/checker-inbox-and-tasks-tabs/reschedul
 import Profile from '@/pages/profile/Profile'
 import NotFound from '@/pages/not-found/NotFound'
 import Settings from '@/pages/settings/Settings'
+import Accounting from '@/pages/accounting/Accounting'
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,9 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           {/* Home Route */}
           <Route path="/home" element={<Home />} />
+
+          {/* Accounting */}
+          <Route path='/accounting' element={<Accounting />} />
 
           {/* Chart of Accounts Routes */}
           <Route path='accounting/chart-of-accounts' element={<ChartOfAccounts />} />
