@@ -23,6 +23,18 @@ import Profile from '@/pages/profile/Profile'
 import NotFound from '@/pages/not-found/NotFound'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
+import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
+import AccountingRules from '@/pages/accounting/accounting-rules/AccountingRules'
+import ViewAccountingRules from '@/pages/accounting/accounting-rules/ViewAccountingRules'
+import Closure from '@/pages/accounting/closing-entries/Closure'
+import CreateClosure from '@/pages/accounting/closing-entries/CreateClosure'
+import ViewClosure from '@/pages/accounting/closing-entries/ViewClosure'
+import EditClosure from '@/pages/accounting/closing-entries/EditClosure'
+import FinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/FinancialActivityMappings'
+import CreateFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/CreateFinancialActivityMappings'
+import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
+import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
+import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 
 const AppRoutes = () => {
   return (
@@ -46,10 +58,32 @@ const AppRoutes = () => {
           <Route path='accounting/chart-of-accounts/gl-accounts/view/:id/edit' element={<EditGlAccounts />} />
 
           {/* Journal Entries Routes */}
+          <Route path='/accounting/journal-entries' element={<SearchJournalEntry />} />
           <Route path='/accounting/journal-entries/create' element={<CreateJournalEntry />} />
 
           {/* Frequent Postings */}
           <Route path='/accounting/journal-entries/frequent-postings' element={<FrequentPostings />} />
+
+          {/* Accounting Rules */}
+          <Route path='/accounting/accounting-rules' element={<AccountingRules />} />
+          <Route path='/accounting/accounting-rules/view/:id' element={<ViewAccountingRules />} />
+
+          {/* Closing Entries */} 
+          <Route path='/accounting/closing-entries' element={<Closure />} />
+          <Route path='/accounting/closing-entries/create' element={<CreateClosure />} />
+          <Route path='/accounting/closing-entries/view/:id' element={<ViewClosure />} />
+          <Route path='/accounting/closing-entries/view/:id/edit' element={<EditClosure />} />
+
+          {/* Financial Activity Mappings */}
+          <Route path='/accounting/financial-activity-mappings' element={<FinancialActivityMappings />} />
+          <Route path='/accounting/financial-activity-mappings/create' element={<CreateFinancialActivityMappings />} />
+          <Route path='/accounting/financial-activity-mappings/:id' element={<ViewFinancialActivityMappings />} />
+
+          {/* Accruals */}
+          <Route path='/accounting/accruals' element={<PeriodicAccruals />} />
+
+          {/* Provision Entries */}
+          <Route path='/accounting/provisioning-entries' element={<ProvisioningEntries/>}/>
 
           {/* Notifications Routes */}
           <Route path='/notifications' element={<Notifications />} />
@@ -75,7 +109,6 @@ const AppRoutes = () => {
             <Route path='loan-disbursal' element={<LoanDisbursal />} />
             <Route path='reschedule-loan' element={<RescheduleLoan />} />
           </Route>
-
 
         </Route>
       </Route>
