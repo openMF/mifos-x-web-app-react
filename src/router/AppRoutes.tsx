@@ -35,6 +35,7 @@ import CreateFinancialActivityMappings from '@/pages/accounting/financial-activi
 import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
+import Reports from '@/pages/reports/Reports'
 
 const AppRoutes = () => {
   return (
@@ -109,6 +110,11 @@ const AppRoutes = () => {
             <Route path='loan-disbursal' element={<LoanDisbursal />} />
             <Route path='reschedule-loan' element={<RescheduleLoan />} />
           </Route>
+
+
+          {/* Reports */}
+          <Route path='/reports' element={<Reports />} />
+          <Route path='/reports/:category' element={<Reports />} />
 
         </Route>
       </Route>
