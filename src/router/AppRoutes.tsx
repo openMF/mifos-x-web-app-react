@@ -40,6 +40,7 @@ import Users from '@/pages/users/Users'
 import ViewUsers from '@/pages/users/ViewUsers'
 import CreateUsers from '@/pages/users/CreateUsers'
 import EditUsers from '@/pages/users/EditUsers'
+import Templates from '@/pages/templates/Templates'
 
 const AppRoutes = () => {
   return (
@@ -129,6 +130,10 @@ const AppRoutes = () => {
           <Route path='/appusers/:id' element={<ViewUsers />} />
           <Route path='/appusers/create' element={<CreateUsers />} />
           <Route path='/appusers/:id/edit' element={<EditUsers />} />
+
+          {/* Templates */}
+          <Route path='/templates' element={<Templates />} />
+
 
         </Route>
       </Route>
