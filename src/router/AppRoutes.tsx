@@ -41,6 +41,38 @@ import ViewUsers from '@/pages/users/ViewUsers'
 import CreateUsers from '@/pages/users/CreateUsers'
 import EditUsers from '@/pages/users/EditUsers'
 import Templates from '@/pages/templates/Templates'
+import Organization from '@/pages/organization/Organization'
+import Offices from '@/pages/organization/offices/Offices'
+import CreateOffices from '@/pages/organization/offices/CreateOffices'
+import ViewOffices from '@/pages/organization/offices/ViewOffices'
+import EditOffices from '@/pages/organization/offices/EditOffices'
+import Currencies from '@/pages/organization/currencies/Currencies'
+import ManageCurrencies from '@/pages/organization/currencies/ManageCurrencies'
+import Holidays from '@/pages/organization/holidays/Holidays'
+import ManageHolidays from '@/pages/organization/holidays/ManageHolidays'
+import ViewHolidays from '@/pages/organization/holidays/ViewHolidays'
+import EditHolidays from '@/pages/organization/holidays/EditHolidays'
+import Employees from '@/pages/organization/employees/Employees'
+import CreateEmployees from '@/pages/organization/employees/CreateEmployees'
+import ViewEmployees from '@/pages/organization/employees/ViewEmployees'
+import EditEmployees from '@/pages/organization/employees/EditEmployees'
+import BulkLoanReassignment from '@/pages/organization/bulk-loan-reassignmnet/BulkLoanReassignmnet'
+import Funds from '@/pages/organization/manage-funds/ManageFunds'
+import CreateFunds from '@/pages/organization/manage-funds/CreateFunds'
+import ViewFunds from '@/pages/organization/manage-funds/ViewFunds'
+import EditFunds from '@/pages/organization/manage-funds/EditFunds'
+import Payment from '@/pages/organization/payment-types/PaymentTypes'
+import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
+import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
+import CreateAdhocQuery from '@/pages/organization/adhoc-query/CreateAdhocQuery'
+import ViewAdhocQuery from '@/pages/organization/adhoc-query/ViewAdhocQuery'
+import EditAdhocQuery from '@/pages/organization/adhoc-query/EditAdhocQuery'
+import Tellers from '@/pages/organization/tellers/Tellers'
+import CreateTellers from '@/pages/organization/tellers/CreateTellers'
+import ViewTellers from '@/pages/organization/tellers/ViewTellers'
+import EditTellers from '@/pages/organization/tellers/EditTellers'
+import Investors from '@/pages/organization/investors/Investors'
+import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 
 const AppRoutes = () => {
   return (
@@ -133,6 +165,62 @@ const AppRoutes = () => {
 
           {/* Templates */}
           <Route path='/templates' element={<Templates />} />
+
+          {/* Organization */}
+          <Route path='/organization' element={<Organization />} />
+
+          {/* Manage Offices */}
+          <Route path='/organization/offices' element={<Offices />} />
+          <Route path='/organization/offices/create' element={<CreateOffices />} />
+          <Route path='/organization/offices/:id' element={<ViewOffices />} />
+          <Route path='/organization/offices/:id/edit' element={<EditOffices />} />
+
+          {/* Currency Configuration */}
+          <Route path='/organization/currencies' element={<Currencies />} />
+          <Route path='/organization/currencies/manage' element={<ManageCurrencies />} />
+
+          {/* Manage Holidays */}
+          <Route path='/organization/holidays' element={<Holidays />} />
+          <Route path='/organization/holidays/create' element={<ManageHolidays />} />
+          <Route path='/organization/holidays/:id' element={<ViewHolidays />} />
+          <Route path='/organization/holidays/:id/edit' element={<EditHolidays />} />
+
+          {/* Manage Employees */}
+          <Route path='/organization/employees' element={<Employees />} />
+          <Route path='/organization/employees/create' element={<CreateEmployees />} />
+          <Route path='/organization/employees/:id' element={<ViewEmployees />} />
+          <Route path='/organization/employees/:id/edit' element={<EditEmployees />} />
+
+          {/* Bulk Loan Reasssignment */}
+          <Route path='/organization/bulkloan' element={<BulkLoanReassignment />} />
+
+          {/* Manage Funds */}
+          <Route path='/organization/manage-funds' element={<Funds />} />
+          <Route path='/organization/manage-funds/create' element={<CreateFunds />} />
+          <Route path='/organization/manage-funds/:id' element={<ViewFunds />} />
+          <Route path='/organization/manage-funds/:id/edit' element={<EditFunds />} />
+
+          {/* Payment Types */}
+          <Route path='/organization/payment-types' element={<Payment />} />
+          <Route path='/organization/payment-types/create' element={<CreatePaymentTypes />} />
+
+          {/* Adhoc Query */}
+          <Route path='/organization/adhoc-query' element={<AdhocQuery />} />
+          <Route path='/organization/adhoc-query/create' element={<CreateAdhocQuery />} />
+          <Route path='/organization/adhoc-query/:id' element={<ViewAdhocQuery />} />
+          <Route path='/organization/adhoc-query/:id/edit' element={<EditAdhocQuery />} />
+
+          {/* Tellers */}
+          <Route path='/organization/tellers' element={<Tellers />} />
+          <Route path='/organization/tellers/create' element={<CreateTellers />} />
+          <Route path='/organization/tellers/:id' element={<ViewTellers />} />
+          <Route path='/organization/tellers/:id/edit' element={<EditTellers />} />
+
+          {/* Investors */}
+          <Route path='/organization/investors' element={<Investors />} />
+
+          {/* Working Days */}
+          <Route path='/organization/working-days' element={<WorkingDays />} />
 
 
         </Route>
