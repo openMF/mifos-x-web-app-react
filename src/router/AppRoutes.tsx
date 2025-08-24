@@ -36,6 +36,10 @@ import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 import Reports from '@/pages/reports/Reports'
+import Users from '@/pages/users/Users'
+import ViewUsers from '@/pages/users/ViewUsers'
+import CreateUsers from '@/pages/users/CreateUsers'
+import EditUsers from '@/pages/users/EditUsers'
 
 const AppRoutes = () => {
   return (
@@ -115,6 +119,16 @@ const AppRoutes = () => {
           {/* Reports */}
           <Route path='/reports' element={<Reports />} />
           <Route path='/reports/:category' element={<Reports />} />
+
+
+
+          {/* Admin Routes */}
+
+          {/* User */}
+          <Route path='/appusers' element={<Users />} />
+          <Route path='/appusers/:id' element={<ViewUsers />} />
+          <Route path='/appusers/create' element={<CreateUsers />} />
+          <Route path='/appusers/:id/edit' element={<EditUsers />} />
 
         </Route>
       </Route>
