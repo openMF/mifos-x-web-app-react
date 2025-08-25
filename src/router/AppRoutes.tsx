@@ -73,6 +73,40 @@ import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
+import Products from '@/pages/products/Products'
+import LoanProducts from '@/pages/products/loan-products/LoanProducts'
+import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
+import ViewLoanProducts from '@/pages/products/loan-products/ViewLoanProducts'
+import SavingsProducts from '@/pages/products/savings-products/SavingsProducts'
+import CreateSavingsProducts from '@/pages/products/savings-products/create-saving-products/CreateSavingsProducts'
+import ViewSavingsProducts from '@/pages/products/savings-products/ViewSavingsProducts'
+import ShareProducts from '@/pages/products/share-products/ShareProducts'
+import Charges from '@/pages/products/charges/Charges'
+import ViewCharges from '@/pages/products/charges/ViewCharges'
+import EditCharges from '@/pages/products/charges/EditCharges'
+import Collaterals from '@/pages/products/collaterals/Collaterals'
+import CreateCollaterals from '@/pages/products/collaterals/CreateCollaterals'
+import ViewCollaterals from '@/pages/products/collaterals/ViewCollaterals'
+import EditCollaterals from '@/pages/products/collaterals/EditCollaterals'
+import ManageDeliquencyBuckets from '@/pages/products/manage-delinquency-buckets/ManageDeliquencyBuckets'
+import CreateDelinquencyRange from '@/pages/products/manage-delinquency-buckets/delinquency-range/CreateDelinquencyRange'
+import DelinquencyRange from '@/pages/products/manage-delinquency-buckets/delinquency-range/DelinquencyRange'
+import ViewDelinquencyRange from '@/pages/products/manage-delinquency-buckets/delinquency-range/ViewDelinquencyRange'
+import EditDelinquencyRange from '@/pages/products/manage-delinquency-buckets/delinquency-range/EditDelinquencyRange'
+import DelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/DelinquencyBucket'
+import CreateDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/CreateDelinquencyBucket'
+import ViewDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/ViewDelinquencyBucket'
+import EditDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/EditDelinquencyBucket'
+import ProductsMix from '@/pages/products/products-mix/ProductsMix'
+import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
+import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
+import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
+import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
+import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
+import ManageTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ManageTaxComponents'
+import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
+import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
+import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
 
 const AppRoutes = () => {
   return (
@@ -106,7 +140,7 @@ const AppRoutes = () => {
           <Route path='/accounting/accounting-rules' element={<AccountingRules />} />
           <Route path='/accounting/accounting-rules/view/:id' element={<ViewAccountingRules />} />
 
-          {/* Closing Entries */} 
+          {/* Closing Entries */}
           <Route path='/accounting/closing-entries' element={<Closure />} />
           <Route path='/accounting/closing-entries/create' element={<CreateClosure />} />
           <Route path='/accounting/closing-entries/view/:id' element={<ViewClosure />} />
@@ -121,7 +155,7 @@ const AppRoutes = () => {
           <Route path='/accounting/accruals' element={<PeriodicAccruals />} />
 
           {/* Provision Entries */}
-          <Route path='/accounting/provisioning-entries' element={<ProvisioningEntries/>}/>
+          <Route path='/accounting/provisioning-entries' element={<ProvisioningEntries />} />
 
           {/* Notifications Routes */}
           <Route path='/notifications' element={<Notifications />} />
@@ -223,10 +257,72 @@ const AppRoutes = () => {
           <Route path='/organization/working-days' element={<WorkingDays />} />
 
 
+
+          {/* Products */}
+          <Route path='/products' element={<Products />} />
+
+          {/* Loan Products */}
+          <Route path='/products/loan-products' element={<LoanProducts />} />
+          <Route path='/products/loan-products/create' element={<CreateLoanProducts />} />
+          <Route path='/products/loan-products/:id/general' element={<ViewLoanProducts />} />
+
+          {/* Savings Products */}
+          <Route path="/products/saving-products" element={<SavingsProducts />} />
+          <Route path="/products/saving-products/create" element={<CreateSavingsProducts />} />
+          <Route path="/products/saving-products/:id/general" element={<ViewSavingsProducts />} />
+
+          {/* Share Products */}
+          <Route path='/products/share-products' element={<ShareProducts />} />
+
+          {/* Charges */}
+          <Route path='/products/charges' element={<Charges />} />
+          <Route path='/products/charges/:id' element={<ViewCharges />} />
+          <Route path='/products/charges/:id/edit' element={<EditCharges />} />
+
+          {/* Collaterals */}
+          <Route path='/products/collaterals' element={<Collaterals />} />
+          <Route path='/products/collaterals/create' element={<CreateCollaterals />} />
+          <Route path='/products/collaterals/:id' element={<ViewCollaterals />} />
+          <Route path='/products/collaterals/:id/edit' element={<EditCollaterals />} />
+
+          {/* Deliquency Buckets */}
+          <Route path='/products/delinquency-bucket-configurations' element={<ManageDeliquencyBuckets />} />
+
+          <Route path='/products/delinquency-bucket-configurations/ranges/create' element={<CreateDelinquencyRange />} />
+          <Route path='/products/delinquency-bucket-configurations/ranges' element={<DelinquencyRange />} />
+          <Route path='/products/delinquency-bucket-configurations/ranges/:id' element={<ViewDelinquencyRange />} />
+          <Route path='/products/delinquency-bucket-configurations/ranges/:id/edit' element={<EditDelinquencyRange />} />
+
+          <Route path='/products/delinquency-bucket-configurations/buckets' element={<DelinquencyBucket />} />
+          <Route path='/products/delinquency-bucket-configurations/buckets/create' element={<CreateDelinquencyBucket />} />
+          <Route path='/products/delinquency-bucket-configurations/buckets/:id' element={<ViewDelinquencyBucket />} />
+          <Route path='/products/delinquency-bucket-configurations/buckets/:id/edit' element={<EditDelinquencyBucket />} />
+
+          {/* Products Mix */}
+          <Route path='/products/products-mix' element={<ProductsMix />} />
+
+          {/* Fixed Deposit Products */}
+          <Route path='/products/fixed-deposit-products' element={<FixedDepositProducts />} />
+          <Route path='/products/fixed-deposit-products/:id/general' element={<ViewFixedDepositProducts />} />
+
+          {/* Recurring Deposit Products */}
+          <Route path='/products/recurring-deposit-products' element={<RecurringDepositProducts />} />
+          <Route path='/products/recurring-deposit-products/:id/general' element={<ViewRecurringDepositProducts />} />
+
+          {/* Manage Tax Configurations */}
+          <Route path='/products/tax-configurations' element={<ManageTaxConfigurations />} />
+          <Route path='/products/tax-configurations/tax-components' element={<ManageTaxComponents />} />
+          <Route path='/products/tax-configurations/tax-groups' element={<ManageTaxGroups />} />
+
+          {/* Floating Rates */}
+          <Route path='/products/floating-rates' element={<FloatingRates />} />
+          <Route path='/products/floating-rates/:id' element={<ViewFloatingRates />} />
+
+
         </Route>
       </Route>
 
-      <Route path="*" element={<NotFound/>}/>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
