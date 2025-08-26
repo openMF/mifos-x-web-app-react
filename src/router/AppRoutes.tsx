@@ -107,6 +107,22 @@ import ManageTaxComponents from '@/pages/products/manage-tax-configurations/mana
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
 import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
+import System from '@/pages/system/System'
+import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
+import ViewDataTables from '@/pages/system/manage-data-tables/ViewDataTables'
+import Codes from '@/pages/system/codes/Codes'
+import ViewCodes from '@/pages/system/codes/ViewCodes'
+import ManageReports from '@/pages/system/manage-reports/ManageReports'
+import ViewReports from '@/pages/system/manage-reports/ViewReports'
+import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
+import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
+import AccountNumberPreferences from '@/pages/system/account-number-preferences/AccountNumberPreferences'
+import CreateAccountNumberPreferences from '@/pages/system/account-number-preferences/CreateAccountNumberPreferences'
+import ViewAccountNumberPreferences from '@/pages/system/account-number-preferences/ViewAccountNumberPreferences'
+import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/EntityToEntityMapping'
+import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
+import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
+import Configurations from '@/pages/system/configurations/Configurations'
 
 const AppRoutes = () => {
   return (
@@ -317,6 +333,43 @@ const AppRoutes = () => {
           {/* Floating Rates */}
           <Route path='/products/floating-rates' element={<FloatingRates />} />
           <Route path='/products/floating-rates/:id' element={<ViewFloatingRates />} />
+
+
+
+          {/* Products */}
+          <Route path='/system' element={<System />} />
+
+          {/* Manage Data Tables */}
+          <Route path='/system/data-tables' element={<ManageDataTables />} />
+          <Route path='/system/data-tables/:id' element={<ViewDataTables />} />
+
+          {/* Manage Codes*/}
+          <Route path='/system/codes' element={<Codes />} />
+          <Route path='/system/codes/:id' element={<ViewCodes />} />
+
+          {/* Manage Reports*/}
+          <Route path='/system/reports' element={<ManageReports />} />
+          <Route path='/system/reports/:id' element={<ViewReports />} />
+
+          {/* Manage Roles and Permission */}
+          <Route path='/system/roles-and-permissions' element={<RolesAndPermissions />} />
+          <Route path='/system/roles-and-permissions/add' element={<CreateRolesAndPermissions />} />
+
+          {/*  Account Number Preferences */}
+          <Route path='/system/account-number-preferences' element={<AccountNumberPreferences />} />
+          <Route path='//system/account-number-preferences/create' element={<CreateAccountNumberPreferences />} />
+          <Route path='/system/account-number-preferences/:id' element={<ViewAccountNumberPreferences />} />
+
+          {/* Entity to Entity Mapping */}
+          <Route path='/system/entity-mapping' element={<EntityToEntityMapping />} />
+          {/* Manage External Event */}
+          <Route path='/system/external-events' element={<ManageExternalEvents />} />
+
+          {/* Configurations */}
+          <Route path='/system/hooks' element={<ManageHooks />} />
+
+          {/* Manage Hooks */}
+          <Route path='/system/configurations' element={<Configurations />} />
 
 
         </Route>
