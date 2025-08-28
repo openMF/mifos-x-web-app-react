@@ -123,6 +123,13 @@ import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/Entit
 import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
 import Configurations from '@/pages/system/configurations/Configurations'
+import Centers from '@/pages/centers/Centers'
+import CreateCenters from '@/pages/centers/CreateCenters'
+import EditCenters from '@/pages/centers/EditCenters'
+import CloseCenters from '@/pages/centers/CloseCenters'
+import CentersView from '@/pages/centers/centers-view/CentersView'
+import CentersGeneralTab from '@/pages/centers/centers-view/general-tab/CentersGeneralTab'
+import CentersNotesTab from '@/pages/centers/centers-view/notes-tab/CentersNotesTab'
 
 const AppRoutes = () => {
   return (
@@ -370,6 +377,19 @@ const AppRoutes = () => {
 
           {/* Manage Hooks */}
           <Route path='/system/configurations' element={<Configurations />} />
+
+
+          {/* Institution */}
+
+          {/* Centers */}
+          <Route path='/centers' element={<Centers />} />
+          <Route path='/centers/create' element={<CreateCenters />} />
+          <Route path='centers/:id/edit' element={<EditCenters />} />
+          <Route path='/centers/:id/actions/close' element={<CloseCenters />} />
+          <Route path='/centers/:id' element={<CentersView />}>
+            <Route path='general' element={<CentersGeneralTab />} />
+            <Route path='notes' element={<CentersNotesTab />} />
+          </Route>
 
 
         </Route>
