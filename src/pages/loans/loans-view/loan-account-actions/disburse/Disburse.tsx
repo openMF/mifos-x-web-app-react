@@ -1,0 +1,157 @@
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import AppSelect from "@/components/custom/select/AppSelect";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+
+const Disburse = () => {
+  const navigate = useNavigate();
+  const { loanId } = useParams();
+
+  const [disbursedOn, setDisbursedOn] = useState("");
+  const [currencyCode] = useState(""); 
+  const [transactionAmount, setTransactionAmount] = useState("");
+  const [externalId, setExternalId] = useState("");
+  const [paymentTypeId, setPaymentTypeId] = useState("");
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+
+  const [accountNumber, setAccountNumber] = useState("");
+  const [checkNumber, setCheckNumber] = useState("");
+  const [routingCode, setRoutingCode] = useState("");
+  const [receiptNumber, setReceiptNumber] = useState("");
+  const [bankNumber, setBankNumber] = useState("");
+  const [note, setNote] = useState("");
+
+  const canSubmit = Boolean(disbursedOn && transactionAmount);
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSubmit || !loanId) return;
+    navigate(-1);
+  };
+
+  return (
+    <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
+      <AppBreadCrumbs
+        items={[
+          { label: "Home", href: "/home" },
+          { label: "Groups", href: "/groups" },
+          { label: "Disburse", current: true },
+        ]}
+      />
+
+      <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-semibold mb-6">Disburse</h2>
+
+        <form onSubmit={onSubmit} className="space-y-6">
+          {/* Disbursed On */}
+          <div className="w-full space-y-2">
+            <Label>Disbursed On*</Label>
+            <Input
+              type="date"
+              value={disbursedOn}
+              onChange={(e) => setDisbursedOn(e.target.value)}
+            />
+          </div>
+
+          {/* Transaction Amount */}
+          <div className="w-full space-y-2">
+            <Label>Transaction Amount*</Label>
+            <div className="flex items-center gap-3">
+              <Input value={currencyCode} readOnly className="w-24" />
+              <Input
+                type="number"
+                value={transactionAmount}
+                onChange={(e) => setTransactionAmount(e.target.value)}
+                min="0"
+                step="0.01"
+                placeholder="Enter amount"
+              />
+            </div>
+          </div>
+
+          {/* External Id */}
+          <div className="w-full space-y-2">
+            <Label>External Id</Label>
+            <Input
+              value={externalId}
+              onChange={(e) => setExternalId(e.target.value)}
+              placeholder=""
+            />
+          </div>
+
+          {/* Payment Type */}
+          <div className="w-full space-y-2">
+            <AppSelect
+              selectLabel="Payment Type"
+              selectPlaceholder="Select payment type"
+              selectValue={paymentTypeId}
+              selectOnChange={setPaymentTypeId}
+              selectOptions={[]}
+              selectClassname="w-full space-y-2"
+            />
+          </div>
+
+          {/* Show Payment Details toggle */}
+          <div className="flex items-center gap-3">
+            <Switch checked={showPaymentDetails} onCheckedChange={(v) => setShowPaymentDetails(Boolean(v))} />
+            <span className="text-sm font-medium">Show Payment Details</span>
+          </div>
+
+          {showPaymentDetails && (
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label>Account #</Label>
+                <Input value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Cheque #</Label>
+                <Input value={checkNumber} onChange={(e) => setCheckNumber(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Routing Code</Label>
+                <Input value={routingCode} onChange={(e) => setRoutingCode(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Receipt #</Label>
+                <Input value={receiptNumber} onChange={(e) => setReceiptNumber(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Bank #</Label>
+                <Input value={bankNumber} onChange={(e) => setBankNumber(e.target.value)} />
+              </div>
+            </div>
+          )}
+
+          {/* Note */}
+          <div className="w-full space-y-2">
+            <Label>Note</Label>
+            <Input
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-4 pt-2">
+            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!canSubmit}
+              className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Disburse;

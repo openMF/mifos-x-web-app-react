@@ -130,6 +130,65 @@ import CloseCenters from '@/pages/centers/CloseCenters'
 import CentersView from '@/pages/centers/centers-view/CentersView'
 import CentersGeneralTab from '@/pages/centers/centers-view/general-tab/CentersGeneralTab'
 import CentersNotesTab from '@/pages/centers/centers-view/notes-tab/CentersNotesTab'
+import Groups from '@/pages/groups/Groups'
+import CreateGroups from '@/pages/groups/CreateGroups'
+import EditGroups from '@/pages/groups/groups-view/group-actions/EditGroups'
+import TransferClients from '@/pages/groups/groups-view/group-actions/TransferClients'
+import ManageGroupMembers from '@/pages/groups/groups-view/group-actions/ManageGroupMembers'
+import AttachMeeting from '@/pages/groups/groups-view/group-actions/AttachMeeting'
+import GroupsAddRoleCommitteeTab from '@/pages/groups/groups-view/commitee-tab/GroupsAddRoleCommiteeTab'
+import GroupsView from '@/pages/groups/groups-view/GroupsView'
+import GroupsGeneralTab from '@/pages/groups/groups-view/general-tab/GroupsGeneralTab'
+import GroupsNotesTab from '@/pages/groups/groups-view/notes-tab/GroupsNotesTab'
+import GroupsCommitteeTab from '@/pages/groups/groups-view/commitee-tab/GroupsCommiteeTab'
+import MakeRepayment from '@/pages/loans/loans-view/loan-account-actions/make-repayment/MakeRepayment'
+import AddLoanCharge from '@/pages/loans/loans-view/loan-account-actions/add-loan-charge/AddLoanCharge'
+import ApproveLoan from '@/pages/loans/loans-view/loan-account-actions/approve-loan/ApproveLoan'
+import WithdrawByClient from '@/pages/loans/loans-view/loan-account-actions/withdraw-by-client/WithdrawByClient'
+import AddCollateral from '@/pages/loans/loans-view/loan-account-actions/add-collateral/AddCollateral'
+import ViewGuarantors from '@/pages/loans/loans-view/loan-account-actions/view-guarantors/ViewGuarantors'
+import CreateGuarantor from '@/pages/loans/loans-view/loan-account-actions/create-guarantor/CreateGuarantor'
+import LoanScreenReports from '@/pages/loans/loans-view/loan-account-actions/loan-screen-reports/LoanScreenReports'
+import AssignLoanOfficer from '@/pages/loans/loans-view/loan-account-actions/assign-loan-officer/AssignLoanOfficer'
+import Disburse from '@/pages/loans/loans-view/loan-account-actions/disburse/Disburse'
+import DisburseToSavingsAccount from '@/pages/loans/loans-view/loan-account-actions/disburse-to-savings-account/DisburseToSavingsAccount'
+import UndoApproval from '@/pages/loans/loans-view/loan-account-actions/undo-approval/UndoApproval'
+import Foreclosure from '@/pages/loans/loans-view/loan-account-actions/foreclosure/Foreclosure'
+import UndoDisbursal from '@/pages/loans/loans-view/loan-account-actions/undo-disbursal/UndoDisbursal'
+import AddInterestPause from '@/pages/loans/loans-view/loan-account-actions/add-interest-pause/AddInterestPause'
+import PrepayLoan from '@/pages/loans/loans-view/loan-account-actions/prepay-loan/PrepayLoan'
+import ChargeOff from '@/pages/loans/loans-view/loan-account-actions/charge-off/ChargeOff'
+import LoanReaging from '@/pages/loans/loans-view/loan-account-actions/loan-reaging/LoanReaging'
+import LoanReamortize from '@/pages/loans/loans-view/loan-account-actions/loan-reamortize/LoanReamortize'
+import WaiveInterest from '@/pages/loans/loans-view/loan-account-actions/waive-interest/WaiveInterest'
+import LoanReschedule from '@/pages/loans/loans-view/loan-account-actions/loan-reschedule/LoanReschedule'
+import WriteOffPage from '@/pages/loans/loans-view/loan-account-actions/write-off-page/WriteOffPage'
+import CloseAsRescheduled from '@/pages/loans/loans-view/loan-account-actions/close-as-rescheduled/CloseAsRescheduled'
+import LoansAccountClose from '@/pages/loans/loans-view/loan-account-actions/loans-account-close/LoansAccountClose'
+import SellLoan from '@/pages/loans/loans-view/loan-account-actions/sell-loan/SellLoan'
+import SavingsAccountView from '@/pages/saving-product/saving-product-view/SavingProductView'
+import SavingProductGeneralTab from '@/pages/saving-product/saving-product-view/general-tab/SavingProductGeneralTab'
+import SavingProductTransactionTab from '@/pages/saving-product/saving-product-view/transaction-tab/SavingProductTransactionTab'
+import SavingProductChargesTab from '@/pages/saving-product/saving-product-view/charges-tab/SavingProductChargesTab'
+import SavingsDocumentsTab from '@/pages/saving-product/saving-product-view/savings-documents-tab/SavingsDocumentsTab'
+import SavingsNotesTab from '@/pages/saving-product/saving-product-view/notes-tab/SavingsNotesTab'
+import ApproveSavingAccount from '@/pages/saving-product/saving-account-actions/approve-savings-account/ApproveSavingAccount'
+import RejectSavingsAccount from '@/pages/saving-product/saving-account-actions/reject-savings-account/RejectSavingsAccount'
+import AddChargeSavingsAccount from '@/pages/saving-product/saving-account-actions/add-charge-savings-account/AddChargeSavingsAccount'
+import SavingsAccountAssignStaff from '@/pages/saving-product/saving-account-actions/savings-account-assign-staff/SavingsAccountAssignStaff'
+import ActivateSavingsAccount from '@/pages/saving-product/saving-account-actions/activate-savings-account/ActivateSavingsAccount'
+import SavingsAccountTransactions from '@/pages/saving-product/saving-account-actions/savings-account-transactions/SavingsAccountTransactions'
+import ManageSavingsAccount from '@/pages/saving-product/saving-account-actions/manage-savings-account/ManageSavingsAccount'
+import UndoApprovalSavingsAccount from '@/pages/saving-product/saving-account-actions/undo-approval-savings-account/UndoApprovalSavingsAccount'
+import LoansView from '@/pages/loans/loans-view/LoansView'
+import LoansGeneralTab from '@/pages/loans/loans-view/general-tab/LoansGeneralTab'
+import LoansAccountDetails from '@/pages/loans/loans-view/account-details/LoansAccountDetails'
+import LoansRepaymentScheduleTab from '@/pages/loans/loans-view/repayment-schedule-tab/LoansRepaymentScheduleTab'
+import LoansTransactions from '@/pages/loans/loans-view/transactions/LoansTransactions'
+import LoansCollateralTab from '@/pages/loans/loans-view/loan-collateral-tab/LoansCollateralTab'
+import LoansTermVariationsTab from '@/pages/loans/loans-view/loan-term-variations-tab/LoansTermVariationsTab'
+import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/LoansDocumentsTab'
+import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
 
 const AppRoutes = () => {
   return (
@@ -381,6 +440,54 @@ const AppRoutes = () => {
 
           {/* Institution */}
 
+          {/* Groups */}
+
+          <Route path='/groups/:id' element={<GroupsView />}>
+            <Route path='general' element={<GroupsGeneralTab />} />
+            <Route path='notes' element={<GroupsNotesTab />} />
+            <Route path='committee' element={<GroupsCommitteeTab />}>
+            </Route>
+          </Route>
+          <Route path='/groups/:id/committee/add-role' element={<GroupsAddRoleCommitteeTab />} />
+
+          <Route path='/groups' element={<Groups />} />
+          <Route path='/groups/create' element={<CreateGroups />} />
+          <Route path='/groups/:id/edit' element={<EditGroups />} />
+          <Route path='/groups/:id/actions/transfer-clients' element={<TransferClients />} />
+          <Route path='/groups/:id/actions/manage-members' element={<ManageGroupMembers />} />
+          <Route path='/groups/:id/actions/attach-meeting' element={<AttachMeeting />} />
+
+          <Route path='/groups/:id/loans-accounts/:id/actions/GoodwillCredit' element={<MakeRepayment />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/InterestPaymentWaiver' element={<MakeRepayment />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/PayoutRefund' element={<MakeRepayment />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/MerchantIssuedRefund' element={<MakeRepayment />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/AddLoanCharge' element={<AddLoanCharge />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Approve' element={<ApproveLoan />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/WithdrawnByClient' element={<WithdrawByClient />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/AddCollateral' element={<AddCollateral />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/ViewGuarantors' element={<ViewGuarantors />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/CreateGuarantor' element={<CreateGuarantor />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/LoanScreenReports' element={<LoanScreenReports />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/AssignLoanOfficer' element={<AssignLoanOfficer />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Disburse' element={<Disburse />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/DisbursetoSavings' element={<DisburseToSavingsAccount />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/UndoApproval' element={<UndoApproval />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Foreclosure' element={<Foreclosure />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/MakeRepayment' element={<MakeRepayment />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/UndoDisbursal' element={<UndoDisbursal />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/AddInterestPause' element={<AddInterestPause />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/PrepayLoan' element={<PrepayLoan />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Charge-Off' element={<ChargeOff />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Re-Age' element={<LoanReaging />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Re-Amortize' element={<LoanReamortize />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/WaiveInterest' element={<WaiveInterest />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Reschedule' element={<LoanReschedule />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/WriteOff' element={<WriteOffPage />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Close-as-Rescheduled' element={<CloseAsRescheduled />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/Close' element={<LoansAccountClose />} />
+          <Route path='/groups/:id/loans-accounts/:id/actions/SellLoan' element={<SellLoan />} />
+
+
           {/* Centers */}
           <Route path='/centers' element={<Centers />} />
           <Route path='/centers/create' element={<CreateCenters />} />
@@ -391,7 +498,51 @@ const AppRoutes = () => {
             <Route path='notes' element={<CentersNotesTab />} />
           </Route>
 
+          {/* Savings Product */}
+          <Route path="/groups/:groupId/savings-accounts/:accountId" element={<SavingsAccountView />}>
+            <Route path="general" element={<SavingProductGeneralTab />} />
+            <Route path="transactions" element={<SavingProductTransactionTab />} />
+            <Route path="charges" element={<SavingProductChargesTab />} />
+            <Route path="documents" element={<SavingsDocumentsTab />} />
+            <Route path="notes" element={<SavingsNotesTab />} />
+          </Route>
 
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/Approve' element={<ApproveSavingAccount />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/Reject' element={<RejectSavingsAccount />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/AddCharge' element={<AddChargeSavingsAccount />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/AssignStaff' element={<SavingsAccountAssignStaff />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/Activate' element={<ActivateSavingsAccount />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/Deposit' element={<SavingsAccountTransactions />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/Withdrawal' element={<SavingsAccountTransactions />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/HoldAmount' element={<ManageSavingsAccount />} />
+          <Route path='/groups/:groupId/savings-accounts/:accountId/actions/UndoApproval' element={<UndoApprovalSavingsAccount />} />
+
+          <Route path="/clients/:groupId/savings-accounts/:accountId" element={<SavingsAccountView />}>
+            <Route path="general" element={<SavingProductGeneralTab />} />
+            <Route path="transactions" element={<SavingProductTransactionTab />} />
+            <Route path="charges" element={<SavingProductChargesTab />} />
+            <Route path="documents" element={<SavingsDocumentsTab />} />
+            <Route path="notes" element={<SavingsNotesTab />} />
+          </Route>
+
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Approve' element={<ApproveSavingAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Reject' element={<RejectSavingsAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/AddCharge' element={<AddChargeSavingsAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/AssignStaff' element={<SavingsAccountAssignStaff />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Activate' element={<ActivateSavingsAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Deposit' element={<SavingsAccountTransactions />} />
+
+          {/* Loans */}
+          <Route path="/groups/:groupId/loans-accounts/:loanId" element={<LoansView />}>
+            <Route path='general' element={<LoansGeneralTab />} />
+            <Route path="accountdetail" element={<LoansAccountDetails />} />
+            <Route path="repayment-schedule" element={<LoansRepaymentScheduleTab />} />
+            <Route path="transactions" element={<LoansTransactions />} />
+            <Route path="loan-collateral" element={<LoansCollateralTab />} />
+            <Route path="term-variations" element={<LoansTermVariationsTab />} />
+            <Route path="loan-documents" element={<LoansDocumentsTab />} />
+            <Route path="notes" element={<LoansNotesTab />} />
+          </Route>
         </Route>
       </Route>
 
