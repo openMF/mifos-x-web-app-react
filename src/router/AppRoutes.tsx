@@ -189,6 +189,27 @@ import LoansCollateralTab from '@/pages/loans/loans-view/loan-collateral-tab/Loa
 import LoansTermVariationsTab from '@/pages/loans/loans-view/loan-term-variations-tab/LoansTermVariationsTab'
 import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/LoansDocumentsTab'
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
+import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
+import Clients from '@/pages/clients/Clients'
+import ClientsView from '@/pages/clients/clients-view/ClientsView'
+import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
+import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
+import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
+import ClientsDocumentsTab from '@/pages/clients/clients-view/documents-tab/ClientsDocumentsTab'
+import ClientsIdentitiesTab from '@/pages/clients/clients-view/Identities-tab/ClientsidentitiesTab'
+import ClientsAddressTab from '@/pages/clients/clients-view/address-tab/ClientsAddressTab'
+import UndoApprovalSharesAccount from '@/pages/shares/shares-account-actions/undo-approval-shares-account/UndoApprovalSharesAccount'
+import SharesAccountView from '@/pages/shares/shares-account-view/SharesAccountView'
+import SharesAccountGeneralTab from '@/pages/shares/shares-account-view/general-tab/SharesAccountGeneralTab'
+import SharesAccountTransactionsTab from '@/pages/shares/shares-account-view/transactions-tab/SharesAccountTransactionsTab'
+import SharesAccountChargesTab from '@/pages/shares/shares-account-view/charges-tab/SharesAccountChargesTab'
+import SharesAccountDividendesTab from '@/pages/shares/shares-account-view/dividends-tab/SharesAccountDividendesTab'
+import ApproveSharesAccount from '@/pages/shares/shares-account-actions/approve-shares-account/ApproveSharesAccount'
+import RejectSharesAccount from '@/pages/shares/shares-account-actions/reject-shares-account/RejectSharesAccount'
+import ActivateSharesAccount from '@/pages/shares/shares-account-actions/activate-shares-account/ActivateSharesAccount'
+import ApplyShares from '@/pages/shares/shares-account-actions/apply-shares/ApplyShares'
+import RedeemShares from '@/pages/shares/shares-account-actions/redeem-shares/RedeemShares'
+import CloseSharesAccount from '@/pages/shares/shares-account-actions/close-shares-account/CloseSharesAccount'
 
 const AppRoutes = () => {
   return (
@@ -439,6 +460,83 @@ const AppRoutes = () => {
 
 
           {/* Institution */}
+
+          {/* Clients */}
+          <Route path='/clients' element={<Clients />} />
+          <Route path='/clients/:id' element={<ClientsView />}>
+            <Route path='general' element={<ClientsGeneralTab />} />
+            <Route path='notes' element={<ClientNotesTab />} />
+            <Route path='address' element={<ClientsAddressTab />} />
+            <Route path='family-members' element={<ClientsFamilyMembersAddTab />}>
+              <Route path='add' element={<ClientsFamilyMembersAddTab />} />
+            </Route>
+            <Route path='documents' element={<ClientsDocumentsTab />} />
+            <Route path='identities' element={<ClientsIdentitiesTab />} />
+          </Route>
+
+          <Route path='/clients/:id/loans-accounts/:id/actions/GoodwillCredit' element={<MakeRepayment />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/InterestPaymentWaiver' element={<MakeRepayment />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/PayoutRefund' element={<MakeRepayment />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/MerchantIssuedRefund' element={<MakeRepayment />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/AddLoanCharge' element={<AddLoanCharge />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Approve' element={<ApproveLoan />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/WithdrawnByClient' element={<WithdrawByClient />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/AddCollateral' element={<AddCollateral />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/ViewGuarantors' element={<ViewGuarantors />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/CreateGuarantor' element={<CreateGuarantor />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/LoanScreenReports' element={<LoanScreenReports />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/AssignLoanOfficer' element={<AssignLoanOfficer />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Disburse' element={<Disburse />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/DisbursetoSavings' element={<DisburseToSavingsAccount />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/UndoApproval' element={<UndoApproval />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Foreclosure' element={<Foreclosure />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/MakeRepayment' element={<MakeRepayment />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/UndoDisbursal' element={<UndoDisbursal />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/AddInterestPause' element={<AddInterestPause />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/PrepayLoan' element={<PrepayLoan />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Charge-Off' element={<ChargeOff />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Re-Age' element={<LoanReaging />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Re-Amortize' element={<LoanReamortize />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/WaiveInterest' element={<WaiveInterest />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Reschedule' element={<LoanReschedule />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/WriteOff' element={<WriteOffPage />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Close-as-Rescheduled' element={<CloseAsRescheduled />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/Close' element={<LoansAccountClose />} />
+          <Route path='/clients/:id/loans-accounts/:id/actions/SellLoan' element={<SellLoan />} />
+
+          <Route path="/clients/:clientId/charges/:chargeId" element={<ViewCharge />} />
+
+          <Route path="/clients/:groupId/savings-accounts/:accountId" element={<SavingsAccountView />}>
+            <Route path="general" element={<SavingProductGeneralTab />} />
+            <Route path="transactions" element={<SavingProductTransactionTab />} />
+            <Route path="charges" element={<SavingProductChargesTab />} />
+            <Route path="documents" element={<SavingsDocumentsTab />} />
+            <Route path="notes" element={<SavingsNotesTab />} />
+          </Route>
+
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Approve' element={<ApproveSavingAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Reject' element={<RejectSavingsAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/AddCharge' element={<AddChargeSavingsAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/AssignStaff' element={<SavingsAccountAssignStaff />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Activate' element={<ActivateSavingsAccount />} />
+          <Route path='/clients/:groupId/savings-accounts/:accountId/actions/Deposit' element={<SavingsAccountTransactions />} />
+
+          <Route
+            path="/clients/:clientId/shares-accounts/:sharesAccountId"
+            element={<SharesAccountView />}
+          >
+            <Route path="general" element={<SharesAccountGeneralTab />} />
+            <Route path="transactions" element={<SharesAccountTransactionsTab />} />
+            <Route path="charges" element={<SharesAccountChargesTab />} />
+            <Route path="dividends" element={<SharesAccountDividendesTab />} />
+          </Route>
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/Approve' element={<ApproveSharesAccount />} />
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/Reject' element={<RejectSharesAccount />} />
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/UndoApproval' element={<UndoApprovalSharesAccount />} />
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/Activate' element={<ActivateSharesAccount />} />
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/ApplyAdditionalShares' element={<ApplyShares />} />
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/RedeemShares' element={<RedeemShares />} />
+          <Route path='/clients/:clientId/shares-accounts/:sharesAccountId/actions/Close' element={<CloseSharesAccount />} />
 
           {/* Groups */}
 
