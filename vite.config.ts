@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "/api": {
           target:
-            env.VITE_FINERACT_API_URL ||
+            env.FINERACT_API_URL ||
             "https://localhost:8443/fineract-provider",
           changeOrigin: true,
           secure: false,
