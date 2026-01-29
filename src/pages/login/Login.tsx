@@ -12,7 +12,8 @@ import { type RootState, type AppDispatch } from "@/app/store";
 
 
 import mainImg from '@/assets/images/cover_image_resized.webp';
-import mifosLogo from '@/assets/images/mifos_lg-logo.png';
+import mifosLogoLight from '@/assets/images/mifos_lg-logo.png';
+import mifosLogoDark from '@/assets/images/image-removebg-preview-transparent.png';
 
 import { Sun, Moon } from "lucide-react";
 
@@ -124,7 +125,11 @@ const Login = () => {
         </div>
 
         <div className="lg:h-[90%] flex flex-col items-center w-full max-w-md mx-auto">
-          <img src={mifosLogo} alt="mifosLogo" className="h-[130px] m-6" />
+          <img 
+            src={theme === 'dark' ? mifosLogoDark : mifosLogoLight} 
+            alt="mifosLogo" 
+            className="h-[130px] m-6" 
+          />
 
           <Select>
             <SelectTrigger className="w-full max-w-xs">
