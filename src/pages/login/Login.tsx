@@ -11,7 +11,8 @@ import { loginUser } from '@/pages/login/loginSlice'
 import { type RootState, type AppDispatch } from '@/app/store'
 
 import mainImg from '@/assets/images/cover_image_resized.webp'
-import mifosLogo from '@/assets/images/mifos_lg-logo.png'
+import mifosLogoLight from '@/assets/images/mifos_lg-logo.png'
+import mifosLogoDark from '@/assets/images/image-removebg-preview-transparent.png'
 
 import { Sun, Moon } from 'lucide-react'
 
@@ -153,7 +154,11 @@ const Login = () => {
             ) : (
               <Sun className="w-5 h-5" />
             )}
-          </Button>
+          </But
+            src={theme === 'dark' ? mifosLogoDark : mifosLogoLight} 
+            alt="mifosLogo" 
+            className="h-[130px] m-6" 
+         
         </div>
 
         <div className="lg:h-[90%] flex flex-col items-center w-full max-w-md mx-auto">
