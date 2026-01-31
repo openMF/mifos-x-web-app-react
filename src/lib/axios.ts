@@ -7,8 +7,13 @@
  */
 import axios from 'axios'
 
+const getBaseURL = () => {
+  const server = localStorage.getItem('mifosServer') || 'https://localhost:8443'
+  return `${server}/fineract-provider/api/v1`
+}
+
 const fineract = axios.create({
-  baseURL: 'https://localhost:8443/fineract-provider/api/v1',
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -18,9 +23,15 @@ const fineract = axios.create({
 
 fineract.interceptors.request.use(config => {
   const token = localStorage.getItem('mifosToken')
+  const tenant = localStorage.getItem('mifosTenant') || 'default'
+  const server = localStorage.getItem('mifosServer') || 'https://localhost:8443'
+  
+  // Update baseURL dynamically in case it changed
+  config.baseURL = `${server}/fineract-provider/api/v1`
+  
   if (token) {
     config.headers['Authorization'] = `Basic ${token}`
-    config.headers['Fineract-Platform-TenantId'] = 'default'
+    config.headers['Fineract-Platform-TenantId'] = tenant
   }
   return config
 })
