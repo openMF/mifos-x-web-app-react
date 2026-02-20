@@ -38,26 +38,36 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faEye } from '@fortawesome/free-solid-svg-icons'
 import { Plus } from 'lucide-react'
+import TableSkeleton from '@/components/custom/loading/TableSkeleton'
+import ErrorState from '@/components/custom/error/ErrorState'
 
 const tellersApi = new TellerCashManagementApi(getConfiguration())
 
 const Tellers = () => {
   const [tellers, setTellers] = useState<GetTellersResponse[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const navigate = useNavigate()
 
   // fetch list once
-  useEffect(() => {
-    const fetchTellers = async () => {
-      try {
-        const res = await tellersApi.getTellerData()
-        setTellers(res.data || [])
-      } catch (err) {
-        console.error('Failed to fetch tellers', err)
-      }
+  const fetchTellers = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const res = await tellersApi.getTellerData()
+      setTellers(res.data || [])
+    } catch (err) {
+      console.error('Failed to fetch tellers', err)
+      setError('Failed to load tellers. Please try again.')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchTellers()
   }, [])
 
@@ -145,64 +155,70 @@ const Tellers = () => {
       </div>
 
       {/* table */}
-      <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
-        <Table>
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
-          </TableCaption>
-          <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Branch</TableHead>
-              <TableHead className="px-6 py-4">Teller Name</TableHead>
-              <TableHead className="px-6 py-4 text-center">Status</TableHead>
-              <TableHead className="px-6 py-4 text-center">
-                Started On
-              </TableHead>
-              <TableHead className="px-6 py-4 text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
+      {loading && <TableSkeleton rows={5} columns={5} />}
 
-          <TableBody>
-            {paginated.map(teller => (
-              <TableRow
-                key={teller.id}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-                onClick={() => navigate(`/organization/tellers/${teller.id}`)} // row -> details
-              >
-                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {teller.officeName || '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {teller.name || '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-center">
-                  <FontAwesomeIcon
-                    icon={faCircle}
-                    className={`${teller.status?.toLowerCase() === 'active' ? 'text-green-500' : 'text-red-500'} text-sm`}
-                  />
-                </TableCell>
-                <TableCell className="px-6 py-4 text-center text-zinc-700 dark:text-zinc-200">
-                  {teller.startDate}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-center">
-                  {/* action: go to cashiers */}
-                  <Button
-                    variant="link"
-                    onClick={() =>
-                      navigate(`/organization/tellers/${teller.id}/cashiers`)
-                    }
-                    className="text-blue-600 hover:underline"
-                  >
-                    <FontAwesomeIcon icon={faEye} className="mr-2" />
-                    View Cashiers
-                  </Button>
-                </TableCell>
+      {error && <ErrorState message={error} onRetry={fetchTellers} />}
+
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
+          <Table>
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+              of {totalPages}
+            </TableCaption>
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">Branch</TableHead>
+                <TableHead className="px-6 py-4">Teller Name</TableHead>
+                <TableHead className="px-6 py-4 text-center">Status</TableHead>
+                <TableHead className="px-6 py-4 text-center">
+                  Started On
+                </TableHead>
+                <TableHead className="px-6 py-4 text-center">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+
+            <TableBody>
+              {paginated.map(teller => (
+                <TableRow
+                  key={teller.id}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                  onClick={() => navigate(`/organization/tellers/${teller.id}`)} // row -> details
+                >
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {teller.officeName || '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {teller.name || '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-center">
+                    <FontAwesomeIcon
+                      icon={faCircle}
+                      className={`${teller.status?.toLowerCase() === 'active' ? 'text-green-500' : 'text-red-500'} text-sm`}
+                    />
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-center text-zinc-700 dark:text-zinc-200">
+                    {teller.startDate}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-center">
+                    {/* action: go to cashiers */}
+                    <Button
+                      variant="link"
+                      onClick={() =>
+                        navigate(`/organization/tellers/${teller.id}/cashiers`)
+                      }
+                      className="text-blue-600 hover:underline"
+                    >
+                      <FontAwesomeIcon icon={faEye} className="mr-2" />
+                      View Cashiers
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }
