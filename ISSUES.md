@@ -39,6 +39,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/organization/offices`
 - `GetOfficesResponse` missing `parentName`
+  - **Workaround applied:** Extended with `ExtendedOffice` interface in `Offices.tsx` and `ViewOffices.tsx`
 
 ### `/organization/currencies`
 - `/v1/currencies (retrieveCurrencies)` → mapped to `ApplicationCurrencyConfigurationData`, but fetch fails
@@ -46,6 +47,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/organization/tellers/create`
 - `PostTellersRequest` missing `endDate` → impossible to create tellers
+  - **Workaround applied:** Extended with `ExtendedPostTellersRequest` interface in `CreateTellers.tsx`. Submit handler uncommented and functional.
 
 ### `/organization/holidays/create`
 - `retrieveRepaymentScheduleUpdationTypeOptions` not mapped to any interface
@@ -58,6 +60,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/organization/tellers/{id}/edit`
 - `GetTellersResponse` missing `endDate` and `description` → edit blocked
+  - **Workaround applied:** Extended with `ExtendedTellersResponse` interface in `EditTellers.tsx`. Fixed bug where `description` and `endDate` were populated from `t.name`.
 
 ---
 
@@ -79,6 +82,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetCentersPageItems` missing:
   - `accountNo`
   - `externalId`
+  - **Workaround applied:** Extended with `ExtendedCentersPageItem` interface in `Centers.tsx`
 
 ### `/centers/{id}/general`
 - `GetCentersCenterIdResponse` missing:
@@ -86,6 +90,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
   - `externalId`
   - `activationDate`
 - Causes TypeScript errors
+  - **Workaround applied:** Extended with `ExtendedCenterResponse` interface in `CentersView.tsx`
 
 ### `/centers` (POST)
 - `PostCentersRequest` incomplete → only has:
@@ -109,6 +114,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetGroupsPageItems` missing:
   - `accountNo`
   - `externalId`
+  - **Workaround applied:** Extended with `ExtendedGroupsPageItem` interface in `Groups.tsx`
 
 ### `/groups` (POST)
 - `PostGroupsResponse` missing:

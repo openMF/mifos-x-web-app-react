@@ -31,6 +31,8 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import TableSkeleton from '@/components/custom/loading/TableSkeleton'
+import ErrorState from '@/components/custom/error/ErrorState'
 
 import { ClientSearchV2Api } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -49,39 +51,38 @@ const Clients = () => {
   // API state
   const [rows, setRows] = useState<any[]>([])
   const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   // fetch clients on mount & whenever query/pagination changes
-  useEffect(() => {
-    let cancelled = false
+  const fetchClients = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const res = await clientSearchApi.searchByText({
+        query: searchTerm || undefined,
+        page: Math.max(0, page - 1),
+        size: itemsPerPage,
+      } as any)
 
-    ;(async () => {
-      try {
-        const res = await clientSearchApi.searchByText({
-          query: searchTerm || undefined,
-          page: Math.max(0, page - 1),
-          size: itemsPerPage,
-        } as any)
+      const data: any = res.data || {}
+      const content: any[] = data.content || []
+      const totalElements: number = data.totalElements ?? content.length
 
-        const data: any = res.data || {}
-        const content: any[] = data.content || []
-        const totalElements: number = data.totalElements ?? content.length
-
-        if (!cancelled) {
-          setRows(content)
-          setTotal(totalElements)
-        }
-      } catch (e) {
-        console.error('Failed to search clients', e)
-        if (!cancelled) {
-          setRows([])
-          setTotal(0)
-        }
-      }
-    })()
-
-    return () => {
-      cancelled = true
+      setRows(content)
+      setTotal(totalElements)
+    } catch (e) {
+      console.error('Failed to search clients', e)
+      setRows([])
+      setTotal(0)
+      setError('Failed to load clients. Please try again.')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
+    fetchClients()
   }, [searchTerm, page, itemsPerPage])
 
   // toggle pending/active filter
@@ -177,61 +178,67 @@ const Clients = () => {
       </div>
 
       {/* results table */}
-      <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Table>
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {filtered.length} of {total} items • Page {page} of{' '}
-            {totalPages}
-          </TableCaption>
+      {loading && <TableSkeleton rows={5} columns={5} />}
 
-          <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Name</TableHead>
-              <TableHead className="px-6 py-4">Account No.</TableHead>
-              <TableHead className="px-6 py-4">External Id</TableHead>
-              <TableHead className="px-6 py-4">Status</TableHead>
-              <TableHead className="px-6 py-4">Office Name</TableHead>
-            </TableRow>
-          </TableHeader>
+      {error && <ErrorState message={error} onRetry={fetchClients} />}
 
-          <TableBody>
-            {filtered.map((c: any) => (
-              <TableRow
-                key={c.id}
-                onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {c.displayName ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.accountNo ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.externalId ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c?.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-green-500"
-                    />
-                  )}
-                  {c?.status?.id === 200 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-yellow-500"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.officeName ?? '—'}
-                </TableCell>
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <Table>
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              Showing {filtered.length} of {total} items • Page {page} of{' '}
+              {totalPages}
+            </TableCaption>
+
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">Name</TableHead>
+                <TableHead className="px-6 py-4">Account No.</TableHead>
+                <TableHead className="px-6 py-4">External Id</TableHead>
+                <TableHead className="px-6 py-4">Status</TableHead>
+                <TableHead className="px-6 py-4">Office Name</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+
+            <TableBody>
+              {filtered.map((c: any) => (
+                <TableRow
+                  key={c.id}
+                  onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {c.displayName ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.accountNo ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.externalId ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c?.status?.id === 300 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="w-4 h-4 text-green-500"
+                      />
+                    )}
+                    {c?.status?.id === 200 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="w-4 h-4 text-yellow-500"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.officeName ?? '—'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }
