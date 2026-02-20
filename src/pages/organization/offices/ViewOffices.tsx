@@ -14,6 +14,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetOfficesResponse type.
+ * See: ISSUES.md → Admin Organization → /organization/offices
+ */
+interface ExtendedOffice extends GetOfficesResponse {
+  parentName?: string
+}
 import { format } from 'date-fns'
 
 const officesApi = new OfficesApi(getConfiguration())
@@ -21,14 +30,14 @@ const officesApi = new OfficesApi(getConfiguration())
 const ViewOffices = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [office, setOffice] = useState<GetOfficesResponse>()
+  const [office, setOffice] = useState<ExtendedOffice>()
 
   // fetch office details
   useEffect(() => {
     const fetchOffice = async () => {
       try {
         const res = await officesApi.retrieveOffice(Number(id))
-        setOffice(res.data)
+        setOffice(res.data as ExtendedOffice)
       } catch (err) {
         console.error('Failed to fetch office', err)
       }
@@ -68,19 +77,19 @@ const ViewOffices = () => {
         {/* office details */}
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Parent Office</div>
-          <div>{'missing in openapi'}</div>
+          <div>{office.parentName ?? '—'}</div>
 
           <div className="font-medium">Opened On</div>
           <div>
             {Array.isArray(office.openingDate)
               ? format(
-                  new Date(
-                    office.openingDate[0],
-                    office.openingDate[1] - 1,
-                    office.openingDate[2]
-                  ),
-                  'dd MMMM yyyy'
-                )
+                new Date(
+                  office.openingDate[0],
+                  office.openingDate[1] - 1,
+                  office.openingDate[2]
+                ),
+                'dd MMMM yyyy'
+              )
               : '—'}
           </div>
 

@@ -29,30 +29,52 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetOfficesResponse type.
+ * See: ISSUES.md → Admin Organization → /organization/offices
+ */
+interface ExtendedOffice extends GetOfficesResponse {
+  parentName?: string
+}
+
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus, Upload } from 'lucide-react'
+<<<<<<< HEAD
 import { format } from 'date-fns'
+=======
+import TableSkeleton from '@/components/custom/loading/TableSkeleton'
+import ErrorState from '@/components/custom/error/ErrorState'
+>>>>>>> c9a94f8 (fix: add missing parentName field in Organization Offices pages)
 
 const officesApi = new OfficesApi(getConfiguration())
 
 const Offices = () => {
-  const [offices, setOffices] = useState<GetOfficesResponse[]>([])
+  const [offices, setOffices] = useState<ExtendedOffice[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const navigate = useNavigate()
 
   // fetch all offices
-  useEffect(() => {
-    const fetchOffices = async () => {
-      try {
-        const response = await officesApi.retrieveOffices()
-        setOffices(response.data || [])
-      } catch (err) {
-        console.error('Failed to fetch offices', err)
-      }
+  const fetchOffices = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await officesApi.retrieveOffices()
+      setOffices((response.data as ExtendedOffice[]) || [])
+    } catch (err) {
+      console.error('Failed to fetch offices', err)
+      setError('Failed to load offices. Please try again.')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchOffices()
   }, [])
 
@@ -149,6 +171,7 @@ const Offices = () => {
       </div>
 
       {/* offices table */}
+<<<<<<< HEAD
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
@@ -191,11 +214,52 @@ const Offices = () => {
                     )
                     : '—'}
                 </TableCell>
+=======
+      {loading && <TableSkeleton rows={5} columns={4} />}
+
+      {error && <ErrorState message={error} onRetry={fetchOffices} />}
+
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
+          <Table>
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+              of {totalPages}
+            </TableCaption>
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">Office Name</TableHead>
+                <TableHead className="px-6 py-4">External ID</TableHead>
+                <TableHead className="px-6 py-4">Parent Office</TableHead>
+                <TableHead className="px-6 py-4">Opened On</TableHead>
+>>>>>>> c9a94f8 (fix: add missing parentName field in Organization Offices pages)
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {paginated.map(office => (
+                <TableRow
+                  key={office.id}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                  onClick={() => navigate(`/organization/offices/${office.id}`)}
+                >
+                  <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
+                    {office.name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {office.externalId || '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {office.parentName ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {office.openingDate || '—'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }
