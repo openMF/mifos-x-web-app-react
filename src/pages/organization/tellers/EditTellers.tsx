@@ -18,8 +18,19 @@ import {
   TellerCashManagementApi,
   OfficesApi,
   type GetOfficesResponse,
+  type GetTellersResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetTellersResponse type.
+ * See: ISSUES.md → Admin Organization → /organization/tellers/{id}/edit
+ */
+interface ExtendedTellersResponse extends GetTellersResponse {
+  endDate?: string | number[]
+  description?: string
+}
 
 const tellersApi = new TellerCashManagementApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
@@ -57,13 +68,13 @@ const EditTellers = () => {
 
         if (id) {
           const tRes = await tellersApi.findTeller(Number(id))
-          const t = tRes.data ?? {}
+          const t = (tRes.data ?? {}) as ExtendedTellersResponse
           setFormData({
             tellerName: t.name ?? '',
             officeId: (t.officeId ?? '').toString(),
-            description: t.name ?? '',
+            description: t.description ?? '',
             startDate: toInputDate(t.startDate),
-            endDate: toInputDate(t.name), // ⚠️ looks wrong, probably should be t.endDate
+            endDate: toInputDate(t.endDate),
             status: (t.status as 'ACTIVE' | 'INACTIVE') ?? 'ACTIVE',
           })
         }
@@ -130,7 +141,7 @@ const EditTellers = () => {
               selectLabel="Office"
               selectPlaceholder="Select Office"
               selectValue={formData.officeId}
-              selectOnChange={() => {}} // disabled
+              selectOnChange={() => { }} // disabled
               selectClassname="w-full space-y-2"
               selectOptions={offices.map(o => ({
                 id: o.id?.toString() || '',
