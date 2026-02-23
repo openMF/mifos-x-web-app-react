@@ -29,6 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { format } from 'date-fns'
 
 const holidayApi = new HolidaysApi(getConfiguration())
 
@@ -163,13 +164,46 @@ const ViewHolidays = () => {
           <div>{holiday?.name || '—'}</div>
 
           <div className="font-medium">From Date</div>
-          <div>{holiday?.fromDate}</div>
+          <div>
+            {Array.isArray(holiday?.fromDate)
+              ? format(
+                new Date(
+                  holiday.fromDate[0],
+                  holiday.fromDate[1] - 1,
+                  holiday.fromDate[2]
+                ),
+                'dd MMMM yyyy'
+              )
+              : '—'}
+          </div>
 
           <div className="font-medium">To Date</div>
-          <div>{holiday?.toDate}</div>
+          <div>
+            {Array.isArray(holiday?.toDate)
+              ? format(
+                new Date(
+                  holiday.toDate[0],
+                  holiday.toDate[1] - 1,
+                  holiday.toDate[2]
+                ),
+                'dd MMMM yyyy'
+              )
+              : '—'}
+          </div>
 
           <div className="font-medium">Repayments Scheduled To</div>
-          <div>{holiday?.repaymentsRescheduledTo}</div>
+          <div>
+            {Array.isArray(holiday?.repaymentsRescheduledTo)
+              ? format(
+                new Date(
+                  holiday.repaymentsRescheduledTo[0],
+                  holiday.repaymentsRescheduledTo[1] - 1,
+                  holiday.repaymentsRescheduledTo[2]
+                ),
+                'dd MMMM yyyy'
+              )
+              : '—'}
+          </div>
         </div>
 
         {/* Back button */}

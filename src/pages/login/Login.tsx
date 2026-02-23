@@ -14,7 +14,7 @@ import mainImg from '@/assets/images/cover_image_resized.webp'
 import mifosLogoLight from '@/assets/images/mifos_lg-logo.png'
 import mifosLogoDark from '@/assets/images/image-removebg-preview-transparent.png'
 
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Eye, EyeOff } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -51,6 +51,7 @@ const Login = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth)
 
   const [form, setForm] = useState({ username: '', password: '' })
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -189,14 +190,31 @@ const Login = () => {
               className="dark:bg-zinc-800 dark:text-white mb-4"
             />
 
-            <Input
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              type="password"
-              placeholder="Password"
-              className="dark:bg-zinc-800 dark:text-white mb-4"
-            />
+            <div className="relative w-full mb-4">
+              <Input
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                className="dark:bg-zinc-800 dark:text-white pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={(e) => e.preventDefault()}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4 text-zinc-500" />
+                ) : (
+                  <Eye className="h-4 w-4 text-zinc-500" />
+                )}
+              </Button>
+            </div>
 
             <div className="flex items-center space-x-2 mb-4">
               <Checkbox id="terms" />

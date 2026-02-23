@@ -40,9 +40,10 @@ export const getAllHeaders = (): Record<string, string> => {
 }
 
 export const getApiBaseUrl = (): string => {
-  return (
-    import.meta.env.VITE_FINERACT_API_URL +
-    import.meta.env.VITE_FINERACT_API_PROVIDER +
-    import.meta.env.VITE_FINERACT_API_VERSION
-  )
+  const url = import.meta.env.VITE_FINERACT_API_URL || 'https://localhost:8443';
+  const provider = import.meta.env.VITE_FINERACT_API_PROVIDER || '/fineract-provider';
+  const version = import.meta.env.VITE_FINERACT_API_VERSION || '/api';
+
+  // Cleans up trailing slashes and combines them safely
+  return `${url.replace(/\/$/, '')}${provider}${version}`;
 }

@@ -32,6 +32,7 @@ import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus, Upload } from 'lucide-react'
+import { format } from 'date-fns'
 
 const officesApi = new OfficesApi(getConfiguration())
 
@@ -179,7 +180,16 @@ const Offices = () => {
                   {'Missing in OpenApi'}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {office.openingDate || '—'}
+                  {Array.isArray(office.openingDate)
+                    ? format(
+                      new Date(
+                        office.openingDate[0],
+                        office.openingDate[1] - 1,
+                        office.openingDate[2]
+                      ),
+                      'dd MMMM yyyy'
+                    )
+                    : '—'}
                 </TableCell>
               </TableRow>
             ))}
