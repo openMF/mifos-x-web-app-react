@@ -23,15 +23,22 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useDispatch } from 'react-redux'
+import { logout } from '@/pages/login/loginSlice'
+import { type AppDispatch } from '@/app/store'
 
 const MfNavbar = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleNavigate = (path?: string) => {
-    if (!path || path.trim() === '') return
+    if (path === undefined || path.trim() === '') return
     else if (path.startsWith('http')) {
       window.open(path, '_blank')
     } else {
+      if (path === 'login') {
+        dispatch(logout())
+      }
       navigate(`/${path.trim()}`)
     }
   }
@@ -150,7 +157,7 @@ const MfNavbar = () => {
             },
             { label: 'Profile', path: 'profile' },
             { label: 'Settings', path: 'settings' },
-            { label: 'Sign Out', path: 'signout' },
+            { label: 'Sign Out', path: 'login' },
           ]}
           onSelect={handleNavigate}
         />

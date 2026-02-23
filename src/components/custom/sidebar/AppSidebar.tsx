@@ -8,6 +8,9 @@
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useDispatch } from 'react-redux'
+import { logout } from '@/pages/login/loginSlice'
+import { type AppDispatch } from '@/app/store'
 import {
   Gauge,
   Send,
@@ -35,6 +38,7 @@ import {
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleHome = () => {
     navigate('/home')
@@ -42,6 +46,11 @@ export const AppSidebar = () => {
 
   const handleClick = (page: string) => {
     navigate(`/${page}`)
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/login')
   }
 
   return (
@@ -67,7 +76,7 @@ export const AppSidebar = () => {
 
           <div className="flex space-x-4 mt-2">
             <Cog className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-primary cursor-pointer" />
-            <LogOut className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-red-500 cursor-pointer" />
+            <LogOut className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-red-500 cursor-pointer" onClick={handleLogout} />
           </div>
         </div>
 
