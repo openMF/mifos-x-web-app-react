@@ -128,13 +128,39 @@ We maintain a linear, meaningful git history.
   - ❌ **Bad History:** `init`, `wip`, `typo`, `fix`, `fix again`
   - ✅ **Good History:** `MXWAR-123: Implement client search functionality`
 
-**How to Squash:**
+**How to Squash (Example for last 2 commits):**
 
-```bash
-git rebase -i HEAD~N  # Replace N with the number of commits
-# Mark the first commit as 'pick' and subsequent commits as 'squash'
-git push --force-with-lease
-```
+1. **Start Interactive Rebase:**
+   ```bash
+   git rebase -i HEAD~2
+   ```
+
+2. **Edit the Rebase File:**
+   An editor will open listing the last two commits. It will look similar to this:
+   ```text
+   pick a1b2c3d Message of the older commit
+   pick e4f5g6h Message of the newer commit
+   ```
+
+3. **Squash the Commits:**
+   Change the second `pick` to `squash` or `s`:
+   ```text
+   pick a1b2c3d Message of the older commit
+   s e4f5g6h Message of the newer commit
+   ```
+
+4. **Save and Close:**
+   Save the file and close the editor.
+
+5. **Finalize Message:**
+   A new editor window will appear allowing you to combine or edit the commit messages for the new, single commit.
+
+6. **Push the Changes:**
+   Push the changes to your remote repository:
+   ```bash
+   git push --force-with-lease
+   ```
+
 
 ---
 

@@ -8,15 +8,13 @@
 //This file has the configuration for base url for fineract using openapi generator
 
 import { Configuration } from '@/fineract-api'
+import { getAllHeaders, getApiBaseUrl } from '@/lib/http-client'
 
 export const getConfiguration = () => {
   return new Configuration({
-    basePath: '/api',
+    basePath: getApiBaseUrl(),
     baseOptions: {
-      headers: {
-        'Fineract-Platform-TenantId': 'default',
-        Authorization: `Basic ${localStorage.getItem('mifosToken')}`,
-      },
+      headers: getAllHeaders(),
       withCredentials: true,
     },
   })

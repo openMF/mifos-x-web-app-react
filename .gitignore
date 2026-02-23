@@ -25,3 +25,6 @@ dist-ssr
 
 #Generate opeapi sdk
 src/fineract-api/
+
+docs/
+.env

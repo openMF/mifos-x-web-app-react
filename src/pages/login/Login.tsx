@@ -11,9 +11,10 @@ import { loginUser } from '@/pages/login/loginSlice'
 import { type RootState, type AppDispatch } from '@/app/store'
 
 import mainImg from '@/assets/images/cover_image_resized.webp'
-import mifosLogo from '@/assets/images/mifos_lg-logo.png'
+import mifosLogoLight from '@/assets/images/mifos_lg-logo.png'
+import mifosLogoDark from '@/assets/images/image-removebg-preview-transparent.png'
 
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Eye, EyeOff } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -56,6 +57,7 @@ const Login = () => {
   const [tenant, setTenant] = useState(() => {
     return localStorage.getItem('mifosTenant') || 'default'
   })
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -173,7 +175,11 @@ const Login = () => {
         </div>
 
         <div className="lg:h-[90%] flex flex-col items-center w-full max-w-md mx-auto">
-          <img src={mifosLogo} alt="mifosLogo" className="h-[130px] m-6" />
+          <img
+            src={theme === 'dark' ? mifosLogoDark : mifosLogoLight}
+            alt="mifosLogo"
+            className="h-[130px] m-6"
+          />
 
           <Select value={tenant} onValueChange={handleTenantChange}>
             <SelectTrigger className="w-full max-w-xs">
@@ -200,14 +206,31 @@ const Login = () => {
               className="dark:bg-zinc-800 dark:text-white mb-4"
             />
 
-            <Input
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              type="password"
-              placeholder="Password"
-              className="dark:bg-zinc-800 dark:text-white mb-4"
-            />
+            <div className="relative w-full mb-4">
+              <Input
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                className="dark:bg-zinc-800 dark:text-white pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={(e) => e.preventDefault()}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4 text-zinc-500" />
+                ) : (
+                  <Eye className="h-4 w-4 text-zinc-500" />
+                )}
+              </Button>
+            </div>
 
             <div className="flex items-center space-x-2 mb-4">
               <Checkbox id="terms" />

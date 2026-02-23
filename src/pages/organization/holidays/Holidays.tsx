@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { format } from 'date-fns'
 
 const holidayApi = new HolidaysApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
@@ -151,13 +152,42 @@ const Holidays = () => {
                       {holiday.name || '—'}
                     </TableCell>
                     <TableCell className="px-6 py-4">
-                      {holiday.fromDate}
+                      {Array.isArray(holiday.fromDate)
+                        ? format(
+                          new Date(
+                            holiday.fromDate[0],
+                            holiday.fromDate[1] - 1,
+                            holiday.fromDate[2]
+                          ),
+                          'dd MMMM yyyy'
+                        )
+                        : '—'}
                     </TableCell>
+
                     <TableCell className="px-6 py-4">
-                      {holiday.toDate}
+                      {Array.isArray(holiday.toDate)
+                        ? format(
+                          new Date(
+                            holiday.toDate[0],
+                            holiday.toDate[1] - 1,
+                            holiday.toDate[2]
+                          ),
+                          'dd MMMM yyyy'
+                        )
+                        : '—'}
                     </TableCell>
+
                     <TableCell className="px-6 py-4">
-                      {holiday.repaymentsRescheduledTo}
+                      {Array.isArray(holiday.repaymentsRescheduledTo)
+                        ? format(
+                          new Date(
+                            holiday.repaymentsRescheduledTo[0],
+                            holiday.repaymentsRescheduledTo[1] - 1,
+                            holiday.repaymentsRescheduledTo[2]
+                          ),
+                          'dd MMMM yyyy'
+                        )
+                        : '—'}
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       {holiday.status?.value || '—'}

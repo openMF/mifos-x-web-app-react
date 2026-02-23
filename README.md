@@ -81,6 +81,33 @@ npm run dev
 
 ---
 
+## 🔧 Environment Variables
+
+The application uses environment variables for configuration. Copy `.env.sample` to `.env` or `.env.local` and adjust the values as needed.
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_FINERACT_API_URL` | Base URL for the Fineract server (protocol + host + port) | `https://localhost:8443` |
+| `VITE_FINERACT_API_PROVIDER` | API path prefix | `/fineract-provider` |
+| `VITE_FINERACT_API_VERSION` | API version path | `/api` |
+| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments | `default` |
+
+### Example Configuration
+
+```bash
+# .env.local
+VITE_FINERACT_API_URL=https://localhost:8443
+VITE_FINERACT_API_PROVIDER=/fineract-provider
+VITE_FINERACT_API_VERSION=/api
+VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER=default
+```
+
+> **Note:** Files ending in `.local` are ignored by git and should be used for machine-specific configuration.
+
+For detailed documentation of all available variables, see [.env.sample](./.env.sample).
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome to improve the project.

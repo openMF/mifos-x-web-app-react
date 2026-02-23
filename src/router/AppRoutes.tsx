@@ -347,9 +347,12 @@ const AppRoutes = () => {
           </Route>
 
           {/* Reports */}
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/reports/:category" element={<Reports />} />
-
+          <Route path='/reports/run/:reportName' element={<Reports />} />
+          <Route path='/reports/:category' element={<Reports />} />
+          <Route path='/reports' element={<Reports />} />
+          
+          
+          
           {/* Admin Routes */}
 
           {/* User */}
