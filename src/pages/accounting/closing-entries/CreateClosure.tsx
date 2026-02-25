@@ -4,6 +4,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +19,7 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   AccountingClosureApi,
   OfficesApi,
-  type GetOfficesResponse,
+  type OfficeData,
 } from '@/fineract-api'
 
 // API clients
@@ -29,7 +30,7 @@ const CreateClosure = () => {
   const navigate = useNavigate()
 
   // Offices list + form state
-  const [offices, setOffices] = useState<GetOfficesResponse[]>([])
+  const [offices, setOffices] = useState<OfficeData[]>([])
 
   const [formData, setFormData] = useState({
     officeId: '',
@@ -42,7 +43,7 @@ const CreateClosure = () => {
     const fetchOffices = async () => {
       try {
         const response = await officesApi.retrieveOffices()
-        setOffices(response.data || [])
+        setOffices(response.data as OfficeData[])
       } catch (err) {
         console.error('Failed to fetch offices', err)
       }
