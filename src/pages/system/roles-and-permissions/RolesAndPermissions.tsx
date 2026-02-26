@@ -32,6 +32,11 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { RolesApi, type GetRolesResponse } from '@/fineract-api'
 
+// Temporary extension until OpenAPI spec is updated
+type RoleWithStatus = GetRolesResponse & {
+  status?: string
+}
+
 // API instance
 const rolesApi = new RolesApi(getConfiguration())
 
@@ -39,7 +44,7 @@ const RolesAndPermissions = () => {
   const navigate = useNavigate()
 
   // State
-  const [roles, setRoles] = useState<GetRolesResponse[]>([])
+  const [roles, setRoles] = useState<RoleWithStatus[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -175,7 +180,7 @@ const RolesAndPermissions = () => {
                   {role.description || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {'missing in OpenApi'}
+                  {role.status || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {role.description && (
