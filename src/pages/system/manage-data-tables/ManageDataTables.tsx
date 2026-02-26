@@ -32,12 +32,17 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { DataTablesApi, type GetDataTablesResponse } from '@/fineract-api'
 
+// Temporary extension until OpenAPI spec is updated
+type DataTableWithSubtype = GetDataTablesResponse & {
+  entitySubType?: string
+}
+
 const dataTablesApi = new DataTablesApi(getConfiguration())
 
 const ManageDataTables = () => {
   const navigate = useNavigate()
 
-  const [dataTables, setDataTables] = useState<GetDataTablesResponse[]>([])
+  const [dataTables, setDataTables] = useState<DataTableWithSubtype[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -170,7 +175,7 @@ const ManageDataTables = () => {
                   {table.applicationTableName || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {'Missing in OpenAPI'}
+                 {table.entitySubType || '—'}
                 </TableCell>
               </TableRow>
             ))}
