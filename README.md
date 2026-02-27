@@ -81,7 +81,67 @@ npm run dev
 
 ---
 
-## 🔧 Environment Variables
+## � Docker Deployment
+
+### Quick Start with Docker Compose
+
+Run the complete stack (web app + Fineract backend + database):
+
+```bash
+# 1. Copy and configure environment file
+cp .env.docker.sample .env.docker
+# Edit .env.docker with your database passwords
+
+# 2. Start all services
+docker compose -f docker-compose-zitadel.yml up -d
+
+# 3. Access the application
+# Web App: http://localhost:10706
+# Fineract API: https://localhost:3000
+```
+
+### Production Deployment
+
+For production with security hardening and resource limits:
+
+```bash
+docker compose -f docker-compose-zitadel.yml -f docker-compose.prod.yml up -d
+```
+
+### Using Pre-built Docker Image
+
+Pull and run the latest image from Docker Hub:
+
+```bash
+docker pull mifos/web-app-react:latest
+
+docker run -d -p 80:80 \
+  -e FINERACT_API_URL=https://your-fineract-server:8443 \
+  -e FINERACT_API_PROVIDER=/fineract-provider \
+  -e FINERACT_PLATFORM_TENANT_IDENTIFIER=default \
+  --name mifos-web-app \
+  mifos/web-app-react:latest
+```
+
+### Build Custom Docker Image
+
+```bash
+docker build -t mifos/web-app-react:custom .
+```
+
+**Docker Features:**
+- Multi-stage build for optimized image size (~50MB)
+- Nginx web server with security headers
+- Runtime environment variable configuration
+- Non-root user for enhanced security
+- Health checks included
+- Multi-platform support (linux/amd64, linux/arm64)
+
+For Docker environment variables, see `.env.docker.sample`.
+
+---
+
+## �🔧 Environment Variables
 
 The application uses environment variables for configuration. Copy `.env.sample` to `.env` or `.env.local` and adjust the values as needed.
 

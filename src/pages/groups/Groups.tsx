@@ -31,6 +31,16 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { GroupsApi, type GetGroupsPageItems } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetGroupsPageItems type.
+ * See: ISSUES.md → Institution Groups → /groups
+ */
+interface ExtendedGroupsPageItem extends GetGroupsPageItems {
+  accountNo?: string
+  externalId?: string
+}
+
 import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -42,7 +52,9 @@ const Groups = () => {
   const navigate = useNavigate()
 
   // State for groups data
-  const [groups, setGroups] = useState<GetGroupsPageItems[]>([])
+  const [groups, setGroups] = useState<ExtendedGroupsPageItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   // Search filter state
   const [searchTerm, setSearchTerm] = useState('')
   // Pagination state
@@ -52,28 +64,33 @@ const Groups = () => {
   const [checked, setChecked] = useState(false)
 
   // Fetch groups on mount
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const response = await groupsApi.retrieveAll24(
-          undefined, // officeId
-          undefined, // staffId
-          undefined, // externalId
-          undefined, // name
-          undefined, // underHierarchy
-          true, // paged
-          0, // offset
-          100, // limit
-          '', // orderBy
-          '' // sortOrder
-        )
-        const items = Array.from(response.data?.pageItems ?? [])
-        setGroups(items)
-      } catch (err) {
-        console.error('Failed to fetch groups', err)
-      }
+  const fetchGroups = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await groupsApi.retrieveAll24(
+        undefined, // officeId
+        undefined, // staffId
+        undefined, // externalId
+        undefined, // name
+        undefined, // underHierarchy
+        true, // paged
+        0, // offset
+        100, // limit
+        '', // orderBy
+        '' // sortOrder
+      )
+      const items = Array.from(response.data?.pageItems ?? []) as ExtendedGroupsPageItem[]
+      setGroups(items)
+    } catch (err) {
+      console.error('Failed to fetch groups', err)
+      setError('Failed to load groups. Please try again.')
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchGroups()
   }, [])
 
@@ -186,62 +203,68 @@ const Groups = () => {
       </div>
 
       {/* Groups Table */}
-      <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Table>
-          {/* Caption */}
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
-          </TableCaption>
+      {loading && <p className="text-center py-8 text-zinc-500">Loading...</p>}
 
-          {/* Table Header */}
-          <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Name</TableHead>
-              <TableHead className="px-6 py-4">Account #</TableHead>
-              <TableHead className="px-6 py-4">External ID</TableHead>
-              <TableHead className="px-6 py-4">Status</TableHead>
-              <TableHead className="px-6 py-4">Office Name</TableHead>
-            </TableRow>
-          </TableHeader>
+      {error && <p className="text-center py-8 text-red-500">{error}</p>}
 
-          {/* Table Body */}
-          <TableBody>
-            {paginated.map(group => (
-              <TableRow
-                key={group.id}
-                onClick={() => navigate(`/groups/${group.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {group.name}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {'Missing in OpenAPI'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {'Missing in OpenAPI'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {group.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="text-green-500 w-4 h-4"
-                    />
-                  )}
-                  {group.status?.id === 100 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="text-yellow-500 w-4 h-4"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">{group.officeName}</TableCell>
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <Table>
+            {/* Caption */}
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+              of {totalPages}
+            </TableCaption>
+
+            {/* Table Header */}
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">Name</TableHead>
+                <TableHead className="px-6 py-4">Account #</TableHead>
+                <TableHead className="px-6 py-4">External ID</TableHead>
+                <TableHead className="px-6 py-4">Status</TableHead>
+                <TableHead className="px-6 py-4">Office Name</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+
+            {/* Table Body */}
+            <TableBody>
+              {paginated.map(group => (
+                <TableRow
+                  key={group.id}
+                  onClick={() => navigate(`/groups/${group.id}/general`)}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {group.name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.accountNo ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.externalId ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.status?.id === 300 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="text-green-500 w-4 h-4"
+                      />
+                    )}
+                    {group.status?.id === 100 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="text-yellow-500 w-4 h-4"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">{group.officeName}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }

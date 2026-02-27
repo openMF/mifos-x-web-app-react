@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright since 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -13,10 +13,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
-  // Build proxy target from environment variables
-  const apiUrl = env.VITE_FINERACT_API_URL || 'https://localhost:8443'
-  const apiProvider = env.VITE_FINERACT_API_PROVIDER || '/fineract-provider/api'
-  const proxyTarget = apiUrl + apiProvider
+  // Fineract backend URL for the Vite dev proxy
+  // Default: Fineract Docker container exposes 8443 on host port 3000
+  const fineractUrl = env.VITE_FINERACT_API_URL || 'https://localhost:3000'
 
   return {
     plugins: [react(), tailwindcss()],
@@ -27,10 +26,11 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        '/api': {
-          target: proxyTarget,
+        // Proxy all /fineract-provider/* requests to the Fineract backend
+        '/fineract-provider': {
+          target: fineractUrl,
           changeOrigin: true,
-          secure: false,
+          secure: false, // allow self-signed certs
         },
       },
     },
