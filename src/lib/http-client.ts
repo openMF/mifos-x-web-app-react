@@ -42,6 +42,14 @@ export const getAllHeaders = (): Record<string, string> => {
 }
 
 export const getApiBaseUrl = (): string => {
+  // Check localStorage for the server URL first (set during login)
+  const mifosServer = localStorage.getItem('mifosServer')
+  if (mifosServer) {
+    const server = mifosServer.trim().replace(/\/+$/, '')
+    return `${server}/fineract-provider/api`
+  }
+
+  // Fall back to environment config
   const url = envConfig.apiUrl;
   const provider = envConfig.apiProvider;
   const version = envConfig.apiVersion;

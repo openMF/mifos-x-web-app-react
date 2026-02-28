@@ -8,6 +8,7 @@
 import { SidebarTrigger } from '@/components/ui/sidebar'
 
 import DropDown from '@/components/custom/navbar/Dropdown'
+import NotificationTray from '@/components/custom/navbar/NotificationTray'
 
 import {
   Landmark,
@@ -15,7 +16,6 @@ import {
   ChartBar,
   Shield,
   Search,
-  Bell,
   Moon,
   User,
   Sun,
@@ -120,12 +120,7 @@ const MfNavbar = () => {
           <Search className="w-5 h-5" />
         </button>
         <LanguageSwitcher className="w-[130px] bg-[#1074b9] border-white text-white hover:bg-[#0e6aa5]" />
-        <Button
-          variant="ghost"
-          className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer"
-        >
-          <Bell className="w-5 h-5" />
-        </Button>
+        <NotificationTray />
         <Button
           variant="ghost"
           className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer"
