@@ -8,12 +8,13 @@
 import fineract from '@/lib/axios'
 
 export const loginFineract = async (username: string, password: string) => {
+  const tenant = localStorage.getItem('mifosTenant') || 'default'
   const response = await fineract.post(
     '/v1/authentication',
     { username, password },
     {
       params: {
-        tenantIdentifier: 'default',
+        tenantIdentifier: tenant,
       },
     }
   )

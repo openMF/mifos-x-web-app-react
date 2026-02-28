@@ -8,6 +8,8 @@
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useAppDispatch } from '@/app/hook'
+import { logout } from '@/pages/login/loginSlice'
 import {
   Gauge,
   Send,
@@ -35,6 +37,7 @@ import {
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleHome = () => {
     navigate('/home')
@@ -42,6 +45,11 @@ export const AppSidebar = () => {
 
   const handleClick = (page: string) => {
     navigate(`/${page}`)
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/login', { replace: true })
   }
 
   return (
@@ -66,8 +74,24 @@ export const AppSidebar = () => {
           </p>
 
           <div className="flex space-x-4 mt-2">
-            <Cog className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-primary cursor-pointer" />
-            <LogOut className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-red-500 cursor-pointer" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-transparent"
+              onClick={() => handleClick('settings')}
+              aria-label="Settings"
+            >
+              <Cog className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
+              onClick={handleLogout}
+              aria-label="Sign out"
+            >
+              <LogOut className="w-5 h-5" />
+            </Button>
           </div>
         </div>
 

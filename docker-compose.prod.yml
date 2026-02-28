@@ -1,0 +1,56 @@
+# =============================================================================
+# Production Overrides for Mifos X Docker Deployment
+# =============================================================================
+#
+# Usage:
+#   docker compose -f docker-compose-zitadel.yml -f docker-compose.prod.yml up -d
+#
+# This file layers on top of docker-compose-zitadel.yml with:
+#   - Pinned image versions (no :develop or :latest)
+#   - Read-only root filesystems
+#   - Tighter resource limits
+#   - HSTS enabled
+#   - No exposed DB/backend ports (only web-app)
+# =============================================================================
+
+services:
+  web-app:
+    image: mifos/web-app-react:${VERSION:-1.0.0}
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:uid=101,gid=101
+      - /var/run:uid=101,gid=101
+      - /tmp/nginx:uid=101,gid=101
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+        reservations:
+          memory: 64M
+
+  fineractmysql:
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
+        reservations:
+          memory: 512M
+
+  fineract-server:
+    # Pin to a specific release for production
+    # image: openmf/fineract:1.9.0
+    restart: unless-stopped
+    ports: []  # Don't expose Fineract directly in production
+    environment:
+      - FINERACT_SECURITY_HSTS_ENABLED=true
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
+        reservations:
+          memory: 1G

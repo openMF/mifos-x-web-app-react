@@ -12,6 +12,17 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { CentersApi, type GetCentersCenterIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetCentersCenterIdResponse type.
+ * See: ISSUES.md → Institution Centers → /centers/{id}/general
+ */
+interface ExtendedCenterResponse extends GetCentersCenterIdResponse {
+  accountNo?: string
+  externalId?: string
+  activationDate?: number[]
+}
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Building2, Menu } from 'lucide-react'
 import AppTabs from '@/components/custom/tabs/AppTabs'
@@ -28,14 +39,14 @@ const CentersView = () => {
   const { id } = useParams()
 
   // State to hold center details
-  const [center, setCenter] = useState<GetCentersCenterIdResponse>()
+  const [center, setCenter] = useState<ExtendedCenterResponse>()
 
   // Fetch center details on mount
   useEffect(() => {
     const fetchCenter = async () => {
       try {
         const res = await centersApi.retrieveOne14(Number(id))
-        setCenter(res.data)
+        setCenter(res.data as ExtendedCenterResponse)
       } catch (err) {
         console.error('Failed to fetch center', err)
       }
@@ -104,15 +115,15 @@ const CentersView = () => {
         // Delete only if active
         ...(isActive
           ? [
-              {
-                label: 'Delete',
-                onClick: () => {
-                  if (confirm('Are you sure you want to delete this center?')) {
-                    handleDelete()
-                  }
-                },
+            {
+              label: 'Delete',
+              onClick: () => {
+                if (confirm('Are you sure you want to delete this center?')) {
+                  handleDelete()
+                }
               },
-            ]
+            },
+          ]
           : []),
 
         // Always allow closing
@@ -158,10 +169,23 @@ const CentersView = () => {
           </div>
 
           {/* Info fields */}
-          <div>Account #: {'Missing in OpenApi'}</div>
+          <div>Account #: {center.accountNo ?? '—'}</div>
           <div>Office: {center.officeName}</div>
-          <div>External Id: {'Missing in OpenApi'}</div>
-          <div>Activation Date : {'Missing in OpenApi'}</div>
+          <div>External Id: {center.externalId ?? '—'}</div>
+          <div>
+            Activation Date :{' '}
+            {Array.isArray(center.activationDate)
+              ? new Date(
+                center.activationDate[0],
+                center.activationDate[1] - 1,
+                center.activationDate[2]
+              ).toLocaleDateString(undefined, {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              })
+              : '—'}
+          </div>
         </div>
 
         <div className="flex flex-col h-full">

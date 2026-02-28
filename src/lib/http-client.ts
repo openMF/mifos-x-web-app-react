@@ -6,6 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import { envConfig } from './env-config'
+
 const TOKEN_KEY = 'mifosToken'
 
 export const getAuthToken = (): string | null => {
@@ -13,16 +15,16 @@ export const getAuthToken = (): string | null => {
 }
 
 export const getAuthHeaders = (): Record<string, string> => {
-  const token = getAuthToken()
-  if (!token) {
-    return {}
+  const headers: Record<string, string> = {
+    'Fineract-Platform-TenantId': envConfig.tenantId,
   }
 
-  return {
-    Authorization: `Basic ${token}`,
-    'Fineract-Platform-TenantId':
-      import.meta.env.VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER,
+  const token = getAuthToken()
+  if (token) {
+    headers.Authorization = `Basic ${token}`
   }
+
+  return headers
 }
 
 export const getDefaultHeaders = (): Record<string, string> => {
@@ -40,10 +42,12 @@ export const getAllHeaders = (): Record<string, string> => {
 }
 
 export const getApiBaseUrl = (): string => {
-  const url = import.meta.env.VITE_FINERACT_API_URL || 'https://localhost:8443';
-  const provider = import.meta.env.VITE_FINERACT_API_PROVIDER || '/fineract-provider';
-  const version = import.meta.env.VITE_FINERACT_API_VERSION || '/api';
+  const url = envConfig.apiUrl;
+  const provider = envConfig.apiProvider;
+  const version = envConfig.apiVersion;
 
-  // Cleans up trailing slashes and combines them safely
-  return `${url.replace(/\/$/, '')}${provider}${version}`;
+  // When apiUrl is empty, build a relative URL so the request goes
+  // through the same origin (nginx reverse-proxy → local Fineract)
+  const base = url ? url.replace(/\/$/, '') : '';
+  return `${base}${provider}${version}`;
 }

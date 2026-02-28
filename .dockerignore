@@ -1,0 +1,25 @@
+node_modules
+dist
+dist-ssr
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+
+# Docker & infrastructure (not needed inside the image)
+docker-compose*.yml
+data/
+certificates/
+fineract-db/
+fineract-data/
+fineract-server/
+fineract-provider/
+reports/
+scripts/
+
+# Docs & config
+*.md
+LICENSE
+.env*
+!.env.sample

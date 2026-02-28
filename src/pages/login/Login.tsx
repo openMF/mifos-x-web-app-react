@@ -51,6 +51,12 @@ const Login = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth)
 
   const [form, setForm] = useState({ username: '', password: '' })
+  const [server, setServer] = useState(() => {
+    return localStorage.getItem('mifosServer') || 'https://localhost:8443'
+  })
+  const [tenant, setTenant] = useState(() => {
+    return localStorage.getItem('mifosTenant') || 'default'
+  })
   const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +65,17 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    localStorage.setItem('mifosServer', server)
+    localStorage.setItem('mifosTenant', tenant)
     dispatch(loginUser(form))
+  }
+
+  const handleServerChange = (value: string) => {
+    setServer(value)
+  }
+
+  const handleTenantChange = (value: string) => {
+    setTenant(value)
   }
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -115,21 +131,21 @@ const Login = () => {
 
       <div className="flex flex-col w-full min-h-screen lg:w-[30%] bg-white dark:bg-zinc-900 px-4 py-6 sm:px-10 justify-between">
         <div className="lg:h-[10%] flex flex-wrap gap-2 text-center justify-center">
-          <Select>
+          <Select value={server} onValueChange={handleServerChange}>
             <SelectTrigger className="w-[160px]">
               <Label className=" text-zinc-900 dark:text-white">Server</Label>
               <SelectValue placeholder="https://localhost:8443" />
             </SelectTrigger>
             <SelectContent className="dark:bg-zinc-800 dark:text-white">
               <SelectGroup>
-                <SelectItem value="sandbox">
+                <SelectItem value="https://sandbox.mifos.community">
                   https://sandbox.mifos.community
                 </SelectItem>
-                <SelectItem value="demo">
+                <SelectItem value="https://demo.mifos.community">
                   https://demo.mifos.community
                 </SelectItem>
-                <SelectItem value="fineract">https://localhost:8443</SelectItem>
-                <SelectItem value="frontend">http://localhost:4200</SelectItem>
+                <SelectItem value="https://localhost:8443">https://localhost:8443</SelectItem>
+                <SelectItem value="http://localhost:4200">http://localhost:4200</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -165,7 +181,7 @@ const Login = () => {
             className="h-[130px] m-6"
           />
 
-          <Select>
+          <Select value={tenant} onValueChange={handleTenantChange}>
             <SelectTrigger className="w-full max-w-xs">
               <Label className="text-zinc-900 dark:text-white">Tenant</Label>
               <SelectValue placeholder="Default" />

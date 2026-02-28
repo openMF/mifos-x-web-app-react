@@ -23,13 +23,19 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useAppDispatch } from '@/app/hook'
+import { logout } from '@/pages/login/loginSlice'
 
 const MfNavbar = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleNavigate = (path?: string) => {
     if (!path || path.trim() === '') return
-    else if (path.startsWith('http')) {
+    else if (path === 'signout') {
+      dispatch(logout())
+      navigate('/login', { replace: true })
+    } else if (path.startsWith('http')) {
       window.open(path, '_blank')
     } else {
       navigate(`/${path.trim()}`)
