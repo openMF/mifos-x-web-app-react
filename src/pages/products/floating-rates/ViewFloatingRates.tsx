@@ -10,13 +10,12 @@ import { Separator } from '@/components/ui/separator'
 import { FloatingRatesApi, type FloatingRateData } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import {  useParams } from 'react-router-dom'
 
 // API instance for floating rates
 const floatingRateApi = new FloatingRatesApi(getConfiguration())
 
 const ViewFloatingRates = () => {
-  const navigate = useNavigate()
   const { id } = useParams() // floating rate ID from route params
   const [rates, setRates] = useState<FloatingRateData>()
 

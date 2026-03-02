@@ -29,7 +29,7 @@ const TransferClients = () => {
     { id: number; name: string }[]
   >([])
 
-  const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([])
+  const [selectedMemberIds,] = useState<string[]>([])
   const [inheritLoanOfficer, setInheritLoanOfficer] = useState(false)
   const [destinationGroupId, setDestinationGroupId] = useState('')
 

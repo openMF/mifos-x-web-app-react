@@ -23,7 +23,7 @@ const CloseCenters = () => {
   const { id } = useParams<{ id: string }>()
 
   const [center, setCenter] = useState<GetCentersCenterIdResponse>()
-  const [staffId, setStaffId] = useState<string>('')
+  const [staffId,] = useState<string>('')
 
   useEffect(() => {
     ;(async () => {

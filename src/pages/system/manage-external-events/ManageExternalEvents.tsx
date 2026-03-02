@@ -83,7 +83,6 @@ const ManageExternalEvents = () => {
   }
 
   const toggle = (idxOnPage: number) => {
-    const idx = start + idxOnPage
     const target = paginated[idxOnPage]
     const originalIndex = externalEvents.findIndex(e => e.type === target.type)
     if (originalIndex === -1) return
@@ -107,7 +106,7 @@ const ManageExternalEvents = () => {
     }
     if (Object.keys(externalEventConfigurations).length === 0) return
 
-    const payload = { changes: { externalEventConfigurations } }
+
 
     try {
       setSubmitting(true)

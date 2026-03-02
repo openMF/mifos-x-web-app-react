@@ -58,8 +58,8 @@ type Row = {
 const SearchJournalEntry = () => {
   const navigate = useNavigate()
 
-  const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null)
-  const [glAccounts, setGlAccounts] = useState<GetGLAccountsResponse[]>([])
+  const [, setOffices] = useState<GetOfficesResponse[] | null>(null)
+  const [, setGlAccounts] = useState<GetGLAccountsResponse[]>([])
 
   const [entries, setEntries] = useState<Row[]>([]) // <-- you were missing this
   const [searchTerm, setSearchTerm] = useState('')

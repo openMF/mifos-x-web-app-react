@@ -34,9 +34,7 @@ const loanProductApi = new LoanProductsApi(getConfiguration())
 const CreateLoanProducts = () => {
   const [loanProducts, setLoanProducts] =
     useState<GetLoanProductsTemplateResponse>()
-  const [formData, setFormData] = useState({
-    fund: '', // only fund for now
-  })
+
 
   useEffect(() => {
     const fetchLoanProductDetails = async () => {

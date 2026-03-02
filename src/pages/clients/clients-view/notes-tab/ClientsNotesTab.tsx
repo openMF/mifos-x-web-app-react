@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 const ClientNotesTab = () => {
-  const [notes, setNotes] = useState<string[]>([]) // mocked notes list
+  const [notes] = useState<string[]>([]) // mocked notes list
   const [newNote, setNewNote] = useState('')
 
   return (

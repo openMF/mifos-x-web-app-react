@@ -30,7 +30,7 @@ const AttachMeeting = () => {
     'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY'
   >('DAILY')
   const [interval, setInterval] = useState<number>(1)
-  const [saving, setSaving] = useState(false)
+  const [saving] = useState(false)
 
   const canSubmit = Boolean(startDate) && !saving
 

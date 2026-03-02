@@ -15,13 +15,12 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 
 import {
-  TellerCashManagementApi,
+ 
   OfficesApi,
   type GetOfficesResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const tellersApi = new TellerCashManagementApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
 
 const CreateTellers = () => {
@@ -55,7 +54,7 @@ const CreateTellers = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
     // const { tellerName, officeId, startDate } = formData;
     // if (!tellerName || !officeId || !startDate) {
     //   alert("Please fill all required fields.");

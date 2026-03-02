@@ -36,7 +36,7 @@ const IndividualCollectionSheet = () => {
 
   const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null)
   const [staff, setStaff] = useState<StaffData[] | null>(null)
-  const [collectionSheet, setCollectionSheet] = useState<any>(null)
+  const [,setCollectionSheet] = useState<any>(null)
 
   const [formData, setFormData] = useState({
     office: '',

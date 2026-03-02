@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/select'
 
 const ClientsFamilyMembersAddTab = ({
-  clientId,
   onCancel,
   onSubmitted,
 }: {

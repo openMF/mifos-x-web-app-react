@@ -54,7 +54,7 @@ const makerCheckerApi = new MakerCheckerOr4EyeFunctionalityApi(
 )
 
 const CheckerInboxContent = () => {
-  const [tasks, setTasks] = useState<AuditData[] | null>(null)
+  const [,setTasks] = useState<AuditData[] | null>(null)
   const [filter, setFilter] = useState('')
   const [selectedRows, setSelectedRows] = useState<number[]>([])
 

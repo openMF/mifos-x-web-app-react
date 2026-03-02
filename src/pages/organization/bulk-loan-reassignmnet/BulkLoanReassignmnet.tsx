@@ -15,19 +15,18 @@ import AppSelect from '@/components/custom/select/AppSelect'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { OfficesApi, StaffApi, type GetOfficesResponse } from '@/fineract-api'
+import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 const officesApi = new OfficesApi(getConfiguration())
-const staffApi = new StaffApi(getConfiguration())
 
 const BulkLoanReassignment = () => {
   const navigate = useNavigate()
 
   const [offices, setOffices] = useState<GetOfficesResponse[]>([])
-  const [fromLoanOfficers, setFromLoanOfficers] = useState<any[]>([])
-  const [toLoanOfficers, setToLoanOfficers] = useState<any[]>([])
-  const [officerTemplate, setOfficerTemplate] = useState<any>()
+  const [fromLoanOfficers] = useState<any[]>([])
+  const [toLoanOfficers] = useState<any[]>([])
+  const [officerTemplate] = useState<any>()
 
   // form state
   const [formData, setFormData] = useState({

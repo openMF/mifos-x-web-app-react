@@ -81,13 +81,7 @@ const EditEmployees = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const formattedDate = formData.joiningDate
-      ? new Date(formData.joiningDate).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric',
-        })
-      : undefined
+
 
     try {
       alert('Employee updated successfully!')
