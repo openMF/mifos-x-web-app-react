@@ -90,12 +90,20 @@ const ClientsAddressTab = () => {
                   onValueChange={v => setForm(f => ({ ...f, addressType: v }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t('address.selectTypePlaceholder')} />
+                    <SelectValue
+                      placeholder={t('address.selectTypePlaceholder')}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="HOME">{t('address.typeHome')}</SelectItem>
-                    <SelectItem value="WORK">{t('address.typeWork')}</SelectItem>
-                    <SelectItem value="OTHER">{t('address.typeOther')}</SelectItem>
+                    <SelectItem value="HOME">
+                      {t('address.typeHome')}
+                    </SelectItem>
+                    <SelectItem value="WORK">
+                      {t('address.typeWork')}
+                    </SelectItem>
+                    <SelectItem value="OTHER">
+                      {t('address.typeOther')}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
