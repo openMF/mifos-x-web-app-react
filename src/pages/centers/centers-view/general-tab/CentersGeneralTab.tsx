@@ -77,15 +77,23 @@ const CentersGeneralTab = () => {
       {/*Summary Section*/}
       <div>
         <h2 className="text-lg font-semibold">{t('general.summaryDetails')}</h2>
-        <div>{t('general.activeClients')} {summary['Active Clients'] ?? 0}</div>
         <div>
-          {t('general.activeGroupBorrowers')} {summary['Active Group Borrowers'] ?? 0}
+          {t('general.activeClients')} {summary['Active Clients'] ?? 0}
         </div>
-        <div>{t('general.activeGroupLoans')} {summary['Active Group Loans'] ?? 0}</div>
         <div>
-          {t('general.activeClientBorrowers')} {summary['Active Client Borrowers'] ?? 0}
+          {t('general.activeGroupBorrowers')}{' '}
+          {summary['Active Group Borrowers'] ?? 0}
         </div>
-        <div>{t('general.activeClientLoans')} {summary['Active Client Loans'] ?? 0}</div>
+        <div>
+          {t('general.activeGroupLoans')} {summary['Active Group Loans'] ?? 0}
+        </div>
+        <div>
+          {t('general.activeClientBorrowers')}{' '}
+          {summary['Active Client Borrowers'] ?? 0}
+        </div>
+        <div>
+          {t('general.activeClientLoans')} {summary['Active Client Loans'] ?? 0}
+        </div>
         <div>
           {t('general.activeOverdueClientLoans')}{' '}
           {summary['Active Overdue Client Loans'] ?? 0}
@@ -102,9 +110,15 @@ const CentersGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-4">{t('general.tableAccountNo')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.tableGroupName')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.tableOfficeName')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.tableAccountNo')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.tableGroupName')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.tableOfficeName')}
+              </TableHead>
               <TableHead className="px-6 py-4 text-right">
                 {t('general.tableSubmittedOn')}
               </TableHead>
@@ -131,7 +145,7 @@ const CentersGeneralTab = () => {
               </TableRow>
             ))}
 
-              {groups.length === 0 && (
+            {groups.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={4}

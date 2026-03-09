@@ -23,9 +23,7 @@ const ClientsIdentitiesTab = () => {
         </h3>
         <Button
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white rounded-md border-0 shadow-none"
-          onClick={() =>
-            navigate(`/clients/${id}/identities/add`)
-          }
+          onClick={() => navigate(`/clients/${id}/identities/add`)}
         >
           <Plus /> {t('identities.addButton')}
         </Button>

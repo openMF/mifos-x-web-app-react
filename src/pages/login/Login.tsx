@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '@/pages/login/loginSlice'
 import { type RootState, type AppDispatch } from '@/app/store'
@@ -61,6 +61,29 @@ const Login = () => {
     return localStorage.getItem('mifosTenant') || 'default'
   })
   const [showPassword, setShowPassword] = useState(false)
+  const passwordRef = useRef<HTMLInputElement>(null)
+
+  const togglePasswordVisibility = () => {
+    const shouldRestoreInputFocus =
+      document.activeElement === passwordRef.current
+    const selectionStart = passwordRef.current?.selectionStart
+    const selectionEnd = passwordRef.current?.selectionEnd
+    setShowPassword(prev => !prev)
+    setTimeout(() => {
+      if (passwordRef.current) {
+        if (shouldRestoreInputFocus) {
+          passwordRef.current.focus()
+        }
+        if (
+          shouldRestoreInputFocus &&
+          typeof selectionStart === 'number' &&
+          typeof selectionEnd === 'number'
+        ) {
+          passwordRef.current.setSelectionRange(selectionStart, selectionEnd)
+        }
+      }
+    }, 0)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -207,9 +230,10 @@ const Login = () => {
             <div className="relative w-full mb-4">
               <Input
                 name="password"
+                ref={passwordRef}
                 value={form.password}
                 onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
+                type={!showPassword ? 'password' : 'text'}
                 placeholder={t('auth:login.password')}
                 className="dark:bg-zinc-800 dark:text-white pr-10"
               />
@@ -218,8 +242,9 @@ const Login = () => {
                 variant="ghost"
                 size="icon"
                 className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={togglePasswordVisibility}
                 onMouseDown={e => e.preventDefault()}
+                aria-pressed={showPassword}
                 aria-label={
                   showPassword
                     ? t('auth:login.hidePassword')

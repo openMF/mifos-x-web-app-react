@@ -63,7 +63,10 @@ const TransferClients = () => {
         const items = list?.data?.pageItems ?? list?.data ?? []
         const opts = items
           .filter((g: any) => g?.id && String(g.id) !== id)
-          .map((g: any) => ({ id: g.id, name: g.name ?? t('transferClients.groupFallback', { id: g.id }) }))
+          .map((g: any) => ({
+            id: g.id,
+            name: g.name ?? t('transferClients.groupFallback', { id: g.id }),
+          }))
         setDestOptions(opts)
       } catch (e) {
         // if list call isn't available, leave empty; you can fallback to manual input below
@@ -81,13 +84,18 @@ const TransferClients = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/groups' },
-          { label: group?.name ?? t('view.groupName'), href: `/groups/${id}/general` },
+          {
+            label: group?.name ?? t('view.groupName'),
+            href: `/groups/${id}/general`,
+          },
           { label: t('transferClients.breadcrumb'), current: true },
         ]}
       />
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-3xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">{t('transferClients.heading')}</h2>
+        <h2 className="text-2xl font-semibold mb-6">
+          {t('transferClients.heading')}
+        </h2>
 
         <div className="space-y-8">
           {/* Members (multi) */}
@@ -113,14 +121,18 @@ const TransferClients = () => {
               selectLabel={t('transferClients.labelDestinationGroup')}
               selectValue={destinationGroupId}
               selectOnChange={(val: string) => setDestinationGroupId(val)}
-              selectPlaceholder={t('transferClients.placeholderDestinationGroup')}
+              selectPlaceholder={t(
+                'transferClients.placeholderDestinationGroup'
+              )}
               selectOptions={destOptions}
               selectClassname="w-full"
             />
           ) : (
             // fallback if list isn't available; remove if you always have options
             <div className="space-y-2">
-              <Label htmlFor="destination-group">{t('transferClients.labelDestinationGroup')}</Label>
+              <Label htmlFor="destination-group">
+                {t('transferClients.labelDestinationGroup')}
+              </Label>
               <Input
                 id="destination-group"
                 placeholder={t('transferClients.placeholderInputGroup')}

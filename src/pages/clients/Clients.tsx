@@ -183,16 +183,27 @@ const Clients = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            {tc('pagination.showing', { current: filtered.length, total, page, pages: totalPages })}
+            {tc('pagination.showing', {
+              current: filtered.length,
+              total,
+              page,
+              pages: totalPages,
+            })}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="text-base">
               <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
-              <TableHead className="px-6 py-4">{t('table.accountNo')}</TableHead>
-              <TableHead className="px-6 py-4">{t('table.externalId')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('table.accountNo')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('table.externalId')}
+              </TableHead>
               <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
-              <TableHead className="px-6 py-4">{t('table.officeName')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('table.officeName')}
+              </TableHead>
             </TableRow>
           </TableHeader>
 
