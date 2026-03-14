@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
-
+import { useTranslation } from 'react-i18next'
 import { CentersApi, type GetCentersCenterIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { Label } from '@/components/ui/label'
@@ -21,6 +21,8 @@ const centersApi = new CentersApi(getConfiguration())
 const CloseCenters = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation('centers')
+  const { t: tc } = useTranslation('common')
 
   const [center, setCenter] = useState<GetCentersCenterIdResponse>()
   const [staffId, setStaffId] = useState<string>('')
@@ -40,25 +42,25 @@ const CloseCenters = () => {
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Centers', href: '/centers' },
-          { label: center?.name ?? 'Center', href: `/centers/${id}` },
-          { label: 'Edit', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/centers' },
+          { label: center?.name ?? t('title'), href: `/centers/${id}` },
+          { label: t('close.breadcrumb'), current: true },
         ]}
       />
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">Close Centers</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('close.heading')}</h2>
 
         <div className="space-y-6">
           <div className="flex flex-col gap-6">
             <div className="w-full space-y-2">
-              <Label htmlFor="center-name">Closed on date*</Label>
+              <Label htmlFor="center-name">{t('close.labelClosedOn')}</Label>
               <Input
                 type="date"
                 id="center-name"
                 defaultValue={center?.name ?? ''}
-                placeholder="Enter name"
+                placeholder=""
                 className="w-full"
               />
             </div>
@@ -85,7 +87,7 @@ const CloseCenters = () => {
               className="cursor-pointer"
               onClick={() => navigate(`/centers/${id}/general`)}
             >
-              Cancel
+              {tc('actions.cancel')}
             </Button>
 
             <Button
@@ -93,7 +95,7 @@ const CloseCenters = () => {
               // no submit logic per your request
               onClick={() => console.log('Selected staff:', staffId)}
             >
-              Confirm
+              {tc('actions.submit')}
             </Button>
           </div>
         </div>

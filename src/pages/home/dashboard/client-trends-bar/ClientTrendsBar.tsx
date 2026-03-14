@@ -32,6 +32,7 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { format, subDays, subWeeks, subMonths } from 'date-fns'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { useTranslation } from 'react-i18next'
 
 const officeApi = new OfficesApi(getConfiguration())
 const runReportApi = new RunReportsApi(getConfiguration())
@@ -59,14 +60,15 @@ const ClientTrendsLine = () => {
   const [officeData, setOfficeData] = useState<GetOfficesResponse[]>()
   const [timescale, setTimescale] = useState('Day')
   const [chartData, setChartData] = useState<any[]>([])
+  const { t } = useTranslation('common')
 
   const chartConfig: ChartConfig = {
     onboarded: {
-      label: 'New Clients',
+      label: t('dashboard.newClients'),
       color: 'var(--chart-3)',
     },
     loaned: {
-      label: 'Loans Disbursed',
+      label: t('dashboard.loansDisbursed'),
       color: 'var(--chart-1)',
     },
   }
@@ -154,15 +156,17 @@ const ClientTrendsLine = () => {
     //main chart card
     <Card className="h-full">
       <CardHeader className="space-y-2">
-        <CardTitle className="text-xl">Client Trends</CardTitle>
-        <CardDescription>Track client onboarding</CardDescription>
+        <CardTitle className="text-xl">{t('dashboard.clientTrends')}</CardTitle>
+        <CardDescription>
+          {t('dashboard.trackClientOnboarding')}
+        </CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mt-2">
           <div className="flex flex-col gap-1 flex-1">
             <AppSelect
-              selectLabel="Office"
+              selectLabel={t('fields.office')}
               selectValue={officeId.toString()}
               selectOnChange={value => setOfficeId(Number(value))}
-              selectPlaceholder="Select office"
+              selectPlaceholder={t('ui.selectOffice')}
               selectOptions={(officeData || [])
                 .filter(option => option.id !== undefined)
                 .map(option => ({
@@ -173,16 +177,22 @@ const ClientTrendsLine = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <Label htmlFor="timescale">Timescale</Label>
+            <Label htmlFor="timescale">{t('dashboard.timescale')}</Label>
             <ToggleGroup
               type="single"
               value={timescale}
               onValueChange={v => v && setTimescale(v)}
               className="mt-1"
             >
-              <ToggleGroupItem value="Day">Day</ToggleGroupItem>
-              <ToggleGroupItem value="Week">Week</ToggleGroupItem>
-              <ToggleGroupItem value="Month">Month</ToggleGroupItem>
+              <ToggleGroupItem value="Day">
+                {t('dashboard.day')}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="Week">
+                {t('dashboard.week')}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="Month">
+                {t('dashboard.month')}
+              </ToggleGroupItem>
             </ToggleGroup>
           </div>
         </div>

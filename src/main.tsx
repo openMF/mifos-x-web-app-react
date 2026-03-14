@@ -5,9 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { StrictMode } from 'react'
+import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import './lib/i18n'
 import App from './App.tsx'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
@@ -30,7 +31,15 @@ i18n.use(initReactI18next).init({
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <StrictMode>
-      <App />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            Loading...
+          </div>
+        }
+      >
+        <App />
+      </Suspense>
     </StrictMode>
   </Provider>
 )

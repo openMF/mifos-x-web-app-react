@@ -16,12 +16,16 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
+import { useTranslation } from 'react-i18next'
+import { formatDate } from '@/lib/date-utils'
 
 const clientsApi = new ClientApi(getConfiguration())
 
 const ClientsView = () => {
   const { id } = useParams()
   const [client, setClient] = useState<GetClientsClientIdResponse>()
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -41,10 +45,10 @@ const ClientsView = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Clients', href: '/clients' },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/clients' },
           { label: String(client?.displayName), href: `/clients/${id}` },
-          { label: 'General', current: true },
+          { label: t('view.tabs.general'), current: true },
         ]}
       />
 
@@ -57,49 +61,41 @@ const ClientsView = () => {
               icon={faCircle}
               className={`${client?.status?.id === 300 ? 'text-green-400' : 'text-yellow-400'} w-3 h-3`}
             />
-            <span>Client Name : {client?.displayName ?? '—'}</span>
+            <span>{t('clientName')} {client?.displayName ?? '—'}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-x-16 gap-y-2 mt-4">
             <div>
-              <div className="font-semibold">Office</div>
+              <div className="font-semibold">{t('view.office')}</div>
               <div>{client?.officeName ?? '—'}</div>
             </div>
             <div>
-              <div className="font-semibold">Member Of</div>
-              <div>{'Missing in OpenAPI'}</div>
+              <div className="font-semibold">{t('view.memberOf')}</div>
+              <div>{t('view.missingInOpenAPI')}</div>
             </div>
             <div>
-              <div className="font-semibold">Client</div>
+              <div className="font-semibold">{t('client')}</div>
               <div>{client?.accountNo ?? '—'}</div>
             </div>
             <div>
-              <div className="font-semibold">Mobile Number</div>
-              <div>{'Missing in OpenAPI'}</div>
+              <div className="font-semibold">{t('view.mobileNumber')}</div>
+              <div>{t('view.missingInOpenAPI')}</div>
             </div>
             <div>
-              <div className="font-semibold">External Id</div>
+              <div className="font-semibold">{t('view.externalId')}</div>
               <div>{client?.externalId ?? '—'}</div>
             </div>
             <div>
-              <div className="font-semibold">Email</div>
+              <div className="font-semibold">{t('view.email')}</div>
               <div>{client?.emailAddress ?? '—'}</div>
             </div>
             <div>
-              <div className="font-semibold">Activation Date</div>
-              <div>
-                {Array.isArray(client?.activationDate)
-                  ? new Date(
-                      client.activationDate[0],
-                      (client.activationDate[1] || 1) - 1,
-                      client.activationDate[2] || 1
-                    ).toLocaleDateString()
-                  : (client?.activationDate ?? '—')}
-              </div>
+              <div className="font-semibold">{t('view.activationDate')}</div>
+              <div>{formatDate(client?.activationDate as number[] | undefined)}</div>
             </div>
             <div>
-              <div className="font-semibold">Staff</div>
-              <div>{'Missing in OpenAPI'}</div>
+              <div className="font-semibold">{t('view.staff')}</div>
+              <div>{t('view.missingInOpenAPI')}</div>
             </div>
           </div>
         </div>
@@ -113,86 +109,86 @@ const ClientsView = () => {
                 </span>
               }
               options={[
-                { label: 'Edit', path: `clients/${client?.id}/edit` },
+                { label: t('view.menu.edit'), path: `clients/${client?.id}/edit` },
                 {
-                  label: 'Applications',
+                  label: t('view.menu.applications'),
                   children: [
                     {
-                      label: 'New Loan Account',
+                      label: t('view.menu.newLoanAccount'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'New Savings Account',
+                      label: t('view.menu.newSavingsAccount'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'New Share Account',
+                      label: t('view.menu.newShareAccount'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'New Recurring Deposit Account',
+                      label: t('view.menu.newRecurringDepositAccount'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'New Fixed Deposit Account',
+                      label: t('view.menu.newFixedDepositAccount'),
                       path: 'signature',
                       disabled: true,
                     },
                   ],
                 },
                 {
-                  label: 'Actions',
+                  label: t('view.menu.actions'),
                   children: [
-                    { label: 'Close', path: 'signature', disabled: true },
+                    { label: t('view.menu.close'), path: 'signature', disabled: true },
                     {
-                      label: 'Transfer Clients',
+                      label: t('view.menu.transferClients'),
                       path: 'signature',
                       disabled: true,
                     },
                   ],
                 },
-                { label: 'Unassign Staff', path: `clients/${client?.id}/edit` },
+                { label: t('view.menu.unassignStaff'), path: `clients/${client?.id}/edit` },
                 {
-                  label: 'More',
+                  label: t('view.menu.more'),
                   children: [
-                    { label: 'Add Charge', path: 'signature', disabled: true },
+                    { label: t('view.menu.addCharge'), path: 'signature', disabled: true },
                     {
-                      label: 'Create Collateral',
+                      label: t('view.menu.createCollateral'),
                       path: 'signature',
                       disabled: true,
                     },
-                    { label: 'Survey', path: 'signature', disabled: true },
+                    { label: t('view.menu.survey'), path: 'signature', disabled: true },
                     {
-                      label: 'Upload Default Savings',
-                      path: 'signature',
-                      disabled: true,
-                    },
-                    {
-                      label: 'Upload Signature',
+                      label: t('view.menu.uploadDefaultSavings'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'Delete Signature',
+                      label: t('view.menu.uploadSignature'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'Client Screen Reports',
+                      label: t('view.menu.deleteSignature'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'Create Standing Instructions',
+                      label: t('view.menu.clientScreenReports'),
                       path: 'signature',
                       disabled: true,
                     },
                     {
-                      label: 'View Standing Instructions',
+                      label: t('view.menu.createStandingInstructions'),
+                      path: 'signature',
+                      disabled: true,
+                    },
+                    {
+                      label: t('view.menu.viewStandingInstructions'),
                       path: 'signature',
                       disabled: true,
                     },
@@ -203,7 +199,7 @@ const ClientsView = () => {
           </div>
 
           <div className="mt-30 bg-[#0662a3] px-4 py-2 rounded-md text-sm font-medium text-white">
-            <div>Status: {client?.status?.code ?? '—'}</div>
+            <div>{t('view.status')} {client?.status?.code ?? '—'}</div>
           </div>
         </div>
       </div>
@@ -211,15 +207,15 @@ const ClientsView = () => {
       {/* Tabs */}
       <AppTabs
         tabs={[
-          { label: 'General', href: `clients/${client?.id}/general` },
-          { label: 'Address', href: `clients/${client?.id}/address` },
+          { label: t('view.tabs.general'), href: `clients/${client?.id}/general` },
+          { label: t('view.tabs.address'), href: `clients/${client?.id}/address` },
           {
-            label: 'Family Members',
+            label: t('view.tabs.familyMembers'),
             href: `clients/${client?.id}/family-members`,
           },
-          { label: 'Identities', href: `clients/${client?.id}/identities` },
-          { label: 'Documents', href: `clients/${client?.id}/documents` },
-          { label: 'Notes', href: `clients/${client?.id}/notes` },
+          { label: t('view.tabs.identities'), href: `clients/${client?.id}/identities` },
+          { label: t('view.tabs.documents'), href: `clients/${client?.id}/documents` },
+          { label: t('view.tabs.notes'), href: `clients/${client?.id}/notes` },
         ]}
       />
 

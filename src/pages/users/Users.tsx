@@ -150,6 +150,9 @@ const Users = () => {
           <TableHeader>
             <TableRow className="text-base">
               <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
+                Login Name
+              </TableHead>
+              <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
                 First Name
               </TableHead>
               <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
@@ -160,6 +163,9 @@ const Users = () => {
               </TableHead>
               <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
                 Office
+              </TableHead>
+              <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
+                Is Self Service
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -172,6 +178,9 @@ const Users = () => {
                 onClick={() => navigate(`/appusers/${user.id}`)} // navigate to user details
               >
                 <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
+                  {user.username}
+                </TableCell>
+                <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
                   {user.firstname}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
@@ -182,6 +191,9 @@ const Users = () => {
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
                   {user.officeName}
+                </TableCell>
+                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                  {'Missing in OpenApi'}
                 </TableCell>
               </TableRow>
             ))}

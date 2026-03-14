@@ -30,6 +30,17 @@ import {
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { GroupsApi, type GetGroupsPageItems } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
+
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetGroupsPageItems type.
+ * See: ISSUES.md → Institution Groups → /groups
+ */
+interface ExtendedGroupsPageItem extends GetGroupsPageItems {
+  accountNo?: string
+  externalId?: string
+}
 
 import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,9 +51,13 @@ const groupsApi = new GroupsApi(getConfiguration())
 
 const Groups = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   // State for groups data
-  const [groups, setGroups] = useState<GetGroupsPageItems[]>([])
+  const [groups, setGroups] = useState<ExtendedGroupsPageItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   // Search filter state
   const [searchTerm, setSearchTerm] = useState('')
   // Pagination state
@@ -52,28 +67,35 @@ const Groups = () => {
   const [checked, setChecked] = useState(false)
 
   // Fetch groups on mount
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const response = await groupsApi.retrieveAll24(
-          undefined, // officeId
-          undefined, // staffId
-          undefined, // externalId
-          undefined, // name
-          undefined, // underHierarchy
-          true, // paged
-          0, // offset
-          100, // limit
-          '', // orderBy
-          '' // sortOrder
-        )
-        const items = Array.from(response.data?.pageItems ?? [])
-        setGroups(items)
-      } catch (err) {
-        console.error('Failed to fetch groups', err)
-      }
+  const fetchGroups = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await groupsApi.retrieveAll24(
+        undefined, // officeId
+        undefined, // staffId
+        undefined, // externalId
+        undefined, // name
+        undefined, // underHierarchy
+        true, // paged
+        0, // offset
+        100, // limit
+        '', // orderBy
+        '' // sortOrder
+      )
+      const items = Array.from(
+        response.data?.pageItems ?? []
+      ) as ExtendedGroupsPageItem[]
+      setGroups(items)
+    } catch (err) {
+      console.error('Failed to fetch groups', err)
+      setError('Failed to load groups. Please try again.')
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchGroups()
   }, [])
 
@@ -109,8 +131,8 @@ const Groups = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
         ]}
       />
 
@@ -120,7 +142,7 @@ const Groups = () => {
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
           onClick={() => navigate('/groups/create')}
         >
-          <Plus className="mr-2" /> Add Group
+          <Plus className="mr-2" /> {t('addGroup')}
         </Button>
       </div>
 
@@ -128,7 +150,7 @@ const Groups = () => {
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         {/* Search input */}
         <Input
-          placeholder="Search by Name or External ID..."
+          placeholder={t('searchPlaceholder')}
           value={searchTerm}
           onChange={e => {
             setSearchTerm(e.target.value)
@@ -144,7 +166,7 @@ const Groups = () => {
             onValueChange={handleItemsPerPageChange}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={tc('pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -160,7 +182,7 @@ const Groups = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
-            Prev
+            {tc('actions.prev')}
           </Button>
           <Button
             variant="outline"
@@ -168,7 +190,7 @@ const Groups = () => {
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {tc('actions.next')}
           </Button>
         </div>
       </div>
@@ -181,67 +203,91 @@ const Groups = () => {
           onCheckedChange={val => setChecked(!!val)}
         />
         <label htmlFor="pending-groups" className="text-base dark:text-white">
-          Show Pending Groups
+          {t('showPending')}
         </label>
       </div>
 
       {/* Groups Table */}
-      <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Table>
-          {/* Caption */}
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
-          </TableCaption>
+      {loading && (
+        <p className="text-center py-8 text-zinc-500">
+          {tc('actions.loading')}
+        </p>
+      )}
 
-          {/* Table Header */}
-          <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Name</TableHead>
-              <TableHead className="px-6 py-4">Account #</TableHead>
-              <TableHead className="px-6 py-4">External ID</TableHead>
-              <TableHead className="px-6 py-4">Status</TableHead>
-              <TableHead className="px-6 py-4">Office Name</TableHead>
-            </TableRow>
-          </TableHeader>
+      {error && (
+        <p className="text-center py-8 text-red-500">{t('failedToLoad')}</p>
+      )}
 
-          {/* Table Body */}
-          <TableBody>
-            {paginated.map(group => (
-              <TableRow
-                key={group.id}
-                onClick={() => navigate(`/groups/${group.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {group.name}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {'Missing in OpenAPI'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {'Missing in OpenAPI'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {group.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="text-green-500 w-4 h-4"
-                    />
-                  )}
-                  {group.status?.id === 100 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="text-yellow-500 w-4 h-4"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">{group.officeName}</TableCell>
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <Table>
+            {/* Caption */}
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              {tc('pagination.showing', {
+                current: paginated.length,
+                total: filtered.length,
+                page,
+                pages: totalPages,
+              })}
+            </TableCaption>
+
+            {/* Table Header */}
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.accountNo')}
+                </TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.externalId')}
+                </TableHead>
+                <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.officeName')}
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+
+            {/* Table Body */}
+            <TableBody>
+              {paginated.map(group => (
+                <TableRow
+                  key={group.id}
+                  onClick={() => navigate(`/groups/${group.id}/general`)}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {group.name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.accountNo ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.externalId ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.status?.id === 300 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="text-green-500 w-4 h-4"
+                      />
+                    )}
+                    {group.status?.id === 100 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="text-yellow-500 w-4 h-4"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {group.officeName}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }

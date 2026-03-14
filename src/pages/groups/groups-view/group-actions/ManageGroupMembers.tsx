@@ -17,6 +17,7 @@ import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { Plus, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
 
@@ -31,6 +32,8 @@ type LiteClient = {
 const ManageGroupMembers = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   const [group, setGroup] = useState<GetGroupsGroupIdResponse>()
   const [clientMembers, setClientMembers] = useState<LiteClient[]>([])
@@ -113,7 +116,7 @@ const ManageGroupMembers = () => {
 
   const removeClient = async (client: LiteClient) => {
     if (!id) return
-    if (!confirm(`Remove ${client.displayName} from this group?`)) return
+    if (!confirm(t('manageMembers.confirmRemove', { name: client.displayName }))) return
     setBusy(true)
     try {
       setClientMembers(prev => prev.filter(c => c.id !== client.id))
@@ -128,28 +131,28 @@ const ManageGroupMembers = () => {
     <div className="min-h-screen px-6 py-8">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: group?.name ?? 'Group', href: `/groups/${id}/general` },
-          { label: 'Manage Members', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
+          { label: group?.name ?? t('view.groupName'), href: `/groups/${id}/general` },
+          { label: t('manageMembers.breadcrumb'), current: true },
         ]}
       />
 
-      <h1 className="text-2xl font-semibold mt-2 mb-6">Manage Members</h1>
+      <h1 className="text-2xl font-semibold mt-2 mb-6">{t('manageMembers.heading')}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* LEFT: Add Clients card */}
         <div className="bg-white dark:bg-zinc-800 rounded-lg shadow border border-zinc-200 dark:border-zinc-700">
           <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-700">
-            <h3 className="text-lg font-medium">Add Clients</h3>
+            <h3 className="text-lg font-medium">{t('manageMembers.addClients')}</h3>
           </div>
 
           <div className="p-5 space-y-4">
             {/* Autocomplete input */}
             <div className="relative">
-              <Label className="mb-1 block">Client</Label>
+              <Label className="mb-1 block">{t('manageMembers.labelClient')}</Label>
               <Input
-                placeholder="Type to search clients…"
+                placeholder={t('manageMembers.placeholderSearch')}
                 value={selectedClient ? selectedClient.displayName : search}
                 onChange={e => {
                   setSelectedClient(null)
@@ -181,13 +184,13 @@ const ManageGroupMembers = () => {
             {/* Selected client details table */}
             <div className="border rounded">
               <div className="flex items-center justify-between px-4 py-3 border-b">
-                <div className="font-medium">Client Details</div>
+                <div className="font-medium">{t('manageMembers.clientDetails')}</div>
                 <Button
                   size="icon"
                   className="bg-[#1074b9] hover:bg-[#0662a3]"
                   onClick={addClient}
                   disabled={!selectedClient || busy}
-                  title="Add client to group"
+                  title={t('manageMembers.titleAdd')}
                 >
                   <Plus className="w-4 h-4 text-white" />
                 </Button>
@@ -195,17 +198,17 @@ const ManageGroupMembers = () => {
 
               <div className="divide-y">
                 <div className="flex px-4 py-3">
-                  <div className="w-40 text-zinc-600">Name</div>
+                  <div className="w-40 text-zinc-600">{t('manageMembers.tableName')}</div>
                   <div className="flex-1">
                     {selectedClient?.displayName ?? '—'}
                   </div>
                 </div>
                 <div className="flex px-4 py-3">
-                  <div className="w-40 text-zinc-600">Id</div>
+                  <div className="w-40 text-zinc-600">{t('manageMembers.tableId')}</div>
                   <div className="flex-1">{selectedClient?.id ?? '—'}</div>
                 </div>
                 <div className="flex px-4 py-3">
-                  <div className="w-40 text-zinc-600">Office</div>
+                  <div className="w-40 text-zinc-600">{t('manageMembers.tableOffice')}</div>
                   <div className="flex-1">
                     {selectedClient?.officeName ?? '—'}
                   </div>
@@ -218,12 +221,12 @@ const ManageGroupMembers = () => {
         {/* RIGHT: Client Members list */}
         <div className="bg-white dark:bg-zinc-800 rounded-lg shadow border border-zinc-200 dark:border-zinc-700">
           <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-700">
-            <h3 className="text-lg font-medium">Client Members</h3>
+            <h3 className="text-lg font-medium">{t('manageMembers.clientMembers')}</h3>
           </div>
 
           <div className="p-2">
             {clientMembers.length === 0 ? (
-              <div className="p-6 text-zinc-500">No client members yet.</div>
+              <div className="p-6 text-zinc-500">{t('manageMembers.noMembers')}</div>
             ) : (
               <ul className="divide-y">
                 {clientMembers.map(c => (
@@ -235,7 +238,7 @@ const ManageGroupMembers = () => {
                       variant="destructive"
                       onClick={() => removeClient(c)}
                       disabled={busy}
-                      title="Remove client from group"
+                      title={t('manageMembers.titleRemove')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -250,7 +253,7 @@ const ManageGroupMembers = () => {
       {/* Footer actions */}
       <div className="mt-8">
         <Button variant="outline" onClick={() => navigate(-1)}>
-          Back to Group
+          {t('manageMembers.backToGroup')}
         </Button>
       </div>
     </div>

@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
 
 const groupApi = new GroupsApi(getConfiguration())
 
@@ -20,6 +21,7 @@ interface GroupNavigationProps {
 const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
   const [groupDetails, setGroupDetails] =
     useState<GetGroupsGroupIdResponse | null>(null)
+  const { t, i18n } = useTranslation('common')
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -35,7 +37,9 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
   }, [groupId])
 
   if (!groupDetails) {
-    return <p className="text-gray-500">Loading group details...</p>
+    return (
+      <p className="text-gray-500">{t('navigation.loadingGroupDetails')}</p>
+    )
   }
 
   const extra = groupDetails as any
@@ -63,33 +67,37 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
             />
           </h2>
           <p className="text-gray-500">
-            Account No:{' '}
-            <span className="font-medium">{extra.accountNo || 'N/A'}</span> |
-            External ID:{' '}
-            <span className="font-medium">{extra.externalId || 'N/A'}</span>
+            {t('fields.accountNo')}:{' '}
+            <span className="font-medium">
+              {extra.accountNo || t('actions.na')}
+            </span>{' '}
+            |{t('fields.externalId')}:{' '}
+            <span className="font-medium">
+              {extra.externalId || t('actions.na')}
+            </span>
           </p>
         </div>
       </div>
 
       {/* Details */}
       <div className="grid grid-cols-2 gap-y-3">
-        <div className="font-medium">Activation Date:</div>
-        <div>{formatDate(extra.activationDate)}</div>
+        <div className="font-medium">{t('navigation.activationDate')}:</div>
+        <div>{formatDate(extra.activationDate, i18n.language)}</div>
 
-        <div className="font-medium">Associated Officer:</div>
-        <div>{extra.staffName || 'N/A'}</div>
+        <div className="font-medium">{t('navigation.associatedOfficer')}:</div>
+        <div>{extra.staffName || t('actions.na')}</div>
 
-        <div className="font-medium">Associated Center:</div>
-        <div>{extra.centerName || 'N/A'}</div>
+        <div className="font-medium">{t('navigation.associatedCenter')}:</div>
+        <div>{extra.centerName || t('actions.na')}</div>
 
-        <div className="font-medium">Next Meeting Date:</div>
-        <div>{formatDate(extra.nextMeetingDate)}</div>
+        <div className="font-medium">{t('navigation.nextMeetingDate')}:</div>
+        <div>{formatDate(extra.nextMeetingDate, i18n.language)}</div>
 
-        <div className="font-medium">Meeting Frequency:</div>
-        <div>{extra.meetingFrequency || 'N/A'}</div>
+        <div className="font-medium">{t('navigation.meetingFrequency')}:</div>
+        <div>{extra.meetingFrequency || t('actions.na')}</div>
 
-        <div className="font-medium">Number of Clients:</div>
-        <div>{extra.clientMembers?.length ?? 'N/A'}</div>
+        <div className="font-medium">{t('navigation.numberOfClients')}:</div>
+        <div>{extra.clientMembers?.length ?? t('actions.na')}</div>
       </div>
     </div>
   )
@@ -97,10 +105,10 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
 
 export default GroupNavigation
 
-function formatDate(date?: string) {
+function formatDate(date?: string, locale: string = 'en-GB') {
   if (!date) return 'N/A'
   try {
-    return new Intl.DateTimeFormat('en-GB', {
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: 'long',
       year: 'numeric',

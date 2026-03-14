@@ -16,6 +16,7 @@ import ClientNavigation from './client-navigation/ClientNavigation'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { useTranslation } from 'react-i18next'
 
 interface OfficeDetails {
   id: number
@@ -43,6 +44,8 @@ const Navigation = () => {
 
   const [clients, setClients] = useState<BasicItem[]>([])
   const [selectedClientId, setSelectedClientId] = useState<string>('')
+
+  const { t } = useTranslation('common')
 
   // Offices
   useEffect(() => {
@@ -159,8 +162,8 @@ const Navigation = () => {
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Navigation', current: true },
+          { label: t('nav.home'), href: '/home' },
+          { label: t('nav.navigation'), current: true },
         ]}
       />
 
@@ -170,7 +173,7 @@ const Navigation = () => {
           {/* Office */}
           <div className="w-full space-y-2">
             <AppSelect
-              selectLabel="Office"
+              selectLabel={t('fields.office')}
               selectValue={selectedOfficeId}
               selectOnChange={value => {
                 setSelectedOfficeId(value)
@@ -179,7 +182,7 @@ const Navigation = () => {
                 setSelectedGroupId('')
                 setSelectedClientId('')
               }}
-              selectPlaceholder="Select Office"
+              selectPlaceholder={t('ui.selectOffice')}
               selectOptions={(offices ?? [])
                 .filter(o => o?.id !== undefined)
                 .map(o => ({ id: o.id!, name: o.name! }))}
@@ -193,8 +196,8 @@ const Navigation = () => {
               <AppSelect
                 selectLabel={
                   officers.length
-                    ? 'Associated Officers'
-                    : 'No Associated Officers'
+                    ? t('navigation.associatedOfficers')
+                    : t('navigation.noAssociatedOfficers')
                 }
                 selectValue={selectedOfficerId}
                 selectOnChange={value => {
@@ -204,7 +207,9 @@ const Navigation = () => {
                   setSelectedClientId('')
                 }}
                 selectPlaceholder={
-                  officers.length ? 'Select Officer' : 'No Associated Officers'
+                  officers.length
+                    ? t('navigation.selectOfficer')
+                    : t('navigation.noAssociatedOfficers')
                 }
                 selectOptions={officers.map(s => ({ id: s.id, name: s.name }))}
                 selectClassname="w-full space-y-2"
@@ -217,7 +222,9 @@ const Navigation = () => {
             <div className="w-full space-y-2">
               <AppSelect
                 selectLabel={
-                  centers.length ? 'Select Center' : 'No Associated Centers'
+                  centers.length
+                    ? t('navigation.selectCenter')
+                    : t('navigation.noAssociatedCenters')
                 }
                 selectValue={selectedCenterId}
                 selectOnChange={value => {
@@ -226,7 +233,9 @@ const Navigation = () => {
                   setSelectedClientId('')
                 }}
                 selectPlaceholder={
-                  centers.length ? 'Select Center' : 'No Associated Centers'
+                  centers.length
+                    ? t('navigation.selectCenter')
+                    : t('navigation.noAssociatedCenters')
                 }
                 selectOptions={centers.map(c => ({ id: c.id, name: c.name }))}
                 selectClassname="w-full space-y-2"
@@ -239,7 +248,9 @@ const Navigation = () => {
             <div className="w-full space-y-2">
               <AppSelect
                 selectLabel={
-                  groups.length ? 'Select Group' : 'No Associated Groups'
+                  groups.length
+                    ? t('navigation.selectGroup')
+                    : t('navigation.noAssociatedGroups')
                 }
                 selectValue={selectedGroupId}
                 selectOnChange={value => {
@@ -247,7 +258,9 @@ const Navigation = () => {
                   setSelectedClientId('')
                 }}
                 selectPlaceholder={
-                  groups.length ? 'Select Group' : 'No Associated Groups'
+                  groups.length
+                    ? t('navigation.selectGroup')
+                    : t('navigation.noAssociatedGroups')
                 }
                 selectOptions={groups.map(g => ({ id: g.id, name: g.name }))}
                 selectClassname="w-full space-y-2"
@@ -260,12 +273,16 @@ const Navigation = () => {
             <div className="w-full space-y-2">
               <AppSelect
                 selectLabel={
-                  clients.length ? 'Select Client' : 'No Associated Clients'
+                  clients.length
+                    ? t('navigation.selectClient')
+                    : t('navigation.noAssociatedClients')
                 }
                 selectValue={selectedClientId}
                 selectOnChange={value => setSelectedClientId(value)}
                 selectPlaceholder={
-                  clients.length ? 'Select Client' : 'No Associated Clients'
+                  clients.length
+                    ? t('navigation.selectClient')
+                    : t('navigation.noAssociatedClients')
                 }
                 selectOptions={clients.map(c => ({ id: c.id, name: c.name }))}
                 selectClassname="w-full space-y-2"
@@ -287,7 +304,7 @@ const Navigation = () => {
           ) : selectedOfficeId ? (
             <OfficeNavigation officeId={parseInt(selectedOfficeId)} />
           ) : (
-            <p>Please select an Office</p>
+            <p>{t('navigation.pleaseSelectOffice')}</p>
           )}
         </div>
       </div>

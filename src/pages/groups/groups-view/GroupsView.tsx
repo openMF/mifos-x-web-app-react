@@ -10,11 +10,13 @@ import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { formatDate } from '@/lib/date-utils'
 import { faCircle, faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
 
@@ -48,6 +50,8 @@ const statusColor = (v?: string) =>
 
 const GroupsView = () => {
   const { id } = useParams()
+  const { t, i18n } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
   const [group, setGroup] = useState<GetGroupsGroupIdResponse>()
 
   useEffect(() => {
@@ -84,22 +88,22 @@ const GroupsView = () => {
 
     if (!isActive && hasPerm('UPDATE_GROUP')) {
       opts.push({
-        label: 'Activate',
+        label: t('view.menu.activate'),
         path: `groups/${group?.id}/actions/activate`,
       })
     }
     if (hasPerm('UPDATE_GROUP')) {
-      opts.push({ label: 'Edit', path: `groups/${group?.id}/edit` })
+      opts.push({ label: t('view.menu.edit'), path: `groups/${group?.id}/edit` })
     }
     if (hasPerm('ASSOCIATECLIENTS_GROUP')) {
       opts.push({
-        label: 'Transfer Clients',
+        label: t('view.menu.transferClients'),
         path: `groups/${group?.id}/actions/transfer-clients`,
       })
     }
     if (hasPerm('TRANSFERCLIENTS_GROUP')) {
       opts.push({
-        label: 'Manage Members',
+        label: t('view.menu.manageMembers'),
         path: `groups/${group?.id}/actions/manage-members`,
       })
     }
@@ -108,79 +112,79 @@ const GroupsView = () => {
       const apps: any[] = []
       if (hasMembers && hasPerm('CREATE_LOAN')) {
         apps.push({
-          label: 'Bulk JLG Loan Application',
+          label: t('view.menu.bulkJlgLoanApplication'),
           path: `groups/${group?.id}/loans-accounts/jlg-bulk-create`,
         })
       }
       if (hasPerm('CREATE_SAVINGSACCOUNT')) {
         apps.push({
-          label: 'Group Saving Application',
+          label: t('view.menu.groupSavingApplication'),
           path: `groups/${group?.id}/savings-accounts/create`,
         })
       }
       if (hasPerm('CREATE_LOAN')) {
         apps.push({
-          label: 'Group Loan Application',
+          label: t('view.menu.groupLoanApplication'),
           path: `groups/${group?.id}/loans-accounts/create`,
         })
       }
       if (hasMembers && hasPerm('CREATE_LOAN')) {
         apps.push({
-          label: 'GLIM Application',
+          label: t('view.menu.glimApplication'),
           path: `groups/${group?.id}/loans-accounts/glim-account/create`,
         })
       }
       if (hasMembers && hasPerm('CREATE_GSIMACCOUNT')) {
         apps.push({
-          label: 'GSIM Application',
+          label: t('view.menu.gsimApplication'),
           path: `groups/${group?.id}/savings-accounts/gsim-account/create`,
         })
       }
       if (apps.length) {
-        opts.push({ label: 'Applications', children: apps })
+        opts.push({ label: t('view.menu.applications'), children: apps })
       }
     }
 
     const more: any[] = []
     if (hasCalendar && hasPerm('SAVEORUPDATEATTENDANCE_MEETING')) {
       more.push({
-        label: 'Attendance',
+        label: t('view.menu.attendance'),
         path: `groups/${group?.id}/actions/attendance`,
       })
     }
     if (!hasStaff && hasPerm('ASSIGNSTAFF_GROUP')) {
       more.push({
-        label: 'Assign Staff',
+        label: t('view.menu.assignStaff'),
         path: `groups/${group?.id}/actions/assign-staff`,
       })
     }
     if (hasStaff && hasPerm('UNASSIGNSTAFF_GROUP')) {
       more.push({
-        label: 'Unassign Staff',
+        label: t('view.menu.unassignStaff'),
         path: `groups/${group?.id}/actions/unassign-staff`,
       })
     }
     if (!inCenter && !hasCalendar && isActive && hasPerm('CREATE_MEETING')) {
       more.push({
-        label: 'Attach Meeting',
+        label: t('view.menu.attachMeeting'),
         path: `groups/${group?.id}/actions/attach-meeting`,
       })
     }
     if (hasPerm('CLOSE_GROUP')) {
-      more.push({ label: 'Close', path: `groups/${group?.id}/actions/close` })
+      more.push({ label: t('view.menu.close'), path: `groups/${group?.id}/actions/close` })
     }
     if (hasPerm('DELETE_GROUP')) {
       more.push({
-        label: 'Delete',
+        label: t('view.menu.delete'),
         onClick: () => {
-          if (confirm('Are you sure you want to delete this group?')) {
+          if (confirm(t('view.confirmDelete'))) {
             // wire your delete call here
           }
         },
       })
     }
     if (more.length) {
-      opts.push({ label: 'More', children: more })
+      opts.push({ label: t('view.menu.more'), children: more })
     }
 
     return opts
@@ -193,13 +197,13 @@ const GroupsView = () => {
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
           {
             label: `${group?.name ?? ''}`,
             href: `/groups/${group?.id}/general`,
           },
-          { label: 'General', current: true },
+          { label: t('view.tabs.general'), current: true },
         ]}
       />
 
@@ -215,17 +219,17 @@ const GroupsView = () => {
             {/* STATUS DOT: dynamic color + tooltip */}
             <FontAwesomeIcon
               icon={faCircle}
-              title={statusVal || 'Unknown'}
+              title={statusVal || tc('status.unknown')}
               className={`w-3 h-3 ${statusColor(statusVal)}`}
             />
-            <span>Group Name</span>
+            <span>{t('view.groupName')}</span>
           </div>
-          <div>Group: {'Missing in OpenApi'}</div>
-          <div>Center Name: {group?.name}</div>
-          <div>Staff: {(group as any)?.staffName ?? 'Missing in OpenApi'}</div>
+          <div>{t('view.missingInOpenAPI')}</div>
+          <div>{t('view.centerName')} {group?.name}</div>
+          <div>{t('view.staff')} {(group as any)?.staffName ?? t('view.missingInOpenAPI')}</div>
           <div>
-            Activation Date :{' '}
-            {(group as any)?.timeline?.activationDate ?? 'Missing in OpenApi'}
+            {t('view.activationDate')}{' '}
+            {formatDate((group as any)?.timeline?.activationDate, i18n.language) || t('view.missingInOpenAPI')}
           </div>
         </div>
 
@@ -242,17 +246,17 @@ const GroupsView = () => {
           </div>
 
           <div className="mt-30 bg-[#0662a3] px-4 py-2 rounded-md text-sm font-medium text-white">
-            <div>Next Meeting on: </div>
-            <div>Meeting Frequency: </div>
+            <div>{t('view.nextMeetingOn')} </div>
+            <div>{t('view.meetingFrequency')} </div>
           </div>
         </div>
       </div>
 
       <AppTabs
         tabs={[
-          { label: 'General', href: `groups/${group?.id}/general` },
-          { label: 'Notes', href: `groups/${group?.id}/notes` },
-          { label: 'Committee', href: `groups/${group?.id}/committee` },
+          { label: t('view.tabs.general'), href: `groups/${group?.id}/general` },
+          { label: t('view.tabs.notes'), href: `groups/${group?.id}/notes` },
+          { label: t('view.tabs.committee'), href: `groups/${group?.id}/committee` },
         ]}
       />
 

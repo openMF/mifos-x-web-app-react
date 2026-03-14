@@ -33,6 +33,8 @@ import {
   type GetClientsChargesPageItems,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { formatDate } from '@/lib/date-utils'
+import { useTranslation } from 'react-i18next'
 
 const chargeApi = new ClientChargesApi(getConfiguration())
 const ViewCharge = () => {
@@ -43,6 +45,8 @@ const ViewCharge = () => {
   }>()
 
   const [charge, setCharge] = useState<GetClientsChargesPageItems>()
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
 
   useEffect(() => {
     if (!clientId || !chargeId) return
@@ -65,10 +69,10 @@ const ViewCharge = () => {
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Clients', href: '/clients' },
-          { label: 'Client', href: `/clients/${clientId}/general` },
-          { label: charge?.name || 'Charge', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/clients' },
+          { label: t('client'), href: `/clients/${clientId}/general` },
+          { label: charge?.name || t('charge.breadcrumbLabel'), current: true },
         ]}
       />
 
@@ -79,15 +83,15 @@ const ViewCharge = () => {
           className="bg-[#1074b9] text-white"
         >
           <FontAwesomeIcon icon={faDollarSign} className="mr-2" />
-          Pay
+          {t('charge.buttonPay')}
         </Button>
         <Button onClick={() => {}} className="bg-[#1074b9] text-white">
           <FontAwesomeIcon icon={faFlag} className="mr-2" />
-          Waive Charge
+          {t('charge.buttonWaive')}
         </Button>
         <Button onClick={() => {}} className="bg-[#1074b9] text-white">
           <FontAwesomeIcon icon={faTrash} className="mr-2" />
-          Delete
+          {t('charge.buttonDelete')}
         </Button>
       </div>
 
@@ -109,35 +113,35 @@ const ViewCharge = () => {
           <table className="w-full text-sm">
             <tbody>
               <tr>
-                <td className="w-1/3 p-3">Currency</td>
+                <td className="w-1/3 p-3">{t('charge.labelCurrency')}</td>
                 <td className="p-3">{charge?.currency?.name}</td>
               </tr>
               <tr>
-                <td className="p-3">Charge Time Type</td>
+                <td className="p-3">{t('charge.labelChargeTimeType')}</td>
                 <td className="p-3">{charge?.chargeTimeType?.code}</td>
               </tr>
               <tr>
-                <td className="p-3">Charge Calculation Type</td>
+                <td className="p-3">{t('charge.labelChargeCalculationType')}</td>
                 <td className="p-3">{charge?.chargeCalculationType?.code}</td>
               </tr>
               <tr>
-                <td className="p-3">Due as of</td>
-                <td className="p-3">{charge?.dueDate}</td>
+                <td className="p-3">{t('charge.labelDueAsOf')}</td>
+                <td className="p-3">{formatDate(charge?.dueDate as number[] | undefined)}</td>
               </tr>
               <tr>
-                <td className="p-3">Due</td>
+                <td className="p-3">{t('charge.labelDue')}</td>
                 <td className="p-3">{charge?.amount}</td>
               </tr>
               <tr>
-                <td className="p-3">Paid</td>
+                <td className="p-3">{t('charge.labelPaid')}</td>
                 <td className="p-3">{charge?.amountPaid}</td>
               </tr>
               <tr>
-                <td className="p-3">Waived</td>
+                <td className="p-3">{t('charge.labelWaived')}</td>
                 <td className="p-3">{charge?.amountWaived}</td>
               </tr>
               <tr>
-                <td className="p-3">Outstanding</td>
+                <td className="p-3">{t('charge.labelOutstanding')}</td>
                 <td className="p-3">{charge?.amountOutstanding}</td>
               </tr>
             </tbody>

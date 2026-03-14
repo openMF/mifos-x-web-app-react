@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import AppSelect from '@/components/custom/select/AppSelect'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useTranslation } from 'react-i18next'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
 import {
@@ -31,6 +32,8 @@ const staffApi = new StaffApi(getConfiguration())
 
 const CreateCenters = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('centers')
+  const { t: tc } = useTranslation('common')
 
   // Dropdown data
   const [offices, setOffices] = useState<GetOfficesResponse[]>([])
@@ -79,7 +82,7 @@ const CreateCenters = () => {
       navigate('/centers')
     } catch (err) {
       console.error('Failed to create center', err)
-      alert('Failed to create center')
+      alert(t('create.errorCreate'))
     }
   }
 
@@ -88,20 +91,20 @@ const CreateCenters = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Centers', href: '/centers' },
-          { label: 'Create', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/centers' },
+          { label: t('create.heading'), current: true },
         ]}
       />
 
       {/* Form card */}
       <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">Create Center</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('create.heading')}</h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Center Name */}
           <div className="space-y-2">
-            <Label>Name*</Label>
+            <Label>{t('create.labelName')}</Label>
             <Input
               value={formData.name}
               onChange={e =>
@@ -113,9 +116,9 @@ const CreateCenters = () => {
 
           {/* Office select */}
           <AppSelect
-            selectLabel="Office*"
+            selectLabel={t('create.labelOffice')}
             selectValue={formData.officeId}
-            selectPlaceholder="Select Office"
+            selectPlaceholder={t('create.selectOffice')}
             selectClassname="w-full space-y-2"
             selectOnChange={value =>
               setFormData(prev => ({ ...prev, officeId: value }))
@@ -128,9 +131,9 @@ const CreateCenters = () => {
 
           {/* Staff select */}
           <AppSelect
-            selectLabel="Staff"
+            selectLabel={t('create.labelStaff')}
             selectValue={formData.staffId}
-            selectPlaceholder="Select Staff"
+            selectPlaceholder={t('create.selectStaff')}
             selectClassname="w-full space-y-2"
             selectOnChange={value =>
               setFormData(prev => ({ ...prev, staffId: value }))
@@ -149,13 +152,13 @@ const CreateCenters = () => {
                 setFormData(prev => ({ ...prev, active: Boolean(val) }))
               }
             />
-            <Label className="text-md">Active</Label>
+            <Label className="text-md">{t('create.labelActive')}</Label>
           </div>
 
           {/* Activation date */}
           {formData.active && (
             <div className="space-y-2">
-              <Label>Activation Date</Label>
+              <Label>{t('create.labelActivationDate')}</Label>
               <Input
                 type="date"
                 value={formData.activationDate}
@@ -171,7 +174,7 @@ const CreateCenters = () => {
 
           {/* External ID */}
           <div className="space-y-2">
-            <Label>External Id</Label>
+            <Label>{t('create.labelExternalId')}</Label>
             <Input
               value={formData.externalId}
               onChange={e =>
@@ -182,7 +185,7 @@ const CreateCenters = () => {
 
           {/* Submitted On date */}
           <div className="space-y-2">
-            <Label>Submitted On*</Label>
+            <Label>{t('create.labelSubmittedOn')}</Label>
             <Input
               type="date"
               value={formData.submittedOnDate}
@@ -203,13 +206,13 @@ const CreateCenters = () => {
               variant="outline"
               onClick={() => navigate('/centers')}
             >
-              Cancel
+              {tc('actions.cancel')}
             </Button>
             <Button
               type="submit"
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
-              Submit
+              {tc('actions.submit')}
             </Button>
           </div>
         </form>
