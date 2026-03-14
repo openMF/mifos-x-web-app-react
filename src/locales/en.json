@@ -1,0 +1,30 @@
+{
+  "label": {
+    "anchor": {
+      "home": "Home",
+      "system": "System",
+      "managereports": "Manage Reports"
+    },
+    "button": {
+      "edit": "Edit",
+      "back": "Back"
+    },
+    "heading": {
+      "report": "Report",
+      "reporttype": "Report Type",
+      "reportcategory": "Report Category",
+      "corereport": "Core Report",
+      "userreport": "User Report"
+    },
+    "boolean": {
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
+  "labels": {
+    "text": {
+      "BIRT": "Mifos Reporting Plugin for Eclipse Birt",
+      "Pentaho": "Mifos Reporting Plugin for Pentaho"
+    }
+  }
+}

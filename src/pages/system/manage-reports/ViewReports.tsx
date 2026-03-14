@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
@@ -20,8 +21,11 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 const reportsApi = new ReportsApi(getConfiguration())
 
 const ViewReports = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams()
+  
+  // Using the correct type for Fineract API
   const [report, setReport] = useState<GetReportsResponse>()
 
   // Fetch report details
@@ -47,60 +51,74 @@ const ViewReports = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'System' },
-          { label: 'Manage Reports', href: '/system/reports' },
-          { label: `${report?.id}`, current: true },
+          { label: t('label.anchor.home'), href: '/home' },
+          { label: t('label.anchor.system') },
+          { label: t('label.anchor.managereports'), href: '/system/reports' },
+          { label: `${report?.id ?? ''}`, current: true },
         ]}
       />
 
-      <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">
+      <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto border border-zinc-200 dark:border-zinc-700">
         {/* Edit button */}
         <div className="flex justify-end mb-6">
           <Button
-            className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
+            className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer px-6"
             onClick={() => navigate(`/system/reports/${report?.id}/edit`)}
           >
-            <FontAwesomeIcon icon={faPenToSquare} /> Edit
+            <FontAwesomeIcon icon={faPenToSquare} className="mr-2" /> {t('label.button.edit')}
           </Button>
         </div>
 
         {/* Report title */}
-        <h2 className="text-xl font-semibold mb-6 text-zinc-800 dark:text-zinc-100">
-          Report : {report?.reportName}
+        <h2 className="text-2xl font-bold mb-8 text-zinc-800 dark:text-zinc-100 border-b pb-4">
+          {t('label.heading.report')}: <span className="text-[#1074b9]">{report?.reportName}</span>
         </h2>
 
-        {/* Report details */}
-        <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
-          <div className="font-medium">Report Type:</div>
-          <div className="text-zinc-600 dark:text-zinc-400">
-            {report?.reportType}
+        {/* Report details - THE ALIGNMENT FIX */}
+        <div className="space-y-6 text-sm text-zinc-700 dark:text-zinc-200">
+          <div className="flex items-start border-b border-zinc-50 dark:border-zinc-700/50 pb-3">
+            <div className="font-semibold w-48 shrink-0 text-zinc-500 dark:text-zinc-400">
+              {t('label.heading.reporttype')}:
+            </div>
+            <div className="font-medium">
+              {report?.reportType ? t(`labels.text.${report.reportType}`) : ''}
+            </div>
           </div>
 
-          <div className="font-medium">Report Category:</div>
-          <div className="text-zinc-600 dark:text-zinc-400">
-            {report?.reportCategory}
+          <div className="flex items-start border-b border-zinc-50 dark:border-zinc-700/50 pb-3">
+            <div className="font-semibold w-48 shrink-0 text-zinc-500 dark:text-zinc-400">
+              {t('label.heading.reportcategory')}:
+            </div>
+            <div className="font-medium">{report?.reportCategory}</div>
           </div>
 
-          <div className="font-medium">Core Report:</div>
-          <div className="text-zinc-600 dark:text-zinc-400">
-            {report?.coreReport ? 'Yes' : 'No'}
+          <div className="flex items-start border-b border-zinc-50 dark:border-zinc-700/50 pb-3">
+            <div className="font-semibold w-48 shrink-0 text-zinc-500 dark:text-zinc-400">
+              {t('label.heading.corereport')}:
+            </div>
+            <div className={`px-2 py-0.5 rounded text-xs font-bold ${report?.coreReport ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+              {report?.coreReport ? t('label.boolean.yes') : t('label.boolean.no')}
+            </div>
           </div>
 
-          <div className="font-medium">User Report:</div>
-          <div className="text-zinc-600 dark:text-zinc-400">
-            {report?.useReport ? 'Yes' : 'No'}
+          <div className="flex items-start border-b border-zinc-50 dark:border-zinc-700/50 pb-3">
+            <div className="font-semibold w-48 shrink-0 text-zinc-500 dark:text-zinc-400">
+              {t('label.heading.userreport')}:
+            </div>
+            <div className={`px-2 py-0.5 rounded text-xs font-bold ${report?.useReport ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+              {report?.useReport ? t('label.boolean.yes') : t('label.boolean.no')}
+            </div>
           </div>
         </div>
 
         {/* Back button */}
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-10">
           <Button
             variant="outline"
-            className="w-28 cursor-pointer"
+            className="w-32 cursor-pointer border-[#1074b9] text-[#1074b9] hover:bg-blue-50"
             onClick={() => navigate('/system/reports')}
           >
-            Back
+            {t('label.button.back')}
           </Button>
         </div>
       </div>
