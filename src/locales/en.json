@@ -21,7 +21,7 @@
       "no": "No"
     }
   },
-  "labels": {
+  "label": {
     "text": {
       "BIRT": "Mifos Reporting Plugin for Eclipse Birt",
       "Pentaho": "Mifos Reporting Plugin for Pentaho"
