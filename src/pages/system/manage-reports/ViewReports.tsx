@@ -22,7 +22,7 @@ import { getConfiguration } from "@/lib/fineract-openapi";
 const reportsApi = new ReportsApi(getConfiguration());
 
 const ViewReports = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("products");
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -60,6 +60,7 @@ const ViewReports = () => {
         <div className="flex justify-end mb-6">
           <Button
             className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer px-6"
+            disabled={!report?.id}
             onClick={() => navigate(`/system/reports/${report?.id}/edit`)}
           >
             <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />{" "}
