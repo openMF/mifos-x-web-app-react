@@ -34,7 +34,8 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
     fetchClient()
   }, [clientId])
 
-  if (!client) return <p className="text-gray-500">{t('navigation.loadingClientInfo')}</p>
+  if (!client)
+    return <p className="text-gray-500">{t('navigation.loadingClientInfo')}</p>
 
   return (
     <div className="space-y-6 text-sm text-gray-700 dark:text-gray-300">
@@ -55,8 +56,9 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
             />
           </h2>
           <p className="text-gray-500">
-            {t('fields.accountNo')}: <span className="font-medium">{client.accountNo}</span>{' '}
-            | {t('fields.externalId')}:{' '}
+            {t('fields.accountNo')}:{' '}
+            <span className="font-medium">{client.accountNo}</span> |{' '}
+            {t('fields.externalId')}:{' '}
             <span className="font-medium">
               {typeof client.externalId || t('actions.na')}
             </span>
@@ -94,16 +96,24 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
 
         {/* Tabs for Accounts & Groups */}
         <div className="pt-8">
-          <h3 className="text-lg font-semibold mb-3">{t('navigation.loanAccounts')}</h3>
+          <h3 className="text-lg font-semibold mb-3">
+            {t('navigation.loanAccounts')}
+          </h3>
           <p className="text-gray-500">[Loan account table goes here]</p>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">{t('navigation.savingsAccounts')}</h3>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            {t('navigation.savingsAccounts')}
+          </h3>
           <p className="text-gray-500">[Savings account table goes here]</p>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">{t('navigation.shareAccounts')}</h3>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            {t('navigation.shareAccounts')}
+          </h3>
           <p className="text-gray-500">[Share account table goes here]</p>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">{t('navigation.groupMemberships')}</h3>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            {t('navigation.groupMemberships')}
+          </h3>
           <p className="text-gray-500">[Group membership info goes here]</p>
         </div>
       </div>

@@ -27,7 +27,10 @@ const Settings = () => {
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
-        items={[{ label: t('nav.home'), href: '/home' }, { label: t('nav.settings') }]}
+        items={[
+          { label: t('nav.home'), href: '/home' },
+          { label: t('nav.settings') },
+        ]}
       />
 
       <div className="bg-white p-8 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
@@ -41,7 +44,9 @@ const Settings = () => {
             <AccordionTrigger>{t('ui.mainConfiguration')}</AccordionTrigger>
             <AccordionContent className="flex flex-col gap-6">
               <div>
-                <label className="text-sm font-medium">{t('ui.defaultLanguage')}</label>
+                <label className="text-sm font-medium">
+                  {t('ui.defaultLanguage')}
+                </label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder={t('ui.selectLanguage')} />
@@ -99,7 +104,9 @@ const Settings = () => {
                 <input type="file" />
               </div>
               <div>
-                <p className="font-semibold">{t('ui.logoWithOrganizationName')}</p>
+                <p className="font-semibold">
+                  {t('ui.logoWithOrganizationName')}
+                </p>
                 <input type="file" />
               </div>
             </AccordionContent>
@@ -114,7 +121,9 @@ const Settings = () => {
                 {/* Replace with custom <ThemePicker /> component if needed */}
               </div>
               <div>
-                <label className="text-sm font-medium">{t('ui.defaultFont')}</label>
+                <label className="text-sm font-medium">
+                  {t('ui.defaultFont')}
+                </label>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder={t('ui.chooseFont')} />
@@ -132,15 +141,21 @@ const Settings = () => {
             <AccordionTrigger>{t('ui.contactInformation')}</AccordionTrigger>
             <AccordionContent className="flex flex-col gap-6">
               <div>
-                <label className="text-sm font-medium">{t('fields.website')}</label>
+                <label className="text-sm font-medium">
+                  {t('fields.website')}
+                </label>
                 <Input type="url" />
               </div>
               <div>
-                <label className="text-sm font-medium">{t('fields.email')}</label>
+                <label className="text-sm font-medium">
+                  {t('fields.email')}
+                </label>
                 <Input type="email" />
               </div>
               <div>
-                <label className="text-sm font-medium">{t('fields.contactNo')}</label>
+                <label className="text-sm font-medium">
+                  {t('fields.contactNo')}
+                </label>
                 <Input type="tel" />
               </div>
             </AccordionContent>

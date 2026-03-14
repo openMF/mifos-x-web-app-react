@@ -27,6 +27,13 @@
     "yes": "Yes",
     "no": "No"
   },
+  "accessibility": {
+    "openNavigationMenu": "Open navigation menu",
+    "notifications": "Notifications",
+    "switchToDarkTheme": "Switch to dark theme",
+    "switchToLightTheme": "Switch to light theme",
+    "userMenu": "User menu"
+  },
   "countries": {
     "AD": "Andorra",
     "AE": "United Arab Emirates",
@@ -350,6 +357,7 @@
     "pageNotExist": "Oops.. Looks like this page doesn't exist.",
     "pending": "Pending",
     "rejected": "Rejected",
+    "unknown": "Unknown",
     "withdrawn": "Withdrawn"
   },
   "tooltips": {

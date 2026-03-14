@@ -27,6 +27,13 @@
     "yes": "Oui",
     "no": "Non"
   },
+  "accessibility": {
+    "openNavigationMenu": "Ouvrir le menu de navigation",
+    "notifications": "Notifications",
+    "switchToDarkTheme": "Passer au thème sombre",
+    "switchToLightTheme": "Passer au thème clair",
+    "userMenu": "Menu utilisateur"
+  },
   "countries": {
     "AD": "Andorre",
     "AE": "Émirats arabes unis",
@@ -229,7 +236,7 @@
     "generic": "Une erreur est survenue.",
     "invalidDate": "Date invalide.",
     "invalidEmail": "Adresse e-mail invalide.",
-    "maxLength": "Longueur maximale dépassée.",
+    "maxLength": "Maximum {{max}} caractères",
     "network": "Erreur réseau. Veuillez réessayer.",
     "networkError": "Erreur réseau. Veuillez réessayer.",
     "notFound": "Ressource introuvable.",
@@ -332,7 +339,7 @@
     "itemsPerPage": "Éléments par page",
     "rowsPerPage": "Lignes par page",
     "showing": "Affichage {{current}} sur {{total}} entrées (page {{page}} sur {{pages}})",
-    "showingReports": "Affichage des rapports"
+    "showingReports": "Affichage de {{current}} sur {{total}} rapports • Page {{page}} sur {{pages}}"
   },
   "status": {
     "active": "Actif",
@@ -350,6 +357,7 @@
     "pageNotExist": "Oups... Il semble que cette page n'existe pas.",
     "pending": "En attente",
     "rejected": "Rejeté",
+    "unknown": "Inconnu",
     "withdrawn": "Retiré"
   },
   "tooltips": {

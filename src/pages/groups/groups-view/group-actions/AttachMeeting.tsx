@@ -19,10 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useTranslation } from 'react-i18next'
 
 const AttachMeeting = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   const [startDate, setStartDate] = useState<string>('')
   const [repeats, setRepeats] = useState(false)
@@ -38,18 +41,18 @@ const AttachMeeting = () => {
     <div className="min-h-screen px-6 py-8">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Attach Meeting', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
+          { label: t('attachMeeting.breadcrumb'), current: true },
         ]}
       />
 
-      <h1 className="text-2xl font-semibold mt-2 mb-6">Attach Meeting</h1>
+      <h1 className="text-2xl font-semibold mt-2 mb-6">{t('attachMeeting.heading')}</h1>
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-6 max-w-xl">
         {/* Meeting Start Date */}
         <div className="mb-6">
-          <Label htmlFor="meeting-start">Meeting Start Date*</Label>
+          <Label htmlFor="meeting-start">{t('attachMeeting.labelStartDate')}</Label>
           <Input
             id="meeting-start"
             type="date"
@@ -62,7 +65,7 @@ const AttachMeeting = () => {
         {/* Repeats? */}
         <div className="mb-4 flex items-center gap-3">
           <Label htmlFor="repeats" className="cursor-pointer">
-            Repeats?
+            {t('attachMeeting.labelRepeats')}
           </Label>
           <input
             id="repeats"
@@ -77,7 +80,7 @@ const AttachMeeting = () => {
         {repeats && (
           <div className="space-y-5 mb-6">
             <div>
-              <Label>Repetition Frequency</Label>
+              <Label>{t('attachMeeting.labelFrequency')}</Label>
               <Select
                 value={frequency}
                 onValueChange={val =>
@@ -85,25 +88,25 @@ const AttachMeeting = () => {
                 }
               >
                 <SelectTrigger className="mt-2">
-                  <SelectValue placeholder="Select frequency" />
+                  <SelectValue placeholder={t('attachMeeting.placeholderFrequency')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DAILY">DAILY</SelectItem>
-                  <SelectItem value="WEEKLY">WEEKLY</SelectItem>
-                  <SelectItem value="MONTHLY">MONTHLY</SelectItem>
-                  <SelectItem value="YEARLY">YEARLY</SelectItem>
+                  <SelectItem value="DAILY">{t('attachMeeting.daily')}</SelectItem>
+                  <SelectItem value="WEEKLY">{t('attachMeeting.weekly')}</SelectItem>
+                  <SelectItem value="MONTHLY">{t('attachMeeting.monthly')}</SelectItem>
+                  <SelectItem value="YEARLY">{t('attachMeeting.yearly')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <Label>Repetition Interval</Label>
+              <Label>{t('attachMeeting.labelInterval')}</Label>
               <Select
                 value={String(interval)}
                 onValueChange={v => setInterval(parseInt(v, 10))}
               >
                 <SelectTrigger className="mt-2">
-                  <SelectValue placeholder="Select interval" />
+                  <SelectValue placeholder={t('attachMeeting.placeholderInterval')} />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 12 }).map((_, i) => {
@@ -128,7 +131,7 @@ const AttachMeeting = () => {
             onClick={() => navigate(`/groups/${id}/general`)}
             disabled={saving}
           >
-            Cancel
+            {tc('actions.cancel')}
           </Button>
           <Button
             type="button"
@@ -136,7 +139,7 @@ const AttachMeeting = () => {
             // onClick={onSubmit}
             disabled={!canSubmit}
           >
-            {saving ? 'Submitting...' : 'Submit'}
+            {saving ? tc('actions.saving') : tc('actions.submit')}
           </Button>
         </div>
       </div>

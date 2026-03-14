@@ -20,6 +20,8 @@ import { Button } from '@/components/ui/button'
 
 import { ClientApi, ClientChargesApi, RunReportsApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { formatDate } from '@/lib/date-utils'
+import { useTranslation } from 'react-i18next'
 
 import {
   DollarSign,
@@ -38,6 +40,7 @@ const reportsApi = new RunReportsApi(getConfiguration())
 
 // small dot for status
 const StatusDot = ({ acc }: { acc: any }) => {
+  const { t: tc } = useTranslation('common')
   const s = acc?.status || {}
   const cls = s.active
     ? 'bg-green-500'
@@ -49,7 +52,7 @@ const StatusDot = ({ acc }: { acc: any }) => {
   return (
     <span
       className={`inline-block w-3 h-3 rounded-full ${cls}`}
-      title={s?.value || 'Status'}
+      title={s?.value || tc('status.unknown')}
     />
   )
 }
@@ -58,6 +61,7 @@ const ClientsGeneralTab = () => {
   const navigate = useNavigate()
   const { id: clientId } = useParams()
   const { id } = useParams()
+  const { t } = useTranslation('clients')
 
   // data
   const [loanAccounts, setLoanAccounts] = useState<any[]>([])
@@ -156,17 +160,17 @@ const ClientsGeneralTab = () => {
     <div className="space-y-6 text-black dark:text-white">
       {/* Performance History  */}
       <div>
-        <h3 className="text-lg font-semibold">Performance History</h3>
+        <h3 className="text-lg font-semibold">{t('general.performanceHistory')}</h3>
         <div className="mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md p-4 text-sm">
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              No. Of Loan Cycles : {perf.loanCycle || '—'} <br />
-              No. of Active Loans : {perf.activeLoans || '—'} <br />
-              Last Loan Amount : {perf.lastLoanAmount || '—'} <br />
+              {t('general.noOfLoanCycles')} {perf.loanCycle || '—'} <br />
+              {t('general.noOfActiveLoans')} {perf.activeLoans || '—'} <br />
+              {t('general.lastLoanAmount')} {perf.lastLoanAmount || '—'} <br />
             </div>
             <div>
-              No. of Active Savings : {perf.activeSavings || '—'} <br />
-              Total Savings : {perf.totalSavings || '—'} <br />
+              {t('general.noOfActiveSavings')} {perf.activeSavings || '—'} <br />
+              {t('general.totalSavings')} {perf.totalSavings || '—'} <br />
             </div>
           </div>
         </div>
@@ -174,14 +178,14 @@ const ClientsGeneralTab = () => {
 
       {/* Upcoming Charges */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Upcoming Charges</h2>
+        <h2 className="text-lg font-semibold">{t('general.upcomingCharges')}</h2>
         <Button
           variant="secondary"
           size="sm"
           onClick={() => navigate('charges/overview')}
           disabled
         >
-          Charges Overview
+          {t('general.chargesOverview')}
         </Button>
       </div>
 
@@ -189,13 +193,13 @@ const ClientsGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-4">Name</TableHead>
-              <TableHead className="px-6 py-4">Due as of</TableHead>
-              <TableHead className="px-6 py-4">Due</TableHead>
-              <TableHead className="px-6 py-4">Paid</TableHead>
-              <TableHead className="px-6 py-4">Waived</TableHead>
-              <TableHead className="px-6 py-4">Outstanding</TableHead>
-              <TableHead className="px-6 py-4">Actions</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTableName')}</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTableDueAsOf')}</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTableDue')}</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTablePaid')}</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTableWaived')}</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTableOutstanding')}</TableHead>
+              <TableHead className="px-6 py-4">{t('general.chargeTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -210,7 +214,7 @@ const ClientsGeneralTab = () => {
                 <TableCell className="px-6 py-4">{ch?.name ?? '—'}</TableCell>
                 <TableCell className="px-6 py-4">
                   {Array.isArray(ch?.dueDate)
-                    ? ch.dueDate.toString()
+                    ? formatDate(ch.dueDate)
                     : (ch?.dueDate ?? '—')}
                 </TableCell>
                 <TableCell className="px-6 py-4">{ch?.amount ?? '—'}</TableCell>
@@ -247,7 +251,7 @@ const ClientsGeneralTab = () => {
                   colSpan={7}
                   className="px-6 py-6 text-center text-zinc-500"
                 >
-                  No upcoming charges.
+                  {t('general.noUpcomingCharges')}
                 </TableCell>
               </TableRow>
             )}
@@ -257,13 +261,13 @@ const ClientsGeneralTab = () => {
 
       {/* Loan Accounts */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Loan Accounts</h2>
+        <h2 className="text-lg font-semibold">{t('general.loanAccounts')}</h2>
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
           size="sm"
           onClick={() => setShowClosedLoans(!showClosedLoans)}
         >
-          {showClosedLoans ? 'View Active Accounts' : 'View Closed Accounts'}
+          {showClosedLoans ? t('general.viewActiveAccounts') : t('general.viewClosedAccounts')}
         </Button>
       </div>
 
@@ -271,14 +275,14 @@ const ClientsGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Account No.</TableHead>
-              <TableHead>Loan Product</TableHead>
-              <TableHead>Original Loan</TableHead>
-              <TableHead>Loan Balance</TableHead>
-              <TableHead>Amount Paid</TableHead>
-              <TableHead>Type</TableHead>
-              {showClosedLoans && <TableHead>Closed Date</TableHead>}
-              <TableHead>Actions</TableHead>
+              <TableHead>{t('general.loanTableAccountNo')}</TableHead>
+              <TableHead>{t('general.loanTableLoanProduct')}</TableHead>
+              <TableHead>{t('general.loanTableOriginalLoan')}</TableHead>
+              <TableHead>{t('general.loanTableLoanBalance')}</TableHead>
+              <TableHead>{t('general.loanTableAmountPaid')}</TableHead>
+              <TableHead>{t('general.loanTableType')}</TableHead>
+              {showClosedLoans && <TableHead>{t('general.loanTableClosedDate')}</TableHead>}
+              <TableHead>{t('general.loanTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -312,7 +316,7 @@ const ClientsGeneralTab = () => {
                 {showClosedLoans && (
                   <TableCell className="px-6 py-4">
                     {Array.isArray(acc?.timeline?.closedOnDate)
-                      ? acc.timeline.closedOnDate.toString()
+                      ? formatDate(acc.timeline.closedOnDate)
                       : (acc?.timeline?.closedOnDate ?? '—')}
                   </TableCell>
                 )}
@@ -380,7 +384,7 @@ const ClientsGeneralTab = () => {
                   colSpan={showClosedLoans ? 8 : 7}
                   className="px-6 py-6 text-center text-zinc-500"
                 >
-                  No loan accounts.
+                  {t('general.noLoanAccounts')}
                 </TableCell>
               </TableRow>
             )}
@@ -390,13 +394,13 @@ const ClientsGeneralTab = () => {
 
       {/* Saving Accounts */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Saving Accounts</h2>
+        <h2 className="text-lg font-semibold">{t('general.savingAccounts')}</h2>
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
           size="sm"
           onClick={() => setShowClosedSavings(!showClosedSavings)}
         >
-          {showClosedSavings ? 'View Active Accounts' : 'View Closed Accounts'}
+          {showClosedSavings ? t('general.viewActiveAccounts') : t('general.viewClosedAccounts')}
         </Button>
       </div>
 
@@ -404,13 +408,13 @@ const ClientsGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Account No.</TableHead>
-              <TableHead>Savings Product</TableHead>
+              <TableHead>{t('general.savingTableAccountNo')}</TableHead>
+              <TableHead>{t('general.savingTableSavingsProduct')}</TableHead>
               <TableHead>
-                {showClosedSavings ? 'Closed Date' : 'Last Active'}
+                {showClosedSavings ? t('general.savingTableClosedDate') : t('general.savingTableLastActive')}
               </TableHead>
-              {!showClosedSavings && <TableHead>Balance</TableHead>}
-              <TableHead>Actions</TableHead>
+              {!showClosedSavings && <TableHead>{t('general.savingTableBalance')}</TableHead>}
+              <TableHead>{t('general.savingTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -435,12 +439,12 @@ const ClientsGeneralTab = () => {
                   <TableCell className="px-6 py-4">
                     {showClosedSavings
                       ? Array.isArray(acc?.timeline?.closedOnDate)
-                        ? acc.timeline.closedOnDate.toString()
+                        ? formatDate(acc.timeline.closedOnDate)
                         : (acc?.timeline?.closedOnDate ?? '—')
                       : Array.isArray(acc?.lastActiveTransactionDate)
-                        ? acc.lastActiveTransactionDate.toString()
+                        ? formatDate(acc.lastActiveTransactionDate)
                         : Array.isArray(acc?.timeline?.activatedOnDate)
-                          ? acc.timeline.activatedOnDate.toString()
+                          ? formatDate(acc.timeline.activatedOnDate)
                           : (acc?.lastActiveTransactionDate ??
                             acc?.timeline?.activatedOnDate ??
                             '—')}
@@ -532,7 +536,7 @@ const ClientsGeneralTab = () => {
                   colSpan={showClosedSavings ? 5 : 6}
                   className="px-6 py-6 text-center text-zinc-500"
                 >
-                  No savings accounts.
+                  {t('general.noSavingAccounts')}
                 </TableCell>
               </TableRow>
             )}
@@ -542,14 +546,14 @@ const ClientsGeneralTab = () => {
 
       {/* Shares Accounts */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Shares Accounts</h2>
+        <h2 className="text-lg font-semibold">{t('general.sharesAccounts')}</h2>
         {shareAccounts.length > 0 && (
           <Button
             className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             size="sm"
             onClick={() => setShowClosedShares(!showClosedShares)}
           >
-            {showClosedShares ? 'View Active Accounts' : 'View Closed Accounts'}
+            {showClosedShares ? t('general.viewActiveAccounts') : t('general.viewClosedAccounts')}
           </Button>
         )}
       </div>
@@ -558,12 +562,12 @@ const ClientsGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Account No.</TableHead>
-              <TableHead>Share Product</TableHead>
-              <TableHead>Approved Shares</TableHead>
-              <TableHead>Pending For Approval Shares</TableHead>
-              {showClosedShares && <TableHead>Closed Date</TableHead>}
-              <TableHead>Actions</TableHead>
+              <TableHead>{t('general.sharesTableAccountNo')}</TableHead>
+              <TableHead>{t('general.sharesTableShareProduct')}</TableHead>
+              <TableHead>{t('general.sharesTableApprovedShares')}</TableHead>
+              <TableHead>{t('general.sharesTablePendingShares')}</TableHead>
+              {showClosedShares && <TableHead>{t('general.sharesTableClosedDate')}</TableHead>}
+              <TableHead>{t('general.sharesTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -591,7 +595,7 @@ const ClientsGeneralTab = () => {
                 {showClosedShares && (
                   <TableCell className="px-6 py-4">
                     {Array.isArray(acc?.timeline?.closedOnDate)
-                      ? acc.timeline.closedOnDate.toString()
+                      ? formatDate(acc.timeline.closedOnDate)
                       : (acc?.timeline?.closedOnDate ?? '—')}
                   </TableCell>
                 )}
@@ -648,7 +652,7 @@ const ClientsGeneralTab = () => {
                   colSpan={showClosedShares ? 6 : 5}
                   className="px-6 py-6 text-center text-zinc-500"
                 >
-                  No share accounts.
+                  {t('general.noShareAccounts')}
                 </TableCell>
               </TableRow>
             )}
@@ -658,16 +662,16 @@ const ClientsGeneralTab = () => {
 
       {/* Collateral Data */}
       <div>
-        <h2 className="text-lg font-semibold">Collateral Data</h2>
+        <h2 className="text-lg font-semibold">{t('general.collateralData')}</h2>
         <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Total Value</TableHead>
-                <TableHead>Total Collateral Value</TableHead>
+                <TableHead>{t('general.collateralTableId')}</TableHead>
+                <TableHead>{t('general.collateralTableName')}</TableHead>
+                <TableHead>{t('general.collateralTableQuantity')}</TableHead>
+                <TableHead>{t('general.collateralTableTotalValue')}</TableHead>
+                <TableHead>{t('general.collateralTableTotalCollateralValue')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -693,7 +697,7 @@ const ClientsGeneralTab = () => {
                     colSpan={5}
                     className="px-6 py-6 text-center text-zinc-500"
                   >
-                    No collateral found.
+                    {t('general.noCollateral')}
                   </TableCell>
                 </TableRow>
               )}

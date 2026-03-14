@@ -157,7 +157,9 @@ const ClientTrendsLine = () => {
     <Card className="h-full">
       <CardHeader className="space-y-2">
         <CardTitle className="text-xl">{t('dashboard.clientTrends')}</CardTitle>
-        <CardDescription>{t('dashboard.trackClientOnboarding')}</CardDescription>
+        <CardDescription>
+          {t('dashboard.trackClientOnboarding')}
+        </CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mt-2">
           <div className="flex flex-col gap-1 flex-1">
             <AppSelect
@@ -182,9 +184,15 @@ const ClientTrendsLine = () => {
               onValueChange={v => v && setTimescale(v)}
               className="mt-1"
             >
-              <ToggleGroupItem value="Day">{t('dashboard.day')}</ToggleGroupItem>
-              <ToggleGroupItem value="Week">{t('dashboard.week')}</ToggleGroupItem>
-              <ToggleGroupItem value="Month">{t('dashboard.month')}</ToggleGroupItem>
+              <ToggleGroupItem value="Day">
+                {t('dashboard.day')}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="Week">
+                {t('dashboard.week')}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="Month">
+                {t('dashboard.month')}
+              </ToggleGroupItem>
             </ToggleGroup>
           </div>
         </div>

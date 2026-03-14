@@ -14,6 +14,7 @@ import {
   type GetGroupsGroupIdAccountsResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
 
 import {
   Table,
@@ -32,6 +33,8 @@ const accountApi = new GroupsApi(getConfiguration())
 const GroupsGeneralTab = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   // State for summary data and accounts
   const [summary, setSummary] = useState<Record<string, any>>({})
@@ -80,7 +83,7 @@ const GroupsGeneralTab = () => {
               ? 'bg-zinc-400'
               : 'bg-sky-500'
       }`}
-      title={acc.status?.value || 'Unknown'}
+      title={acc.status?.value || tc('status.unknown')}
     />
   )
 
@@ -88,22 +91,22 @@ const GroupsGeneralTab = () => {
     <div className="space-y-6 text-black dark:text-white">
       {/*Summary section*/}
       <div>
-        <h2 className="text-lg font-semibold">Group Details</h2>
-        <div>Active Clients: {summary?.['Active Clients'] ?? 0}</div>
+        <h2 className="text-lg font-semibold">{t('general.groupDetails')}</h2>
+        <div>{t('general.activeClients')} {summary?.['Active Clients'] ?? 0}</div>
         <div>
-          Active Group Borrowers: {summary?.['Active Group Borrowers'] ?? 0}
+          {t('general.activeGroupBorrowers')} {summary?.['Active Group Borrowers'] ?? 0}
         </div>
-        <div>Active Group Loans: {summary?.['Active Group Loans'] ?? 0}</div>
+        <div>{t('general.activeGroupLoans')} {summary?.['Active Group Loans'] ?? 0}</div>
         <div>
-          Active Client Borrowers: {summary?.['Active Client Borrowers'] ?? 0}
+          {t('general.activeClientBorrowers')} {summary?.['Active Client Borrowers'] ?? 0}
         </div>
-        <div>Active Client Loans: {summary?.['Active Client Loans'] ?? 0}</div>
+        <div>{t('general.activeClientLoans')} {summary?.['Active Client Loans'] ?? 0}</div>
         <div>
-          Active Overdue Client Loans:{' '}
+          {t('general.activeOverdueClientLoans')}{' '}
           {summary?.['Active Overdue Client Loans'] ?? 0}
         </div>
         <div>
-          Active Overdue Group Loans:{' '}
+          {t('general.activeOverdueGroupLoans')}{' '}
           {summary?.['Active Overdue Group Loans'] ?? 0}
         </div>
       </div>
@@ -111,15 +114,15 @@ const GroupsGeneralTab = () => {
       {/*Client Members*/}
       {clientMembers.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-2">Client Members</h2>
+          <h2 className="text-lg font-semibold mb-2">{t('general.clientMembers')}</h2>
           <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Account No</TableHead>
-                  <TableHead>Office</TableHead>
-                  <TableHead>JLG Loan Application</TableHead>
+                  <TableHead>{t('general.tableName')}</TableHead>
+                  <TableHead>{t('general.tableAccountNo')}</TableHead>
+                  <TableHead>{t('general.tableOffice')}</TableHead>
+                  <TableHead>{t('general.tableJlgLoanApplication')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -151,7 +154,7 @@ const GroupsGeneralTab = () => {
       {/*Loan Accounts*/}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold">Loan Accounts</h2>
+          <h2 className="text-lg font-semibold">{t('general.loanAccounts')}</h2>
           {loanAccounts.length > 0 && (
             <Button
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
@@ -159,8 +162,8 @@ const GroupsGeneralTab = () => {
               onClick={() => setShowClosedLoanAccounts(!showClosedLoanAccounts)}
             >
               {showClosedLoanAccounts
-                ? 'View Active Accounts'
-                : 'View Closed Accounts'}
+                ? t('general.viewActiveAccounts')
+                : t('general.viewClosedAccounts')}
             </Button>
           )}
         </div>
@@ -169,14 +172,14 @@ const GroupsGeneralTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Account No</TableHead>
-                <TableHead>Loan Account</TableHead>
-                <TableHead>Original Loan</TableHead>
-                <TableHead>Loan Balance</TableHead>
-                <TableHead>Amount Paid</TableHead>
-                <TableHead>Type</TableHead>
-                {showClosedLoanAccounts && <TableHead>Closed Date</TableHead>}
-                <TableHead>Actions</TableHead>
+                  <TableHead>{t('general.tableAccountNo')}</TableHead>
+                  <TableHead>{t('general.tableLoanAccount')}</TableHead>
+                  <TableHead>{t('general.tableOriginalLoan')}</TableHead>
+                  <TableHead>{t('general.tableLoanBalance')}</TableHead>
+                  <TableHead>{t('general.tableAmountPaid')}</TableHead>
+                  <TableHead>{t('general.tableType')}</TableHead>
+                  {showClosedLoanAccounts && <TableHead>{t('general.tableClosedDate')}</TableHead>}
+                  <TableHead>{t('general.tableActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -205,12 +208,12 @@ const GroupsGeneralTab = () => {
                       <span>{acc.accountNo}</span>
                     </TableCell>
                     <TableCell>{acc.productName}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
                     <TableCell>{acc.loanType?.code}</TableCell>
                     {showClosedLoanAccounts && (
-                      <TableCell>{'Missing in OpenAPI'}</TableCell>
+                      <TableCell>{t('view.missingInOpenAPI')}</TableCell>
                     )}
                     <TableCell
                       onClick={e => e.stopPropagation()}
@@ -243,26 +246,26 @@ const GroupsGeneralTab = () => {
       {/*GSIM Accounts*/}
       {gsimAccounts.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-2">GSIM Account Overview</h2>
+          <h2 className="text-lg font-semibold mb-2">{t('general.gsimAccountOverview')}</h2>
           <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>GSIM Id</TableHead>
-                  <TableHead>Account Number</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Balance</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t('general.tableGsimId')}</TableHead>
+                  <TableHead>{t('general.tableAccountNumber')}</TableHead>
+                  <TableHead>{t('general.tableProduct')}</TableHead>
+                  <TableHead>{t('general.tableBalance')}</TableHead>
+                  <TableHead>{t('general.tableStatus')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {gsimAccounts.map(acc => (
                   <TableRow key={acc.id}>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -275,27 +278,27 @@ const GroupsGeneralTab = () => {
       {glimAccounts.length > 0 && (
         <div>
           <h2 className="text-lg font-semibold mb-2">
-            GLIM Loans Account Overview
+            {t('general.glimLoansOverview')}
           </h2>
           <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>GLIM Id</TableHead>
-                  <TableHead>Account Number</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Original Loan</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t('general.tableGlimId')}</TableHead>
+                  <TableHead>{t('general.tableAccountNumber')}</TableHead>
+                  <TableHead>{t('general.tableProduct')}</TableHead>
+                  <TableHead>{t('general.tableOriginalLoan')}</TableHead>
+                  <TableHead>{t('general.tableStatus')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {glimAccounts.map(acc => (
                   <TableRow key={acc.id}>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
-                    <TableCell>{'Missing in OpenAPI'}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
+                    <TableCell>{t('view.missingInOpenAPI')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -307,7 +310,7 @@ const GroupsGeneralTab = () => {
       {/*Saving Accounts*/}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold">Saving Accounts</h2>
+          <h2 className="text-lg font-semibold">{t('general.savingAccounts')}</h2>
           {savingAccounts.length > 0 && (
             <Button
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
@@ -317,8 +320,8 @@ const GroupsGeneralTab = () => {
               }
             >
               {showClosedSavingAccounts
-                ? 'View Active Accounts'
-                : 'View Closed Accounts'}
+                ? t('general.viewActiveAccounts')
+                : t('general.viewClosedAccounts')}
             </Button>
           )}
         </div>
@@ -326,13 +329,13 @@ const GroupsGeneralTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Account No</TableHead>
-                <TableHead>Saving Account</TableHead>
-                <TableHead>
-                  {showClosedSavingAccounts ? 'Closed Date' : 'Last Active'}
-                </TableHead>
-                {!showClosedSavingAccounts && <TableHead>Balance</TableHead>}
-                <TableHead>Actions</TableHead>
+                  <TableHead>{t('general.tableAccountNo')}</TableHead>
+                  <TableHead>{t('general.tableSavingAccount')}</TableHead>
+                  <TableHead>
+                    {showClosedSavingAccounts ? t('general.tableClosedDate') : t('general.tableLastActive')}
+                  </TableHead>
+                  {!showClosedSavingAccounts && <TableHead>{t('general.tableBalance')}</TableHead>}
+                  <TableHead>{t('general.tableActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -364,7 +367,7 @@ const GroupsGeneralTab = () => {
                         : (acc.accountNo ?? '-')}
                     </TableCell>
                     {!showClosedSavingAccounts && (
-                      <TableCell>{'Missing in OpenAPI'}</TableCell>
+                      <TableCell>{t('view.missingInOpenAPI')}</TableCell>
                     )}
                     <TableCell
                       onClick={e => e.stopPropagation()}

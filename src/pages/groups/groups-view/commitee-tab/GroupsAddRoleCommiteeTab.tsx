@@ -11,9 +11,12 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { useTranslation } from 'react-i18next'
 
 const GroupsAddRoleCommitteeTab = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   const [form, setForm] = useState({
     clientId: '',
@@ -35,22 +38,22 @@ const GroupsAddRoleCommitteeTab = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Group' },
-          { label: 'Add Role', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
+          { label: t('addRole.breadcrumbGroup') },
+          { label: t('addRole.heading'), current: true },
         ]}
       />
 
       {/* Card wrapper */}
       <div className="mt-6 bg-white dark:bg-zinc-900 rounded-md border border-zinc-200 dark:border-zinc-700 shadow p-8 max-w-2xl ml-auto mr-auto">
         <form className="space-y-8" onSubmit={handleConfirm}>
-          <h1 className="text-2xl font-semibold">Add Role</h1>
+          <h1 className="text-2xl font-semibold">{t('addRole.heading')}</h1>
 
           {/* Client dropdown */}
           <AppSelect
-            selectLabel="Client*"
-            selectPlaceholder="Select client"
+            selectLabel={t('addRole.labelClient')}
+            selectPlaceholder={t('addRole.placeholderClient')}
             selectValue={form.clientId}
             selectOnChange={v => setForm(s => ({ ...s, clientId: v }))}
             selectOptions={[]}
@@ -59,8 +62,8 @@ const GroupsAddRoleCommitteeTab = () => {
 
           {/* Role dropdown */}
           <AppSelect
-            selectLabel="Role*"
-            selectPlaceholder="Select role"
+            selectLabel={t('addRole.labelRole')}
+            selectPlaceholder={t('addRole.placeholderRole')}
             selectValue={form.roleId}
             selectOnChange={v => setForm(s => ({ ...s, roleId: v }))}
             selectOptions={[]}
@@ -75,14 +78,14 @@ const GroupsAddRoleCommitteeTab = () => {
               onClick={() => navigate(-1)}
               className="min-w-[100px]"
             >
-              Cancel
+              {tc('actions.cancel')}
             </Button>
             <Button
               type="submit"
               disabled={!canSubmit}
               className="min-w-[100px] bg-[#1074b9] hover:bg-[#1074c9] text-white disabled:opacity-60"
             >
-              Confirm
+              {t('addRole.confirm')}
             </Button>
           </div>
         </form>

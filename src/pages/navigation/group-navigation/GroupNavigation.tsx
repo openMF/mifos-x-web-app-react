@@ -37,7 +37,9 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
   }, [groupId])
 
   if (!groupDetails) {
-    return <p className="text-gray-500">{t('navigation.loadingGroupDetails')}</p>
+    return (
+      <p className="text-gray-500">{t('navigation.loadingGroupDetails')}</p>
+    )
   }
 
   const extra = groupDetails as any
@@ -66,9 +68,13 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
           </h2>
           <p className="text-gray-500">
             {t('fields.accountNo')}:{' '}
-            <span className="font-medium">{extra.accountNo || t('actions.na')}</span> |
-            {t('fields.externalId')}:{' '}
-            <span className="font-medium">{extra.externalId || t('actions.na')}</span>
+            <span className="font-medium">
+              {extra.accountNo || t('actions.na')}
+            </span>{' '}
+            |{t('fields.externalId')}:{' '}
+            <span className="font-medium">
+              {extra.externalId || t('actions.na')}
+            </span>
           </p>
         </div>
       </div>

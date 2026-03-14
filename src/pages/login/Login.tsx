@@ -38,6 +38,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
+import { envConfig } from '@/lib/env-config'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -54,7 +55,9 @@ const Login = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth)
 
   const [form, setForm] = useState({ username: '', password: '' })
+  const isDockerProxy = !envConfig.apiUrl
   const [server, setServer] = useState(() => {
+    if (isDockerProxy) return ''
     return localStorage.getItem('mifosServer') || 'https://localhost:8443'
   })
   const [tenant, setTenant] = useState(() => {
@@ -68,7 +71,9 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    localStorage.setItem('mifosServer', server)
+    if (!isDockerProxy) {
+      localStorage.setItem('mifosServer', server)
+    }
     localStorage.setItem('mifosTenant', tenant)
     dispatch(loginUser(form))
   }
@@ -82,13 +87,13 @@ const Login = () => {
   }
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return (savedTheme as 'light' | 'dark') || 'light';
-  });
+    const savedTheme = localStorage.getItem('theme')
+    return (savedTheme as 'light' | 'dark') || 'light'
+  })
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    localStorage.setItem('theme', theme)
   }, [theme])
 
   const toggleTheme = () => {
@@ -111,8 +116,15 @@ const Login = () => {
               i18nKey="hero.description"
               ns="auth"
               components={{
-                mifosLink: <a href="https://mifos.org/" className="underline" />,
-                communityLink: <a href="https://mifos.org/resources/community/" className="underline" />,
+                mifosLink: (
+                  <a href="https://mifos.org/" className="underline" />
+                ),
+                communityLink: (
+                  <a
+                    href="https://mifos.org/resources/community/"
+                    className="underline"
+                  />
+                ),
               }}
             />{' '}
             <a
@@ -127,24 +139,32 @@ const Login = () => {
 
       <div className="flex flex-col w-full min-h-screen lg:w-[30%] bg-white dark:bg-zinc-900 px-4 py-6 sm:px-10 justify-between">
         <div className="lg:h-[10%] flex flex-wrap gap-2 text-center justify-center">
-          <Select value={server} onValueChange={handleServerChange}>
-            <SelectTrigger className="w-[160px]">
-              <Label className=" text-zinc-900 dark:text-white">{t('auth:login.server')}</Label>
-              <SelectValue placeholder="https://localhost:8443" />
-            </SelectTrigger>
-            <SelectContent className="dark:bg-zinc-800 dark:text-white">
-              <SelectGroup>
-                <SelectItem value="https://sandbox.mifos.community">
-                  https://sandbox.mifos.community
-                </SelectItem>
-                <SelectItem value="https://demo.mifos.community">
-                  https://demo.mifos.community
-                </SelectItem>
-                <SelectItem value="https://localhost:8443">https://localhost:8443</SelectItem>
-                <SelectItem value="http://localhost:4200">http://localhost:4200</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          {!isDockerProxy && (
+            <Select value={server} onValueChange={handleServerChange}>
+              <SelectTrigger className="w-[160px]">
+                <Label className=" text-zinc-900 dark:text-white">
+                  {t('auth:login.server')}
+                </Label>
+                <SelectValue placeholder="https://localhost:8443" />
+              </SelectTrigger>
+              <SelectContent className="dark:bg-zinc-800 dark:text-white">
+                <SelectGroup>
+                  <SelectItem value="https://sandbox.mifos.community">
+                    https://sandbox.mifos.community
+                  </SelectItem>
+                  <SelectItem value="https://demo.mifos.community">
+                    https://demo.mifos.community
+                  </SelectItem>
+                  <SelectItem value="https://localhost:8443">
+                    https://localhost:8443
+                  </SelectItem>
+                  <SelectItem value="http://localhost:4200">
+                    http://localhost:4200
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
 
           <LanguageSwitcher className="w-[140px] dark:bg-zinc-800 dark:text-white" />
 
@@ -166,7 +186,9 @@ const Login = () => {
 
           <Select value={tenant} onValueChange={handleTenantChange}>
             <SelectTrigger className="w-full max-w-xs">
-              <Label className="text-zinc-900 dark:text-white">{t('auth:login.tenant')}</Label>
+              <Label className="text-zinc-900 dark:text-white">
+                {t('auth:login.tenant')}
+              </Label>
               <SelectValue placeholder="Default" />
             </SelectTrigger>
             <SelectContent className="dark:bg-zinc-800 dark:text-white">
@@ -204,8 +226,12 @@ const Login = () => {
                 size="icon"
                 className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
-                onMouseDown={(e) => e.preventDefault()}
-                aria-label={showPassword ? t('auth:login.hidePassword') : t('auth:login.showPassword')}
+                onMouseDown={e => e.preventDefault()}
+                aria-label={
+                  showPassword
+                    ? t('auth:login.hidePassword')
+                    : t('auth:login.showPassword')
+                }
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4 text-zinc-500" />
@@ -222,7 +248,9 @@ const Login = () => {
               </label>
             </div>
 
-            {error && <p className="text-red-500 text-sm">{t('auth:login.error')}</p>}
+            {error && (
+              <p className="text-red-500 text-sm">{t('auth:login.error')}</p>
+            )}
 
             <Button
               type="submit"
@@ -275,7 +303,9 @@ const Login = () => {
               <DropdownMenuContent className="dark:bg-zinc-800 dark:text-white">
                 <DropdownMenuGroup>
                   <DropdownMenuItem className="cursor-pointer">
-                    <a href="https://groups.google.com/g/mifosusers">{t('common:nav.userGroup')}</a>
+                    <a href="https://groups.google.com/g/mifosusers">
+                      {t('common:nav.userGroup')}
+                    </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://groups.google.com/g/mifosdeveloper">
@@ -322,7 +352,8 @@ const Login = () => {
 
         <div className="lg:h-[10%] flex flex-col justify-center items-center mt-10 text-zinc-700 dark:text-zinc-300 text-sm">
           <p>
-            <span className="font-semibold">{t('common:info.mifos')}</span> 250518 - cf693b0f
+            <span className="font-semibold">{t('common:info.mifos')}</span>{' '}
+            250518 - cf693b0f
           </p>
           <p>
             <span className="font-semibold">{t('common:info.fineract')}</span>{' '}

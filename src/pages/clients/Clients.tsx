@@ -34,11 +34,14 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { ClientSearchV2Api } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
 
 const clientSearchApi = new ClientSearchV2Api(getConfiguration())
 
 const Clients = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
 
   // pagination + filters
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -99,8 +102,8 @@ const Clients = () => {
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Clients', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), current: true },
         ]}
       />
 
@@ -110,14 +113,14 @@ const Clients = () => {
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
           onClick={() => navigate('/clients/create')}
         >
-          <Plus className="mr-2" /> Add Client
+          <Plus className="mr-2" /> {t('addClient')}
         </Button>
       </div>
 
       {/* search + pagination controls */}
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         <Input
-          placeholder="Search by Name, External ID..."
+          placeholder={t('searchByName')}
           value={searchTerm}
           onChange={e => {
             setSearchTerm(e.target.value)
@@ -135,7 +138,7 @@ const Clients = () => {
             }}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={tc('pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -151,7 +154,7 @@ const Clients = () => {
             disabled={page === 1}
             onClick={() => setPage(p => Math.max(1, p - 1))}
           >
-            Prev
+            {tc('actions.prev')}
           </Button>
           <Button
             variant="outline"
@@ -159,7 +162,7 @@ const Clients = () => {
             disabled={page >= totalPages}
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
           >
-            Next
+            {tc('actions.next')}
           </Button>
         </div>
       </div>
@@ -172,7 +175,7 @@ const Clients = () => {
           onCheckedChange={v => setIncludePending(!!v)}
         />
         <label htmlFor="pending-clients" className="text-base dark:text-white">
-          Show Pending Clients
+          {t('pending.showPendingClients')}
         </label>
       </div>
 
@@ -180,17 +183,16 @@ const Clients = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {filtered.length} of {total} items • Page {page} of{' '}
-            {totalPages}
+            {tc('pagination.showing', { current: filtered.length, total, page, pages: totalPages })}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Name</TableHead>
-              <TableHead className="px-6 py-4">Account No.</TableHead>
-              <TableHead className="px-6 py-4">External Id</TableHead>
-              <TableHead className="px-6 py-4">Status</TableHead>
-              <TableHead className="px-6 py-4">Office Name</TableHead>
+              <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
+              <TableHead className="px-6 py-4">{t('table.accountNo')}</TableHead>
+              <TableHead className="px-6 py-4">{t('table.externalId')}</TableHead>
+              <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
+              <TableHead className="px-6 py-4">{t('table.officeName')}</TableHead>
             </TableRow>
           </TableHeader>
 

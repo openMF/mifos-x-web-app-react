@@ -8,19 +8,21 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useTranslation } from 'react-i18next'
 
 const ClientNotesTab = () => {
-  const [notes, setNotes] = useState<string[]>([]) // mocked notes list
+  const [notes, setNotes] = useState<string[]>([])
   const [newNote, setNewNote] = useState('')
+  const { t } = useTranslation('clients')
 
   return (
     <div className="text-black dark:text-white px-6 py-4 space-y-4">
-      <h2 className="text-lg font-semibold">Notes</h2>
+      <h2 className="text-lg font-semibold">{t('notes.heading')}</h2>
 
       {/* Input section */}
       <div className="flex items-start gap-4">
         <Input
-          placeholder="Write a note ...."
+          placeholder={t('notes.placeholder')}
           value={newNote}
           onChange={e => setNewNote(e.target.value)}
         />
@@ -28,7 +30,7 @@ const ClientNotesTab = () => {
           variant="outline"
           className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white"
         >
-          + Add
+          {t('notes.addButton')}
         </Button>
       </div>
 
@@ -38,8 +40,8 @@ const ClientNotesTab = () => {
       <div className="space-y-4">
         {notes.map((note, idx) => (
           <div key={idx} className="space-y-1">
-            <p>Created By: mifos</p>
-            <p>Date: 03 August 2025</p>
+            <p>{t('notes.createdBy', { name: 'mifos' })}</p>
+            <p>{t('notes.date', { date: '03 August 2025' })}</p>
             <p className="text-sm italic">{note}</p>
           </div>
         ))}

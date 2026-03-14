@@ -16,7 +16,13 @@ import { Provider } from 'react-redux'
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <StrictMode>
-      <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            Loading...
+          </div>
+        }
+      >
         <App />
       </Suspense>
     </StrictMode>

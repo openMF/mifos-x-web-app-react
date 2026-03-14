@@ -16,39 +16,16 @@ import { Input } from '@/components/ui/input'
 
 import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { dateArrayToInputValue, inputToFineractDate } from '@/lib/date-utils'
+import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
-
-function dateArrayToInputValue(arr?: number[] | null): string {
-  if (!arr || arr.length < 3) return ''
-  const [y, m, d] = arr
-  return `${y}-${String(m ?? 1).padStart(2, '0')}-${String(d ?? 1).padStart(2, '0')}`
-}
-
-function inputToFineractDate(iso?: string): string | undefined {
-  if (!iso) return undefined
-  const [y, m, d] = iso.split('-').map(n => parseInt(n, 10))
-  if (!y || !m || !d) return undefined
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  return `${String(d).padStart(2, '0')} ${months[m - 1]} ${y}`
-}
 
 const EditGroups = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   // Local state for group + form fields
   const [group, setGroup] = useState<GetGroupsGroupIdResponse>()
@@ -91,7 +68,7 @@ const EditGroups = () => {
   const staffOptions =
     ((group as any)?.staffOptions ?? []).map((s: any) => ({
       id: s.id,
-      name: s.displayName ?? s.name ?? `Staff ${s.id}`,
+      name: s.displayName ?? s.name ?? t('edit.staffFallback', { id: s.id }),
     })) || []
 
   // Handle submit
@@ -125,26 +102,26 @@ const EditGroups = () => {
       {/* Breadcrumb navigation */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: group?.name ?? 'Group', href: `/groups/${id}/general` },
-          { label: 'Edit', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
+          { label: group?.name ?? t('view.groupName'), href: `/groups/${id}/general` },
+          { label: t('edit.breadcrumb'), current: true },
         ]}
       />
 
       {/* Edit form card */}
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">Edit Group</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('edit.heading')}</h2>
 
         <div className="space-y-6">
           {/* Group name */}
           <div className="w-full space-y-2">
-            <Label htmlFor="group-name">Name*</Label>
+            <Label htmlFor="group-name">{t('edit.labelName')}</Label>
             <Input
               id="group-name"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Enter group name"
+              placeholder={t('edit.placeholderName')}
               className="w-full"
             />
           </div>
@@ -152,21 +129,21 @@ const EditGroups = () => {
           {/* Staff dropdown or read-only field */}
           {staffOptions.length > 0 ? (
             <AppSelect
-              selectLabel="Staff"
+              selectLabel={t('edit.labelStaff')}
               selectValue={staffId}
               selectOnChange={(val: string) => setStaffId(val)}
-              selectPlaceholder="Select Staff"
+              selectPlaceholder={t('create.selectStaff')}
               selectOptions={staffOptions}
               selectClassname="w-full"
             />
           ) : (
             <div className="w-full space-y-2">
-              <Label>Staff</Label>
+              <Label>{t('edit.labelStaff')}</Label>
               <Input
                 value={
                   (group as any)?.staffName ??
                   (group as any)?.staff?.displayName ??
-                  'Unassigned'
+                  t('edit.placeholderUnassigned')
                 }
                 readOnly
                 className="w-full"
@@ -176,7 +153,7 @@ const EditGroups = () => {
 
           {/* Submitted On */}
           <div className="w-full space-y-2">
-            <Label htmlFor="submitted-on">Submitted On*</Label>
+            <Label htmlFor="submitted-on">{t('edit.labelSubmittedOn')}</Label>
             <Input
               id="submitted-on"
               type="date"
@@ -188,7 +165,7 @@ const EditGroups = () => {
 
           {/* Activation Date */}
           <div className="w-full space-y-2">
-            <Label htmlFor="activation-on">Activation Date*</Label>
+            <Label htmlFor="activation-on">{t('edit.labelActivationDate')}</Label>
             <Input
               id="activation-on"
               type="date"
@@ -200,12 +177,12 @@ const EditGroups = () => {
 
           {/* External Id */}
           <div className="w-full space-y-2">
-            <Label htmlFor="external-id">External id</Label>
+            <Label htmlFor="external-id">{t('edit.labelExternalId')}</Label>
             <Input
               id="external-id"
               value={externalId}
               onChange={e => setExternalId(e.target.value)}
-              placeholder="Enter external id"
+              placeholder={t('edit.placeholderExternalId')}
               className="w-full"
             />
           </div>
@@ -218,14 +195,14 @@ const EditGroups = () => {
               onClick={() => navigate(`/groups/${id}/general`)}
               disabled={saving}
             >
-              Cancel
+              {tc('actions.cancel')}
             </Button>
             <Button
               onClick={onSubmit}
               disabled={saving || !name.trim()}
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
-              {saving ? 'Saving...' : 'Submit'}
+              {saving ? tc('actions.saving') : tc('actions.submit')}
             </Button>
           </div>
         </div>

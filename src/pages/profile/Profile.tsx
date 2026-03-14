@@ -48,11 +48,16 @@ const Profile = () => {
           <div className="text-zinc-600 dark:text-zinc-400">Head Office</div>
 
           <div className="font-medium">{t('common:fields.status')}</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{t('common:status.authenticated')}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {t('common:status.authenticated')}
+          </div>
 
           <div className="font-medium">{t('common:fields.language')}</div>
           <div className="text-zinc-600 dark:text-zinc-400">
-            {t(`languages.${i18n.resolvedLanguage ?? 'en-US'}` as 'languages.en-US', { ns: 'common' })}
+            {t(
+              `languages.${i18n.resolvedLanguage ?? 'en-US'}` as 'languages.en-US',
+              { ns: 'common' }
+            )}
           </div>
         </div>
 

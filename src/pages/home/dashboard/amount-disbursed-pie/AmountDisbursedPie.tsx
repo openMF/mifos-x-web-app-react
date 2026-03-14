@@ -110,7 +110,9 @@ const AmountDisbursedPie = () => {
     <Card className="flex flex-col h-full">
       <CardHeader className="gap-4">
         <div>
-          <CardTitle className="text-xl">{t('dashboard.amountPendingDisbursed')}</CardTitle>
+          <CardTitle className="text-xl">
+            {t('dashboard.amountPendingDisbursed')}
+          </CardTitle>
           <CardDescription>{t('dashboard.selectOfficeToView')}</CardDescription>
         </div>
         <div className="w-full max-w-sm flex flex-col gap-2">

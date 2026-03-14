@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useTranslation } from 'react-i18next'
 
 const ClientsFamilyMembersAddTab = ({
   clientId,
@@ -42,6 +43,8 @@ const ClientsFamilyMembersAddTab = ({
     maritalStatus: '',
     dob: '',
   })
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
 
   // update helper
   const set = (k: keyof typeof form, v: any) => setForm(f => ({ ...f, [k]: v }))
@@ -69,7 +72,7 @@ const ClientsFamilyMembersAddTab = ({
         {/* First / Middle / Last Name */}
         <div className="space-y-1">
           <Label>
-            First Name<span className="text-red-500">*</span>
+            {t('familyMembers.labelFirstName')}<span className="text-red-500">*</span>
           </Label>
           <Input
             value={form.firstName}
@@ -78,7 +81,7 @@ const ClientsFamilyMembersAddTab = ({
           />
         </div>
         <div className="space-y-1">
-          <Label>Middle Name</Label>
+          <Label>{t('familyMembers.labelMiddleName')}</Label>
           <Input
             value={form.middleName}
             onChange={e => set('middleName', e.target.value)}
@@ -87,7 +90,7 @@ const ClientsFamilyMembersAddTab = ({
         </div>
         <div className="space-y-1">
           <Label>
-            Last Name<span className="text-red-500">*</span>
+            {t('familyMembers.labelLastName')}<span className="text-red-500">*</span>
           </Label>
           <Input
             value={form.lastName}
@@ -96,7 +99,7 @@ const ClientsFamilyMembersAddTab = ({
           />
         </div>
         <div className="space-y-1">
-          <Label>Qualification</Label>
+          <Label>{t('familyMembers.labelQualification')}</Label>
           <Input
             value={form.qualification}
             onChange={e => set('qualification', e.target.value)}
@@ -107,7 +110,7 @@ const ClientsFamilyMembersAddTab = ({
         {/* Age + Dependent flag */}
         <div className="space-y-1">
           <Label>
-            Age<span className="text-red-500">*</span>
+            {t('familyMembers.labelAge')}<span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
@@ -118,7 +121,7 @@ const ClientsFamilyMembersAddTab = ({
           />
         </div>
         <div className="flex items-center gap-3 mt-6">
-          <Label className="m-0">Is Dependent?</Label>
+          <Label className="m-0">{t('familyMembers.labelIsDependent')}</Label>
           <Checkbox
             checked={form.isDependent}
             onCheckedChange={v => set('isDependent', !!v)}
@@ -128,73 +131,73 @@ const ClientsFamilyMembersAddTab = ({
         {/* Relationship + Gender */}
         <div className="space-y-1">
           <Label>
-            Relationship<span className="text-red-500">*</span>
+            {t('familyMembers.labelRelationship')}<span className="text-red-500">*</span>
           </Label>
           <Select
             value={form.relationship}
             onValueChange={v => set('relationship', v)}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SPOUSE">Spouse</SelectItem>
-              <SelectItem value="CHILD">Child</SelectItem>
-              <SelectItem value="PARENT">Parent</SelectItem>
-              <SelectItem value="SIBLING">Sibling</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem value="SPOUSE">{t('familyMembers.relationshipSpouse')}</SelectItem>
+              <SelectItem value="CHILD">{t('familyMembers.relationshipChild')}</SelectItem>
+              <SelectItem value="PARENT">{t('familyMembers.relationshipParent')}</SelectItem>
+              <SelectItem value="SIBLING">{t('familyMembers.relationshipSibling')}</SelectItem>
+              <SelectItem value="OTHER">{t('familyMembers.relationshipOther')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
           <Label>
-            Gender<span className="text-red-500">*</span>
+            {t('familyMembers.labelGender')}<span className="text-red-500">*</span>
           </Label>
           <Select value={form.gender} onValueChange={v => set('gender', v)}>
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MALE">Male</SelectItem>
-              <SelectItem value="FEMALE">Female</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem value="MALE">{t('familyMembers.genderMale')}</SelectItem>
+              <SelectItem value="FEMALE">{t('familyMembers.genderFemale')}</SelectItem>
+              <SelectItem value="OTHER">{t('familyMembers.genderOther')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Profession + Marital status */}
         <div className="space-y-1">
-          <Label>Profession</Label>
+          <Label>{t('familyMembers.labelProfession')}</Label>
           <Select
             value={form.profession}
             onValueChange={v => set('profession', v)}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="EMPLOYED">Employed</SelectItem>
-              <SelectItem value="SELF_EMPLOYED">Self-Employed</SelectItem>
-              <SelectItem value="STUDENT">Student</SelectItem>
-              <SelectItem value="UNEMPLOYED">Unemployed</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem value="EMPLOYED">{t('familyMembers.professionEmployed')}</SelectItem>
+              <SelectItem value="SELF_EMPLOYED">{t('familyMembers.professionSelfEmployed')}</SelectItem>
+              <SelectItem value="STUDENT">{t('familyMembers.professionStudent')}</SelectItem>
+              <SelectItem value="UNEMPLOYED">{t('familyMembers.professionUnemployed')}</SelectItem>
+              <SelectItem value="OTHER">{t('familyMembers.professionOther')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
-          <Label>Marital Status</Label>
+          <Label>{t('familyMembers.labelMaritalStatus')}</Label>
           <Select
             value={form.maritalStatus}
             onValueChange={v => set('maritalStatus', v)}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SINGLE">Single</SelectItem>
-              <SelectItem value="MARRIED">Married</SelectItem>
-              <SelectItem value="DIVORCED">Divorced</SelectItem>
-              <SelectItem value="WIDOWED">Widowed</SelectItem>
+              <SelectItem value="SINGLE">{t('familyMembers.maritalSingle')}</SelectItem>
+              <SelectItem value="MARRIED">{t('familyMembers.maritalMarried')}</SelectItem>
+              <SelectItem value="DIVORCED">{t('familyMembers.maritalDivorced')}</SelectItem>
+              <SelectItem value="WIDOWED">{t('familyMembers.maritalWidowed')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -202,7 +205,7 @@ const ClientsFamilyMembersAddTab = ({
         {/* DOB with icon */}
         <div className="space-y-1">
           <Label>
-            Date Of Birth<span className="text-red-500">*</span>
+            {t('familyMembers.labelDateOfBirth')}<span className="text-red-500">*</span>
           </Label>
           <div className="relative">
             <Input
@@ -219,14 +222,14 @@ const ClientsFamilyMembersAddTab = ({
       {/* footer buttons */}
       <div className="flex items-center gap-4 justify-center mt-8">
         <Button type="button" variant="outline" onClick={() => onCancel?.()}>
-          Cancel
+          {tc('actions.cancel')}
         </Button>
         <Button
           type="submit"
           disabled={!isValid}
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white"
         >
-          Submit
+          {tc('actions.submit')}
         </Button>
       </div>
     </form>

@@ -114,8 +114,20 @@ export const AppSidebar = () => {
           </SidebarGroupLabel>
           <SidebarMenu>
             {[
+              dev
               { icon: <Gauge />, label: t('nav.dashboard'), route: 'dashboard', permission: 'ALL_FUNCTIONS' },
               { icon: <Send />, label: t('nav.navigation'), route: 'navigation', permission: 'ALL_FUNCTIONS' },
+              {
+                icon: <Gauge />,
+                label: t('nav.dashboard'),
+                route: 'dashboard',
+              },
+              {
+                icon: <Send />,
+                label: t('nav.navigation'),
+                route: 'navigation',
+              }
+            
               {
                 icon: <Check />,
                 label: t('nav.checkerInboxAndTasks'),

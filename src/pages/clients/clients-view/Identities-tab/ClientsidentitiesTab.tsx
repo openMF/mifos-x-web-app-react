@@ -8,26 +8,26 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const ClientsIdentitiesTab = () => {
-  const { groupId, loanId } = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation('clients')
 
   return (
     <div className="bg-transparent">
       <div className="flex items-center justify-between p-4">
         <h3 className="text-lg font-semibold text-black dark:text-white">
-          Client Identity
+          {t('identities.heading')}
         </h3>
         <Button
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white rounded-md border-0 shadow-none"
           onClick={() =>
-            navigate(
-              `/groups/${groupId}/loans-accounts/${loanId}/loan-collateral/add`
-            )
+            navigate(`/clients/${id}/identities/add`)
           }
         >
-          <Plus /> Add
+          <Plus /> {t('identities.addButton')}
         </Button>
       </div>
     </div>

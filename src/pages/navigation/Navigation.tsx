@@ -207,7 +207,9 @@ const Navigation = () => {
                   setSelectedClientId('')
                 }}
                 selectPlaceholder={
-                  officers.length ? t('navigation.selectOfficer') : t('navigation.noAssociatedOfficers')
+                  officers.length
+                    ? t('navigation.selectOfficer')
+                    : t('navigation.noAssociatedOfficers')
                 }
                 selectOptions={officers.map(s => ({ id: s.id, name: s.name }))}
                 selectClassname="w-full space-y-2"
@@ -220,7 +222,9 @@ const Navigation = () => {
             <div className="w-full space-y-2">
               <AppSelect
                 selectLabel={
-                  centers.length ? t('navigation.selectCenter') : t('navigation.noAssociatedCenters')
+                  centers.length
+                    ? t('navigation.selectCenter')
+                    : t('navigation.noAssociatedCenters')
                 }
                 selectValue={selectedCenterId}
                 selectOnChange={value => {
@@ -229,7 +233,9 @@ const Navigation = () => {
                   setSelectedClientId('')
                 }}
                 selectPlaceholder={
-                  centers.length ? t('navigation.selectCenter') : t('navigation.noAssociatedCenters')
+                  centers.length
+                    ? t('navigation.selectCenter')
+                    : t('navigation.noAssociatedCenters')
                 }
                 selectOptions={centers.map(c => ({ id: c.id, name: c.name }))}
                 selectClassname="w-full space-y-2"
@@ -242,7 +248,9 @@ const Navigation = () => {
             <div className="w-full space-y-2">
               <AppSelect
                 selectLabel={
-                  groups.length ? t('navigation.selectGroup') : t('navigation.noAssociatedGroups')
+                  groups.length
+                    ? t('navigation.selectGroup')
+                    : t('navigation.noAssociatedGroups')
                 }
                 selectValue={selectedGroupId}
                 selectOnChange={value => {
@@ -250,7 +258,9 @@ const Navigation = () => {
                   setSelectedClientId('')
                 }}
                 selectPlaceholder={
-                  groups.length ? t('navigation.selectGroup') : t('navigation.noAssociatedGroups')
+                  groups.length
+                    ? t('navigation.selectGroup')
+                    : t('navigation.noAssociatedGroups')
                 }
                 selectOptions={groups.map(g => ({ id: g.id, name: g.name }))}
                 selectClassname="w-full space-y-2"
@@ -263,12 +273,16 @@ const Navigation = () => {
             <div className="w-full space-y-2">
               <AppSelect
                 selectLabel={
-                  clients.length ? t('navigation.selectClient') : t('navigation.noAssociatedClients')
+                  clients.length
+                    ? t('navigation.selectClient')
+                    : t('navigation.noAssociatedClients')
                 }
                 selectValue={selectedClientId}
                 selectOnChange={value => setSelectedClientId(value)}
                 selectPlaceholder={
-                  clients.length ? t('navigation.selectClient') : t('navigation.noAssociatedClients')
+                  clients.length
+                    ? t('navigation.selectClient')
+                    : t('navigation.noAssociatedClients')
                 }
                 selectOptions={clients.map(c => ({ id: c.id, name: c.name }))}
                 selectClassname="w-full space-y-2"

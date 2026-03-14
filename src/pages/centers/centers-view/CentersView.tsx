@@ -27,6 +27,8 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Building2, Menu } from 'lucide-react'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
+import { useTranslation } from 'react-i18next'
+import { formatDate } from '@/lib/date-utils'
 
 // API instance
 const centersApi = new CentersApi(getConfiguration())
@@ -37,9 +39,12 @@ const can = (_perm: string) => true
 const CentersView = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const { t, i18n } = useTranslation('centers')
+  const { t: tc } = useTranslation('common')
 
   // State to hold center details
   const [center, setCenter] = useState<ExtendedCenterResponse>()
+  const [fetchError, setFetchError] = useState(false)
 
   // Fetch center details on mount
   useEffect(() => {
@@ -49,6 +54,7 @@ const CentersView = () => {
         setCenter(res.data as ExtendedCenterResponse)
       } catch (err) {
         console.error('Failed to fetch center', err)
+        setFetchError(true)
       }
     }
     fetchCenter()
@@ -64,8 +70,10 @@ const CentersView = () => {
     }
   }
 
-  // Loading state
-  if (!center) return <div className="p-6">Loading...</div>
+  // Loading / error states
+  if (fetchError)
+    return <div className="p-6 text-red-500">{t('failedToLoad')}</div>
+  if (!center) return <div className="p-6">{tc('actions.loading')}</div>
 
   // Map backend status codes to Tailwind colors
   const statusVal = center.status?.code
@@ -87,55 +95,71 @@ const CentersView = () => {
   const menuOptions = [
     // Activate if not active
     ...(!isActive
-      ? [{ label: 'Activate', onClick: () => alert('TODO: activate center') }]
+      ? [
+          {
+            label: t('view.menu.activate'),
+            onClick: () => alert(t('view.activateTodo')),
+          },
+        ]
       : []),
 
     // Edit allowed by permission
     ...(can('UPDATE_CENTER')
-      ? [{ label: 'Edit', path: `centers/${center.id}/edit` }]
+      ? [{ label: t('view.menu.edit'), path: `centers/${center.id}/edit` }]
       : []),
 
     // Group-related actions
-    { label: 'Add Group', path: 'groups', disabled: true },
-    { label: 'Manage Groups', path: 'centers' },
-    { label: 'Centers Saving Application', path: 'accounting', disabled: true },
+    { label: t('view.menu.addGroup'), path: 'groups', disabled: true },
+    { label: t('view.menu.manageGroups'), path: 'centers' },
+    {
+      label: t('view.menu.centersSavingApplication'),
+      path: 'accounting',
+      disabled: true,
+    },
 
     // Nested "More" options
     {
-      label: 'More',
+      label: t('view.menu.more'),
       children: [
         // Attendance only if a calendar exists
-        ...(hasCal ? [{ label: 'Attendance', path: 'pdf' }] : []),
+        ...(hasCal ? [{ label: t('view.menu.attendance'), path: 'pdf' }] : []),
 
         // Assign/unassign staff
         ...(!hasStaff
-          ? [{ label: 'Assign Staff', path: 'email' }]
-          : [{ label: 'Unassign Staff', path: 'email' }]),
+          ? [{ label: t('view.menu.assignStaff'), path: 'email' }]
+          : [{ label: t('view.menu.unassignStaff'), path: 'email' }]),
 
         // Delete only if active
         ...(isActive
           ? [
-            {
-              label: 'Delete',
-              onClick: () => {
-                if (confirm('Are you sure you want to delete this center?')) {
-                  handleDelete()
-                }
+              {
+                label: t('view.menu.delete'),
+                onClick: () => {
+                  if (confirm(t('view.confirmDelete'))) {
+                    handleDelete()
+                  }
+                },
               },
-            },
-          ]
+            ]
           : []),
 
         // Always allow closing
-        { label: 'Close', path: `centers/${center.id}/actions/close` },
+        {
+          label: t('view.menu.close'),
+          path: `centers/${center.id}/actions/close`,
+        },
 
         // Attach meeting only if active and no calendar yet
         ...(isActive && !hasCal
-          ? [{ label: 'Attach Meeting', path: 'meeting' }]
+          ? [{ label: t('view.menu.attachMeeting'), path: 'meeting' }]
           : []),
 
-        // Disabled history option (parity with Angular)
-        { label: 'Staff assignment history', path: 'email', disabled: true },
+        // Disabled history option
+        {
+          label: t('view.menu.staffAssignmentHistory'),
+          path: 'email',
+          disabled: true,
+        },
       ],
     },
   ]
@@ -145,10 +169,10 @@ const CentersView = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Centers', href: '/centers' },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/centers' },
           { label: String(center.name), href: `/centers/${id}` },
-          { label: 'General', current: true },
+          { label: t('view.tabs.general'), current: true },
         ]}
       />
 
@@ -162,29 +186,27 @@ const CentersView = () => {
           <div className="text-xl font-semibold flex items-center gap-2">
             <FontAwesomeIcon
               icon={faCircle}
-              title={statusVal || 'Unknown'}
+              title={statusVal || tc('status.unknown')}
               className={`${statusClass} w-3 h-3`}
             />
-            <span>Center Name : {center.name}</span>
+            <span>
+              {t('view.centerName')} {center.name}
+            </span>
           </div>
 
           {/* Info fields */}
-          <div>Account #: {center.accountNo ?? '—'}</div>
-          <div>Office: {center.officeName}</div>
-          <div>External Id: {center.externalId ?? '—'}</div>
           <div>
-            Activation Date :{' '}
-            {Array.isArray(center.activationDate)
-              ? new Date(
-                center.activationDate[0],
-                center.activationDate[1] - 1,
-                center.activationDate[2]
-              ).toLocaleDateString(undefined, {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-              })
-              : '—'}
+            {t('view.accountNo')} {center.accountNo ?? '—'}
+          </div>
+          <div>
+            {t('view.office')} {center.officeName}
+          </div>
+          <div>
+            {t('view.externalId')} {center.externalId ?? '—'}
+          </div>
+          <div>
+            {t('view.activationDate')}{' '}
+            {formatDate(center.activationDate, i18n.language)}
           </div>
         </div>
 
@@ -205,8 +227,12 @@ const CentersView = () => {
 
           {/* Meeting info */}
           <div className="mt-30 bg-[#0662a3] px-4 py-2 rounded-md text-sm font-medium text-white">
-            <div>Next Meeting on: {'Missing in OpenAPI'}</div>
-            <div>Meeting Frequency: {'Missing in OpenAPI'}</div>
+            <div>
+              {t('view.nextMeetingOn')} {t('view.missingInOpenAPI')}
+            </div>
+            <div>
+              {t('view.meetingFrequency')} {t('view.missingInOpenAPI')}
+            </div>
           </div>
         </div>
       </div>
@@ -214,8 +240,11 @@ const CentersView = () => {
       {/* Tabs */}
       <AppTabs
         tabs={[
-          { label: 'General', href: `centers/${center.id}/general` },
-          { label: 'Notes', href: `centers/${center.id}/notes` },
+          {
+            label: t('view.tabs.general'),
+            href: `centers/${center.id}/general`,
+          },
+          { label: t('view.tabs.notes'), href: `centers/${center.id}/notes` },
         ]}
       />
 

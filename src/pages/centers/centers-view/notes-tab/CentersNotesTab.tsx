@@ -8,18 +8,20 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useTranslation } from 'react-i18next'
 
 const CentersNotesTab = () => {
   const [newNote, setNewNote] = useState('')
+  const { t } = useTranslation('centers')
 
   return (
     <div className="text-black dark:text-white px-6 py-4 space-y-4">
-      <h2 className="text-lg font-semibold">Notes</h2>
+      <h2 className="text-lg font-semibold">{t('notes.heading')}</h2>
 
       {/* Input section */}
       <div className="flex items-start gap-4">
         <Input
-          placeholder="Write a note ...."
+          placeholder={t('notes.placeholder')}
           value={newNote}
           onChange={e => setNewNote(e.target.value)}
         />
@@ -27,7 +29,7 @@ const CentersNotesTab = () => {
           variant="outline"
           className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white"
         >
-          + Add
+          {t('notes.addButton')}
         </Button>
       </div>
 
