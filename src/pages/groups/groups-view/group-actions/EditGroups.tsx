@@ -104,7 +104,10 @@ const EditGroups = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/groups' },
-          { label: group?.name ?? t('view.groupName'), href: `/groups/${id}/general` },
+          {
+            label: group?.name ?? t('view.groupName'),
+            href: `/groups/${id}/general`,
+          },
           { label: t('edit.breadcrumb'), current: true },
         ]}
       />
@@ -165,7 +168,9 @@ const EditGroups = () => {
 
           {/* Activation Date */}
           <div className="w-full space-y-2">
-            <Label htmlFor="activation-on">{t('edit.labelActivationDate')}</Label>
+            <Label htmlFor="activation-on">
+              {t('edit.labelActivationDate')}
+            </Label>
             <Input
               id="activation-on"
               type="date"

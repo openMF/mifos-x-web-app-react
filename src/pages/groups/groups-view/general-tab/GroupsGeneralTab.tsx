@@ -92,15 +92,24 @@ const GroupsGeneralTab = () => {
       {/*Summary section*/}
       <div>
         <h2 className="text-lg font-semibold">{t('general.groupDetails')}</h2>
-        <div>{t('general.activeClients')} {summary?.['Active Clients'] ?? 0}</div>
         <div>
-          {t('general.activeGroupBorrowers')} {summary?.['Active Group Borrowers'] ?? 0}
+          {t('general.activeClients')} {summary?.['Active Clients'] ?? 0}
         </div>
-        <div>{t('general.activeGroupLoans')} {summary?.['Active Group Loans'] ?? 0}</div>
         <div>
-          {t('general.activeClientBorrowers')} {summary?.['Active Client Borrowers'] ?? 0}
+          {t('general.activeGroupBorrowers')}{' '}
+          {summary?.['Active Group Borrowers'] ?? 0}
         </div>
-        <div>{t('general.activeClientLoans')} {summary?.['Active Client Loans'] ?? 0}</div>
+        <div>
+          {t('general.activeGroupLoans')} {summary?.['Active Group Loans'] ?? 0}
+        </div>
+        <div>
+          {t('general.activeClientBorrowers')}{' '}
+          {summary?.['Active Client Borrowers'] ?? 0}
+        </div>
+        <div>
+          {t('general.activeClientLoans')}{' '}
+          {summary?.['Active Client Loans'] ?? 0}
+        </div>
         <div>
           {t('general.activeOverdueClientLoans')}{' '}
           {summary?.['Active Overdue Client Loans'] ?? 0}
@@ -114,7 +123,9 @@ const GroupsGeneralTab = () => {
       {/*Client Members*/}
       {clientMembers.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-2">{t('general.clientMembers')}</h2>
+          <h2 className="text-lg font-semibold mb-2">
+            {t('general.clientMembers')}
+          </h2>
           <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
             <Table>
               <TableHeader>
@@ -172,14 +183,16 @@ const GroupsGeneralTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                  <TableHead>{t('general.tableAccountNo')}</TableHead>
-                  <TableHead>{t('general.tableLoanAccount')}</TableHead>
-                  <TableHead>{t('general.tableOriginalLoan')}</TableHead>
-                  <TableHead>{t('general.tableLoanBalance')}</TableHead>
-                  <TableHead>{t('general.tableAmountPaid')}</TableHead>
-                  <TableHead>{t('general.tableType')}</TableHead>
-                  {showClosedLoanAccounts && <TableHead>{t('general.tableClosedDate')}</TableHead>}
-                  <TableHead>{t('general.tableActions')}</TableHead>
+                <TableHead>{t('general.tableAccountNo')}</TableHead>
+                <TableHead>{t('general.tableLoanAccount')}</TableHead>
+                <TableHead>{t('general.tableOriginalLoan')}</TableHead>
+                <TableHead>{t('general.tableLoanBalance')}</TableHead>
+                <TableHead>{t('general.tableAmountPaid')}</TableHead>
+                <TableHead>{t('general.tableType')}</TableHead>
+                {showClosedLoanAccounts && (
+                  <TableHead>{t('general.tableClosedDate')}</TableHead>
+                )}
+                <TableHead>{t('general.tableActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -246,7 +259,9 @@ const GroupsGeneralTab = () => {
       {/*GSIM Accounts*/}
       {gsimAccounts.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-2">{t('general.gsimAccountOverview')}</h2>
+          <h2 className="text-lg font-semibold mb-2">
+            {t('general.gsimAccountOverview')}
+          </h2>
           <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
             <Table>
               <TableHeader>
@@ -310,7 +325,9 @@ const GroupsGeneralTab = () => {
       {/*Saving Accounts*/}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold">{t('general.savingAccounts')}</h2>
+          <h2 className="text-lg font-semibold">
+            {t('general.savingAccounts')}
+          </h2>
           {savingAccounts.length > 0 && (
             <Button
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
@@ -329,13 +346,17 @@ const GroupsGeneralTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                  <TableHead>{t('general.tableAccountNo')}</TableHead>
-                  <TableHead>{t('general.tableSavingAccount')}</TableHead>
-                  <TableHead>
-                    {showClosedSavingAccounts ? t('general.tableClosedDate') : t('general.tableLastActive')}
-                  </TableHead>
-                  {!showClosedSavingAccounts && <TableHead>{t('general.tableBalance')}</TableHead>}
-                  <TableHead>{t('general.tableActions')}</TableHead>
+                <TableHead>{t('general.tableAccountNo')}</TableHead>
+                <TableHead>{t('general.tableSavingAccount')}</TableHead>
+                <TableHead>
+                  {showClosedSavingAccounts
+                    ? t('general.tableClosedDate')
+                    : t('general.tableLastActive')}
+                </TableHead>
+                {!showClosedSavingAccounts && (
+                  <TableHead>{t('general.tableBalance')}</TableHead>
+                )}
+                <TableHead>{t('general.tableActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

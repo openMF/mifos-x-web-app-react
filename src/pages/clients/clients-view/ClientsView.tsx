@@ -61,7 +61,9 @@ const ClientsView = () => {
               icon={faCircle}
               className={`${client?.status?.id === 300 ? 'text-green-400' : 'text-yellow-400'} w-3 h-3`}
             />
-            <span>{t('clientName')} {client?.displayName ?? '—'}</span>
+            <span>
+              {t('clientName')} {client?.displayName ?? '—'}
+            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-x-16 gap-y-2 mt-4">
@@ -91,7 +93,9 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.activationDate')}</div>
-              <div>{formatDate(client?.activationDate as number[] | undefined)}</div>
+              <div>
+                {formatDate(client?.activationDate as number[] | undefined)}
+              </div>
             </div>
             <div>
               <div className="font-semibold">{t('view.staff')}</div>
@@ -109,7 +113,10 @@ const ClientsView = () => {
                 </span>
               }
               options={[
-                { label: t('view.menu.edit'), path: `clients/${client?.id}/edit` },
+                {
+                  label: t('view.menu.edit'),
+                  path: `clients/${client?.id}/edit`,
+                },
                 {
                   label: t('view.menu.applications'),
                   children: [
@@ -143,7 +150,11 @@ const ClientsView = () => {
                 {
                   label: t('view.menu.actions'),
                   children: [
-                    { label: t('view.menu.close'), path: 'signature', disabled: true },
+                    {
+                      label: t('view.menu.close'),
+                      path: 'signature',
+                      disabled: true,
+                    },
                     {
                       label: t('view.menu.transferClients'),
                       path: 'signature',
@@ -151,17 +162,28 @@ const ClientsView = () => {
                     },
                   ],
                 },
-                { label: t('view.menu.unassignStaff'), path: `clients/${client?.id}/edit` },
+                {
+                  label: t('view.menu.unassignStaff'),
+                  path: `clients/${client?.id}/edit`,
+                },
                 {
                   label: t('view.menu.more'),
                   children: [
-                    { label: t('view.menu.addCharge'), path: 'signature', disabled: true },
+                    {
+                      label: t('view.menu.addCharge'),
+                      path: 'signature',
+                      disabled: true,
+                    },
                     {
                       label: t('view.menu.createCollateral'),
                       path: 'signature',
                       disabled: true,
                     },
-                    { label: t('view.menu.survey'), path: 'signature', disabled: true },
+                    {
+                      label: t('view.menu.survey'),
+                      path: 'signature',
+                      disabled: true,
+                    },
                     {
                       label: t('view.menu.uploadDefaultSavings'),
                       path: 'signature',
@@ -199,7 +221,9 @@ const ClientsView = () => {
           </div>
 
           <div className="mt-30 bg-[#0662a3] px-4 py-2 rounded-md text-sm font-medium text-white">
-            <div>{t('view.status')} {client?.status?.code ?? '—'}</div>
+            <div>
+              {t('view.status')} {client?.status?.code ?? '—'}
+            </div>
           </div>
         </div>
       </div>
@@ -207,14 +231,26 @@ const ClientsView = () => {
       {/* Tabs */}
       <AppTabs
         tabs={[
-          { label: t('view.tabs.general'), href: `clients/${client?.id}/general` },
-          { label: t('view.tabs.address'), href: `clients/${client?.id}/address` },
+          {
+            label: t('view.tabs.general'),
+            href: `clients/${client?.id}/general`,
+          },
+          {
+            label: t('view.tabs.address'),
+            href: `clients/${client?.id}/address`,
+          },
           {
             label: t('view.tabs.familyMembers'),
             href: `clients/${client?.id}/family-members`,
           },
-          { label: t('view.tabs.identities'), href: `clients/${client?.id}/identities` },
-          { label: t('view.tabs.documents'), href: `clients/${client?.id}/documents` },
+          {
+            label: t('view.tabs.identities'),
+            href: `clients/${client?.id}/identities`,
+          },
+          {
+            label: t('view.tabs.documents'),
+            href: `clients/${client?.id}/documents`,
+          },
           { label: t('view.tabs.notes'), href: `clients/${client?.id}/notes` },
         ]}
       />
