@@ -24,7 +24,7 @@ const ViewReports = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams()
-  
+
   // Using the correct type for Fineract API
   const [report, setReport] = useState<GetReportsResponse>()
 
@@ -65,13 +65,15 @@ const ViewReports = () => {
             className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer px-6"
             onClick={() => navigate(`/system/reports/${report?.id}/edit`)}
           >
-            <FontAwesomeIcon icon={faPenToSquare} className="mr-2" /> {t('label.button.edit')}
+            <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />{' '}
+            {t('label.button.edit')}
           </Button>
         </div>
 
         {/* Report title */}
         <h2 className="text-2xl font-bold mb-8 text-zinc-800 dark:text-zinc-100 border-b pb-4">
-          {t('label.heading.report')}: <span className="text-[#1074b9]">{report?.reportName}</span>
+          {t('label.heading.report')}:{' '}
+          <span className="text-[#1074b9]">{report?.reportName}</span>
         </h2>
 
         {/* Report details - THE ALIGNMENT FIX */}
@@ -81,7 +83,12 @@ const ViewReports = () => {
               {t('label.heading.reporttype')}:
             </div>
             <div className="font-medium">
-              {report?.reportType ? t(`labels.text.${report.reportType}`) : ''}
+              {/* FIXED: CodeRabbit recommendation for safer translation */}
+              {report?.reportType
+                ? t(`labels.text.${report.reportType}`, {
+                    defaultValue: report.reportType,
+                  })
+                : ''}
             </div>
           </div>
 
@@ -96,8 +103,12 @@ const ViewReports = () => {
             <div className="font-semibold w-48 shrink-0 text-zinc-500 dark:text-zinc-400">
               {t('label.heading.corereport')}:
             </div>
-            <div className={`px-2 py-0.5 rounded text-xs font-bold ${report?.coreReport ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
-              {report?.coreReport ? t('label.boolean.yes') : t('label.boolean.no')}
+            <div
+              className={`px-2 py-0.5 rounded text-xs font-bold ${report?.coreReport ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}
+            >
+              {report?.coreReport
+                ? t('label.boolean.yes')
+                : t('label.boolean.no')}
             </div>
           </div>
 
@@ -105,8 +116,12 @@ const ViewReports = () => {
             <div className="font-semibold w-48 shrink-0 text-zinc-500 dark:text-zinc-400">
               {t('label.heading.userreport')}:
             </div>
-            <div className={`px-2 py-0.5 rounded text-xs font-bold ${report?.useReport ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
-              {report?.useReport ? t('label.boolean.yes') : t('label.boolean.no')}
+            <div
+              className={`px-2 py-0.5 rounded text-xs font-bold ${report?.useReport ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}
+            >
+              {report?.useReport
+                ? t('label.boolean.yes')
+                : t('label.boolean.no')}
             </div>
           </div>
         </div>

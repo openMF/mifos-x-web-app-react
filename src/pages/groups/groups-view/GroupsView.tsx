@@ -93,7 +93,10 @@ const GroupsView = () => {
       })
     }
     if (hasPerm('UPDATE_GROUP')) {
-      opts.push({ label: t('view.menu.edit'), path: `groups/${group?.id}/edit` })
+      opts.push({
+        label: t('view.menu.edit'),
+        path: `groups/${group?.id}/edit`,
+      })
     }
     if (hasPerm('ASSOCIATECLIENTS_GROUP')) {
       opts.push({
@@ -171,7 +174,10 @@ const GroupsView = () => {
       })
     }
     if (hasPerm('CLOSE_GROUP')) {
-      more.push({ label: t('view.menu.close'), path: `groups/${group?.id}/actions/close` })
+      more.push({
+        label: t('view.menu.close'),
+        path: `groups/${group?.id}/actions/close`,
+      })
     }
     if (hasPerm('DELETE_GROUP')) {
       more.push({
@@ -225,11 +231,19 @@ const GroupsView = () => {
             <span>{t('view.groupName')}</span>
           </div>
           <div>{t('view.missingInOpenAPI')}</div>
-          <div>{t('view.centerName')} {group?.name}</div>
-          <div>{t('view.staff')} {(group as any)?.staffName ?? t('view.missingInOpenAPI')}</div>
+          <div>
+            {t('view.centerName')} {group?.name}
+          </div>
+          <div>
+            {t('view.staff')}{' '}
+            {(group as any)?.staffName ?? t('view.missingInOpenAPI')}
+          </div>
           <div>
             {t('view.activationDate')}{' '}
-            {formatDate((group as any)?.timeline?.activationDate, i18n.language) || t('view.missingInOpenAPI')}
+            {formatDate(
+              (group as any)?.timeline?.activationDate,
+              i18n.language
+            ) || t('view.missingInOpenAPI')}
           </div>
         </div>
 
@@ -254,9 +268,15 @@ const GroupsView = () => {
 
       <AppTabs
         tabs={[
-          { label: t('view.tabs.general'), href: `groups/${group?.id}/general` },
+          {
+            label: t('view.tabs.general'),
+            href: `groups/${group?.id}/general`,
+          },
           { label: t('view.tabs.notes'), href: `groups/${group?.id}/notes` },
-          { label: t('view.tabs.committee'), href: `groups/${group?.id}/committee` },
+          {
+            label: t('view.tabs.committee'),
+            href: `groups/${group?.id}/committee`,
+          },
         ]}
       />
 

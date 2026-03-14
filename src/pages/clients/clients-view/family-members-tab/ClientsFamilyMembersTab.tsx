@@ -133,11 +133,21 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SPOUSE">{t('familyMembers.relationshipSpouse')}</SelectItem>
-              <SelectItem value="CHILD">{t('familyMembers.relationshipChild')}</SelectItem>
-              <SelectItem value="PARENT">{t('familyMembers.relationshipParent')}</SelectItem>
-              <SelectItem value="SIBLING">{t('familyMembers.relationshipSibling')}</SelectItem>
-              <SelectItem value="OTHER">{t('familyMembers.relationshipOther')}</SelectItem>
+              <SelectItem value="SPOUSE">
+                {t('familyMembers.relationshipSpouse')}
+              </SelectItem>
+              <SelectItem value="CHILD">
+                {t('familyMembers.relationshipChild')}
+              </SelectItem>
+              <SelectItem value="PARENT">
+                {t('familyMembers.relationshipParent')}
+              </SelectItem>
+              <SelectItem value="SIBLING">
+                {t('familyMembers.relationshipSibling')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.relationshipOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -148,9 +158,15 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MALE">{t('familyMembers.genderMale')}</SelectItem>
-              <SelectItem value="FEMALE">{t('familyMembers.genderFemale')}</SelectItem>
-              <SelectItem value="OTHER">{t('familyMembers.genderOther')}</SelectItem>
+              <SelectItem value="MALE">
+                {t('familyMembers.genderMale')}
+              </SelectItem>
+              <SelectItem value="FEMALE">
+                {t('familyMembers.genderFemale')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.genderOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -166,11 +182,21 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="EMPLOYED">{t('familyMembers.professionEmployed')}</SelectItem>
-              <SelectItem value="SELF_EMPLOYED">{t('familyMembers.professionSelfEmployed')}</SelectItem>
-              <SelectItem value="STUDENT">{t('familyMembers.professionStudent')}</SelectItem>
-              <SelectItem value="UNEMPLOYED">{t('familyMembers.professionUnemployed')}</SelectItem>
-              <SelectItem value="OTHER">{t('familyMembers.professionOther')}</SelectItem>
+              <SelectItem value="EMPLOYED">
+                {t('familyMembers.professionEmployed')}
+              </SelectItem>
+              <SelectItem value="SELF_EMPLOYED">
+                {t('familyMembers.professionSelfEmployed')}
+              </SelectItem>
+              <SelectItem value="STUDENT">
+                {t('familyMembers.professionStudent')}
+              </SelectItem>
+              <SelectItem value="UNEMPLOYED">
+                {t('familyMembers.professionUnemployed')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.professionOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -184,10 +210,18 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SINGLE">{t('familyMembers.maritalSingle')}</SelectItem>
-              <SelectItem value="MARRIED">{t('familyMembers.maritalMarried')}</SelectItem>
-              <SelectItem value="DIVORCED">{t('familyMembers.maritalDivorced')}</SelectItem>
-              <SelectItem value="WIDOWED">{t('familyMembers.maritalWidowed')}</SelectItem>
+              <SelectItem value="SINGLE">
+                {t('familyMembers.maritalSingle')}
+              </SelectItem>
+              <SelectItem value="MARRIED">
+                {t('familyMembers.maritalMarried')}
+              </SelectItem>
+              <SelectItem value="DIVORCED">
+                {t('familyMembers.maritalDivorced')}
+              </SelectItem>
+              <SelectItem value="WIDOWED">
+                {t('familyMembers.maritalWidowed')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

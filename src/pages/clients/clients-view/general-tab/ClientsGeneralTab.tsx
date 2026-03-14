@@ -160,7 +160,9 @@ const ClientsGeneralTab = () => {
     <div className="space-y-6 text-black dark:text-white">
       {/* Performance History  */}
       <div>
-        <h3 className="text-lg font-semibold">{t('general.performanceHistory')}</h3>
+        <h3 className="text-lg font-semibold">
+          {t('general.performanceHistory')}
+        </h3>
         <div className="mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md p-4 text-sm">
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
@@ -169,7 +171,8 @@ const ClientsGeneralTab = () => {
               {t('general.lastLoanAmount')} {perf.lastLoanAmount || '—'} <br />
             </div>
             <div>
-              {t('general.noOfActiveSavings')} {perf.activeSavings || '—'} <br />
+              {t('general.noOfActiveSavings')} {perf.activeSavings || '—'}{' '}
+              <br />
               {t('general.totalSavings')} {perf.totalSavings || '—'} <br />
             </div>
           </div>
@@ -178,7 +181,9 @@ const ClientsGeneralTab = () => {
 
       {/* Upcoming Charges */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{t('general.upcomingCharges')}</h2>
+        <h2 className="text-lg font-semibold">
+          {t('general.upcomingCharges')}
+        </h2>
         <Button
           variant="secondary"
           size="sm"
@@ -193,13 +198,27 @@ const ClientsGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-4">{t('general.chargeTableName')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.chargeTableDueAsOf')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.chargeTableDue')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.chargeTablePaid')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.chargeTableWaived')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.chargeTableOutstanding')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.chargeTableActions')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTableName')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTableDueAsOf')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTableDue')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTablePaid')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTableWaived')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTableOutstanding')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.chargeTableActions')}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -267,7 +286,9 @@ const ClientsGeneralTab = () => {
           size="sm"
           onClick={() => setShowClosedLoans(!showClosedLoans)}
         >
-          {showClosedLoans ? t('general.viewActiveAccounts') : t('general.viewClosedAccounts')}
+          {showClosedLoans
+            ? t('general.viewActiveAccounts')
+            : t('general.viewClosedAccounts')}
         </Button>
       </div>
 
@@ -281,7 +302,9 @@ const ClientsGeneralTab = () => {
               <TableHead>{t('general.loanTableLoanBalance')}</TableHead>
               <TableHead>{t('general.loanTableAmountPaid')}</TableHead>
               <TableHead>{t('general.loanTableType')}</TableHead>
-              {showClosedLoans && <TableHead>{t('general.loanTableClosedDate')}</TableHead>}
+              {showClosedLoans && (
+                <TableHead>{t('general.loanTableClosedDate')}</TableHead>
+              )}
               <TableHead>{t('general.loanTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
@@ -400,7 +423,9 @@ const ClientsGeneralTab = () => {
           size="sm"
           onClick={() => setShowClosedSavings(!showClosedSavings)}
         >
-          {showClosedSavings ? t('general.viewActiveAccounts') : t('general.viewClosedAccounts')}
+          {showClosedSavings
+            ? t('general.viewActiveAccounts')
+            : t('general.viewClosedAccounts')}
         </Button>
       </div>
 
@@ -411,9 +436,13 @@ const ClientsGeneralTab = () => {
               <TableHead>{t('general.savingTableAccountNo')}</TableHead>
               <TableHead>{t('general.savingTableSavingsProduct')}</TableHead>
               <TableHead>
-                {showClosedSavings ? t('general.savingTableClosedDate') : t('general.savingTableLastActive')}
+                {showClosedSavings
+                  ? t('general.savingTableClosedDate')
+                  : t('general.savingTableLastActive')}
               </TableHead>
-              {!showClosedSavings && <TableHead>{t('general.savingTableBalance')}</TableHead>}
+              {!showClosedSavings && (
+                <TableHead>{t('general.savingTableBalance')}</TableHead>
+              )}
               <TableHead>{t('general.savingTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
@@ -553,7 +582,9 @@ const ClientsGeneralTab = () => {
             size="sm"
             onClick={() => setShowClosedShares(!showClosedShares)}
           >
-            {showClosedShares ? t('general.viewActiveAccounts') : t('general.viewClosedAccounts')}
+            {showClosedShares
+              ? t('general.viewActiveAccounts')
+              : t('general.viewClosedAccounts')}
           </Button>
         )}
       </div>
@@ -566,7 +597,9 @@ const ClientsGeneralTab = () => {
               <TableHead>{t('general.sharesTableShareProduct')}</TableHead>
               <TableHead>{t('general.sharesTableApprovedShares')}</TableHead>
               <TableHead>{t('general.sharesTablePendingShares')}</TableHead>
-              {showClosedShares && <TableHead>{t('general.sharesTableClosedDate')}</TableHead>}
+              {showClosedShares && (
+                <TableHead>{t('general.sharesTableClosedDate')}</TableHead>
+              )}
               <TableHead>{t('general.sharesTableActions')}</TableHead>
             </TableRow>
           </TableHeader>
@@ -671,7 +704,9 @@ const ClientsGeneralTab = () => {
                 <TableHead>{t('general.collateralTableName')}</TableHead>
                 <TableHead>{t('general.collateralTableQuantity')}</TableHead>
                 <TableHead>{t('general.collateralTableTotalValue')}</TableHead>
-                <TableHead>{t('general.collateralTableTotalCollateralValue')}</TableHead>
+                <TableHead>
+                  {t('general.collateralTableTotalCollateralValue')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
