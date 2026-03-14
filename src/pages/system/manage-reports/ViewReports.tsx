@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * Copyright since 2025 Mifos Initiative
  *
