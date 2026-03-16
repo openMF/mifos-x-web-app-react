@@ -193,7 +193,7 @@ const Users = () => {
                   {user.officeName}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {'Missing in OpenApi'}
+                  {(user as any).isSelfServiceUser ? 'Yes' : 'No'}
                 </TableCell>
               </TableRow>
             ))}

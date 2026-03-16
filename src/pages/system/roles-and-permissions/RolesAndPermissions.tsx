@@ -175,7 +175,7 @@ const RolesAndPermissions = () => {
                   {role.description || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {'missing in OpenApi'}
+                  {(role as any).disabled ? 'Disabled' : 'Enabled'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {role.description && (
