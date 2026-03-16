@@ -44663,6 +44663,9 @@ components:
         username:
           type: string
           example: mifos
+        isSelfServiceUser:
+          type: boolean
+          example: false
     GetUsersTemplateResponse:
       type: object
       description: GetUsersTemplateResponse
@@ -44719,6 +44722,9 @@ components:
         username:
           type: string
           example: mifos
+        isSelfServiceUser:
+          type: boolean
+          example: false
     GetWorkingDaysTemplateResponse:
       type: object
       description: GetWorkingDaysTemplateResponse
