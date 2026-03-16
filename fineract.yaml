@@ -30875,6 +30875,12 @@ components:
           example: Head Office
         status:
           $ref: '#/components/schemas/GetCentersStatus'
+        accountNo:
+          type: string
+          example: '000-1234'
+        externalId:
+          type: string
+          example: EXT-001
     GetCentersResponse:
       type: object
       description: GetCentersResponse
