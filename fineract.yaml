@@ -38290,6 +38290,13 @@ components:
         openingDate:
           type: string
           format: date
+        parentId:
+          type: integer
+          format: int64
+          example: 1
+        parentName:
+          type: string
+          example: Head Office
     GetOfficesTemplateResponse:
       type: object
       description: GetOfficesTemplateResponse
