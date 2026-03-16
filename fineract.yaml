@@ -50518,6 +50518,19 @@ components:
           type: integer
           format: int64
           example: 2
+        staffId:
+          type: integer
+          format: int64
+          example: 1
+        externalId:
+          type: string
+          example: EXT-001
+        submittedOnDate:
+          type: string
+          format: date
+        activationDate:
+          type: string
+          format: date
     PostHolidaysHolidayIdRequest:
       type: object
       description: PostHolidaysHolidayIdRequest
