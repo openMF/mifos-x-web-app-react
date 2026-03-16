@@ -32221,6 +32221,9 @@ components:
         registeredTableName:
           type: string
           example: extra_client_details
+        entitySubType:
+          type: string
+          example: PERSON
     GetDelinquencyActionsResponse:
       type: object
       description: GetDelinquencyActionsResponse
