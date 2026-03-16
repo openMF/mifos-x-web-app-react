@@ -172,7 +172,7 @@ const ViewUsers = () => {
 
           <div className="font-medium">Is Self Service</div>
           <div className="text-zinc-600 dark:text-zinc-400">
-            {'Missing in OpenApi'}
+            {users?.isSelfServiceUser ? 'Yes' : 'No'}
           </div>
         </div>
 
