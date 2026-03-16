@@ -31483,6 +31483,11 @@ components:
         penalty:
           type: boolean
           example: true
+        clientTransactiondates:
+          type: array
+          items:
+            type: string
+            format: date
     GetClientsClientIdAccountsResponse:
       type: object
       description: GetClientsClientIdAccountsResponse
