@@ -40432,6 +40432,9 @@ components:
         name:
           type: string
           example: Super Users
+        disabled:
+          type: boolean
+          example: false
     GetRolesRoleIdPermissionsResponse:
       type: object
       description: GetRolesRoleIdPermissionsResponse
