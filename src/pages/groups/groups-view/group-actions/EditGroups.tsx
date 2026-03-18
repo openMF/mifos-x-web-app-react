@@ -5,6 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import {
+  GroupsApi,
+  type GetGroupsGroupIdResponse,
+  type PutGroupsGroupIdRequest,
+} from '@/fineract-api'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -13,8 +18,6 @@ import AppSelect from '@/components/custom/select/AppSelect'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-
-import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { dateArrayToInputValue, inputToFineractDate } from '@/lib/date-utils'
 import { useTranslation } from 'react-i18next'
@@ -88,6 +91,7 @@ const EditGroups = () => {
       const act = inputToFineractDate(activationOn)
       if (act) payload.activationDate = act
       if (externalId.trim()) payload.externalId = externalId.trim()
+      await groupsApi.update13(Number(id), payload)
 
       navigate(`/groups/${id}/general`)
     } catch (err) {
@@ -104,7 +108,10 @@ const EditGroups = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/groups' },
-          { label: group?.name ?? t('view.groupName'), href: `/groups/${id}/general` },
+          {
+            label: group?.name ?? t('view.groupName'),
+            href: `/groups/${id}/general`,
+          },
           { label: t('edit.breadcrumb'), current: true },
         ]}
       />
@@ -165,7 +172,9 @@ const EditGroups = () => {
 
           {/* Activation Date */}
           <div className="w-full space-y-2">
-            <Label htmlFor="activation-on">{t('edit.labelActivationDate')}</Label>
+            <Label htmlFor="activation-on">
+              {t('edit.labelActivationDate')}
+            </Label>
             <Input
               id="activation-on"
               type="date"
