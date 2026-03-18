@@ -32,11 +32,21 @@ import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-import { ClientSearchV2Api } from '@/fineract-api'
+import { ClientSearchV2Api, type PageClientSearchData } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useTranslation } from 'react-i18next'
 
 const clientSearchApi = new ClientSearchV2Api(getConfiguration())
+
+/** Row shape returned by the search endpoint at runtime */
+interface ClientRow {
+  id?: number
+  displayName?: string
+  accountNumber?: string
+  externalId?: string
+  officeName?: string
+  status?: { id?: number; value?: string }
+}
 
 const Clients = () => {
   const navigate = useNavigate()
@@ -50,7 +60,7 @@ const Clients = () => {
   const [includePending, setIncludePending] = useState(false)
 
   // API state
-  const [rows, setRows] = useState<any[]>([])
+  const [rows, setRows] = useState<ClientRow[]>([])
   const [total, setTotal] = useState(0)
 
   // fetch clients on mount & whenever query/pagination changes
@@ -60,13 +70,13 @@ const Clients = () => {
     ;(async () => {
       try {
         const res = await clientSearchApi.searchByText({
-          query: searchTerm || undefined,
+          request: { text: searchTerm || undefined },
           page: Math.max(0, page - 1),
           size: itemsPerPage,
-        } as any)
+        })
 
-        const data: any = res.data || {}
-        const content: any[] = data.content || []
+        const data: PageClientSearchData = res.data || {}
+        const content = (data.content ?? []) as unknown as ClientRow[]
         const totalElements: number = data.totalElements ?? content.length
 
         if (!cancelled) {
@@ -88,7 +98,7 @@ const Clients = () => {
   }, [searchTerm, page, itemsPerPage])
 
   // toggle pending/active filter
-  const filtered = rows.filter((c: any) => {
+  const filtered = rows.filter((c: ClientRow) => {
     const statusId = c?.status?.id ?? 0
     return includePending
       ? statusId === 300 || statusId === 100
@@ -183,21 +193,32 @@ const Clients = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            {tc('pagination.showing', { current: filtered.length, total, page, pages: totalPages })}
+            {tc('pagination.showing', {
+              current: filtered.length,
+              total,
+              page,
+              pages: totalPages,
+            })}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="text-base">
               <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
-              <TableHead className="px-6 py-4">{t('table.accountNo')}</TableHead>
-              <TableHead className="px-6 py-4">{t('table.externalId')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('table.accountNo')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('table.externalId')}
+              </TableHead>
               <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
-              <TableHead className="px-6 py-4">{t('table.officeName')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('table.officeName')}
+              </TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {filtered.map((c: any) => (
+            {filtered.map((c: ClientRow) => (
               <TableRow
                 key={c.id}
                 onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
@@ -207,7 +228,7 @@ const Clients = () => {
                   {c.displayName ?? '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {c.accountNo ?? '—'}
+                  {c.accountNumber ?? '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {c.externalId ?? '—'}

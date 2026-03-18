@@ -49,7 +49,7 @@ const EditEmployees = () => {
           const emp = empRes.data ?? {}
 
           // Fineract often sends dates as [yyyy, mm, dd]
-          const toInputDate = (d: any) => {
+          const toInputDate = (d: unknown) => {
             if (Array.isArray(d) && d.length >= 3) {
               const [y, m, day] = d
               return `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`
@@ -74,14 +74,14 @@ const EditEmployees = () => {
     fetchData()
   }, [id])
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const formattedDate = formData.joiningDate
+    const _formattedDate = formData.joiningDate // Reserved for future use
       ? new Date(formData.joiningDate).toLocaleDateString('en-GB', {
           day: '2-digit',
           month: 'long',

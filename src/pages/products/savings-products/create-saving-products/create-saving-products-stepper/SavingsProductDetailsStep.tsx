@@ -8,12 +8,23 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+interface SavingsProductDetailsFormData {
+  name: string
+  shortName: string
+  description: string
+  [key: string]: unknown
+}
+
 const SavingsProductDetailsStep = ({
   formData,
   setFormData,
 }: {
-  formData: any
-  setFormData: (val: any) => void
+  formData: SavingsProductDetailsFormData
+  setFormData: (
+    updater: (
+      prev: SavingsProductDetailsFormData
+    ) => SavingsProductDetailsFormData
+  ) => void
 }) => {
   return (
     <div className="flex flex-col gap-6">
@@ -25,7 +36,7 @@ const SavingsProductDetailsStep = ({
             id="productName"
             value={formData.name}
             onChange={e =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 name: e.target.value,
               }))
@@ -39,7 +50,7 @@ const SavingsProductDetailsStep = ({
             id="shortName"
             value={formData.shortName}
             onChange={e =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 shortName: e.target.value,
               }))
@@ -55,7 +66,7 @@ const SavingsProductDetailsStep = ({
           id="description"
           value={formData.description}
           onChange={e =>
-            setFormData((prev: any) => ({
+            setFormData(prev => ({
               ...prev,
               description: e.target.value,
             }))

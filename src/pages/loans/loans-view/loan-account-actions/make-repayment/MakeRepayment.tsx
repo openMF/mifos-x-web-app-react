@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
@@ -14,10 +14,14 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
-import { LoansApi } from '@/fineract-api'
+import {
+  LoanTransactionsApi,
+  type GetLoansLoanIdTransactionsTemplateResponse,
+  type PostLoansLoanIdTransactionsRequest,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const loansApi = new LoansApi(getConfiguration())
+const loanTransactionsApi = new LoanTransactionsApi(getConfiguration())
 
 // tiny date helpers
 const toInputDate = (d = new Date()) =>
@@ -73,60 +77,52 @@ const MakeRepayment = () => {
   const [saving, setSaving] = useState(false)
 
   // load repayment template
-  const loadTemplate = async (isoDate: string) => {
-    if (!loanId) return
-    try {
-      const api: any = loansApi as any
-      const res = await api.retrieveLoanTransactionTemplate(
-        Number(loanId),
-        'repayment',
-        {
-          params: {
-            dateFormat: 'dd MMMM yyyy',
-            locale: 'en',
-            transactionDate: toFineractDate(isoDate),
-          },
-        }
-      )
-      const t = res?.data || {}
-      setCurrencyCode(t?.currency?.code || t?.currencyCode || 'USD')
-      setPaymentTypes(
-        (t?.paymentTypeOptions || []).map((p: any) => ({
-          id: p.id,
-          name: p.name,
-        }))
-      )
-      setPrincipal(Number(t?.principalPortion || 0))
-      setInterest(Number(t?.interestPortion || 0))
-      setFees(Number(t?.feeChargesPortion || 0))
-      setPenalties(Number(t?.penaltyChargesPortion || 0))
-    } catch (e) {
-      setPaymentTypes([])
-      setPrincipal(0)
-      setInterest(0)
-      setFees(0)
-      setPenalties(0)
-      console.error('repayment template failed', e)
-    }
-  }
-
-  useEffect(() => {
-    loadTemplate(transactionDate)
-  }, [loanId])
-  useEffect(() => {
-    loadTemplate(transactionDate)
-  }, [transactionDate])
-
-  const canSubmit = useMemo(
-    () => Boolean(loanId && Number(amount) > 0 && transactionDate),
-    [loanId, amount, transactionDate]
+  const loadTemplate = useCallback(
+    async (isoDate: string) => {
+      if (!loanId) return
+      try {
+        const res = await loanTransactionsApi.retrieveTransactionTemplate(
+          Number(loanId),
+          'repayment',
+          'dd MMMM yyyy',
+          toFineractDate(isoDate) as unknown as object,
+          'en'
+        )
+        const tpl: GetLoansLoanIdTransactionsTemplateResponse = res.data ?? {}
+        setCurrencyCode(tpl.currency?.code ?? 'USD')
+        setPaymentTypes(
+          (tpl.paymentTypeOptions ?? []).map(p => ({
+            id: p.id ?? 0,
+            name: p.name ?? '',
+          }))
+        )
+        setPrincipal(tpl.principalPortion ?? 0)
+        setInterest(tpl.interestPortion ?? 0)
+        setFees(tpl.feeChargesPortion ?? 0)
+        setPenalties(tpl.penaltyChargesPortion ?? 0)
+      } catch (e) {
+        setPaymentTypes([])
+        setPrincipal(0)
+        setInterest(0)
+        setFees(0)
+        setPenalties(0)
+        console.error('repayment template failed', e)
+      }
+    },
+    [loanId]
   )
+
+  useEffect(() => {
+    loadTemplate(transactionDate)
+  }, [loadTemplate, transactionDate])
+
+  const canSubmit = Boolean(loanId && Number(amount) > 0 && transactionDate)
 
   const onSubmit = async () => {
     if (!loanId || !canSubmit) return
     setSaving(true)
     try {
-      const payload: any = {
+      const payload: PostLoansLoanIdTransactionsRequest = {
         dateFormat: 'dd MMMM yyyy',
         locale: 'en',
         transactionDate: toFineractDate(transactionDate),
@@ -145,17 +141,11 @@ const MakeRepayment = () => {
         bankNumber: showPaymentDetails ? bankNumber || undefined : undefined,
       }
 
-      // OpenAPI submit
-      const api: any = loansApi as any
-      if (api.executeLoanTransaction) {
-        await api.executeLoanTransaction(Number(loanId), 'repayment', payload)
-      } else if (api.postLoansLoanIdTransactions) {
-        await api.postLoansLoanIdTransactions(
-          Number(loanId),
-          'repayment',
-          payload
-        )
-      }
+      await loanTransactionsApi.executeLoanTransaction(
+        Number(loanId),
+        payload,
+        'repayment'
+      )
 
       navigate(`/groups/${groupId}/loans-accounts/${loanId}/general`)
     } catch (e) {

@@ -31,7 +31,6 @@ const CloseSharesAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Close Shares Account:', { closedDate, note })
     backToAccount()
   }
 

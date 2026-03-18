@@ -12,6 +12,10 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 
+import type {
+  GetLoansLoanIdResponse,
+  GetLoansLoanIdStatus,
+} from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
@@ -20,12 +24,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'lucide-react'
 
 const loansApi = new LoansApi(getConfiguration())
-
 type Loan = any
 type Action = {
   label: string,
   path?: string,
   disabled?: boolean
+
 }
 const LoansView = () => {
   const { groupId, loanId } = useParams()

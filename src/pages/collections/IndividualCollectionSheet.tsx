@@ -21,6 +21,7 @@ import {
   StaffApi,
   type GetOfficesResponse,
   type StaffData,
+  type PostCollectionSheetResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
@@ -36,7 +37,8 @@ const IndividualCollectionSheet = () => {
 
   const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null)
   const [staff, setStaff] = useState<StaffData[] | null>(null)
-  const [collectionSheet, setCollectionSheet] = useState<any>(null)
+  const [_collectionSheet, setCollectionSheet] =
+    useState<PostCollectionSheetResponse | null>(null) // Reserved for future use
 
   const [formData, setFormData] = useState({
     office: '',
@@ -51,7 +53,7 @@ const IndividualCollectionSheet = () => {
         const officesRes = await officeApi.retrieveOffices()
         setOffices(officesRes.data)
       } catch (err) {
-        console.log('Failed to fetch offices', err)
+        console.error('Failed to fetch offices', err)
       }
     }
     fetchDropdowns()
@@ -62,7 +64,7 @@ const IndividualCollectionSheet = () => {
       const res = await staffApi.retrieveAll16(Number(officeId))
       setStaff(res.data)
     } catch (err) {
-      console.log('Failed to fetch staff', err)
+      console.error('Failed to fetch staff', err)
     }
   }
 
@@ -83,17 +85,14 @@ const IndividualCollectionSheet = () => {
     }
 
     try {
-      console.log('Sending collection payload', payload)
-
       const response = await collectionSheetApi.generateCollectionSheet(
         payload,
         'generateCollectionSheet'
       )
 
-      console.log('Collection Sheet Response:', response.data)
       setCollectionSheet(response.data)
     } catch (err) {
-      console.log('Failed to generate collection sheet', err)
+      console.error('Failed to generate collection sheet', err)
     }
   }
 

@@ -25,7 +25,7 @@ const EditCenters = () => {
   const { t: tc } = useTranslation('common')
 
   const [center, setCenter] = useState<GetCentersCenterIdResponse>()
-  const [staffId, setStaffId] = useState<string>('')
+  const [_staffId, _setStaffId] = useState<string>('') // Reserved for future use
 
   useEffect(() => {
     ;(async () => {
@@ -33,7 +33,7 @@ const EditCenters = () => {
         const res = await centersApi.retrieveOne14(Number(id))
         setCenter(res.data)
       } catch (err) {
-        console.log("Can't fetch center", err)
+        console.error("Can't fetch center", err)
       }
     })()
   }, [id])
@@ -102,7 +102,9 @@ const EditCenters = () => {
             <Button
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
               // no submit logic per your request
-              onClick={() => console.log('Selected staff:', staffId)}
+              onClick={() => {
+                /* TODO: handle staff selection */
+              }}
             >
               {tc('actions.submit')}
             </Button>

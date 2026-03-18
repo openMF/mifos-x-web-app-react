@@ -7,12 +7,20 @@
  */
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type { GetLoansLoanIdResponse } from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 const loansApi = new LoansApi(getConfiguration())
 
-type Loan = any
+/** Extension for properties not on the generated type but returned at runtime. */
+type ExtendedLoan = GetLoansLoanIdResponse & {
+  loanOfficer?: { displayName?: string }
+  purpose?: { name?: string }
+  approvedPrincipalAmount?: number
+  principalDisbursed?: number
+  disbursedAmount?: number
+}
 
 function formatCurrency(n: number | null | undefined, code: string) {
   if (n === null || n === undefined) return 'Not Provided'
@@ -27,12 +35,8 @@ function formatCurrency(n: number | null | undefined, code: string) {
   }
 }
 
-function formatDate(d: any) {
+function formatDate(d: string | null | undefined) {
   if (!d) return 'Not Available'
-  if (Array.isArray(d) && d.length >= 3) {
-    const [y, m, day] = d
-    return new Date(y, (m ?? 1) - 1, day ?? 1).toLocaleDateString()
-  }
   const dt = new Date(d)
   return isNaN(+dt) ? 'Not Available' : dt.toLocaleDateString()
 }
@@ -56,15 +60,18 @@ const Row = ({
 
 const LoansGeneralTab = () => {
   const { loanId } = useParams()
-  const [loan, setLoan] = useState<Loan | null>(null)
+  const [loan, setLoan] = useState<ExtendedLoan | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     ;(async () => {
       try {
         if (!loanId) return
-        const res = await loansApi.retrieveLoan(Number(loanId) as any)
-        setLoan(res.data)
+        const loanIdNum = Number(loanId)
+        const res = await loansApi.retrieveLoan(loanIdNum)
+        setLoan(res.data as ExtendedLoan)
+      } catch (err) {
+        console.error('Failed to fetch loan', err)
       } finally {
         setLoading(false)
       }
@@ -77,14 +84,16 @@ const LoansGeneralTab = () => {
     )
   }
 
-  const currencyCode = loan?.currency?.code ?? 'USD'
-  const currencyName = loan?.currency?.name
-    ? `${loan.currency.name} ${currencyCode}`
+  const currency = loan?.currency
+  const currencyCode = currency?.code ?? 'USD'
+  const currencyName = currency?.name
+    ? `${currency.name} ${currencyCode}`
     : 'Not Available'
 
+  const timeline = loan?.timeline
   const disbursementDate =
-    loan?.timeline?.actualDisbursementDate ??
-    loan?.timeline?.expectedDisbursementDate ??
+    timeline?.actualDisbursementDate ??
+    timeline?.expectedDisbursementDate ??
     null
 
   const loanOfficer =
@@ -104,10 +113,9 @@ const LoansGeneralTab = () => {
   const disbursedAmount =
     loan?.principalDisbursed ?? loan?.disbursedAmount ?? null
 
+  const summary = loan?.summary
   const arrearsBy =
-    typeof loan?.summary?.totalOverdue === 'number'
-      ? loan.summary.totalOverdue
-      : null
+    typeof summary?.totalOverdue === 'number' ? summary.totalOverdue : null
 
   return (
     <div className="space-y-10 text-black dark:text-white">
