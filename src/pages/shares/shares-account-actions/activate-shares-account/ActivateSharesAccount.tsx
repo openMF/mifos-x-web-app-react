@@ -30,7 +30,6 @@ const ActivateSharesAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Activate Shares:', { activatedDate, sharesAccountId })
     backToAccount()
   }
 

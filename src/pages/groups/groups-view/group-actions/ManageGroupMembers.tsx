@@ -57,9 +57,12 @@ const ManageGroupMembers = () => {
           }
         )
         setGroup(res.data)
+        const dataRecord = res.data as unknown as Record<string, unknown>
         const members = Array.from(
-          (res.data as any)?.clientMembers ?? []
-        ) as LiteClient[]
+          (Array.isArray(dataRecord?.clientMembers)
+            ? dataRecord.clientMembers
+            : []) as LiteClient[]
+        )
         setClientMembers(members)
       } catch (e) {
         console.error('Failed to load group/members', e)
@@ -116,7 +119,10 @@ const ManageGroupMembers = () => {
 
   const removeClient = async (client: LiteClient) => {
     if (!id) return
-    if (!confirm(t('manageMembers.confirmRemove', { name: client.displayName }))) return
+    if (
+      !confirm(t('manageMembers.confirmRemove', { name: client.displayName }))
+    )
+      return
     setBusy(true)
     try {
       setClientMembers(prev => prev.filter(c => c.id !== client.id))
@@ -133,24 +139,33 @@ const ManageGroupMembers = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/groups' },
-          { label: group?.name ?? t('view.groupName'), href: `/groups/${id}/general` },
+          {
+            label: group?.name ?? t('view.groupName'),
+            href: `/groups/${id}/general`,
+          },
           { label: t('manageMembers.breadcrumb'), current: true },
         ]}
       />
 
-      <h1 className="text-2xl font-semibold mt-2 mb-6">{t('manageMembers.heading')}</h1>
+      <h1 className="text-2xl font-semibold mt-2 mb-6">
+        {t('manageMembers.heading')}
+      </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* LEFT: Add Clients card */}
         <div className="bg-white dark:bg-zinc-800 rounded-lg shadow border border-zinc-200 dark:border-zinc-700">
           <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-700">
-            <h3 className="text-lg font-medium">{t('manageMembers.addClients')}</h3>
+            <h3 className="text-lg font-medium">
+              {t('manageMembers.addClients')}
+            </h3>
           </div>
 
           <div className="p-5 space-y-4">
             {/* Autocomplete input */}
             <div className="relative">
-              <Label className="mb-1 block">{t('manageMembers.labelClient')}</Label>
+              <Label className="mb-1 block">
+                {t('manageMembers.labelClient')}
+              </Label>
               <Input
                 placeholder={t('manageMembers.placeholderSearch')}
                 value={selectedClient ? selectedClient.displayName : search}
@@ -184,7 +199,9 @@ const ManageGroupMembers = () => {
             {/* Selected client details table */}
             <div className="border rounded">
               <div className="flex items-center justify-between px-4 py-3 border-b">
-                <div className="font-medium">{t('manageMembers.clientDetails')}</div>
+                <div className="font-medium">
+                  {t('manageMembers.clientDetails')}
+                </div>
                 <Button
                   size="icon"
                   className="bg-[#1074b9] hover:bg-[#0662a3]"
@@ -198,17 +215,23 @@ const ManageGroupMembers = () => {
 
               <div className="divide-y">
                 <div className="flex px-4 py-3">
-                  <div className="w-40 text-zinc-600">{t('manageMembers.tableName')}</div>
+                  <div className="w-40 text-zinc-600">
+                    {t('manageMembers.tableName')}
+                  </div>
                   <div className="flex-1">
                     {selectedClient?.displayName ?? '—'}
                   </div>
                 </div>
                 <div className="flex px-4 py-3">
-                  <div className="w-40 text-zinc-600">{t('manageMembers.tableId')}</div>
+                  <div className="w-40 text-zinc-600">
+                    {t('manageMembers.tableId')}
+                  </div>
                   <div className="flex-1">{selectedClient?.id ?? '—'}</div>
                 </div>
                 <div className="flex px-4 py-3">
-                  <div className="w-40 text-zinc-600">{t('manageMembers.tableOffice')}</div>
+                  <div className="w-40 text-zinc-600">
+                    {t('manageMembers.tableOffice')}
+                  </div>
                   <div className="flex-1">
                     {selectedClient?.officeName ?? '—'}
                   </div>
@@ -221,12 +244,16 @@ const ManageGroupMembers = () => {
         {/* RIGHT: Client Members list */}
         <div className="bg-white dark:bg-zinc-800 rounded-lg shadow border border-zinc-200 dark:border-zinc-700">
           <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-700">
-            <h3 className="text-lg font-medium">{t('manageMembers.clientMembers')}</h3>
+            <h3 className="text-lg font-medium">
+              {t('manageMembers.clientMembers')}
+            </h3>
           </div>
 
           <div className="p-2">
             {clientMembers.length === 0 ? (
-              <div className="p-6 text-zinc-500">{t('manageMembers.noMembers')}</div>
+              <div className="p-6 text-zinc-500">
+                {t('manageMembers.noMembers')}
+              </div>
             ) : (
               <ul className="divide-y">
                 {clientMembers.map(c => (

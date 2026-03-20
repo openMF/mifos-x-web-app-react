@@ -37,7 +37,7 @@ const GroupsGeneralTab = () => {
   const { t: tc } = useTranslation('common')
 
   // State for summary data and accounts
-  const [summary, setSummary] = useState<Record<string, any>>({})
+  const [summary, setSummary] = useState<Record<string, unknown>>({})
   const [accounts, setAccounts] =
     useState<GetGroupsGroupIdAccountsResponse | null>(null)
 
@@ -56,7 +56,10 @@ const GroupsGeneralTab = () => {
           }),
           accountApi.retrieveAccounts(Number(id)),
         ])
-        setSummary(summaryRes.data?.data?.[0] ?? {})
+        setSummary(
+          (summaryRes.data?.data?.[0] as unknown as Record<string, unknown>) ??
+            {}
+        )
         setAccounts(accountsRes.data)
       } catch (e) {
         console.error('Failed to load group details', e)
@@ -66,24 +69,31 @@ const GroupsGeneralTab = () => {
 
   // organize accounts from response
   const loanAccounts = Array.from(accounts?.loanAccounts ?? [])
-  const gsimAccounts = Array.from(accounts?.memberLoanAccounts ?? [])
+  const gsimAccounts = Array.from(accounts?.memberSavingsAccounts ?? [])
   const glimAccounts = Array.from(accounts?.memberLoanAccounts ?? [])
   const savingAccounts = Array.from(accounts?.savingsAccounts ?? [])
-  const clientMembers = Array.from(accounts?.memberLoanAccounts ?? [])
 
   // helper to render status dot based on account status flags
-  const statusDot = (acc: any) => (
+  const statusDot = (acc: { status?: unknown }) => (
     <span
       className={`inline-block w-3 h-3 rounded-full ${
-        acc.status?.active
+        (acc.status as Record<string, unknown> | undefined)?.active
           ? 'bg-green-500'
-          : acc.status?.submittedAndPendingApproval
+          : (acc.status as Record<string, unknown> | undefined)
+                ?.submittedAndPendingApproval
             ? 'bg-yellow-500'
-            : acc.status?.closed || acc.status?.code?.includes('withdrawn')
+            : (acc.status as Record<string, unknown> | undefined)?.closed ||
+                (
+                  (acc.status as Record<string, unknown> | undefined)
+                    ?.code as string
+                )?.includes('withdrawn')
               ? 'bg-zinc-400'
               : 'bg-sky-500'
       }`}
-      title={acc.status?.value || tc('status.unknown')}
+      title={
+        ((acc.status as Record<string, unknown> | undefined)
+          ?.value as string) || tc('status.unknown')
+      }
     />
   )
 
@@ -92,64 +102,37 @@ const GroupsGeneralTab = () => {
       {/*Summary section*/}
       <div>
         <h2 className="text-lg font-semibold">{t('general.groupDetails')}</h2>
-        <div>{t('general.activeClients')} {summary?.['Active Clients'] ?? 0}</div>
         <div>
-          {t('general.activeGroupBorrowers')} {summary?.['Active Group Borrowers'] ?? 0}
+          {t('general.activeClients')}{' '}
+          {String(summary?.['Active Clients'] ?? 0)}
         </div>
-        <div>{t('general.activeGroupLoans')} {summary?.['Active Group Loans'] ?? 0}</div>
         <div>
-          {t('general.activeClientBorrowers')} {summary?.['Active Client Borrowers'] ?? 0}
+          {t('general.activeGroupBorrowers')}{' '}
+          {String(summary?.['Active Group Borrowers'] ?? 0)}
         </div>
-        <div>{t('general.activeClientLoans')} {summary?.['Active Client Loans'] ?? 0}</div>
+        <div>
+          {t('general.activeGroupLoans')}{' '}
+          {String(summary?.['Active Group Loans'] ?? 0)}
+        </div>
+        <div>
+          {t('general.activeClientBorrowers')}{' '}
+          {String(summary?.['Active Client Borrowers'] ?? 0)}
+        </div>
+        <div>
+          {t('general.activeClientLoans')}{' '}
+          {String(summary?.['Active Client Loans'] ?? 0)}
+        </div>
         <div>
           {t('general.activeOverdueClientLoans')}{' '}
-          {summary?.['Active Overdue Client Loans'] ?? 0}
+          {String(summary?.['Active Overdue Client Loans'] ?? 0)}
         </div>
         <div>
           {t('general.activeOverdueGroupLoans')}{' '}
-          {summary?.['Active Overdue Group Loans'] ?? 0}
+          {String(summary?.['Active Overdue Group Loans'] ?? 0)}
         </div>
       </div>
 
-      {/*Client Members*/}
-      {clientMembers.length > 0 && (
-        <div>
-          <h2 className="text-lg font-semibold mb-2">{t('general.clientMembers')}</h2>
-          <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('general.tableName')}</TableHead>
-                  <TableHead>{t('general.tableAccountNo')}</TableHead>
-                  <TableHead>{t('general.tableOffice')}</TableHead>
-                  <TableHead>{t('general.tableJlgLoanApplication')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {clientMembers.map(c => (
-                  <TableRow
-                    key={c.id}
-                    onClick={() => navigate(`/clients/${c.id}/general`)}
-                    className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700"
-                  >
-                    <TableCell>{c.productName}</TableCell>
-                    <TableCell>{c.accountNo}</TableCell>
-                    <TableCell>{c.productName}</TableCell>
-                    <TableCell>
-                      <Button
-                        size="icon"
-                        className="bg-[#1074b9] hover:bg-[#0662a3]"
-                      >
-                        <Check className="w-4 h-4 text-white" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
-      )}
+      {/* TODO: Client members should be passed from parent GroupsView which has group.clientMembers */}
 
       {/*Loan Accounts*/}
       <div>
@@ -172,21 +155,20 @@ const GroupsGeneralTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                  <TableHead>{t('general.tableAccountNo')}</TableHead>
-                  <TableHead>{t('general.tableLoanAccount')}</TableHead>
-                  <TableHead>{t('general.tableOriginalLoan')}</TableHead>
-                  <TableHead>{t('general.tableLoanBalance')}</TableHead>
-                  <TableHead>{t('general.tableAmountPaid')}</TableHead>
-                  <TableHead>{t('general.tableType')}</TableHead>
-                  {showClosedLoanAccounts && <TableHead>{t('general.tableClosedDate')}</TableHead>}
-                  <TableHead>{t('general.tableActions')}</TableHead>
+                <TableHead>{t('general.tableAccountNo')}</TableHead>
+                <TableHead>{t('general.tableLoanAccount')}</TableHead>
+                <TableHead>{t('general.tableOriginalLoan')}</TableHead>
+                <TableHead>{t('general.tableLoanBalance')}</TableHead>
+                <TableHead>{t('general.tableAmountPaid')}</TableHead>
+                <TableHead>{t('general.tableType')}</TableHead>
+                {showClosedLoanAccounts && (
+                  <TableHead>{t('general.tableClosedDate')}</TableHead>
+                )}
+                <TableHead>{t('general.tableActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loanAccounts
-                .filter(l =>
-                  showClosedLoanAccounts ? l.status?.closed : !l.status?.closed
-                )
                 .filter(l =>
                   showClosedLoanAccounts
                     ? l.status?.closed || l.status?.code?.includes('withdrawn')
@@ -246,7 +228,9 @@ const GroupsGeneralTab = () => {
       {/*GSIM Accounts*/}
       {gsimAccounts.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-2">{t('general.gsimAccountOverview')}</h2>
+          <h2 className="text-lg font-semibold mb-2">
+            {t('general.gsimAccountOverview')}
+          </h2>
           <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
             <Table>
               <TableHeader>
@@ -310,7 +294,9 @@ const GroupsGeneralTab = () => {
       {/*Saving Accounts*/}
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold">{t('general.savingAccounts')}</h2>
+          <h2 className="text-lg font-semibold">
+            {t('general.savingAccounts')}
+          </h2>
           {savingAccounts.length > 0 && (
             <Button
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
@@ -329,13 +315,17 @@ const GroupsGeneralTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                  <TableHead>{t('general.tableAccountNo')}</TableHead>
-                  <TableHead>{t('general.tableSavingAccount')}</TableHead>
-                  <TableHead>
-                    {showClosedSavingAccounts ? t('general.tableClosedDate') : t('general.tableLastActive')}
-                  </TableHead>
-                  {!showClosedSavingAccounts && <TableHead>{t('general.tableBalance')}</TableHead>}
-                  <TableHead>{t('general.tableActions')}</TableHead>
+                <TableHead>{t('general.tableAccountNo')}</TableHead>
+                <TableHead>{t('general.tableSavingAccount')}</TableHead>
+                <TableHead>
+                  {showClosedSavingAccounts
+                    ? t('general.tableClosedDate')
+                    : t('general.tableLastActive')}
+                </TableHead>
+                {!showClosedSavingAccounts && (
+                  <TableHead>{t('general.tableBalance')}</TableHead>
+                )}
+                <TableHead>{t('general.tableActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -363,8 +353,8 @@ const GroupsGeneralTab = () => {
                     <TableCell>{acc.productName}</TableCell>
                     <TableCell>
                       {showClosedSavingAccounts
-                        ? (acc.accountNo ?? '-')
-                        : (acc.accountNo ?? '-')}
+                        ? t('view.missingInOpenAPI')
+                        : t('view.missingInOpenAPI')}
                     </TableCell>
                     {!showClosedSavingAccounts && (
                       <TableCell>{t('view.missingInOpenAPI')}</TableCell>

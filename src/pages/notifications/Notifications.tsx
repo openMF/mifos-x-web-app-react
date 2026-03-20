@@ -43,7 +43,7 @@ const Notifications = () => {
         const response = await notiApi.getAllNotifications()
         setNotificationData(response.data)
       } catch (err) {
-        console.log('Failed to fetch Notification Data', err)
+        console.error('Failed to fetch Notification Data', err)
       }
     }
     fetchNotificationDetails()

@@ -126,8 +126,7 @@ const LoanApproval = () => {
     }))
 
     try {
-      const res = await batchApi.handleBatchRequests(batchPayload, true)
-      console.log('Loan approvals successful:', res.data)
+      await batchApi.handleBatchRequests(batchPayload, true)
       alert('Loans approved successfully.')
       setSelectedIds([]) // Clear selection
     } catch (err) {

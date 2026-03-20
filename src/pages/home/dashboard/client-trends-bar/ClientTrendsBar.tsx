@@ -59,7 +59,9 @@ const ClientTrendsLine = () => {
   const [officeId, setOfficeId] = useState<number>(1)
   const [officeData, setOfficeData] = useState<GetOfficesResponse[]>()
   const [timescale, setTimescale] = useState('Day')
-  const [chartData, setChartData] = useState<any[]>([])
+  const [chartData, setChartData] = useState<
+    { label: string; onboarded: number; loaned: number }[]
+  >([])
   const { t } = useTranslation('common')
 
   const chartConfig: ChartConfig = {
@@ -100,10 +102,14 @@ const ClientTrendsLine = () => {
           }),
         ])
 
-        const clientRows: any[] = Array.isArray(clientRes.data)
-          ? clientRes.data
+        const clientRows: Record<string, unknown>[] = Array.isArray(
+          clientRes.data
+        )
+          ? (clientRes.data as Record<string, unknown>[])
           : []
-        const loanRows: any[] = Array.isArray(loanRes.data) ? loanRes.data : []
+        const loanRows: Record<string, unknown>[] = Array.isArray(loanRes.data)
+          ? (loanRes.data as Record<string, unknown>[])
+          : []
         const labels = generateLabels(timescale)
 
         const formatted = labels.map(label => {
@@ -113,7 +119,7 @@ const ClientTrendsLine = () => {
             } else if (timescale === 'Week') {
               return String(r.Weeks) === label
             } else {
-              const entryDate = new Date(r.days)
+              const entryDate = new Date(r.days as string | number)
               const formattedDate = format(
                 entryDate,
                 timescale === 'Month' ? 'MMMM' : 'd/M'
@@ -128,7 +134,7 @@ const ClientTrendsLine = () => {
             } else if (timescale === 'Week') {
               return String(r.Weeks) === label
             } else {
-              const entryDate = new Date(r.days)
+              const entryDate = new Date(r.days as string | number)
               const formattedDate = format(
                 entryDate,
                 timescale === 'Month' ? 'MMMM' : 'd/M'
@@ -139,8 +145,8 @@ const ClientTrendsLine = () => {
 
           return {
             label,
-            onboarded: matchClient?.count ?? 0,
-            loaned: matchLoan?.lcount ?? 0,
+            onboarded: (matchClient?.count as number) ?? 0,
+            loaned: (matchLoan?.lcount as number) ?? 0,
           }
         })
 

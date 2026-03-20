@@ -25,7 +25,7 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 import {
   UsersApi,
-  type GetUsersResponse,
+  type GetUsersResponse as _GetUsersResponse, // Reserved for future use
   type GetUsersUserIdResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -49,10 +49,9 @@ const ViewUsers = () => {
     const fetchViewUsers = async () => {
       try {
         const response = await usersApi.retrieveOne31(Number(id))
-        console.log('res: ', response.data)
         setUsers(response.data)
       } catch (err) {
-        console.log('Failed to fetch User details', err)
+        console.error('Failed to fetch User details', err)
       }
     }
     fetchViewUsers()

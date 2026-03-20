@@ -46,7 +46,7 @@ const ViewDelinquencyBucket = () => {
       await delinquencyApi.deleteDelinquencyBucket(Number(id))
       navigate('/products/delinquency-bucket-configurations/buckets')
     } catch (err) {
-      console.log('Failed to Delete Bucket', err)
+      console.error('Failed to Delete Bucket', err)
     }
   }
 

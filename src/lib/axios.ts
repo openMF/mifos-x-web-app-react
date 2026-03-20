@@ -30,7 +30,7 @@ fineract.interceptors.request.use(config => {
   const authHeaders = getAuthHeaders()
   // Ensure tenant header is set if an Authorization header is present
   const hasAuthorizationHeader = !!(
-    authHeaders['Authorization'] || (authHeaders as any)['authorization']
+    authHeaders['Authorization'] || authHeaders['authorization']
   )
 
   if (hasAuthorizationHeader) {

@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -19,6 +19,8 @@ import AppSelect from '@/components/custom/select/AppSelect'
 import {
   GeneralLedgerAccountApi,
   type GetGLAccountsTemplateResponse,
+  type GLAccountData,
+  type CodeValueData,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
@@ -38,8 +40,8 @@ const EditGlAccounts = () => {
   const [selectedAccountUsage, setSelectedAccountUsage] = useState<string>('')
 
   //stores the state for parent and tag options
-  const [parentOptions, setParentOptions] = useState<any[]>([])
-  const [tagOptions, setTagOptions] = useState<any[]>([])
+  const [parentOptions, setParentOptions] = useState<GLAccountData[]>([])
+  const [tagOptions, setTagOptions] = useState<CodeValueData[]>([])
 
   //stores the state for manual entries
 
@@ -73,7 +75,7 @@ const EditGlAccounts = () => {
           description: acc.description || '',
         })
       } catch (err) {
-        console.log('Failed to fetch GL account details', err)
+        console.error('Failed to fetch GL account details', err)
       }
     }
     fetchGlAccounts()
@@ -86,11 +88,44 @@ const EditGlAccounts = () => {
         const response = await glApi.retrieveNewAccountDetails()
         setTemplate(response.data)
       } catch (err) {
-        console.log('Failed to get gl Template', err)
+        console.error('Failed to get gl Template', err)
       }
     }
     fetchTemplate()
   }, [])
+
+  const handleAccountTypeChange = useCallback(
+    (value: string) => {
+      const id = parseInt(value)
+
+      switch (id) {
+        case 1:
+          setParentOptions(template?.assetHeaderAccountOptions || [])
+          setTagOptions(template?.allowedAssetsTagOptions || [])
+          break
+        case 2:
+          setParentOptions(template?.liabilityHeaderAccountOptions || [])
+          setTagOptions(template?.allowedLiabilitiesTagOptions || [])
+          break
+        case 3:
+          setParentOptions(template?.equityHeaderAccountOptions || [])
+          setTagOptions(template?.allowedEquityTagOptions || [])
+          break
+        case 4:
+          // setParentOptions(template?.incomeHeaderAccountOptions || []);
+          setTagOptions(template?.allowedIncomeTagOptions || [])
+          break
+        case 5:
+          setParentOptions(template?.expenseHeaderAccountOptions || [])
+          setTagOptions(template?.allowedExpensesTagOptions || [])
+          break
+        default:
+          setParentOptions([])
+          setTagOptions([])
+      }
+    },
+    [template]
+  )
 
   //to fill in the account type and account usage dropdowns
   useEffect(() => {
@@ -99,37 +134,7 @@ const EditGlAccounts = () => {
       setSelectedAccountUsage(formData.usage)
       handleAccountTypeChange(formData.type)
     }
-  }, [template, formData.type, formData.usage])
-
-  const handleAccountTypeChange = (value: string) => {
-    const id = parseInt(value)
-
-    switch (id) {
-      case 1:
-        setParentOptions(template?.assetHeaderAccountOptions || [])
-        setTagOptions(template?.allowedAssetsTagOptions || [])
-        break
-      case 2:
-        setParentOptions(template?.liabilityHeaderAccountOptions || [])
-        setTagOptions(template?.allowedLiabilitiesTagOptions || [])
-        break
-      case 3:
-        setParentOptions(template?.equityHeaderAccountOptions || [])
-        setTagOptions(template?.allowedEquityTagOptions || [])
-        break
-      case 4:
-        // setParentOptions(template?.incomeHeaderAccountOptions || []);
-        setTagOptions(template?.allowedIncomeTagOptions || [])
-        break
-      case 5:
-        setParentOptions(template?.expenseHeaderAccountOptions || [])
-        setTagOptions(template?.allowedExpensesTagOptions || [])
-        break
-      default:
-        setParentOptions([])
-        setTagOptions([])
-    }
-  }
+  }, [template, formData.type, formData.usage, handleAccountTypeChange])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -153,7 +158,7 @@ const EditGlAccounts = () => {
       alert('GL Account updated successfully!')
       navigate('/accounting/chart-of-accounts')
     } catch (err) {
-      console.log('Error in updating GL account', err)
+      console.error('Error in updating GL account', err)
       alert('Failed to update GL account.')
     }
   }
@@ -250,10 +255,15 @@ const EditGlAccounts = () => {
               }}
               selectPlaceholder="Select parent (optional)"
               selectOptions={(parentOptions || [])
-                .filter(option => option.id !== undefined)
+                .filter(
+                  (
+                    option
+                  ): option is GLAccountData & { id: number; name: string } =>
+                    option.id !== undefined && option.name !== undefined
+                )
                 .map(option => ({
-                  id: option.id!,
-                  name: option.name!,
+                  id: option.id,
+                  name: option.name,
                 }))}
             />
             <AppSelect
@@ -264,10 +274,15 @@ const EditGlAccounts = () => {
               }}
               selectPlaceholder="Select tag (optional)"
               selectOptions={(tagOptions || [])
-                .filter(option => option.id !== undefined)
+                .filter(
+                  (
+                    option
+                  ): option is CodeValueData & { id: number; name: string } =>
+                    option.id !== undefined && option.name !== undefined
+                )
                 .map(option => ({
-                  id: option.id!,
-                  name: option.name!,
+                  id: option.id,
+                  name: option.name,
                 }))}
             />
           </div>

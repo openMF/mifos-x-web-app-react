@@ -24,10 +24,10 @@ import {
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const LoanDisbursal = () => {
-  const loanApi = new LoansApi(getConfiguration())
-  const batchApi = new BatchAPIApi(getConfiguration())
+const loanApi = new LoansApi(getConfiguration())
+const batchApi = new BatchAPIApi(getConfiguration())
 
+const LoanDisbursal = () => {
   const [filter, setFilter] = useState('')
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [groupedLoans, setGroupedLoans] = useState<
@@ -113,8 +113,7 @@ const LoanDisbursal = () => {
     }))
 
     try {
-      const res = await batchApi.handleBatchRequests(batchPayload, true)
-      console.log('Loan disbursal successful:', res.data)
+      const _res = await batchApi.handleBatchRequests(batchPayload, true) // Reserved for future use
       alert('Selected loans disbursed successfully.')
       setSelectedIds([])
     } catch (err) {

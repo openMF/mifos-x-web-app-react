@@ -22,6 +22,8 @@ interface ExtendedCenterResponse extends GetCentersCenterIdResponse {
   accountNo?: string
   externalId?: string
   activationDate?: number[]
+  collectionMeetingCalendar?: unknown
+  staffId?: number
 }
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Building2, Menu } from 'lucide-react'
@@ -66,7 +68,7 @@ const CentersView = () => {
       await centersApi.delete10(Number(id))
       navigate('/centers')
     } catch (err) {
-      console.log('Failed to delete center', err)
+      console.error('Failed to delete center', err)
     }
   }
 
@@ -88,8 +90,8 @@ const CentersView = () => {
   // Derived flags
   const isActive = statusVal === 'Active'
   const isClosed = statusVal === 'Closed'
-  const hasCal = !!(center as any)?.collectionMeetingCalendar // calendar check
-  const hasStaff = !!(center as any)?.staffId // staff check
+  const hasCal = !!center?.collectionMeetingCalendar // calendar check
+  const hasStaff = !!center?.staffId // staff check
 
   // Dropdown menu options
   const menuOptions = [

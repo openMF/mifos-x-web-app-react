@@ -31,7 +31,6 @@ const RedeemShares = () => {
   }
 
   const onSubmit = () => {
-    console.log('Redeem Shares:', { requestedDate, requestedShares })
     backToAccount()
   }
 

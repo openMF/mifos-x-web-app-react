@@ -31,7 +31,6 @@ const RejectSharesAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Reject Shares:', { rejectedDate, note })
     backToAccount()
   }
 

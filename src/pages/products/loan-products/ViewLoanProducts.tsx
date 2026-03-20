@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate as _useNavigate, useParams } from 'react-router-dom' // Reserved for future use: _useNavigate
 import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/ui/button'
+import { Button as _Button } from '@/components/ui/button' // Reserved for future use: _Button
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 import {
@@ -33,7 +33,7 @@ const ViewLoanProducts = () => {
         )
         setLoanProduct(response.data)
       } catch (err) {
-        console.log('Failed to fetch loan product', err)
+        console.error('Failed to fetch loan product', err)
       }
     }
     fetchLoanProduct()

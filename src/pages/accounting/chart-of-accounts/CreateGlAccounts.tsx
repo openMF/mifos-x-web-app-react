@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -19,6 +19,8 @@ import AppSelect from '@/components/custom/select/AppSelect'
 import {
   GeneralLedgerAccountApi,
   type GetGLAccountsTemplateResponse,
+  type GLAccountData,
+  type CodeValueData,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
@@ -46,8 +48,8 @@ const CreateGlAccounts = () => {
   })
 
   //state needed for subledger accounts
-  const [parentOptions, setParentOptions] = useState<any[]>([])
-  const [tagOptions, setTagOptions] = useState<any[]>([])
+  const [parentOptions, setParentOptions] = useState<GLAccountData[]>([])
+  const [tagOptions, setTagOptions] = useState<CodeValueData[]>([])
 
   //fetch template data
   useEffect(() => {
@@ -56,12 +58,46 @@ const CreateGlAccounts = () => {
         const response = await glApi.retrieveNewAccountDetails()
         setTemplate(response.data)
       } catch (err) {
-        console.log('Failed to fetch a GL account', err)
+        console.error('Failed to fetch a GL account', err)
       }
     }
 
     fetchGlAccounts()
   }, [])
+
+  //tests for the subledger accounts
+  const handleAccountTypeChange = useCallback(
+    (value: string) => {
+      const id = parseInt(value)
+
+      switch (id) {
+        case 1:
+          setParentOptions(template?.assetHeaderAccountOptions || [])
+          setTagOptions(template?.allowedAssetsTagOptions || [])
+          break
+        case 2:
+          setParentOptions(template?.liabilityHeaderAccountOptions || [])
+          setTagOptions(template?.allowedLiabilitiesTagOptions || [])
+          break
+        case 3:
+          setParentOptions(template?.equityHeaderAccountOptions || [])
+          setTagOptions(template?.allowedEquityTagOptions || [])
+          break
+        case 4:
+          // setParentOptions(template?.incomeHeaderAccountOptions || []);
+          setTagOptions(template?.allowedIncomeTagOptions || [])
+          break
+        case 5:
+          setParentOptions(template?.expenseHeaderAccountOptions || [])
+          setTagOptions(template?.allowedExpensesTagOptions || [])
+          break
+        default:
+          setParentOptions([])
+          setTagOptions([])
+      }
+    },
+    [template]
+  )
 
   // Handle sub-ledger parameters (parent + accountType)
   useEffect(() => {
@@ -79,7 +115,7 @@ const CreateGlAccounts = () => {
     if (template && formData.type) {
       handleAccountTypeChange(formData.type)
     }
-  }, [template, formData.type])
+  }, [template, formData.type, handleAccountTypeChange])
 
   //Function to post a gl account form
   const handleSubmit = async (e: React.FormEvent) => {
@@ -110,38 +146,7 @@ const CreateGlAccounts = () => {
       navigate('/accounting/chart-of-accounts')
     } catch (err) {
       alert('Failed to create GL account')
-      console.log('Failed to create GL account', err)
-    }
-  }
-
-  //tests for the subledfer accounts
-  const handleAccountTypeChange = (value: string) => {
-    const id = parseInt(value)
-
-    switch (id) {
-      case 1:
-        setParentOptions(template?.assetHeaderAccountOptions || [])
-        setTagOptions(template?.allowedAssetsTagOptions || [])
-        break
-      case 2:
-        setParentOptions(template?.liabilityHeaderAccountOptions || [])
-        setTagOptions(template?.allowedLiabilitiesTagOptions || [])
-        break
-      case 3:
-        setParentOptions(template?.equityHeaderAccountOptions || [])
-        setTagOptions(template?.allowedEquityTagOptions || [])
-        break
-      case 4:
-        // setParentOptions(template?.incomeHeaderAccountOptions || []);
-        setTagOptions(template?.allowedIncomeTagOptions || [])
-        break
-      case 5:
-        setParentOptions(template?.expenseHeaderAccountOptions || [])
-        setTagOptions(template?.allowedExpensesTagOptions || [])
-        break
-      default:
-        setParentOptions([])
-        setTagOptions([])
+      console.error('Failed to create GL account', err)
     }
   }
 
@@ -231,10 +236,15 @@ const CreateGlAccounts = () => {
               }}
               selectPlaceholder="Select parent (optional)"
               selectOptions={(parentOptions || [])
-                .filter(option => option.id !== undefined)
+                .filter(
+                  (
+                    option
+                  ): option is GLAccountData & { id: number; name: string } =>
+                    option.id !== undefined && option.name !== undefined
+                )
                 .map(option => ({
-                  id: option.id!,
-                  name: option.name!,
+                  id: option.id,
+                  name: option.name,
                 }))}
             />
 
@@ -246,10 +256,15 @@ const CreateGlAccounts = () => {
               }}
               selectPlaceholder="Select tag (optional)"
               selectOptions={(tagOptions || [])
-                .filter(option => option.id !== undefined)
+                .filter(
+                  (
+                    option
+                  ): option is CodeValueData & { id: number; name: string } =>
+                    option.id !== undefined && option.name !== undefined
+                )
                 .map(option => ({
-                  id: option.id!,
-                  name: option.name!,
+                  id: option.id,
+                  name: option.name,
                 }))}
             />
           </div>
