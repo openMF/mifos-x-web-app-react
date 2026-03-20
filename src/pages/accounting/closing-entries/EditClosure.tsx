@@ -30,7 +30,7 @@ const EditClosure = () => {
     comments: '',
   })
 
-  const toInputDate = (d: any) => {
+  const toInputDate = (d: unknown) => {
     if (Array.isArray(d) && d.length >= 3) {
       const [y, m, dd] = d
       return `${y}-${String(m).padStart(2, '0')}-${String(dd).padStart(2, '0')}`

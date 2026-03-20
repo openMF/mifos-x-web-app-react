@@ -64,7 +64,7 @@ const EditCharges = () => {
           isPenalty: data.penalty ?? false,
         })
       } catch (err) {
-        console.log('Failed to fetch charge details', err)
+        console.error('Failed to fetch charge details', err)
       }
     }
 
@@ -80,7 +80,7 @@ const EditCharges = () => {
         })
         setTemplate(response.data)
       } catch (err) {
-        console.log('Failed to fetch template', err)
+        console.error('Failed to fetch template', err)
       }
     }
 
@@ -106,7 +106,7 @@ const EditCharges = () => {
 
     try {
       // Build API payload
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         name: formData.name,
         amount: Number(formData.amount),
         currencyCode: formData.currency,
@@ -131,7 +131,7 @@ const EditCharges = () => {
       alert('Charges updated successfully!')
       navigate('/products/charges')
     } catch (err) {
-      console.log("Couldn't edit charge", err)
+      console.error("Couldn't edit charge", err)
       alert('Failed to update Charges.')
     }
   }

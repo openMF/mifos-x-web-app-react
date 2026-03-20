@@ -50,7 +50,7 @@ const ViewFinancialActivityMappings = () => {
       await activityApi.deleteGLAccount(Number(id))
       navigate('/accounting/financial-activity-mappings')
     } catch (err) {
-      console.log('Failed to delete mappings', err)
+      console.error('Failed to delete mappings', err)
     }
   }
 

@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { SavingsAccountApi } from '@/fineract-api'
@@ -16,7 +16,13 @@ import { Input } from '@/components/ui/input'
 
 const api = new SavingsAccountApi(getConfiguration())
 
-type Note = any
+interface Note {
+  id: number
+  note?: string
+  createdByUsername?: string
+  createdByFirstname?: string
+  createdOn?: number[] | string
+}
 
 const SavingsNotesTab = () => {
   const { accountId } = useParams()
@@ -32,27 +38,28 @@ const SavingsNotesTab = () => {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editText, setEditText] = useState('')
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!accountId) return
     setLoading(true)
     try {
-      const res = await (api as any).retrieveOne25(
+      const res = await api.retrieveOne25(
         Number(accountId),
         undefined,
         undefined,
         'notes'
       )
-      setNotes(res?.data?.notes || [])
+      const data = res?.data as Record<string, unknown> | undefined
+      setNotes((data?.notes as Note[]) || [])
     } catch (e) {
       console.error('Failed to load notes', e)
     } finally {
       setLoading(false)
     }
-  }
+  }, [accountId])
 
   useEffect(() => {
     load()
-  }, [accountId])
+  }, [accountId, load])
 
   const addNote = async () => {
     if (!accountId || !newNote.trim()) return

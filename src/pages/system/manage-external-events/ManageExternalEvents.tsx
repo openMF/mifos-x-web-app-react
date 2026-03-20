@@ -58,7 +58,7 @@ const ManageExternalEvents = () => {
         }
         setBaseline(map)
       } catch (err) {
-        console.log("Couldn't fetch External Events Data", err)
+        console.error("Couldn't fetch External Events Data", err)
       }
     }
     fetchDetails()
@@ -83,7 +83,7 @@ const ManageExternalEvents = () => {
   }
 
   const toggle = (idxOnPage: number) => {
-    const idx = start + idxOnPage
+    const _idx = start + idxOnPage // Reserved for future use
     const target = paginated[idxOnPage]
     const originalIndex = externalEvents.findIndex(e => e.type === target.type)
     if (originalIndex === -1) return
@@ -107,7 +107,7 @@ const ManageExternalEvents = () => {
     }
     if (Object.keys(externalEventConfigurations).length === 0) return
 
-    const payload = { changes: { externalEventConfigurations } }
+    const _payload = { changes: { externalEventConfigurations } } // Reserved for future use
 
     try {
       setSubmitting(true)

@@ -73,8 +73,8 @@ const Navigation = () => {
         })
         const list = res.data?.pageItems ?? res.data ?? []
         setOfficers(
-          (list as any[])
-            .map(s => ({ id: s.id, name: s.displayName }))
+          (list as Record<string, unknown>[])
+            .map(s => ({ id: s.id as number, name: s.displayName as string }))
             .filter(x => x.id != null)
         )
       } catch (err) {
@@ -101,10 +101,11 @@ const Navigation = () => {
         })
         // Normalize report rows
         const rows = res.data?.data ?? res.data ?? []
-        const normalized: BasicItem[] = (rows as any[])
-          .map((r: any) => {
-            const id = r.id ?? r.row?.[0] ?? r[0]
-            const name = r.name ?? r.row?.[1] ?? r[1]
+        const normalized: BasicItem[] = (rows as Record<string, unknown>[])
+          .map((r: Record<string, unknown>) => {
+            const row = r.row as unknown[] | undefined
+            const id = r.id ?? row?.[0] ?? (r as Record<number, unknown>)[0]
+            const name = r.name ?? row?.[1] ?? (r as Record<number, unknown>)[1]
             return { id: Number(id), name: String(name) }
           })
           .filter(x => x.id != null && !Number.isNaN(x.id))
@@ -129,7 +130,12 @@ const Navigation = () => {
           params: { centerId: Number(selectedCenterId) },
         })
         const list = res.data?.pageItems ?? []
-        setGroups(list.map((g: any) => ({ id: g.id, name: g.name })))
+        setGroups(
+          list.map((g: Record<string, unknown>) => ({
+            id: g.id as number,
+            name: g.name as string,
+          }))
+        )
       } catch (err) {
         console.error('Failed to fetch groups', err)
         setGroups([])
@@ -150,7 +156,12 @@ const Navigation = () => {
           params: { groupId: Number(selectedGroupId) },
         })
         const list = res.data?.pageItems ?? []
-        setClients(list.map((c: any) => ({ id: c.id, name: c.displayName })))
+        setClients(
+          list.map((c: Record<string, unknown>) => ({
+            id: c.id as number,
+            name: c.displayName as string,
+          }))
+        )
       } catch (err) {
         console.error('Failed to fetch clients', err)
         setClients([])

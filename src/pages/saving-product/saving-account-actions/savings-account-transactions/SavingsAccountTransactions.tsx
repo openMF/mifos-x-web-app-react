@@ -40,17 +40,7 @@ const SavingsAccountTransactions = () => {
   }
 
   const onSubmit = () => {
-    console.log('Transaction:', {
-      transactionDate,
-      amount,
-      paymentTypeId,
-      note,
-      accountNumber,
-      checkNumber,
-      routingCode,
-      receiptNumber,
-      bankNumber,
-    })
+    // TODO: Call savings account transaction API
     backToAccount()
   }
 

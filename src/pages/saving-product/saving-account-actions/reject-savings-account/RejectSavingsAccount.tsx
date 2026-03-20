@@ -29,7 +29,6 @@ const RejectSavingsAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log({ rejectedOnDate, note })
     backToAccount()
   }
 

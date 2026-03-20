@@ -45,7 +45,7 @@ const ViewAccountingRules = () => {
       await accountingRuleApi.deleteAccountingRule(Number(id))
       navigate('/accounting/accounting-rules')
     } catch (err) {
-      console.log('Failed to delete accounting rules', err)
+      console.error('Failed to delete accounting rules', err)
     }
   }
 

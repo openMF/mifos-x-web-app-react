@@ -20,7 +20,7 @@ import { Separator } from '@radix-ui/react-separator'
 const rdApi = new RecurringDepositProductApi(getConfiguration())
 
 const ViewRecurringDepositProducts = () => {
-  const navigate = useNavigate()
+  const _navigate = useNavigate() // Reserved for future use
   const { id } = useParams() // get product id from URL
   const [recurrProduct, setRecurrProduct] =
     useState<GetRecurringDepositProductsProductIdResponse>()
@@ -30,7 +30,6 @@ const ViewRecurringDepositProducts = () => {
     const fetch = async () => {
       try {
         const res = await rdApi.retrieveOne23(Number(id))
-        console.log(res.data)
         setRecurrProduct(res.data)
       } catch (err) {
         console.error('Failed to fetch recurring deposit product', err)

@@ -8,7 +8,8 @@
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
-import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
+import { GroupsApi } from '@/fineract-api'
+import type { ExtendedGroupResponse } from '@/pages/groups/types'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { formatDate } from '@/lib/date-utils'
 import { faCircle, faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
@@ -52,7 +53,7 @@ const GroupsView = () => {
   const { id } = useParams()
   const { t, i18n } = useTranslation('groups')
   const { t: tc } = useTranslation('common')
-  const [group, setGroup] = useState<GetGroupsGroupIdResponse>()
+  const [group, setGroup] = useState<ExtendedGroupResponse>()
 
   useEffect(() => {
     ;(async () => {
@@ -66,25 +67,27 @@ const GroupsView = () => {
             params: { associations: 'all' },
           }
         )
-        setGroup(res.data)
+        setGroup(res.data as ExtendedGroupResponse)
       } catch (err) {
         console.error('Failed to fetch group', err)
       }
     })()
   }, [id])
 
-  const isActive =
-    (group as any)?.status?.value === 'Active' ||
-    Boolean((group as any)?.active)
+  const isActive = group?.status?.value === 'Active' || Boolean(group?.active)
   const hasMembers =
-    Array.isArray((group as any)?.clientMembers) &&
-    (group as any).clientMembers.length > 0
-  const hasCalendar = Boolean((group as any)?.collectionMeetingCalendar)
-  const hasStaff = Boolean((group as any)?.staffId)
-  const inCenter = Boolean((group as any)?.centerId)
+    Array.isArray(group?.clientMembers) && group.clientMembers.length > 0
+  const hasCalendar = Boolean(group?.collectionMeetingCalendar)
+  const hasStaff = Boolean(group?.staffId)
+  const inCenter = Boolean(group?.centerId)
 
   const menuOptions = useMemo(() => {
-    const opts: any[] = []
+    const opts: {
+      label: string
+      path?: string
+      onClick?: () => void
+      children?: { label: string; path: string; onClick?: () => void }[]
+    }[] = []
 
     if (!isActive && hasPerm('UPDATE_GROUP')) {
       opts.push({
@@ -93,7 +96,10 @@ const GroupsView = () => {
       })
     }
     if (hasPerm('UPDATE_GROUP')) {
-      opts.push({ label: t('view.menu.edit'), path: `groups/${group?.id}/edit` })
+      opts.push({
+        label: t('view.menu.edit'),
+        path: `groups/${group?.id}/edit`,
+      })
     }
     if (hasPerm('ASSOCIATECLIENTS_GROUP')) {
       opts.push({
@@ -109,7 +115,7 @@ const GroupsView = () => {
     }
 
     if (isActive) {
-      const apps: any[] = []
+      const apps: { label: string; path: string }[] = []
       if (hasMembers && hasPerm('CREATE_LOAN')) {
         apps.push({
           label: t('view.menu.bulkJlgLoanApplication'),
@@ -145,7 +151,7 @@ const GroupsView = () => {
       }
     }
 
-    const more: any[] = []
+    const more: { label: string; path: string; onClick?: () => void }[] = []
     if (hasCalendar && hasPerm('SAVEORUPDATEATTENDANCE_MEETING')) {
       more.push({
         label: t('view.menu.attendance'),
@@ -171,11 +177,15 @@ const GroupsView = () => {
       })
     }
     if (hasPerm('CLOSE_GROUP')) {
-      more.push({ label: t('view.menu.close'), path: `groups/${group?.id}/actions/close` })
+      more.push({
+        label: t('view.menu.close'),
+        path: `groups/${group?.id}/actions/close`,
+      })
     }
     if (hasPerm('DELETE_GROUP')) {
       more.push({
         label: t('view.menu.delete'),
+        path: '#',
         onClick: () => {
           if (confirm(t('view.confirmDelete'))) {
             // wire your delete call here
@@ -188,10 +198,10 @@ const GroupsView = () => {
     }
 
     return opts
-  }, [group, isActive, hasMembers, hasCalendar, hasStaff, inCenter])
+  }, [group, isActive, hasMembers, hasCalendar, hasStaff, inCenter, t])
 
   // status value for tooltip + color
-  const statusVal = (group as any)?.status?.value as string | undefined
+  const statusVal = group?.status?.value
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -225,11 +235,16 @@ const GroupsView = () => {
             <span>{t('view.groupName')}</span>
           </div>
           <div>{t('view.missingInOpenAPI')}</div>
-          <div>{t('view.centerName')} {group?.name}</div>
-          <div>{t('view.staff')} {(group as any)?.staffName ?? t('view.missingInOpenAPI')}</div>
+          <div>
+            {t('view.centerName')} {group?.name}
+          </div>
+          <div>
+            {t('view.staff')} {group?.staffName ?? t('view.missingInOpenAPI')}
+          </div>
           <div>
             {t('view.activationDate')}{' '}
-            {formatDate((group as any)?.timeline?.activationDate, i18n.language) || t('view.missingInOpenAPI')}
+            {formatDate(group?.timeline?.activatedOnDate, i18n.language) ||
+              t('view.missingInOpenAPI')}
           </div>
         </div>
 
@@ -254,9 +269,15 @@ const GroupsView = () => {
 
       <AppTabs
         tabs={[
-          { label: t('view.tabs.general'), href: `groups/${group?.id}/general` },
+          {
+            label: t('view.tabs.general'),
+            href: `groups/${group?.id}/general`,
+          },
           { label: t('view.tabs.notes'), href: `groups/${group?.id}/notes` },
-          { label: t('view.tabs.committee'), href: `groups/${group?.id}/committee` },
+          {
+            label: t('view.tabs.committee'),
+            href: `groups/${group?.id}/committee`,
+          },
         ]}
       />
 

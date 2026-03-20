@@ -47,7 +47,9 @@ const AmountDisbursedPie = () => {
   const [officeData, setOfficeData] = useState<{ id: number; name: string }[]>(
     []
   )
-  const [chartData, setChartData] = useState<any[]>([])
+  const [chartData, setChartData] = useState<
+    { name: string; visitors: number; fill: string }[]
+  >([])
   const [chartConfig, setChartConfig] = useState<ChartConfig>({})
   const { t } = useTranslation('common')
 
@@ -72,7 +74,9 @@ const AmountDisbursedPie = () => {
           }
         )
 
-        const rows: any[] = Array.isArray(res.data) ? res.data : []
+        const rows: Record<string, unknown>[] = Array.isArray(res.data)
+          ? (res.data as Record<string, unknown>[])
+          : []
         const raw = rows[0]
         if (!raw) {
           setChartData([])

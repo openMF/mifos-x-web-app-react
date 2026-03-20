@@ -113,8 +113,7 @@ const ClientApproval = () => {
     }))
 
     try {
-      const res = await batchApi.handleBatchRequests(batchPayload, true)
-      console.log('Batch approval successful', res.data)
+      await batchApi.handleBatchRequests(batchPayload, true)
       alert('Selected clients approved successfully.')
       setSelected([]) // Clear the selection
     } catch (error) {

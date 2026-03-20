@@ -7,6 +7,10 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  GetLoansLoanIdResponse,
+  GetLoansLoanIdRepaymentPeriod,
+} from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import {
@@ -21,22 +25,15 @@ import { Button } from '@/components/ui/button'
 
 const loansApi = new LoansApi(getConfiguration())
 
-type Loan = any
-type Period = any
-
-const fmtDate = (d: any) => {
+const fmtDate = (d: string | null | undefined) => {
   if (!d) return '—'
-  if (Array.isArray(d) && d.length >= 3) {
-    const [y, m, day] = d
-    return new Date(y, (m ?? 1) - 1, day ?? 1).toLocaleDateString()
-  }
   const dt = new Date(d)
   return isNaN(+dt) ? '—' : dt.toLocaleDateString()
 }
 
 const LoansRepaymentScheduleTab = () => {
   const { loanId } = useParams()
-  const [loan, setLoan] = useState<Loan | null>(null)
+  const [loan, setLoan] = useState<GetLoansLoanIdResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
   // fetch loan details
@@ -44,8 +41,11 @@ const LoansRepaymentScheduleTab = () => {
     ;(async () => {
       try {
         if (!loanId) return
-        const res = await loansApi.retrieveLoan(Number(loanId) as any)
+        const loanIdNum = Number(loanId)
+        const res = await loansApi.retrieveLoan(loanIdNum)
         setLoan(res.data)
+      } catch (err) {
+        console.error('Failed to fetch loan', err)
       } finally {
         setLoading(false)
       }
@@ -64,44 +64,58 @@ const LoansRepaymentScheduleTab = () => {
         }).format(n)
 
   // repayment schedule
-  const schedule = loan?.repaymentSchedule ?? {}
-  const rawPeriods: Period[] = Array.isArray(schedule?.periods)
-    ? schedule.periods
-    : []
+  const schedule = loan?.repaymentSchedule
+  const rawPeriods: GetLoansLoanIdRepaymentPeriod[] = useMemo(
+    () => schedule?.periods ?? [],
+    [schedule?.periods]
+  )
 
   // filter out disbursement
   const periods = useMemo(
-    () => rawPeriods.filter(p => (p?.period ?? 0) > 0),
+    () => rawPeriods.filter(p => (p.period ?? 0) > 0),
     [rawPeriods]
   )
 
   // disbursement row
-  const disbursement = rawPeriods.find(p => (p?.period ?? 0) === 0)
+  const disbursement = rawPeriods.find(p => (p.period ?? 0) === 0)
+  const timeline = loan?.timeline
   const disbDate =
-    loan?.timeline?.actualDisbursementDate ??
-    loan?.timeline?.expectedDisbursementDate ??
+    timeline?.actualDisbursementDate ??
+    timeline?.expectedDisbursementDate ??
     disbursement?.dueDate
   const openingBalance =
     disbursement?.principalLoanBalanceOutstanding ??
-    schedule?.principalDisbursed ??
+    schedule?.totalPrincipalDisbursed ??
     loan?.principal ??
     null
 
   // totals
-  const totals = periods.reduce(
+  const n = (v: number | undefined) => v ?? 0
+  interface ScheduleTotals {
+    principal: number
+    interest: number
+    fees: number
+    penalties: number
+    due: number
+    paid: number
+    inAdvance: number
+    late: number
+    outstanding: number
+  }
+  const totals = periods.reduce<ScheduleTotals>(
     (acc, p) => {
-      const principal = p?.principalDue ?? 0
-      const interest = p?.interestDue ?? 0
-      const fees = p?.feeChargesDue ?? 0
-      const penalties = p?.penaltyChargesDue ?? 0
+      const principal = n(p.principalDue)
+      const interest = n(p.interestDue)
+      const fees = n(p.feeChargesDue)
+      const penalties = n(p.penaltyChargesDue)
       const due =
-        p?.totalDueForPeriod ?? principal + interest + fees + penalties
+        n(p.totalDueForPeriod) || principal + interest + fees + penalties
 
-      const paid = p?.totalPaidForPeriod ?? 0
-      const inAdvance = p?.totalPaidInAdvanceForPeriod ?? 0
-      const late = p?.totalPaidLateForPeriod ?? 0
+      const paid = n(p.totalPaidForPeriod)
+      const inAdvance = n(p.totalPaidInAdvanceForPeriod)
+      const late = n(p.totalPaidLateForPeriod)
       const outstanding =
-        p?.totalOutstandingForPeriod ?? Math.max(due - paid, 0)
+        n(p.totalOutstandingForPeriod) || Math.max(due - paid, 0)
 
       acc.principal += principal
       acc.interest += interest
@@ -115,22 +129,15 @@ const LoansRepaymentScheduleTab = () => {
       return acc
     },
     {
-      principal: schedule?.totalPrincipalExpected ?? 0,
-      interest:
-        schedule?.totalInterestExpected ?? schedule?.totalInterestCharged ?? 0,
-      fees:
-        schedule?.totalFeeChargesExpected ??
-        schedule?.totalFeeChargesCharged ??
-        0,
-      penalties:
-        schedule?.totalPenaltyChargesExpected ??
-        schedule?.totalPenaltyChargesCharged ??
-        0,
-      due: schedule?.totalRepaymentExpected ?? 0,
-      paid: schedule?.totalPaid ?? 0,
-      inAdvance: schedule?.totalPaidInAdvance ?? 0,
-      late: schedule?.totalPaidLate ?? 0,
-      outstanding: schedule?.totalOutstanding ?? 0,
+      principal: 0,
+      interest: 0,
+      fees: 0,
+      penalties: 0,
+      due: 0,
+      paid: 0,
+      inAdvance: 0,
+      late: 0,
+      outstanding: 0,
     }
   )
 
@@ -190,7 +197,7 @@ const LoansRepaymentScheduleTab = () => {
 
           <TableBody>
             {/* disbursement row */}
-            {disbDate && (
+            {disbDate != null && (
               <TableRow>
                 <TableCell />
                 <TableCell />
@@ -216,38 +223,39 @@ const LoansRepaymentScheduleTab = () => {
             )}
 
             {/* installment rows */}
-            {periods.map((p: Period) => {
-              const principal = p?.principalDue ?? 0
-              const interest = p?.interestDue ?? 0
-              const fees = p?.feeChargesDue ?? 0
-              const penalties = p?.penaltyChargesDue ?? 0
+            {periods.map(p => {
+              const principal = n(p.principalDue)
+              const interest = n(p.interestDue)
+              const fees = n(p.feeChargesDue)
+              const penalties = n(p.penaltyChargesDue)
               const due =
-                p?.totalDueForPeriod ?? principal + interest + fees + penalties
-              const paid = p?.totalPaidForPeriod ?? 0
-              const inAdvance = p?.totalPaidInAdvanceForPeriod ?? 0
-              const late = p?.totalPaidLateForPeriod ?? 0
+                n(p.totalDueForPeriod) ||
+                principal + interest + fees + penalties
+              const paid = n(p.totalPaidForPeriod)
+              const inAdvance = n(p.totalPaidInAdvanceForPeriod)
+              const late = n(p.totalPaidLateForPeriod)
               const outstanding =
-                p?.totalOutstandingForPeriod ?? Math.max(due - paid, 0)
+                n(p.totalOutstandingForPeriod) || Math.max(due - paid, 0)
 
               return (
                 <TableRow
-                  key={p?.period ?? fmtDate(p?.dueDate)}
+                  key={String(p.period ?? fmtDate(p.dueDate))}
                   className="text-base"
                 >
-                  <TableCell>{p?.period ?? '—'}</TableCell>
+                  <TableCell>{String(p.period ?? '—')}</TableCell>
                   <TableCell className="text-red-500">
-                    {p?.daysInPeriod ?? p?.days ?? '—'}
+                    {String(p.daysInPeriod ?? '—')}
                   </TableCell>
                   <TableCell className="text-red-500">
-                    {fmtDate(p?.dueDate)}
+                    {fmtDate(p.dueDate)}
                   </TableCell>
                   <TableCell>
-                    {p?.obligationsMetOnDate
+                    {p.obligationsMetOnDate
                       ? fmtDate(p.obligationsMetOnDate)
                       : '—'}
                   </TableCell>
                   <TableCell className="text-right">
-                    {currency(p?.principalLoanBalanceOutstanding)}
+                    {currency(p.principalLoanBalanceOutstanding)}
                   </TableCell>
                   <TableCell className="text-right text-red-500">
                     {currency(principal)}

@@ -32,8 +32,8 @@ const CentersGeneralTab = () => {
   const { t: tc } = useTranslation('common')
 
   // State for group summary counts, groups list, and loading flag
-  const [summary, setSummary] = useState<any>({})
-  const [groups, setGroups] = useState<any[]>([])
+  const [summary, setSummary] = useState<Record<string, unknown>>({})
+  const [groups, setGroups] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -52,13 +52,24 @@ const CentersGeneralTab = () => {
             },
           }
         )
-        setSummary(sumRes.data?.data?.[0] ?? {})
+        const sumData = sumRes.data as Record<string, unknown> | undefined
+        const sumDataArr = sumData?.data as
+          | Record<string, unknown>[]
+          | undefined
+        setSummary(sumDataArr?.[0] ?? {})
 
         // Fetch groups associated with this center
-        const centerRes = await (centersApi as any).retrieveOne14(Number(id), {
-          params: { associations: 'groupMembers' },
-        })
-        setGroups(centerRes?.data?.groupMembers ?? [])
+        const centerRes = await centersApi.retrieveOne14(
+          Number(id),
+          undefined,
+          {
+            params: { associations: 'groupMembers' },
+          }
+        )
+        const centerData = centerRes?.data as
+          | Record<string, unknown>
+          | undefined
+        setGroups((centerData?.groupMembers as Record<string, unknown>[]) ?? [])
       } catch (e) {
         console.error('Error fetching general tab data', e)
       } finally {
@@ -68,7 +79,7 @@ const CentersGeneralTab = () => {
   }, [id])
 
   // Helper to format dates
-  const fmtDate = (arr: any) => formatDate(arr)
+  const fmtDate = (arr: unknown) => formatDate(arr as number[] | undefined)
 
   if (loading) return <div>{tc('actions.loading')}</div>
 
@@ -77,22 +88,32 @@ const CentersGeneralTab = () => {
       {/*Summary Section*/}
       <div>
         <h2 className="text-lg font-semibold">{t('general.summaryDetails')}</h2>
-        <div>{t('general.activeClients')} {summary['Active Clients'] ?? 0}</div>
         <div>
-          {t('general.activeGroupBorrowers')} {summary['Active Group Borrowers'] ?? 0}
+          {t('general.activeClients')} {String(summary['Active Clients'] ?? 0)}
         </div>
-        <div>{t('general.activeGroupLoans')} {summary['Active Group Loans'] ?? 0}</div>
         <div>
-          {t('general.activeClientBorrowers')} {summary['Active Client Borrowers'] ?? 0}
+          {t('general.activeGroupBorrowers')}{' '}
+          {String(summary['Active Group Borrowers'] ?? 0)}
         </div>
-        <div>{t('general.activeClientLoans')} {summary['Active Client Loans'] ?? 0}</div>
+        <div>
+          {t('general.activeGroupLoans')}{' '}
+          {String(summary['Active Group Loans'] ?? 0)}
+        </div>
+        <div>
+          {t('general.activeClientBorrowers')}{' '}
+          {String(summary['Active Client Borrowers'] ?? 0)}
+        </div>
+        <div>
+          {t('general.activeClientLoans')}{' '}
+          {String(summary['Active Client Loans'] ?? 0)}
+        </div>
         <div>
           {t('general.activeOverdueClientLoans')}{' '}
-          {summary['Active Overdue Client Loans'] ?? 0}
+          {String(summary['Active Overdue Client Loans'] ?? 0)}
         </div>
         <div>
           {t('general.activeOverdueGroupLoans')}{' '}
-          {summary['Active Overdue Group Loans'] ?? 0}
+          {String(summary['Active Overdue Group Loans'] ?? 0)}
         </div>
       </div>
 
@@ -102,36 +123,49 @@ const CentersGeneralTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-4">{t('general.tableAccountNo')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.tableGroupName')}</TableHead>
-              <TableHead className="px-6 py-4">{t('general.tableOfficeName')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.tableAccountNo')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.tableGroupName')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('general.tableOfficeName')}
+              </TableHead>
               <TableHead className="px-6 py-4 text-right">
                 {t('general.tableSubmittedOn')}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {groups.map((g: any) => (
+            {groups.map((g: Record<string, unknown>) => (
               <TableRow
-                key={g.id}
+                key={g.id as string | number}
                 className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
                 onClick={() => navigate(`/groups/${g.id}/general`)}
               >
                 <TableCell className="px-6 py-4">
                   <span className="inline-block w-3 h-3 bg-yellow-500 rounded-sm mr-2 align-middle" />
-                  <span className="align-middle">{g.accountNo ?? '-'}</span>
+                  <span className="align-middle">
+                    {(g.accountNo as string) ?? '-'}
+                  </span>
                 </TableCell>
-                <TableCell className="px-6 py-4">{g.name ?? '-'}</TableCell>
                 <TableCell className="px-6 py-4">
-                  {g.officeName ?? '-'}
+                  {(g.name as string) ?? '-'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {(g.officeName as string) ?? '-'}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-right">
-                  {fmtDate(g?.timeline?.submittedOnDate)}
+                  {fmtDate(
+                    (g?.timeline as Record<string, unknown> | undefined)
+                      ?.submittedOnDate
+                  )}
                 </TableCell>
               </TableRow>
             ))}
 
-              {groups.length === 0 && (
+            {groups.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={4}

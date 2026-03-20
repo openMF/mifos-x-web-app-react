@@ -58,7 +58,7 @@ const ViewCharge = () => {
         )
         setCharge(res.data)
       } catch (err) {
-        console.log("Couldn't fetch charge details", err)
+        console.error("Couldn't fetch charge details", err)
       }
     }
     fetchDetails()
@@ -121,12 +121,16 @@ const ViewCharge = () => {
                 <td className="p-3">{charge?.chargeTimeType?.code}</td>
               </tr>
               <tr>
-                <td className="p-3">{t('charge.labelChargeCalculationType')}</td>
+                <td className="p-3">
+                  {t('charge.labelChargeCalculationType')}
+                </td>
                 <td className="p-3">{charge?.chargeCalculationType?.code}</td>
               </tr>
               <tr>
                 <td className="p-3">{t('charge.labelDueAsOf')}</td>
-                <td className="p-3">{formatDate(charge?.dueDate as number[] | undefined)}</td>
+                <td className="p-3">
+                  {formatDate(charge?.dueDate as number[] | undefined)}
+                </td>
               </tr>
               <tr>
                 <td className="p-3">{t('charge.labelDue')}</td>
