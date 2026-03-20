@@ -14,20 +14,35 @@ import { useTranslation } from 'react-i18next'
 
 const groupApi = new GroupsApi(getConfiguration())
 
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetGroupsGroupIdResponse type.
+ */
+interface ExtendedGroupResponse extends GetGroupsGroupIdResponse {
+  accountNo?: string
+  status?: { code?: string; description?: string }
+  activationDate?: string
+  staffName?: string
+  centerName?: string
+  nextMeetingDate?: string
+  meetingFrequency?: string
+  clientMembers?: unknown[]
+}
+
 interface GroupNavigationProps {
   groupId: number
 }
 
 const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
   const [groupDetails, setGroupDetails] =
-    useState<GetGroupsGroupIdResponse | null>(null)
+    useState<ExtendedGroupResponse | null>(null)
   const { t, i18n } = useTranslation('common')
 
   useEffect(() => {
     const fetchGroup = async () => {
       try {
         const res = await groupApi.retrieveOne15(groupId)
-        setGroupDetails(res.data)
+        setGroupDetails(res.data as ExtendedGroupResponse)
       } catch (err) {
         console.error('Error fetching group data:', err)
       }
@@ -41,8 +56,6 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
       <p className="text-gray-500">{t('navigation.loadingGroupDetails')}</p>
     )
   }
-
-  const extra = groupDetails as any
 
   return (
     <div className="space-y-6 text-sm text-gray-700 dark:text-gray-300">
@@ -59,21 +72,21 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
             <FontAwesomeIcon
               icon={faCircle}
               className={
-                extra.status?.code === 'groupingStatusType.active'
+                groupDetails.status?.code === 'groupingStatusType.active'
                   ? 'text-green-500'
                   : 'text-gray-400'
               }
-              title={extra.status?.description}
+              title={groupDetails.status?.description}
             />
           </h2>
           <p className="text-gray-500">
             {t('fields.accountNo')}:{' '}
             <span className="font-medium">
-              {extra.accountNo || t('actions.na')}
+              {groupDetails.accountNo || t('actions.na')}
             </span>{' '}
             |{t('fields.externalId')}:{' '}
             <span className="font-medium">
-              {extra.externalId || t('actions.na')}
+              {groupDetails.externalId || t('actions.na')}
             </span>
           </p>
         </div>
@@ -82,22 +95,22 @@ const GroupNavigation = ({ groupId }: GroupNavigationProps) => {
       {/* Details */}
       <div className="grid grid-cols-2 gap-y-3">
         <div className="font-medium">{t('navigation.activationDate')}:</div>
-        <div>{formatDate(extra.activationDate, i18n.language)}</div>
+        <div>{formatDate(groupDetails.activationDate, i18n.language)}</div>
 
         <div className="font-medium">{t('navigation.associatedOfficer')}:</div>
-        <div>{extra.staffName || t('actions.na')}</div>
+        <div>{groupDetails.staffName || t('actions.na')}</div>
 
         <div className="font-medium">{t('navigation.associatedCenter')}:</div>
-        <div>{extra.centerName || t('actions.na')}</div>
+        <div>{groupDetails.centerName || t('actions.na')}</div>
 
         <div className="font-medium">{t('navigation.nextMeetingDate')}:</div>
-        <div>{formatDate(extra.nextMeetingDate, i18n.language)}</div>
+        <div>{formatDate(groupDetails.nextMeetingDate, i18n.language)}</div>
 
         <div className="font-medium">{t('navigation.meetingFrequency')}:</div>
-        <div>{extra.meetingFrequency || t('actions.na')}</div>
+        <div>{groupDetails.meetingFrequency || t('actions.na')}</div>
 
         <div className="font-medium">{t('navigation.numberOfClients')}:</div>
-        <div>{extra.clientMembers?.length ?? t('actions.na')}</div>
+        <div>{groupDetails.clientMembers?.length ?? t('actions.na')}</div>
       </div>
     </div>
   )

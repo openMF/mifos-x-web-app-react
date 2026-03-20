@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { useTranslation } from 'react-i18next'
 
 const ClientNotesTab = () => {
-  const [notes, setNotes] = useState<string[]>([])
+  const [notes, _setNotes] = useState<string[]>([]) // Reserved for future use
   const [newNote, setNewNote] = useState('')
   const { t } = useTranslation('clients')
 

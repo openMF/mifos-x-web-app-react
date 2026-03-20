@@ -51,8 +51,13 @@ const ClientsAddressTab = () => {
     setOpen(false)
   }, [])
 
-  const onChange = (key: keyof typeof form) => (e: any) =>
-    setForm(f => ({ ...f, [key]: e?.target ? e.target.value : e }))
+  const onChange =
+    (key: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement> | string) =>
+      setForm(f => ({
+        ...f,
+        [key]: typeof e === 'string' ? e : e.target.value,
+      }))
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,12 +95,20 @@ const ClientsAddressTab = () => {
                   onValueChange={v => setForm(f => ({ ...f, addressType: v }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t('address.selectTypePlaceholder')} />
+                    <SelectValue
+                      placeholder={t('address.selectTypePlaceholder')}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="HOME">{t('address.typeHome')}</SelectItem>
-                    <SelectItem value="WORK">{t('address.typeWork')}</SelectItem>
-                    <SelectItem value="OTHER">{t('address.typeOther')}</SelectItem>
+                    <SelectItem value="HOME">
+                      {t('address.typeHome')}
+                    </SelectItem>
+                    <SelectItem value="WORK">
+                      {t('address.typeWork')}
+                    </SelectItem>
+                    <SelectItem value="OTHER">
+                      {t('address.typeOther')}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>

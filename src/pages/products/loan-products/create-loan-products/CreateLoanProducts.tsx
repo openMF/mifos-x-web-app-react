@@ -34,7 +34,8 @@ const loanProductApi = new LoanProductsApi(getConfiguration())
 const CreateLoanProducts = () => {
   const [loanProducts, setLoanProducts] =
     useState<GetLoanProductsTemplateResponse>()
-  const [formData, setFormData] = useState({
+  const [_formData, _setFormData] = useState({
+    // Reserved for future use
     fund: '', // only fund for now
   })
 
@@ -44,7 +45,7 @@ const CreateLoanProducts = () => {
         const response = await loanProductApi.retrieveTemplate11()
         setLoanProducts(response.data)
       } catch (err) {
-        console.log('Failed to fetch Loan Products', err)
+        console.error('Failed to fetch Loan Products', err)
       }
     }
     fetchLoanProductDetails()

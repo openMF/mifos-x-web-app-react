@@ -73,7 +73,7 @@ const ViewDataTables = () => {
 
   // Filter + pagination
   const filtered = fields.filter(c =>
-    String((c as any).columnName ?? (c as any).name ?? '')
+    String(c.columnName ?? '')
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   )
@@ -184,31 +184,22 @@ const ViewDataTables = () => {
                 className="text-base hover:bg-zinc-100 dark:hover:bg-zinc-700"
               >
                 <TableCell className="px-6 py-4 font-medium">
-                  {(c as any).columnName ?? (c as any).name ?? ''}
+                  {c.columnName ?? ''}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(
-                    (c as any).columnType ?? (c as any).type ?? ''
-                  ).toUpperCase()}
+                  {String(c.columnType ?? '').toUpperCase()}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {(c as any).columnLength ?? (c as any).length ?? 0}
+                  {c.columnLength ?? 0}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {(c as any).code ??
-                    (c as any).codeName ??
-                    (c as any).columnCode ??
-                    '—'}
+                  {c.columnCode ?? '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <FontAwesomeIcon
-                    icon={
-                      (c as any).mandatory || (c as any).isMandatory
-                        ? faCircleCheck
-                        : faCircleXmark
-                    }
+                    icon={c.mandatory ? faCircleCheck : faCircleXmark}
                     className={
-                      (c as any).mandatory || (c as any).isMandatory
+                      c.mandatory
                         ? 'w-4 h-4 text-green-500'
                         : 'w-4 h-4 text-red-500'
                     }
@@ -216,13 +207,9 @@ const ViewDataTables = () => {
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <FontAwesomeIcon
-                    icon={
-                      (c as any).unique || (c as any).isUnique
-                        ? faCircleCheck
-                        : faCircleXmark
-                    }
+                    icon={c.isColumnUnique ? faCircleCheck : faCircleXmark}
                     className={
-                      (c as any).unique || (c as any).isUnique
+                      c.isColumnUnique
                         ? 'w-4 h-4 text-green-500'
                         : 'w-4 h-4 text-red-500'
                     }
@@ -230,13 +217,9 @@ const ViewDataTables = () => {
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <FontAwesomeIcon
-                    icon={
-                      (c as any).indexed || (c as any).isIndexed
-                        ? faCircleCheck
-                        : faCircleXmark
-                    }
+                    icon={c.isColumnIndexed ? faCircleCheck : faCircleXmark}
                     className={
-                      (c as any).indexed || (c as any).isIndexed
+                      c.isColumnIndexed
                         ? 'w-4 h-4 text-green-500'
                         : 'w-4 h-4 text-red-500'
                     }

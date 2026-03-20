@@ -15,19 +15,27 @@ import AppSelect from '@/components/custom/select/AppSelect'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { OfficesApi, StaffApi, type GetOfficesResponse } from '@/fineract-api'
+import {
+  BulkLoansApi,
+  OfficesApi,
+  StaffApi,
+  type GetOfficesResponse,
+  type StaffData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 const officesApi = new OfficesApi(getConfiguration())
 const staffApi = new StaffApi(getConfiguration())
+const bulkLoansApi = new BulkLoansApi(getConfiguration())
 
 const BulkLoanReassignment = () => {
   const navigate = useNavigate()
 
   const [offices, setOffices] = useState<GetOfficesResponse[]>([])
-  const [fromLoanOfficers, setFromLoanOfficers] = useState<any[]>([])
-  const [toLoanOfficers, setToLoanOfficers] = useState<any[]>([])
-  const [officerTemplate, setOfficerTemplate] = useState<any>()
+  const [fromLoanOfficers, setFromLoanOfficers] = useState<StaffData[]>([])
+  const [toLoanOfficers, setToLoanOfficers] = useState<StaffData[]>([])
+  const [officerTemplate, setOfficerTemplate] =
+    useState<Record<string, unknown>>()
 
   // form state
   const [formData, setFormData] = useState({
@@ -50,8 +58,52 @@ const BulkLoanReassignment = () => {
     })()
   }, [])
 
+  // fetch loan officers when office changes
+  useEffect(() => {
+    if (!formData.officeId) {
+      setFromLoanOfficers([])
+      setToLoanOfficers([])
+      return
+    }
+    ;(async () => {
+      try {
+        const res = await staffApi.retrieveAll16(
+          Number(formData.officeId),
+          undefined,
+          true
+        )
+        const staff = res.data ?? []
+        setFromLoanOfficers(staff)
+        setToLoanOfficers(staff)
+      } catch (err) {
+        console.error('Failed to fetch loan officers', err)
+      }
+    })()
+  }, [formData.officeId])
+
+  // fetch reassignment template when fromLoanOfficer changes
+  useEffect(() => {
+    if (!formData.officeId || !formData.fromLoanOfficerId) {
+      setOfficerTemplate(undefined)
+      return
+    }
+    ;(async () => {
+      try {
+        const res = await bulkLoansApi.loanReassignmentTemplate(
+          Number(formData.officeId),
+          Number(formData.fromLoanOfficerId)
+        )
+        const data =
+          typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+        setOfficerTemplate(data as Record<string, unknown>)
+      } catch (err) {
+        console.error('Failed to fetch reassignment template', err)
+      }
+    })()
+  }, [formData.officeId, formData.fromLoanOfficerId])
+
   // handle form field updates
-  const handleChange = (field: string, value: any) =>
+  const handleChange = (field: string, value: string) =>
     setFormData(prev => ({ ...prev, [field]: value }))
 
   // toggle loan selection (clients/groups)
@@ -65,6 +117,23 @@ const BulkLoanReassignment = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    try {
+      const payload = JSON.stringify({
+        fromLoanOfficerId: Number(formData.fromLoanOfficerId),
+        toLoanOfficerId: Number(formData.toLoanOfficerId),
+        assignmentDate: formData.assignmentDate,
+        locale: 'en',
+        dateFormat: 'yyyy-MM-dd',
+        loans: formData.selectedLoans.reduce(
+          (acc, id) => ({ ...acc, [id]: id }),
+          {} as Record<number, number>
+        ),
+      })
+      await bulkLoansApi.loanReassignment(payload)
+      navigate('/organization')
+    } catch (err) {
+      console.error('Failed to reassign loans', err)
+    }
   }
 
   return (
@@ -116,8 +185,8 @@ const BulkLoanReassignment = () => {
               selectOnChange={val => handleChange('fromLoanOfficerId', val)}
               selectClassname="w-full space-y-2"
               selectOptions={fromLoanOfficers.map(o => ({
-                id: o.id?.toString() || '',
-                name: o.displayName || '',
+                id: o.id?.toString() ?? '',
+                name: o.displayName ?? '',
               }))}
             />
           </div>
@@ -131,8 +200,8 @@ const BulkLoanReassignment = () => {
               selectOnChange={val => handleChange('toLoanOfficerId', val)}
               selectClassname="w-full space-y-2"
               selectOptions={toLoanOfficers.map(o => ({
-                id: o.id?.toString() || '',
-                name: o.displayName || '',
+                id: o.id?.toString() ?? '',
+                name: o.displayName ?? '',
               }))}
             />
           </div>
@@ -144,35 +213,43 @@ const BulkLoanReassignment = () => {
               <div className="w-full space-y-2">
                 <Label>Clients</Label>
                 <div className="rounded-md border p-4 space-y-3">
-                  {officerTemplate.accountSummaryCollection.clients?.map(
-                    (client: any) => (
-                      <div key={client.id}>
-                        <div className="font-semibold">
-                          {client.displayName}
-                        </div>
-                        <div className="mt-1 space-y-1 pl-2">
-                          {client.loans.map((loan: any) => (
+                  {(
+                    (
+                      officerTemplate.accountSummaryCollection as Record<
+                        string,
+                        unknown
+                      >
+                    )?.clients as Record<string, unknown>[]
+                  )?.map((client: Record<string, unknown>) => (
+                    <div key={client.id as number}>
+                      <div className="font-semibold">
+                        {client.displayName as string}
+                      </div>
+                      <div className="mt-1 space-y-1 pl-2">
+                        {(client.loans as Record<string, unknown>[]).map(
+                          (loan: Record<string, unknown>) => (
                             <label
-                              key={loan.id}
+                              key={loan.id as string | number}
                               className="flex items-center gap-2 text-sm"
                             >
                               <Checkbox
                                 checked={formData.selectedLoans.includes(
-                                  loan.id
+                                  loan.id as number
                                 )}
                                 onCheckedChange={c =>
-                                  handleLoanToggle(loan.id, !!c)
+                                  handleLoanToggle(loan.id as number, !!c)
                                 }
                               />
                               <span>
-                                {loan.productName} ({loan.accountNo})
+                                {loan.productName as string} (
+                                {loan.accountNo as string})
                               </span>
                             </label>
-                          ))}
-                        </div>
+                          )
+                        )}
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -180,26 +257,36 @@ const BulkLoanReassignment = () => {
               <div className="w-full space-y-2">
                 <Label>Groups</Label>
                 <div className="rounded-md border p-4 space-y-3">
-                  {officerTemplate.accountSummaryCollection.groups?.map(
-                    (group: any) => (
-                      <div key={group.id}>
-                        <div className="font-semibold">{group.displayName}</div>
-                        <div className="mt-1 space-y-1 pl-2">
-                          {group.loans.map((loan: any) => (
+                  {(
+                    (
+                      officerTemplate.accountSummaryCollection as Record<
+                        string,
+                        unknown
+                      >
+                    )?.groups as Record<string, unknown>[]
+                  )?.map((group: Record<string, unknown>) => (
+                    <div key={group.id as number}>
+                      <div className="font-semibold">
+                        {group.displayName as string}
+                      </div>
+                      <div className="mt-1 space-y-1 pl-2">
+                        {(group.loans as Record<string, unknown>[]).map(
+                          (loan: Record<string, unknown>) => (
                             <label
-                              key={loan.id}
+                              key={loan.id as string | number}
                               className="flex items-center gap-2 text-sm"
                             >
                               <Checkbox />
                               <span>
-                                {loan.productName} ({loan.accountNo})
+                                {loan.productName as string} (
+                                {loan.accountNo as string})
                               </span>
                             </label>
-                          ))}
-                        </div>
+                          )
+                        )}
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

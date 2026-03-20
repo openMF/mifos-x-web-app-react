@@ -24,7 +24,6 @@ const UndoApprovalSharesAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Undo approval of shares account:', sharesAccountId)
     backToAccount()
   }
 

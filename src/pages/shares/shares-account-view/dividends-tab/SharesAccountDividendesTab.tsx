@@ -17,16 +17,24 @@ import {
   TableCell,
 } from '@/components/ui/table'
 
-type Dividend = any
+interface Dividend {
+  id?: number
+  transactionDate?: unknown
+  date?: unknown
+  amount?: number
+  transactionReference?: string
+  referenceNumber?: string
+  status?: Record<string, unknown>
+}
 
-const fmtDate = (d: any) => {
+const fmtDate = (d: unknown) => {
   if (!d) return '—'
   if (Array.isArray(d)) {
     const [y, m, day] = d
     const dt = new Date(y, (m ?? 1) - 1, day ?? 1)
     return dt.toLocaleDateString()
   }
-  const dt = new Date(d)
+  const dt = new Date(d as string | number)
   return isNaN(+dt) ? '—' : dt.toLocaleDateString()
 }
 
@@ -57,9 +65,9 @@ const SharesAccountDividendesTab = () => {
   }, [accountId])
 
   // helper: format money with currency
-  const fmtMoney = (n: any) => {
+  const fmtMoney = (n: unknown) => {
     const val = Number(n)
-    if (isNaN(val)) return n ?? '—'
+    if (isNaN(val)) return '—'
     try {
       return new Intl.NumberFormat(undefined, {
         style: currencyCode ? 'currency' : 'decimal',
@@ -98,16 +106,16 @@ const SharesAccountDividendesTab = () => {
                 <TableCell colSpan={4}>No dividends</TableCell>
               </TableRow>
             ) : (
-              dividends.map((d: any, idx: number) => (
+              dividends.map((d, idx) => (
                 <TableRow key={d?.id ?? idx}>
                   <TableCell>
                     {fmtDate(d?.transactionDate ?? d?.date)}
                   </TableCell>
-                  <TableCell>{fmtMoney(d?.amount)}</TableCell>
+                  <TableCell>{String(fmtMoney(d?.amount))}</TableCell>
                   <TableCell>
                     {d?.transactionReference ?? d?.referenceNumber ?? '—'}
                   </TableCell>
-                  <TableCell>{d?.status?.value ?? d?.status ?? '—'}</TableCell>
+                  <TableCell>{String(d?.status?.value ?? '—')}</TableCell>
                 </TableRow>
               ))
             )}

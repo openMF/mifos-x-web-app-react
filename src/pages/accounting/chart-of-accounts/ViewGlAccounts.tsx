@@ -55,7 +55,7 @@ const ViewGlAccounts = () => {
         const response = await glApi.retreiveAccount(Number(id))
         setAccount(response.data)
       } catch (err) {
-        console.log('Failed to get Gl Account Details', err)
+        console.error('Failed to get Gl Account Details', err)
       }
     }
     fetchViewGlAccounts()
@@ -69,7 +69,7 @@ const ViewGlAccounts = () => {
       await glApi.deleteGLAccount1(Number(id))
       navigate('/accounting/chart-of-accounts')
     } catch (err) {
-      console.log('Failed to delete Gl account', err)
+      console.error('Failed to delete Gl account', err)
     }
   }
 
@@ -82,7 +82,7 @@ const ViewGlAccounts = () => {
       await glApi.updateGLAccount1(Number(id), updated)
       setAccount(prev => ({ ...prev!, disabled: !prev?.disabled }))
     } catch (err) {
-      console.log('Failed to update disable state', err)
+      console.error('Failed to update disable state', err)
     }
   }
 

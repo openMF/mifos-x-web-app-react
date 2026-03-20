@@ -9,12 +9,29 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 
+interface SavingsProductSettingsFormData {
+  minOpeningBalance: number
+  balanceRequiredForInterestCalculation: number
+  lockinPeriodFrequency: number
+  minBalance: number
+  withdrawalFeeForTransfers: boolean
+  enforceMinRequiredBalance: boolean
+  withHoldTax: boolean
+  allowOverdraft: boolean
+  trackDormancy: boolean
+  [key: string]: unknown
+}
+
 const SavingsProductSettingsStep = ({
   formData,
   setFormData,
 }: {
-  formData: any
-  setFormData: (val: any) => void
+  formData: SavingsProductSettingsFormData
+  setFormData: (
+    updater: (
+      prev: SavingsProductSettingsFormData
+    ) => SavingsProductSettingsFormData
+  ) => void
 }) => {
   return (
     <div className="flex flex-col gap-6">
@@ -27,7 +44,7 @@ const SavingsProductSettingsStep = ({
             placeholder="e.g., 500"
             value={formData.minOpeningBalance}
             onChange={e =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 minOpeningBalance: +e.target.value,
               }))
@@ -41,7 +58,7 @@ const SavingsProductSettingsStep = ({
             placeholder="e.g., 1000"
             value={formData.balanceRequiredForInterestCalculation}
             onChange={e =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 balanceRequiredForInterestCalculation: +e.target.value,
               }))
@@ -59,7 +76,7 @@ const SavingsProductSettingsStep = ({
             placeholder="e.g., 12 (months)"
             value={formData.lockinPeriodFrequency}
             onChange={e =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 lockinPeriodFrequency: +e.target.value,
               }))
@@ -73,7 +90,7 @@ const SavingsProductSettingsStep = ({
             placeholder="e.g., 200"
             value={formData.minBalance}
             onChange={e =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 minBalance: +e.target.value,
               }))
@@ -89,7 +106,7 @@ const SavingsProductSettingsStep = ({
             id="withdrawalFee"
             checked={formData.withdrawalFeeForTransfers}
             onCheckedChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 withdrawalFeeForTransfers: val as boolean,
               }))
@@ -104,7 +121,7 @@ const SavingsProductSettingsStep = ({
             id="enforceMinBalance"
             checked={formData.enforceMinRequiredBalance}
             onCheckedChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 enforceMinRequiredBalance: val as boolean,
               }))
@@ -117,7 +134,7 @@ const SavingsProductSettingsStep = ({
             id="withholdTax"
             checked={formData.withHoldTax}
             onCheckedChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 withHoldTax: val as boolean,
               }))
@@ -135,7 +152,7 @@ const SavingsProductSettingsStep = ({
             id="overdraftAllowed"
             checked={formData.allowOverdraft}
             onCheckedChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 allowOverdraft: val as boolean,
               }))
@@ -153,7 +170,7 @@ const SavingsProductSettingsStep = ({
             id="dormancyTracking"
             checked={formData.trackDormancy}
             onCheckedChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 trackDormancy: val as boolean,
               }))

@@ -94,12 +94,12 @@ const SharesAccountView = () => {
     if (!sharesAccountId) return
     ;(async () => {
       try {
-        const res = await (shareApi as any).retrieveAccount(
+        const res = await shareApi.retrieveAccount(
           Number(sharesAccountId),
           'share',
           { params: { template: false } }
         )
-        setAcct(res.data as GetAccountsTypeAccountIdResponse)
+        setAcct(res.data)
       } catch (e) {
         console.error('Failed to load share account', e)
       } finally {
@@ -109,7 +109,8 @@ const SharesAccountView = () => {
   }, [sharesAccountId])
 
   // determine status color for header indicator
-  const statusValue = String((acct as any)?.status?.value ?? '').toLowerCase()
+  const statusObj = acct?.status as Record<string, unknown> | undefined
+  const statusValue = String(statusObj?.value ?? '').toLowerCase()
   const statusColor = statusValue.includes('pending')
     ? 'text-orange-400'
     : statusValue === 'approved'
@@ -121,8 +122,7 @@ const SharesAccountView = () => {
   // basic account info
   const productName = acct?.productName ?? '—'
   const accountNo = acct?.accountNo ?? '—'
-  const holderName =
-    (acct as any)?.clientName ?? (acct as any)?.groupName ?? '—'
+  const holderName = acct?.clientName ?? '—'
   const currentMarketPrice = acct?.currentMarketPrice ?? '—'
 
   // sub-tabs inside Shares account view
@@ -200,7 +200,13 @@ const SharesAccountView = () => {
                       <td className="pr-3">Lockin Period :</td>
                       <td>
                         {acct.lockinPeriod}{' '}
-                        {(acct as any)?.lockPeriodTypeEnum?.value}
+                        {String(
+                          (
+                            acct?.lockPeriodTypeEnum as
+                              | Record<string, unknown>
+                              | undefined
+                          )?.value ?? ''
+                        )}
                       </td>
                     </tr>
                   ) : null}

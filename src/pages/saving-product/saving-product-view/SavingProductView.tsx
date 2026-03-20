@@ -12,7 +12,11 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 
-import { SavingsAccountApi, type SavingsAccountData } from '@/fineract-api'
+import {
+  SavingsAccountApi,
+  type SavingsAccountData,
+  type SavingsAccountStatusEnumData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { faCircle, faMoneyBill } from '@fortawesome/free-solid-svg-icons'
@@ -129,13 +133,13 @@ const SavingsAccountView = () => {
     if (!accountId) return
     ;(async () => {
       try {
-        const res = await (savingsApi as any).retrieveOne25(
+        const res = await savingsApi.retrieveOne25(
           Number(accountId),
           undefined,
           undefined,
           'all'
         )
-        setAcct(res.data as SavingsAccountData)
+        setAcct(res.data)
       } catch (err) {
         console.error('Failed to fetch savings account', err)
       }
@@ -143,20 +147,16 @@ const SavingsAccountView = () => {
   }, [accountId])
 
   // Extract status info safely
-  const s: any = (acct as any)?.status || {}
+  const s: SavingsAccountStatusEnumData = acct?.status || {}
   const statusVal = String(s.value ?? '').toLowerCase()
 
-  const inArrears = Boolean((acct as any)?.inArrears)
+  const inArrears = Boolean((acct as Record<string, unknown> | null)?.inArrears)
   const isActive = Boolean(s.active || statusVal === 'active')
   const isApproved = Boolean(
-    (s.approved && !s.active) ||
-    s.waitingForActivation ||
-    statusVal === 'approved'
+    (s.approved && !s.active) || statusVal === 'approved'
   )
   const isPending = Boolean(
-    s.pendingApproval ||
-    s.submittedAndPendingApproval ||
-    statusVal.includes('pending')
+    s.submittedAndPendingApproval || statusVal.includes('pending')
   )
 
   // Pick status color for dot indicator
@@ -171,9 +171,9 @@ const SavingsAccountView = () => {
           : 'text-zinc-400'
 
   // Basic info fields
-  const productName = (acct as any)?.savingsProductName ?? '—'
+  const productName = acct?.savingsProductName ?? '—'
   const accountNo = acct?.accountNo ?? '—'
-  const holderName = acct?.groupName ?? (acct as any)?.clientName ?? '—'
+  const holderName = acct?.groupName ?? acct?.clientName ?? '—'
 
   // Build action menu items
   const actions = buildSavingsMenu(s || {}, groupId, accountId)
@@ -225,11 +225,11 @@ const SavingsAccountView = () => {
               <div className="mt-3 grid max-w-md grid-cols-2 text-sm">
                 <div>Current Balance</div>
                 <div className="text-right">
-                  {(acct as any)?.summary?.accountBalance}
+                  {acct?.summary?.accountBalance}
                 </div>
                 <div>Available Balance</div>
                 <div className="text-right">
-                  {(acct as any)?.summary?.availableBalance}
+                  {acct?.summary?.availableBalance}
                 </div>
               </div>
             )}
