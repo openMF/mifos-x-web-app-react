@@ -1,0 +1,18 @@
+{
+  "addCharge": "Ajouter un frais",
+  "charges": "Frais",
+  "delinquencyBucket": "Catégorie de retard",
+  "fixedDepositProducts": "Produits de dépôt à terme",
+  "floatingRates": "Taux variables",
+  "loanProduct": "Produit de prêt",
+  "loanProducts": "Produits de prêt",
+  "loanProvisioningCriteria": "Critères de provisionnement des prêts",
+  "paymentType": "Type de paiement",
+  "product": "Produit",
+  "productsMix": "Mix produits",
+  "recurringDepositProducts": "Produits de dépôt récurrent",
+  "savingsProducts": "Produits d'épargne",
+  "shareProduct": "Produit d'actions",
+  "shareProducts": "Produits d'actions",
+  "title": "Produits"
+}

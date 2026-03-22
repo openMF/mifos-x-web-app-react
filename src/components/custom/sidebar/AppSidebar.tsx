@@ -8,6 +8,9 @@
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useAppDispatch } from '@/app/hook'
+import { logout } from '@/pages/login/loginSlice'
+import { useTranslation } from 'react-i18next'
 import {
   Gauge,
   Send,
@@ -35,6 +38,8 @@ import {
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { t } = useTranslation('common')
 
   const handleHome = () => {
     navigate('/home')
@@ -42,6 +47,11 @@ export const AppSidebar = () => {
 
   const handleClick = (page: string) => {
     navigate(`/${page}`)
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/login', { replace: true })
   }
 
   return (
@@ -66,54 +76,78 @@ export const AppSidebar = () => {
           </p>
 
           <div className="flex space-x-4 mt-2">
-            <Cog className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-primary cursor-pointer" />
-            <LogOut className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-red-500 cursor-pointer" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-transparent"
+              onClick={() => handleClick('settings')}
+              aria-label={t('tooltips.settings')}
+            >
+              <Cog className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
+              onClick={handleLogout}
+              aria-label={t('tooltips.signOut')}
+            >
+              <LogOut className="w-5 h-5" />
+            </Button>
           </div>
         </div>
 
         <SidebarGroup>
           <SidebarGroupLabel className="px-6 pt-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-            Frequently Accessed
+            {t('nav.frequentlyAccessed')}
           </SidebarGroupLabel>
           <SidebarMenu></SidebarMenu>
         </SidebarGroup>
 
         <SidebarGroup>
           <SidebarGroupLabel className="px-6 pt-4 pb-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-            Main Items
+            {t('nav.mainItems')}
           </SidebarGroupLabel>
           <SidebarMenu>
             {[
-              { icon: <Gauge />, label: 'Dashboard', route: 'dashboard' },
-              { icon: <Send />, label: 'Navigation', route: 'navigation' },
+              {
+                icon: <Gauge />,
+                label: t('nav.dashboard'),
+                route: 'dashboard',
+              },
+              {
+                icon: <Send />,
+                label: t('nav.navigation'),
+                route: 'navigation',
+              },
               {
                 icon: <Check />,
-                label: 'Checker Inbox and Tasks',
+                label: t('nav.checkerInboxAndTasks'),
                 route: 'checker-inbox-and-tasks/checker-inbox',
               },
               {
                 icon: <Layers2 />,
-                label: 'Individual Collection Sheet',
+                label: t('nav.individualCollectionSheet'),
                 route: 'individual-collection-sheet',
               },
               {
                 icon: <Bell />,
-                label: 'Notifications',
+                label: t('nav.notifications'),
                 route: 'notifications',
               },
               {
                 icon: <RefreshCcw />,
-                label: 'Frequent Postings',
+                label: t('nav.frequentPostings'),
                 route: 'accounting/journal-entries/frequent-postings',
               },
               {
                 icon: <Plus />,
-                label: 'Create Journal Entry',
+                label: t('nav.createJournalEntry'),
                 route: 'accounting/journal-entries/create',
               },
               {
                 icon: <Network />,
-                label: 'Chart of Accounts',
+                label: t('nav.chartOfAccounts'),
                 route: 'accounting/chart-of-accounts',
               },
             ].map(({ icon, label, route }) => (
@@ -141,7 +175,7 @@ export const AppSidebar = () => {
                   className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                 >
                   <Keyboard />
-                  <p>Keyboard Shortcuts</p>
+                  <p>{t('nav.keyboardShortcuts')}</p>
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -159,7 +193,7 @@ export const AppSidebar = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Help
+                      {t('nav.help')}
                     </a>
                   </p>
                 </Button>

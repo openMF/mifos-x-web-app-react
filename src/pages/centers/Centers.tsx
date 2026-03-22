@@ -28,9 +28,20 @@ import {
 } from '@/components/ui/select'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useTranslation } from 'react-i18next'
 
 import { CentersApi, type GetCentersPageItems } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+
+/**
+ * Extended interface to include fields returned by the Fineract API
+ * but missing from the OpenAPI-generated GetCentersPageItems type.
+ * See: ISSUES.md → Institution Centers → /centers
+ */
+interface ExtendedCentersPageItem extends GetCentersPageItems {
+  accountNo?: string
+  externalId?: string
+}
 
 import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -41,9 +52,13 @@ const centersApi = new CentersApi(getConfiguration())
 
 const Centers = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('centers')
+  const { t: tc } = useTranslation('common')
 
   // State for centers data
-  const [centers, setCenters] = useState<GetCentersPageItems[]>([])
+  const [centers, setCenters] = useState<ExtendedCentersPageItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   // Search filter state
   const [searchTerm, setSearchTerm] = useState('')
   // Pagination state
@@ -53,28 +68,35 @@ const Centers = () => {
   const [checked, setChecked] = useState(false)
 
   // Fetch centers on mount
-  useEffect(() => {
-    const fetchCenters = async () => {
-      try {
-        const response = await centersApi.retrieveAll23(
-          undefined, // officeId
-          undefined, // staffId
-          undefined, // externalId
-          undefined, // name
-          undefined, // underHierarchy
-          true, // paged
-          0, // offset
-          10, // limit
-          '', // orderBy
-          '' // sortOrder
-        )
-        const items = Array.from(response.data?.pageItems ?? [])
-        setCenters(items)
-      } catch (err) {
-        console.error('Failed to fetch centers', err)
-      }
+  const fetchCenters = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await centersApi.retrieveAll23(
+        undefined, // officeId
+        undefined, // staffId
+        undefined, // externalId
+        undefined, // name
+        undefined, // underHierarchy
+        true, // paged
+        0, // offset
+        10, // limit
+        '', // orderBy
+        '' // sortOrder
+      )
+      const items = Array.from(
+        response.data?.pageItems ?? []
+      ) as ExtendedCentersPageItem[]
+      setCenters(items)
+    } catch (err) {
+      console.error('Failed to fetch centers', err)
+      setError('Failed to load centers. Please try again.')
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchCenters()
   }, [])
 
@@ -109,8 +131,8 @@ const Centers = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Centers', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), current: true },
         ]}
       />
 
@@ -120,7 +142,7 @@ const Centers = () => {
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
           onClick={() => navigate('/centers/create')}
         >
-          <Plus className="mr-2" /> Add Center
+          <Plus className="mr-2" /> {t('addCenter')}
         </Button>
       </div>
 
@@ -128,7 +150,7 @@ const Centers = () => {
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         {/* Search input */}
         <Input
-          placeholder="Search by Name or External ID..."
+          placeholder={t('searchPlaceholder')}
           value={searchTerm}
           onChange={e => {
             setSearchTerm(e.target.value)
@@ -144,7 +166,7 @@ const Centers = () => {
             onValueChange={handleItemsPerPageChange}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={tc('pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -160,7 +182,7 @@ const Centers = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
-            Prev
+            {tc('actions.prev')}
           </Button>
           <Button
             variant="outline"
@@ -168,7 +190,7 @@ const Centers = () => {
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {tc('actions.next')}
           </Button>
         </div>
       </div>
@@ -181,67 +203,91 @@ const Centers = () => {
           onCheckedChange={val => setChecked(!!val)}
         />
         <label htmlFor="closed-centers" className="text-base dark:text-white">
-          Show Pending Centers
+          {t('showPending')}
         </label>
       </div>
 
       {/* Centers Table */}
-      <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Table>
-          {/* Caption */}
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
-          </TableCaption>
+      {loading && (
+        <p className="text-center py-8 text-zinc-500">
+          {tc('actions.loading')}
+        </p>
+      )}
 
-          {/* Table Header */}
-          <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Name</TableHead>
-              <TableHead className="px-6 py-4">Account #</TableHead>
-              <TableHead className="px-6 py-4">External ID</TableHead>
-              <TableHead className="px-6 py-4">Status</TableHead>
-              <TableHead className="px-6 py-4">Office Name</TableHead>
-            </TableRow>
-          </TableHeader>
+      {error && (
+        <p className="text-center py-8 text-red-500">{t('failedToLoad')}</p>
+      )}
 
-          {/* Table Body */}
-          <TableBody>
-            {paginated.map(center => (
-              <TableRow
-                key={center.id}
-                onClick={() => navigate(`/centers/${center.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {center.name}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {'Missing in OpenAPI'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {'Missing in OpenAPI'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {center.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="text-green-500 w-4 h-4"
-                    />
-                  )}
-                  {center.status?.id === 100 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="text-yellow-500 w-4 h-4"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">{center.officeName}</TableCell>
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <Table>
+            {/* Caption */}
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              {tc('pagination.showing', {
+                current: paginated.length,
+                total: filtered.length,
+                page,
+                pages: totalPages,
+              })}
+            </TableCaption>
+
+            {/* Table Header */}
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.accountNo')}
+                </TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.externalId')}
+                </TableHead>
+                <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.officeName')}
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+
+            {/* Table Body */}
+            <TableBody>
+              {paginated.map(center => (
+                <TableRow
+                  key={center.id}
+                  onClick={() => navigate(`/centers/${center.id}/general`)}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {center.name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {center.accountNo ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {center.externalId ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {center.status?.id === 300 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="text-green-500 w-4 h-4"
+                      />
+                    )}
+                    {center.status?.id === 100 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="text-yellow-500 w-4 h-4"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {center.officeName}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }

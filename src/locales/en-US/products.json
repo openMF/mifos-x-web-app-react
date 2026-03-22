@@ -1,0 +1,18 @@
+{
+  "addCharge": "Add Charge",
+  "charges": "Charges",
+  "delinquencyBucket": "Delinquency Bucket",
+  "fixedDepositProducts": "Fixed Deposit Products",
+  "floatingRates": "Floating Rates",
+  "loanProduct": "Loan Product",
+  "loanProducts": "Loan Products",
+  "loanProvisioningCriteria": "Loan Provisioning Criteria",
+  "paymentType": "Payment Type",
+  "product": "Product",
+  "productsMix": "Products Mix",
+  "recurringDepositProducts": "Recurring Deposit Products",
+  "savingsProducts": "Savings Products",
+  "shareProduct": "Share Product",
+  "shareProducts": "Share Products",
+  "title": "Products"
+}

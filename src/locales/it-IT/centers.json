@@ -1,0 +1,92 @@
+{
+  "title": "Centri",
+  "addCenter": "Aggiungi Centro",
+  "searchPlaceholder": "Cerca per Nome o ID Esterno...",
+  "showPending": "Mostra Centri in Attesa",
+  "failedToLoad": "Impossibile caricare i centri. Riprova.",
+  "table": {
+    "name": "Nome",
+    "accountNo": "N. Conto",
+    "externalId": "ID Esterno",
+    "status": "Stato",
+    "officeName": "Nome Ufficio"
+  },
+  "create": {
+    "heading": "Crea Centro",
+    "labelName": "Nome*",
+    "labelOffice": "Ufficio*",
+    "labelStaff": "Personale",
+    "labelActive": "Attivo",
+    "labelActivationDate": "Data di Attivazione",
+    "labelExternalId": "Id Esterno",
+    "labelSubmittedOn": "Inviato Il*",
+    "selectOffice": "Seleziona Ufficio",
+    "selectStaff": "Seleziona Personale",
+    "errorCreate": "Impossibile creare il centro"
+  },
+  "edit": {
+    "heading": "Modifica Centro",
+    "labelName": "Nome*",
+    "labelExternalId": "Id Esterno",
+    "placeholderName": "Inserisci nome",
+    "placeholderExternalId": "Inserisci id esterno",
+    "breadcrumb": "Modifica"
+  },
+  "close": {
+    "heading": "Chiudi Centro",
+    "labelClosedOn": "Data di chiusura*",
+    "breadcrumb": "Chiudi"
+  },
+  "view": {
+    "centerName": "Nome Centro :",
+    "accountNo": "N. Conto:",
+    "office": "Ufficio:",
+    "externalId": "Id Esterno:",
+    "activationDate": "Data di Attivazione :",
+    "nextMeetingOn": "Prossima Riunione il:",
+    "meetingFrequency": "Frequenza Riunioni:",
+    "missingInOpenAPI": "Mancante in OpenAPI",
+    "confirmDelete": "Sei sicuro di voler eliminare questo centro?",
+    "activateTodo": "DA FARE: attivare il centro",
+    "tabs": {
+      "general": "Generale",
+      "notes": "Note"
+    },
+    "menu": {
+      "activate": "Attiva",
+      "edit": "Modifica",
+      "addGroup": "Aggiungi Gruppo",
+      "manageGroups": "Gestisci Gruppi",
+      "centersSavingApplication": "Domanda di Risparmio Centro",
+      "more": "Altro",
+      "attendance": "Presenze",
+      "assignStaff": "Assegna Personale",
+      "unassignStaff": "Rimuovi Assegnazione Personale",
+      "delete": "Elimina",
+      "close": "Chiudi",
+      "attachMeeting": "Allega Riunione",
+      "staffAssignmentHistory": "Cronologia assegnazione personale"
+    }
+  },
+  "general": {
+    "summaryDetails": "Dettagli Riepilogativi",
+    "activeClients": "Clienti Attivi:",
+    "activeGroupBorrowers": "Mutuatari di Gruppo Attivi:",
+    "activeGroupLoans": "Prestiti di Gruppo Attivi:",
+    "activeClientBorrowers": "Mutuatari Clienti Attivi:",
+    "activeClientLoans": "Prestiti Clienti Attivi:",
+    "activeOverdueClientLoans": "Prestiti Clienti Attivi Scaduti:",
+    "activeOverdueGroupLoans": "Prestiti di Gruppo Attivi Scaduti:",
+    "groups": "Gruppi",
+    "tableAccountNo": "N. Conto",
+    "tableGroupName": "Nome Gruppo",
+    "tableOfficeName": "Nome Ufficio",
+    "tableSubmittedOn": "Inviato Il",
+    "noGroups": "Nessun gruppo trovato."
+  },
+  "notes": {
+    "heading": "Note",
+    "placeholder": "Scrivi una nota ....",
+    "addButton": "+ Aggiungi"
+  }
+}

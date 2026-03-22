@@ -8,8 +8,20 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from '@/fineract-api'
+import { SavingsAccountApi, type CurrencyData } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+
+interface TransactionRecord {
+  id?: number
+  date?: string
+  externalId?: string
+  transactionType?: { value?: string }
+  debit?: unknown
+  credit?: unknown
+  amount?: number
+  runningBalance?: number
+  note?: string
+}
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -29,14 +41,14 @@ const SavingProductTransactionTab = () => {
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(true)
-  const [transactions, setTransactions] = useState<any[]>([])
-  const [currency, setCurrency] = useState<any>(null)
+  const [transactions, setTransactions] = useState<TransactionRecord[]>([])
+  const [currency, setCurrency] = useState<CurrencyData | null>(null)
 
   useEffect(() => {
     if (!accountId) return
     ;(async () => {
       try {
-        const res = await (api as any).retrieveOne25(
+        const res = await api.retrieveOne25(
           Number(accountId),
           undefined,
           undefined,
@@ -134,10 +146,10 @@ const SavingProductTransactionTab = () => {
                   <TableCell>{t.externalId || '—'}</TableCell>
                   <TableCell>{t.transactionType?.value}</TableCell>
                   <TableCell className="text-right">
-                    {t.debit || 'N/A'}
+                    {String(t.debit ?? 'N/A')}
                   </TableCell>
                   <TableCell className="text-right">
-                    {t.credit || '—'}
+                    {String(t.credit ?? '—')}
                   </TableCell>
                   <TableCell className="text-right">
                     {t.runningBalance || '—'}

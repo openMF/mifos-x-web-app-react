@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { ClientApi, type ClientData } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
 
 interface ClientNavigationProps {
   clientId: number
@@ -19,6 +20,7 @@ const clientApi = new ClientApi(getConfiguration())
 
 const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
   const [client, setClient] = useState<ClientData | undefined>()
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -32,7 +34,8 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
     fetchClient()
   }, [clientId])
 
-  if (!client) return <p className="text-gray-500">Loading client info...</p>
+  if (!client)
+    return <p className="text-gray-500">{t('navigation.loadingClientInfo')}</p>
 
   return (
     <div className="space-y-6 text-sm text-gray-700 dark:text-gray-300">
@@ -49,14 +52,17 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
             <FontAwesomeIcon
               icon={faCircle}
               className="text-green-500"
-              title="Active"
+              title={t('status.active')}
             />
           </h2>
           <p className="text-gray-500">
-            Account No: <span className="font-medium">{client.accountNo}</span>{' '}
-            | External ID:{' '}
+            {t('fields.accountNo')}:{' '}
+            <span className="font-medium">{client.accountNo}</span> |{' '}
+            {t('fields.externalId')}:{' '}
             <span className="font-medium">
-              {typeof client.externalId || 'N/A'}
+              {(typeof client.externalId === 'string'
+                ? client.externalId
+                : client.externalId?.value) || t('actions.na')}
             </span>
           </p>
         </div>
@@ -65,43 +71,51 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
       {/* Tabbed Content */}
       <div className="border-t pt-6">
         <div className="grid grid-cols-2 gap-y-3">
-          <div className="font-medium">First Name:</div>
+          <div className="font-medium">{t('fields.firstName')}:</div>
           <div>{client.firstname || '-'}</div>
 
-          <div className="font-medium">Middle Name:</div>
+          <div className="font-medium">{t('navigation.middleName')}:</div>
           <div>{client.middlename || '-'}</div>
 
-          <div className="font-medium">Last Name:</div>
+          <div className="font-medium">{t('fields.lastName')}:</div>
           <div>{client.lastname || '-'}</div>
 
-          <div className="font-medium">Date of Birth:</div>
+          <div className="font-medium">{t('navigation.dateOfBirth')}:</div>
           <div>{client.dateOfBirth || '-'}</div>
 
-          <div className="font-medium">Mobile Number:</div>
+          <div className="font-medium">{t('navigation.mobileNumber')}:</div>
           <div>{client.mobileNo || '-'}</div>
 
-          <div className="font-medium">Activation Date:</div>
+          <div className="font-medium">{t('navigation.activationDate')}:</div>
           <div>{client.activationDate || '-'}</div>
 
-          <div className="font-medium">Associated Office:</div>
+          <div className="font-medium">{t('navigation.associatedOffice')}:</div>
           <div>{client.officeName || '-'}</div>
 
-          <div className="font-medium">Associated Staff:</div>
+          <div className="font-medium">{t('navigation.associatedStaff')}:</div>
           <div>{client.staffName || '-'}</div>
         </div>
 
         {/* Tabs for Accounts & Groups */}
         <div className="pt-8">
-          <h3 className="text-lg font-semibold mb-3">Loan Accounts</h3>
+          <h3 className="text-lg font-semibold mb-3">
+            {t('navigation.loanAccounts')}
+          </h3>
           <p className="text-gray-500">[Loan account table goes here]</p>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">Savings Accounts</h3>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            {t('navigation.savingsAccounts')}
+          </h3>
           <p className="text-gray-500">[Savings account table goes here]</p>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">Share Accounts</h3>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            {t('navigation.shareAccounts')}
+          </h3>
           <p className="text-gray-500">[Share account table goes here]</p>
 
-          <h3 className="text-lg font-semibold mt-6 mb-3">Group Memberships</h3>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            {t('navigation.groupMemberships')}
+          </h3>
           <p className="text-gray-500">[Group membership info goes here]</p>
         </div>
       </div>

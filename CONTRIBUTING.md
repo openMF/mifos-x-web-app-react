@@ -10,6 +10,7 @@ To ensure a smooth collaboration process and maintain code quality, we enforce a
 - Sign the [Contribution License Agreement](http://mifos.org/about-us/financial-legal/mifos-contributor-agreement/).
 - Always follow the [code of conduct](https://mifos.org/resources/community/code-of-conduct/) - this is important to us.
 - Learn more at our [getting started guide](https://mifosforge.jira.com/wiki/spaces/RES/pages/464322561/New+Contributor+Getting+Started+Guide).
+- Have a look at our [Wiki](https://github.com/openMF/mifos-x-web-app-react/wiki).
 - Sign up to the [mailing list](https://sourceforge.net/projects/mifos/lists/mifos-developer).
 
 ---
@@ -68,6 +69,7 @@ We follow a strict branching model to keep our history clean.
 - **Naming Convention:** Your branch name must include the Jira Ticket ID.
   - **Format:** `MXWAR-<ID>-<short-description>`
   - **Example:** `git checkout -b MXWAR-123-fix-login-button`
+
 ### Reserved Branch Names
 
 The following branch names and tags (and their derivatives/extensions) are reserved for use by Mifos Organisation. Any branches created by non-admins with these names will be deleted without notice:
@@ -82,6 +84,7 @@ The following branch names and tags (and their derivatives/extensions) are reser
 - `staging`
 - `prod` / `production`
 - `gsoc`
+
 ---
 
 ## Step 4: UI/UX Consistency
@@ -131,12 +134,14 @@ We maintain a linear, meaningful git history.
 **How to Squash (Example for last 2 commits):**
 
 1. **Start Interactive Rebase:**
+
    ```bash
    git rebase -i HEAD~2
    ```
 
 2. **Edit the Rebase File:**
    An editor will open listing the last two commits. It will look similar to this:
+
    ```text
    pick a1b2c3d Message of the older commit
    pick e4f5g6h Message of the newer commit
@@ -144,6 +149,7 @@ We maintain a linear, meaningful git history.
 
 3. **Squash the Commits:**
    Change the second `pick` to `squash` or `s`:
+
    ```text
    pick a1b2c3d Message of the older commit
    s e4f5g6h Message of the newer commit
@@ -161,7 +167,6 @@ We maintain a linear, meaningful git history.
    git push --force-with-lease
    ```
 
-
 ---
 
 ## Step 7: Pull Request Checklist
@@ -177,94 +182,156 @@ When you are ready to submit your PR:
 
 ---
 
+## Additional Resources
+
+- Learn how to [format pull requests](#best-practices-to-send-pull-requests).
+- Read how to [rebase/merge upstream branches](#configuring-remotes).
+
 ## Git and GitHub Workflow
+
+### Best Practices to send Pull Requests
+
+- Fork the [project](https://github.com/openMF/mifos-x-web-app-react) on GitHub
+- Clone the project locally into your system.
+
+```bash
+git clone https://github.com/your-username/mifos-x-web-app-react.git
+```
+
+- We use the `main` branch for releases, hotfixes and special purposes. All regular work on releases flows into the `dev` branch.
+
+```bash
+git checkout dev
+```
+
+- Create a new branch with a meaningful name before adding and committing your changes.
+
+```bash
+git checkout -b branch-name
+```
+
+- Add the files you changed. (Better don't use `git add .`)
+
+```bash
+git add file-name
+```
+
+- Follow the style conventions for a meaningful commit message.
+
+```bash
+git commit
+```
+
+- If you forgot to add some changes, you can edit your previous commit message.
+
+```bash
+git commit --amend
+```
+
+- Squash multiple commits to a single commit. (Example: squash last two commits done on this branch into one.)
+
+```bash
+git rebase --interactive HEAD~2
+```
+
+- Push this branch to your remote repository on GitHub.
+
+```bash
+git push --set-upstream origin branch-name
+```
+
+- If any of the squashed commits have already been pushed to your remote repository, you need to do a force push.
+
+  ```bash
+  git push origin branch-name --force-with-lease
+  ```
+
+- Follow the Pull request template and submit a pull request with a motive for your change and the method you used to achieve it to be merged with the `dev` branch.
+- If possible, please submit the pull request along with tests.
+- During review, if changes are requested, rebase your branch and squash commits again. Once you push, the pull request updates automatically.
 
 ### Configuring Remotes
 
-1. **Fork the Repository:** Create your own fork of the repository on GitHub.
+When a repository is cloned, it has a default remote called `origin` that points to your fork on GitHub, not the original repository it was forked from. To keep track of the original repository, you can add another remote called `upstream`.
 
-2. **Clone Your Fork:**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/mifos-x-web-app-react.git
-   cd mifos-x-web-app-react
-   ```
-
-3. **Add Upstream Remote:**
-   ```bash
-   git remote add upstream https://github.com/openMF/mifos-x-web-app-react.git
-   ```
-
-4. **Verify Remotes:**
-   ```bash
-   git remote -v
-   # origin    https://github.com/YOUR_USERNAME/mifos-x-web-app-react.git (fetch)
-   # origin    https://github.com/YOUR_USERNAME/mifos-x-web-app-react.git (push)
-   # upstream  https://github.com/openMF/mifos-x-web-app-react.git (fetch)
-   # upstream  https://github.com/openMF/mifos-x-web-app-react.git (push)
-   ```
-
-### Keeping Your Fork Updated
-
-Before starting work on a new feature, always sync with upstream:
+1. Set the `upstream`.
 
 ```bash
-# Fetch the latest changes from upstream
+git remote add upstream https://github.com/openMF/mifos-x-web-app-react.git
+```
+
+2. Use `git remote -v` to check the status. The output must be something like this:
+
+```bash
+  > origin    https://github.com/your-username/mifos-x-web-app-react.git (fetch)
+  > origin    https://github.com/your-username/mifos-x-web-app-react.git (push)
+  > upstream  https://github.com/openMF/mifos-x-web-app-react.git (fetch)
+  > upstream  https://github.com/openMF/mifos-x-web-app-react.git (push)
+```
+
+3. To update your local copy with remote changes, run the following: (This will give you an exact copy of the current remote. You should not have any local changes on your dev branch, if you do, use rebase instead.)
+
+```bash
 git fetch upstream
-
-# Switch to your local dev branch
 git checkout dev
-
-# Merge upstream dev into your local dev
 git merge upstream/dev
+```
 
-# Push the updates to your fork
+4. Push these merged changes to the `dev` branch on your fork. (Pull upstream changes regularly to keep your fork up to date, or use the "Sync fork" button at the top of your fork's GitHub page, then run `git pull`.)
+
+```bash
 git push origin dev
 ```
 
-### Creating a Feature Branch
+5. Switch to the branch you are using for some piece of work.
 
 ```bash
-# Make sure you're on dev and it's up to date
+git checkout branch-name
+```
+
+6. Rebase your branch, which means, take in all latest changes and replay your work in the branch on top of this - this produces cleaner versions/history.
+
+```bash
+git rebase dev
+```
+
+7. Push the final changes when you're ready.
+
+```bash
+git push origin branch-name
+```
+
+### After your Pull Request is merged
+
+After your pull request is merged, you can safely delete your branch and pull the changes from the dev (upstream) repository.
+
+1. Delete the remote branch on GitHub.
+
+```bash
+git push origin --delete branch-name
+```
+
+2. Checkout the dev branch.
+
+```bash
 git checkout dev
+```
+
+3. Delete the local branch.
+
+```bash
+git branch -D branch-name
+```
+
+4. Update your dev branch with the latest upstream version.
+
+```bash
 git pull upstream dev
-
-# Create a new branch for your feature
-git checkout -b MXWAR-123-your-feature-name
 ```
 
-### Making Changes and Committing
+### Skipping a CI Build
 
-```bash
-# Stage your changes
-git add .
-
-# Commit with a meaningful message
-git commit -m "MXWAR-123: Add client search functionality"
-
-# Push to your fork
-git push origin MXWAR-123-your-feature-name
-```
-
-### Creating a Pull Request
-
-1. Go to your fork on GitHub
-2. Click "Compare & pull request"
-3. Ensure the base repository is `openMF/mifos-x-web-app-react` and the base branch is `dev`
-4. Fill in the PR template with all required information
-5. Submit the pull request
-
-### Handling Review Feedback
-
-```bash
-# Make the requested changes in your branch
-git add .
-git commit -m "MXWAR-123: Address review feedback"
-
-# Push the changes
-git push origin MXWAR-123-your-feature-name
-```
-
-The PR will automatically update with your new commits.
+If running a build is not required for a particular commit (in some cases like an update to README.md), add [ci skip] or [skip ci] to the git commit message. Commits that have [ci skip] or [skip ci] anywhere in the commit messages are ignored by CI.
 
 ---
 
@@ -312,7 +379,7 @@ src/
 ├── router/           # React Router setup
 ├── App.tsx           # Root component with global providers
 ├── index.css         # Global Tailwind styles
-├── main.tsx          # React entry point 
+├── main.tsx          # React entry point
 ```
 
 ---
@@ -323,4 +390,4 @@ If you get stuck, please reach out in the `#web-app` channel on [Slack](https://
 
 ---
 
-Thank you for contributing!
+**_Thank you for contributing!_**

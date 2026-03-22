@@ -1,0 +1,18 @@
+{
+  "addCharge": "Aggiungi commissione",
+  "charges": "Commissioni",
+  "delinquencyBucket": "Bucket di morosità",
+  "fixedDepositProducts": "Prodotti deposito a termine",
+  "floatingRates": "Tassi variabili",
+  "loanProduct": "Prodotto di prestito",
+  "loanProducts": "Prodotti di prestito",
+  "loanProvisioningCriteria": "Criteri di accantonamento prestiti",
+  "paymentType": "Tipo di pagamento",
+  "product": "Prodotto",
+  "productsMix": "Mix prodotti",
+  "recurringDepositProducts": "Prodotti deposito ricorrente",
+  "savingsProducts": "Prodotti di risparmio",
+  "shareProduct": "Prodotto azionario",
+  "shareProducts": "Prodotti azionari",
+  "title": "Prodotti"
+}

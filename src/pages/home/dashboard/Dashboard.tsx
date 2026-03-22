@@ -7,20 +7,21 @@
  */
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-
 import { Label } from '@/components/ui/label'
 import ClientTrendsBar from './client-trends-bar/ClientTrendsBar'
 import AmountDisbursedPie from './amount-disbursed-pie/AmountDisbursedPie'
 import AmountCollectedPie from './amount-collected-pie/AmountCollectedPie'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useTranslation } from 'react-i18next'
 
 const Dashboard = () => {
+  const { t } = useTranslation('common')
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Dashboard', current: true },
+          { label: t('nav.home'), href: '/home' },
+          { label: t('nav.dashboard'), current: true },
         ]}
       />
 
@@ -28,8 +29,8 @@ const Dashboard = () => {
         {/* Search Activity */}
         <CardContent className="p-0">
           <div className="w-full max-w-md flex flex-col gap-1 flex-1">
-            <Label htmlFor="search">Search Activity</Label>
-            <Input id="search" placeholder="Search Activity" />
+            <Label htmlFor="search">{t('ui.searchActivity')}</Label>
+            <Input id="search" placeholder={t('ui.searchActivity')} />
             {/* Optionally add autocomplete logic here */}
           </div>
         </CardContent>
