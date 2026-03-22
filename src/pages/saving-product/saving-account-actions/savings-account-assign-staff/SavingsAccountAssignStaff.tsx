@@ -33,7 +33,6 @@ const SavingsAccountAssignStaff = () => {
 
   // submit handler — placeholder for API call
   const onSubmit = () => {
-    console.log({ staffId, assignmentDate })
     backToAccount()
   }
 

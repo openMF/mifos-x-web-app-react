@@ -17,7 +17,7 @@ on:
     branches:
       - dev
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
 permissions:
   contents: read

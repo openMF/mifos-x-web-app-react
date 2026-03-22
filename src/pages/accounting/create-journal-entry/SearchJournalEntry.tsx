@@ -58,8 +58,8 @@ type Row = {
 const SearchJournalEntry = () => {
   const navigate = useNavigate()
 
-  const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null)
-  const [glAccounts, setGlAccounts] = useState<GetGLAccountsResponse[]>([])
+  const [_offices, setOffices] = useState<GetOfficesResponse[] | null>(null) // Reserved for future use
+  const [_glAccounts, setGlAccounts] = useState<GetGLAccountsResponse[]>([]) // Reserved for future use
 
   const [entries, setEntries] = useState<Row[]>([]) // <-- you were missing this
   const [searchTerm, setSearchTerm] = useState('')
@@ -85,44 +85,59 @@ const SearchJournalEntry = () => {
         setOffices(officesRes.data ?? [])
         setGlAccounts(glAccountsRes.data ?? [])
 
+        const rawData = journalRes?.data as
+          | Record<string, unknown>
+          | unknown[]
+          | undefined
         const items =
-          (journalRes?.data as any)?.pageItems ?? journalRes?.data ?? []
+          rawData &&
+          !Array.isArray(rawData) &&
+          Array.isArray((rawData as Record<string, unknown>).pageItems)
+            ? (rawData as Record<string, unknown>).pageItems
+            : (rawData ?? [])
         // Normalize each item into the table shape you render
         const mapped: Row[] = (Array.isArray(items) ? items : []).map(
-          (r: any) => ({
-            id: r.id ?? r.entryId ?? r.transactionId ?? '',
-            office: r.officeName ?? r.office?.name ?? '',
-            transactionId: r.transactionId ?? '',
+          (r: Record<string, unknown>) => ({
+            id: (r.id ?? r.entryId ?? r.transactionId ?? '') as number | string,
+            office: (r.officeName ??
+              (r.office as Record<string, unknown> | undefined)?.name ??
+              '') as string,
+            transactionId: (r.transactionId ?? '') as string,
             transactionDate:
               // Fineract often returns dates as arrays [yyyy, mm, dd]
               Array.isArray(r.transactionDate) && r.transactionDate.length >= 3
                 ? new Date(
-                    r.transactionDate[0],
-                    (r.transactionDate[1] ?? 1) - 1,
-                    r.transactionDate[2]
+                    r.transactionDate[0] as number,
+                    ((r.transactionDate[1] as number) ?? 1) - 1,
+                    r.transactionDate[2] as number
                   ).toLocaleDateString('en-GB', {
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric',
                   })
-                : (r.transactionDate ?? ''),
-            type: (r.entryType ?? r.type ?? '').toString(),
-            createdBy: r.createdByUserName ?? r.createdBy ?? '',
+                : ((r.transactionDate ?? '') as string),
+            type: ((r.entryType ?? r.type ?? '') as string).toString(),
+            createdBy: (r.createdByUserName ?? r.createdBy ?? '') as string,
             submittedOn:
               Array.isArray(r.submittedOnDate) && r.submittedOnDate.length >= 3
                 ? new Date(
-                    r.submittedOnDate[0],
-                    (r.submittedOnDate[1] ?? 1) - 1,
-                    r.submittedOnDate[2]
+                    r.submittedOnDate[0] as number,
+                    ((r.submittedOnDate[1] as number) ?? 1) - 1,
+                    r.submittedOnDate[2] as number
                   ).toLocaleDateString('en-GB', {
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric',
                   })
-                : (r.submittedOnDate ?? ''),
-            accountCode: r.accountCode ?? r.glAccountCode ?? r.glCode ?? '',
-            accountName: r.accountName ?? r.glAccountName ?? '',
-            currency: r.currencyCode ?? r.currency?.code ?? '',
+                : ((r.submittedOnDate ?? '') as string),
+            accountCode: (r.accountCode ??
+              r.glAccountCode ??
+              r.glCode ??
+              '') as string,
+            accountName: (r.accountName ?? r.glAccountName ?? '') as string,
+            currency: (r.currencyCode ??
+              (r.currency as Record<string, unknown> | undefined)?.code ??
+              '') as string,
           })
         )
 

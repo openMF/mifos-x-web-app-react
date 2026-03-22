@@ -8,7 +8,12 @@
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 import { Button } from '@/components/ui/button'
-import { MappingFinancialActivitiesToAccountsApi } from '@/fineract-api'
+import {
+  MappingFinancialActivitiesToAccountsApi,
+  type FinancialActivityAccountData,
+  type FinancialActivityData,
+  type GLAccountData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -22,8 +27,8 @@ const CreateFinancialActivityMappings = () => {
   const navigate = useNavigate()
 
   // Template from server + filtered GL list for the chosen FA
-  const [template, setTemplate] = useState<any>({})
-  const [glList, setGlList] = useState<any[]>([])
+  const [template, setTemplate] = useState<FinancialActivityAccountData>({})
+  const [glList, setGlList] = useState<GLAccountData[]>([])
 
   // Controlled form state
   const [formData, setFormData] = useState({
@@ -56,17 +61,14 @@ const CreateFinancialActivityMappings = () => {
     setFormData(p => ({ ...p, financialActivityId: val, glAccountId: '' }))
 
     const fa = (template?.financialActivityOptions || []).find(
-      (x: any) => String(x.id) === String(val)
+      (x: FinancialActivityData) => String(x.id) === String(val)
     )
-    const t = fa?.mappedGLAccountType
+    const accountType = fa?.mappedGLAccountType
 
-    // pick the right GL array
-    let list: any[] = []
-    if (t === 'ASSET') list = template?.assetAccountOptions || []
-    else if (t === 'LIABILITY') list = template?.liabilityAccountOptions || []
-    else if (t === 'EQUITY') list = template?.equityAccountOptions || []
-    else if (t === 'INCOME') list = template?.incomeAccountOptions || []
-    else if (t === 'EXPENSE') list = template?.expenseAccountOptions || []
+    // pick the right GL array from glAccountOptions map
+    const glOptions = template?.glAccountOptions ?? {}
+    let list: GLAccountData[] = []
+    if (accountType) list = glOptions[accountType] ?? []
 
     setGlList(list)
   }
@@ -78,15 +80,15 @@ const CreateFinancialActivityMappings = () => {
 
   // Build select options for FA and GL
   const faOptions = (template?.financialActivityOptions || []).map(
-    (o: any) => ({
+    (o: FinancialActivityData) => ({
       id: String(o.id),
       name: `(${o.id}) ${toTitle(o.name)}`,
     })
   )
 
-  const glOptions = glList.map((o: any) => ({
+  const glSelectOptions = glList.map((o: GLAccountData) => ({
     id: String(o.id),
-    name: o.glCode ? `(${o.glCode}) ${o.name}` : o.name,
+    name: o.glCode ? `(${o.glCode}) ${o.name}` : (o.name ?? ''),
   }))
 
   // Submit mapping: validate then create
@@ -148,7 +150,7 @@ const CreateFinancialActivityMappings = () => {
             selectPlaceholder="Select GL Account"
             selectValue={formData.glAccountId}
             selectOnChange={handleGLChange}
-            selectOptions={glOptions}
+            selectOptions={glSelectOptions}
             selectClassname="w-full space-y-2"
           />
 

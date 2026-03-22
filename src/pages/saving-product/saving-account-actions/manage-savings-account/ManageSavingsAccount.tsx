@@ -32,11 +32,7 @@ const ManageSavingsAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Manage Savings Account:', {
-      reasonForBlock,
-      transactionDate,
-      transactionAmount,
-    })
+    // TODO: Call savings account manage API
     backToTransactions()
   }
 

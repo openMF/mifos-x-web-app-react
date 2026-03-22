@@ -53,7 +53,7 @@ const ViewTellers = () => {
       await tellersApi.deleteTeller(Number(id))
       navigate('/organization/tellers')
     } catch (err) {
-      console.log('Failed to delete Teller', err)
+      console.error('Failed to delete Teller', err)
     }
   }
 

@@ -182,13 +182,13 @@ const Offices = () => {
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
                   {Array.isArray(office.openingDate)
                     ? format(
-                      new Date(
-                        office.openingDate[0],
-                        office.openingDate[1] - 1,
-                        office.openingDate[2]
-                      ),
-                      'dd MMMM yyyy'
-                    )
+                        new Date(
+                          office.openingDate[0],
+                          office.openingDate[1] - 1,
+                          office.openingDate[2]
+                        ),
+                        'dd MMMM yyyy'
+                      )
                     : '—'}
                 </TableCell>
               </TableRow>

@@ -1,0 +1,15 @@
+{
+  "accountLinkedFinancialActivities": "Accounts Linked to Financial Activities",
+  "accountNumberPreferences": "Account Number Preferences",
+  "accountingRules": "Accounting Rules",
+  "accruals": "Accruals",
+  "chartOfAccounts": "Chart of Accounts",
+  "closingEntries": "Closing Entries",
+  "createJournalEntries": "Create Journal Entries",
+  "createJournalEntry": "Create Journal Entry",
+  "frequentPostings": "Frequent Postings",
+  "fundMapping": "Fund Mapping",
+  "migrateOpeningBalances": "Migrate Opening Balances (Office-wise)",
+  "searchAccounts": "Search accounts",
+  "title": "Accounting"
+}

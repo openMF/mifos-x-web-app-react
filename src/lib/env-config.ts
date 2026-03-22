@@ -8,65 +8,61 @@
  */
 
 interface EnvWindow {
-  __env?: Record<string, string>;
+  __env?: Record<string, string>
 }
 
 function env(runtimeKey: string, viteKey: string, fallback: string): string {
-  const runtime = (window as unknown as EnvWindow).__env?.[runtimeKey];
+  const runtime = (window as unknown as EnvWindow).__env?.[runtimeKey]
   // envsubst leaves "${VAR}" literally when the var is unset — treat that as empty
-  if (runtime != null && !runtime.startsWith("${")) return runtime;
+  if (runtime != null && !runtime.startsWith('${')) return runtime
 
-  const vite = (import.meta.env as Record<string, string>)?.[viteKey];
-  if (vite) return vite;
+  const vite = (import.meta.env as Record<string, string>)?.[viteKey]
+  if (vite) return vite
 
-  return fallback;
+  return fallback
 }
 
 export const envConfig = {
   /** Base URL of the Fineract server (protocol + host + port) */
   apiUrl: env(
-    "FINERACT_API_URL",
-    "VITE_FINERACT_API_URL",
-    "https://localhost:8443",
+    'FINERACT_API_URL',
+    'VITE_FINERACT_API_URL',
+    'https://localhost:8443'
   ),
 
   /** API path prefix */
   apiProvider: env(
-    "FINERACT_API_PROVIDER",
-    "VITE_FINERACT_API_PROVIDER",
-    "/fineract-provider",
+    'FINERACT_API_PROVIDER',
+    'VITE_FINERACT_API_PROVIDER',
+    '/fineract-provider'
   ),
 
   /** API version path */
-  apiVersion: env(
-    "FINERACT_API_VERSION",
-    "VITE_FINERACT_API_VERSION",
-    "/api",
-  ),
+  apiVersion: env('FINERACT_API_VERSION', 'VITE_FINERACT_API_VERSION', '/api'),
 
   /** Tenant identifier for multi-tenant setups */
   tenantId: env(
-    "FINERACT_PLATFORM_TENANT_IDENTIFIER",
-    "VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER",
-    "default",
+    'FINERACT_PLATFORM_TENANT_IDENTIFIER',
+    'VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER',
+    'default'
   ),
 
   /** Whether OIDC authentication is enabled */
   oidcEnabled:
-    env("FINERACT_PLUGIN_OIDC_ENABLED", "", "false").toLowerCase() === "true",
+    env('FINERACT_PLUGIN_OIDC_ENABLED', '', 'false').toLowerCase() === 'true',
 
   /** OIDC provider base URL */
-  oidcBaseUrl: env("FINERACT_PLUGIN_OIDC_BASE_URL", "", ""),
+  oidcBaseUrl: env('FINERACT_PLUGIN_OIDC_BASE_URL', '', ''),
 
   /** OIDC client ID */
-  oidcClientId: env("FINERACT_PLUGIN_OIDC_CLIENT_ID", "", ""),
+  oidcClientId: env('FINERACT_PLUGIN_OIDC_CLIENT_ID', '', ''),
 
   /** OIDC API URL */
-  oidcApiUrl: env("FINERACT_PLUGIN_OIDC_API_URL", "", ""),
+  oidcApiUrl: env('FINERACT_PLUGIN_OIDC_API_URL', '', ''),
 
   /** OIDC frontend URL */
-  oidcFrontendUrl: env("FINERACT_PLUGIN_OIDC_FRONTEND_URL", "", ""),
+  oidcFrontendUrl: env('FINERACT_PLUGIN_OIDC_FRONTEND_URL', '', ''),
 
   /** Default UI language */
-  defaultLanguage: env("MIFOS_DEFAULT_LANGUAGE", "", "en-US"),
-} as const;
+  defaultLanguage: env('MIFOS_DEFAULT_LANGUAGE', '', 'en-US'),
+} as const

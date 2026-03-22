@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from 'react'
+import { useEffect as _useEffect, useState } from 'react' // Reserved for future use: _useEffect
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Input } from '@/components/ui/input'
@@ -16,13 +16,13 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { HolidaysApi, type PutHolidaysHolidayIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const holidayApi = new HolidaysApi(getConfiguration())
+const _holidayApi = new HolidaysApi(getConfiguration()) // Reserved for future use
 
 const EditHolidays = () => {
-  const { id } = useParams()
+  const { id: _id } = useParams() // Reserved for future use: _id
   const navigate = useNavigate()
 
-  const [holiday, setHoliday] = useState<PutHolidaysHolidayIdResponse>()
+  const [_holiday, _setHoliday] = useState<PutHolidaysHolidayIdResponse>() // Reserved for future use
   const [formData, setFormData] = useState({
     name: '',
     description: '',

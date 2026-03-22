@@ -36,7 +36,6 @@ const CreateAccountNumberPreferences = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submit payload:', form)
   }
 
   return (

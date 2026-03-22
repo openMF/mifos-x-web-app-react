@@ -1,0 +1,18 @@
+{
+  "addCharge": "Agregar cargo",
+  "charges": "Cargos",
+  "delinquencyBucket": "Cubo de morosidad",
+  "fixedDepositProducts": "Productos de depósito a plazo fijo",
+  "floatingRates": "Tasas flotantes",
+  "loanProduct": "Producto de préstamo",
+  "loanProducts": "Productos de préstamo",
+  "loanProvisioningCriteria": "Criterios de provisión de préstamos",
+  "paymentType": "Tipo de pago",
+  "product": "Producto",
+  "productsMix": "Combinación de productos",
+  "recurringDepositProducts": "Productos de depósito recurrente",
+  "savingsProducts": "Productos de ahorro",
+  "shareProduct": "Producto de acciones",
+  "shareProducts": "Productos de acciones",
+  "title": "Productos"
+}
