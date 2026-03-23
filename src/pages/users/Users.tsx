@@ -193,7 +193,11 @@ const Users = () => {
                   {user.officeName}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {(user as any).isSelfServiceUser ? 'Yes' : 'No'}
+                  {(user as any).isSelfServiceUser === true
+                    ? 'Yes'
+                    : (user as any).isSelfServiceUser === false
+                      ? 'No'
+                      : '—'}
                 </TableCell>
               </TableRow>
             ))}
