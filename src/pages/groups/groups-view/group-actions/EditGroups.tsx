@@ -5,11 +5,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import {
-  GroupsApi,
-  type GetGroupsGroupIdResponse,
-  type PutGroupsGroupIdRequest,
-} from '@/fineract-api'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -18,6 +13,9 @@ import AppSelect from '@/components/custom/select/AppSelect'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+
+import { GroupsApi, type PutGroupsGroupIdRequest } from '@/fineract-api'
+import type { ExtendedGroupResponse } from '@/pages/groups/types'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { dateArrayToInputValue, inputToFineractDate } from '@/lib/date-utils'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +29,7 @@ const EditGroups = () => {
   const { t: tc } = useTranslation('common')
 
   // Local state for group + form fields
-  const [group, setGroup] = useState<GetGroupsGroupIdResponse>()
+  const [group, setGroup] = useState<ExtendedGroupResponse>()
   const [name, setName] = useState('')
   const [staffId, setStaffId] = useState<string>('')
   const [submittedOn, setSubmittedOn] = useState<string>('')
@@ -45,19 +43,21 @@ const EditGroups = () => {
       if (!id) return
       try {
         const res = await groupsApi.retrieveOne15(Number(id))
-        setGroup(res.data)
+        const groupData = res.data as ExtendedGroupResponse
+        setGroup(groupData)
 
-        setName(res.data?.name ?? '')
-        if ((res.data as any)?.staffId) {
-          setStaffId(String((res.data as any).staffId))
+        setName(groupData?.name ?? '')
+        if (groupData?.staffId) {
+          setStaffId(String(groupData.staffId))
         }
         setSubmittedOn(
-          dateArrayToInputValue((res.data as any)?.timeline?.submittedOnDate)
+          dateArrayToInputValue(
+            groupData?.timeline?.submittedOnDate as number[] | null
+          )
         )
         setActivationOn(
           dateArrayToInputValue(
-            (res.data as any)?.timeline?.activationDate ??
-              (res.data as any)?.timeline?.activatedOnDate
+            groupData?.timeline?.activatedOnDate as number[] | null
           )
         )
         // externalId left blank on purpose, user must fill if needed
@@ -68,18 +68,22 @@ const EditGroups = () => {
   }, [id])
 
   // Build staff dropdown options from API response
-  const staffOptions =
-    ((group as any)?.staffOptions ?? []).map((s: any) => ({
-      id: s.id,
-      name: s.displayName ?? s.name ?? t('edit.staffFallback', { id: s.id }),
-    })) || []
+  const staffOptions = (group?.staffOptions ?? []).map(s => ({
+    id: s.id ?? 0,
+    name: s.displayName ?? s.name ?? t('edit.staffFallback', { id: s.id }),
+  }))
 
   // Handle submit
   const onSubmit = async () => {
     if (!id) return
+    const groupId = Number(id)
+    if (!Number.isFinite(groupId)) {
+      console.error('Invalid group id:', id)
+      return
+    }
     setSaving(true)
     try {
-      const payload: any = {
+      const payload: PutGroupsGroupIdRequest & Record<string, unknown> = {
         name: name.trim(),
         locale: 'en',
         dateFormat: 'dd MMMM yyyy',
@@ -91,8 +95,8 @@ const EditGroups = () => {
       const act = inputToFineractDate(activationOn)
       if (act) payload.activationDate = act
       if (externalId.trim()) payload.externalId = externalId.trim()
-      await groupsApi.update13(Number(id), payload)
 
+      await groupsApi.update13(groupId, payload)
       navigate(`/groups/${id}/general`)
     } catch (err) {
       console.error('Failed to update group', err)
@@ -148,8 +152,8 @@ const EditGroups = () => {
               <Label>{t('edit.labelStaff')}</Label>
               <Input
                 value={
-                  (group as any)?.staffName ??
-                  (group as any)?.staff?.displayName ??
+                  group?.staffName ??
+                  group?.staff?.displayName ??
                   t('edit.placeholderUnassigned')
                 }
                 readOnly
