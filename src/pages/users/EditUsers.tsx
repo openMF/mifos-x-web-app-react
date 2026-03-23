@@ -31,7 +31,7 @@ const staffApi = new StaffApi(getConfiguration())
 const EditUsers = () => {
   const [users, setUsers] = useState<GetUsersTemplateResponse>()
   const [staff, setStaff] = useState<StaffData[] | null>(null)
-  const [,setUser] = useState<GetUsersResponse | null>(null)
+  const [_user, setUser] = useState<GetUsersResponse | null>(null) // Reserved for future use: _user
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -102,16 +102,17 @@ const EditUsers = () => {
       return
     }
 
-    // const payload = {
-    //   username: formData.username,
-    //   email: formData.email,
-    //   firstname: formData.firstName,
-    //   lastname: formData.lastName,
-    //   passwordNeverExpiers: formData.passwordNeverExpiers,
-    //   office: formData.office,
-    //   staff: formData.staff,
-    //   roles: formData.roles,
-    // }
+    const _payload = {
+      // Reserved for future use
+      username: formData.username,
+      email: formData.email,
+      firstname: formData.firstName,
+      lastname: formData.lastName,
+      passwordNeverExpiers: formData.passwordNeverExpiers,
+      office: formData.office,
+      staff: formData.staff,
+      roles: formData.roles,
+    }
   }
 
   return (

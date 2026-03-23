@@ -1,0 +1,87 @@
+{
+  "adhocQuery": "Query ad hoc",
+  "auditTrails": "Audit trail",
+  "bulkLoanReassignment": "Riassegnazione massiva dei prestiti",
+  "collateralManagement": "Gestione garanzie",
+  "configurations": "Configurazioni",
+  "configureMakerCheckerTasks": "Configura attività di verifica",
+  "currencyConfiguration": "Configurazione valuta",
+  "entityDataTableChecks": "Controlli tabella dati entità",
+  "entityToEntityMapping": "Mappatura da entità a entità",
+  "errors": {
+    "failedCreateOffice": "Impossibile creare l'ufficio",
+    "failedLoadFunds": "Impossibile caricare i fondi.",
+    "failedLoadOffices": "Impossibile caricare gli uffici."
+  },
+  "externalServices": "Servizi esterni",
+  "funds": {
+    "create": "Crea fondo",
+    "edit": "Modifica fondo",
+    "fields": {
+      "externalId": "ID esterno",
+      "name": "Nome fondo"
+    },
+    "messages": {
+      "createError": "Impossibile creare il fondo",
+      "createSuccess": "Fondo creato con successo.",
+      "created": "Fondo creato con successo",
+      "deleted": "Fondo eliminato con successo",
+      "noFunds": "Nessun fondo creato.",
+      "updateError": "Impossibile aggiornare il fondo",
+      "updateSuccess": "Fondo aggiornato con successo.",
+      "updated": "Fondo aggiornato con successo"
+    },
+    "title": "Gestisci fondi"
+  },
+  "investors": "Investitori",
+  "manageCodes": "Gestisci codici",
+  "manageDataTables": "Gestisci tabelle dati",
+  "manageEmployees": "Gestisci dipendenti",
+  "manageExternalEvents": "Gestisci eventi esterni",
+  "manageHolidays": "Gestisci festivi",
+  "manageHooks": "Gestisci hook",
+  "manageJobs": "Gestisci lavori",
+  "manageReports": "Gestisci report",
+  "manageRolesAndPermissions": "Gestisci ruoli e autorizzazioni",
+  "manageSurveys": "Gestisci sondaggi",
+  "manageTaxConfigurations": "Gestisci configurazioni fiscali",
+  "nav": {
+    "funds": "Fondi"
+  },
+  "offices": {
+    "create": "Crea ufficio",
+    "fields": {
+      "externalId": "ID esterno",
+      "name": "Nome ufficio",
+      "officeName": "Nome ufficio",
+      "officeNameStar": "Nome ufficio*",
+      "openedOn": "Data di apertura*",
+      "openingDate": "Data di apertura",
+      "parentOffice": "Ufficio principale",
+      "pleaseSelectOffice": "Seleziona un ufficio"
+    },
+    "manage": "Gestisci uffici",
+    "messages": {
+      "createError": "Impossibile creare l'ufficio",
+      "createSuccess": "Ufficio creato con successo.",
+      "created": "Ufficio creato con successo.",
+      "noOffices": "Nessun ufficio trovato.",
+      "updateSuccess": "Ufficio aggiornato con successo."
+    },
+    "title": "Uffici",
+    "unnamedOffice": "Ufficio senza nome"
+  },
+  "searchByMaker": "Cerca per creatore",
+  "searchEvents": "Cerca eventi",
+  "searchReports": "Cerca report",
+  "smsCampaigns": "Campagne SMS",
+  "standingInstructionsHistory": "Storico istruzioni permanenti",
+  "success": {
+    "fundSaved": "Fondo salvato con successo.",
+    "officeCreated": "Ufficio creato con successo.",
+    "officeSaved": "Ufficio salvato con successo."
+  },
+  "tellerCashierManagement": "Gestione cassieri",
+  "title": "Organizzazione",
+  "workingDays": "Giorni lavorativi"
+}

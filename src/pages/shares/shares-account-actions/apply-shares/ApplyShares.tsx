@@ -31,7 +31,6 @@ const ApplyShares = () => {
   }
 
   const onSubmit = () => {
-    console.log('Apply Additional Shares:', { requestedDate, requestedShares })
     backToAccount()
   }
 

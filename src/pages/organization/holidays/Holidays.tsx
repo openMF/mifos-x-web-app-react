@@ -154,39 +154,39 @@ const Holidays = () => {
                     <TableCell className="px-6 py-4">
                       {Array.isArray(holiday.fromDate)
                         ? format(
-                          new Date(
-                            holiday.fromDate[0],
-                            holiday.fromDate[1] - 1,
-                            holiday.fromDate[2]
-                          ),
-                          'dd MMMM yyyy'
-                        )
+                            new Date(
+                              holiday.fromDate[0],
+                              holiday.fromDate[1] - 1,
+                              holiday.fromDate[2]
+                            ),
+                            'dd MMMM yyyy'
+                          )
                         : '—'}
                     </TableCell>
 
                     <TableCell className="px-6 py-4">
                       {Array.isArray(holiday.toDate)
                         ? format(
-                          new Date(
-                            holiday.toDate[0],
-                            holiday.toDate[1] - 1,
-                            holiday.toDate[2]
-                          ),
-                          'dd MMMM yyyy'
-                        )
+                            new Date(
+                              holiday.toDate[0],
+                              holiday.toDate[1] - 1,
+                              holiday.toDate[2]
+                            ),
+                            'dd MMMM yyyy'
+                          )
                         : '—'}
                     </TableCell>
 
                     <TableCell className="px-6 py-4">
                       {Array.isArray(holiday.repaymentsRescheduledTo)
                         ? format(
-                          new Date(
-                            holiday.repaymentsRescheduledTo[0],
-                            holiday.repaymentsRescheduledTo[1] - 1,
-                            holiday.repaymentsRescheduledTo[2]
-                          ),
-                          'dd MMMM yyyy'
-                        )
+                            new Date(
+                              holiday.repaymentsRescheduledTo[0],
+                              holiday.repaymentsRescheduledTo[1] - 1,
+                              holiday.repaymentsRescheduledTo[2]
+                            ),
+                            'dd MMMM yyyy'
+                          )
                         : '—'}
                     </TableCell>
                     <TableCell className="px-6 py-4">

@@ -10,6 +10,7 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import { faBuilding } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface OfficeNavigationProps {
   officeId: number
@@ -21,6 +22,7 @@ const staffApi = new StaffApi(getConfiguration())
 const OfficeNavigation = ({ officeId }: OfficeNavigationProps) => {
   const [office, setOffice] = useState<GetOfficesResponse | null>(null)
   const [staffCount, setStaffCount] = useState<number>(0)
+  const { t, i18n } = useTranslation('common')
 
   useEffect(() => {
     const fetchOfficeDetails = async () => {
@@ -38,7 +40,10 @@ const OfficeNavigation = ({ officeId }: OfficeNavigationProps) => {
     if (officeId) fetchOfficeDetails()
   }, [officeId])
 
-  if (!office) return <p className="text-gray-500">Loading office details...</p>
+  if (!office)
+    return (
+      <p className="text-gray-500">{t('navigation.loadingOfficeDetails')}</p>
+    )
 
   return (
     <div>
@@ -49,16 +54,16 @@ const OfficeNavigation = ({ officeId }: OfficeNavigationProps) => {
             {office.name}
           </h1>
           <p className="text-sm text-gray-500">
-            External ID: {office.externalId}
+            {t('fields.externalId')}: {office.externalId}
           </p>
         </div>
       </div>
 
       <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
         <div className="flex justify-between items-center">
-          <span className="font-medium">Opened On:</span>
+          <span className="font-medium">{t('navigation.openedOn')}:</span>
           <span className="font-medium">
-            {new Intl.DateTimeFormat('en-GB', {
+            {new Intl.DateTimeFormat(i18n.language, {
               day: '2-digit',
               month: 'long',
               year: 'numeric',
@@ -67,7 +72,7 @@ const OfficeNavigation = ({ officeId }: OfficeNavigationProps) => {
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="font-medium">Number of Staff:</span>
+          <span className="font-medium">{t('navigation.numberOfStaff')}:</span>
           <span>{staffCount}</span>
         </div>
       </div>

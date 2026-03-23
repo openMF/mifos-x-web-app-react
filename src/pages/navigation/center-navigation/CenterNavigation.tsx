@@ -10,6 +10,7 @@ import fineract from '@/lib/axios'
 import { faBuilding, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
 import {
   CentersApi,
   type CenterData,
@@ -31,8 +32,8 @@ interface CenterProps {
 }
 
 //For data conversion
-const formatDate = (date: string) =>
-  new Intl.DateTimeFormat('en-GB', {
+const formatDate = (date: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -51,6 +52,7 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
   const [centerSummary, setCenterSummary] =
     useState<CenterSummaryDetails | null>(null)
   const [office, setOffice] = useState<GetOfficesResponse | null>(null)
+  const { t, i18n } = useTranslation('common')
 
   useEffect(() => {
     const fetchCenterData = async () => {
@@ -80,7 +82,7 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
   }, [centerId])
 
   if (!centerDetails) {
-    return <p className="text-gray-500">Loading center information...</p>
+    return <p className="text-gray-500">{t('navigation.loadingCenterInfo')}</p>
   }
 
   return (
@@ -106,12 +108,12 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
             />
           </h2>
           <p className="text-gray-500">
-            Account No:{' '}
+            {t('fields.accountNo')}:{' '}
             <span className="font-medium">{centerDetails.accountNo}</span>
           </p>
           {office?.externalId && (
             <p className="text-gray-500">
-              External ID:{' '}
+              {t('fields.externalId')}:{' '}
               <span className="font-medium">{office?.externalId}</span>
             </p>
           )}
@@ -120,32 +122,40 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
 
       {/* Details */}
       <div className="grid grid-cols-2 gap-y-3">
-        <div className="font-medium">Activation Date:</div>
-        <div>{formatDate(template?.activationDate ?? '')}</div>
+        <div className="font-medium">{t('navigation.activationDate')}:</div>
+        <div>{formatDate(template?.activationDate ?? '', i18n.language)}</div>
 
-        <div className="font-medium">Associated Officer:</div>
-        <div>{centerDetails.staffName || 'N/A'}</div>
+        <div className="font-medium">{t('navigation.associatedOfficer')}:</div>
+        <div>{centerDetails.staffName || t('actions.na')}</div>
 
         {centerSummary && (
           <>
-            <div className="font-medium">Number of Active Clients:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfActiveClients')}:
+            </div>
             <div>{centerSummary.activeClients}</div>
 
-            <div className="font-medium">Number of Active Client Loans:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfActiveClientLoans')}:
+            </div>
             <div>{centerSummary.activeClientLoans}</div>
 
             <div className="font-medium">
-              Number of Active Client Borrowers:
+              {t('navigation.numberOfActiveClientBorrowers')}:
             </div>
             <div>{centerSummary.activeClientBorrowers}</div>
 
-            <div className="font-medium">Number of Overdue Group Loans:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfOverdueGroupLoans')}:
+            </div>
             <div>{centerSummary.overdueGroupLoans}</div>
 
-            <div className="font-medium">Number of Overdue Client Loans:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfOverdueClientLoans')}:
+            </div>
             <div>{centerSummary.overdueClientLoans}</div>
 
-            <div className="font-medium">Number of Groups:</div>
+            <div className="font-medium">{t('navigation.numberOfGroups')}:</div>
             <div>{centerSummary.overdueGroupLoans}</div>
           </>
         )}

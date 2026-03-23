@@ -29,7 +29,6 @@ const ApproveSavingAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log({ approvedOnDate, note })
     backToAccount()
   }
 

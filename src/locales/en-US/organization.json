@@ -1,0 +1,87 @@
+{
+  "adhocQuery": "AdHocQuery",
+  "auditTrails": "Audit Trails",
+  "bulkLoanReassignment": "Bulk Loan Reassignment",
+  "collateralManagement": "Collateral Management",
+  "configurations": "Configurations",
+  "configureMakerCheckerTasks": "Configure Maker Checker Tasks",
+  "currencyConfiguration": "Currency Configuration",
+  "entityDataTableChecks": "Entity Data Table Checks",
+  "entityToEntityMapping": "Entity to Entity Mapping",
+  "errors": {
+    "failedCreateOffice": "Failed to create office",
+    "failedLoadFunds": "Failed to load funds.",
+    "failedLoadOffices": "Failed to load offices."
+  },
+  "externalServices": "External Services",
+  "funds": {
+    "create": "Create Fund",
+    "edit": "Edit Fund",
+    "fields": {
+      "externalId": "External ID",
+      "name": "Fund Name"
+    },
+    "messages": {
+      "createError": "Failed to create fund",
+      "createSuccess": "Fund created successfully.",
+      "created": "Fund created successfully",
+      "deleted": "Fund deleted successfully",
+      "noFunds": "No funds created.",
+      "updateError": "Failed to update fund",
+      "updateSuccess": "Fund updated successfully.",
+      "updated": "Fund updated successfully"
+    },
+    "title": "Manage Funds"
+  },
+  "investors": "Investors",
+  "manageCodes": "Manage Codes",
+  "manageDataTables": "Manage Data tables",
+  "manageEmployees": "Manage Employees",
+  "manageExternalEvents": "Manage External Events",
+  "manageHolidays": "Manage Holidays",
+  "manageHooks": "Manage Hooks",
+  "manageJobs": "Manage Jobs",
+  "manageReports": "Manage Reports",
+  "manageRolesAndPermissions": "Manage Roles and Permissions",
+  "manageSurveys": "Manage Surveys",
+  "manageTaxConfigurations": "Manage Tax Configurations",
+  "nav": {
+    "funds": "Funds"
+  },
+  "offices": {
+    "create": "Create Office",
+    "fields": {
+      "externalId": "External ID",
+      "name": "Office Name",
+      "officeName": "Office Name",
+      "officeNameStar": "Office Name*",
+      "openedOn": "Opened On*",
+      "openingDate": "Opened On",
+      "parentOffice": "Parent Office*",
+      "pleaseSelectOffice": "Please select an Office"
+    },
+    "manage": "Manage Offices",
+    "messages": {
+      "createError": "Failed to create office",
+      "createSuccess": "Office created successfully.",
+      "created": "Office created successfully!",
+      "noOffices": "No offices found.",
+      "updateSuccess": "Office updated successfully."
+    },
+    "title": "Offices",
+    "unnamedOffice": "Unnamed Office"
+  },
+  "searchByMaker": "Search by maker",
+  "searchEvents": "Search events…",
+  "searchReports": "Search reports...",
+  "smsCampaigns": "SMS Campaigns",
+  "standingInstructionsHistory": "Standing Instructions History",
+  "success": {
+    "fundSaved": "Fund saved successfully.",
+    "officeCreated": "Office created successfully!",
+    "officeSaved": "Office saved successfully."
+  },
+  "tellerCashierManagement": "Teller / Cashier Management",
+  "title": "Organization",
+  "workingDays": "Working Days"
+}

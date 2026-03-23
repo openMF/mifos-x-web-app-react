@@ -16,6 +16,7 @@ import {  useParams } from 'react-router-dom'
 const floatingRateApi = new FloatingRatesApi(getConfiguration())
 
 const ViewFloatingRates = () => {
+  const _navigate = useNavigate() // Reserved for future use
   const { id } = useParams() // floating rate ID from route params
   const [rates, setRates] = useState<FloatingRateData>()
 
@@ -24,7 +25,6 @@ const ViewFloatingRates = () => {
     const fetch = async () => {
       try {
         const res = await floatingRateApi.retrieveOne13(Number(id)) // API call
-        console.log(res.data)
         setRates(res.data)
       } catch (err) {
         console.error('Failed to fetch floating rate', err)

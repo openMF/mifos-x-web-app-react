@@ -39,7 +39,7 @@ const RescheduleLoan = () => {
           await rescheduleLoanApi.retrieveAllRescheduleRequest('pending')
         setRescheduleLoans(response.data ?? [])
       } catch (err) {
-        console.log("Couldn't fetch rescheduled loan details", err)
+        console.error("Couldn't fetch rescheduled loan details", err)
       }
     }
 
@@ -60,13 +60,9 @@ const RescheduleLoan = () => {
     setSelectedRows(filteredLoans.map(loan => loan.id!))
   }
 
-  const approveSelected = () => {
-    console.log('Approved', selectedRows)
-  }
+  const approveSelected = () => {}
 
-  const rejectSelected = () => {
-    console.log('Rejected', selectedRows)
-  }
+  const rejectSelected = () => {}
 
   return (
     <div className="space-y-6 mt-6">

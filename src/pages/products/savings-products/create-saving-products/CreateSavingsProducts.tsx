@@ -42,7 +42,7 @@ const CreateSavingsProducts = () => {
         const response = await savingProductApi.retrieveTemplate20()
         setSavingProductTemplate(response.data)
       } catch (err) {
-        console.log('Failed to fetch Saving Product Response', err)
+        console.error('Failed to fetch Saving Product Response', err)
       }
     }
     fetchSavingProductTemplateDetails()
@@ -88,12 +88,12 @@ const CreateSavingsProducts = () => {
   ).map(o => ({
     id: o.id!.toString(),
     name: o.name!,
-    chargeTimeType: o.chargeTimeType?.description!,
+    chargeTimeType: o.chargeTimeType?.description ?? '',
     amount: o.amount!,
-    chargeCalculationType: o.chargeCalculationType?.description!,
+    chargeCalculationType: o.chargeCalculationType?.description ?? '',
   }))
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Record<string, unknown>>({
     name: '',
     shortName: '',
     description: '',
@@ -105,12 +105,34 @@ const CreateSavingsProducts = () => {
     decimalPlaces: 2,
     currencyMultiples: '',
 
-    nominalAnnualInterestRate: undefined,
-    interestCompoundingPeriod: undefined,
-    interestPostingPeriod: undefined,
-    interestCalculationType: undefined,
-    interestCalculationDaysInYearType: undefined,
+    nominalAnnualInterestRate: 0,
+    interestCompoundingPeriod: '',
+    interestPostingPeriod: '',
+    interestCalculationType: '',
+    interestCalculationDaysInYearType: '',
+
+    // Settings
+    minOpeningBalance: 0,
+    balanceRequiredForInterestCalculation: 0,
+    lockinPeriodFrequency: 0,
+    minBalance: 0,
+    withdrawalFeeForTransfers: false,
+    enforceMinRequiredBalance: false,
+    withHoldTax: false,
+    allowOverdraft: false,
+    trackDormancy: false,
+
+    // Charges
+    charges: [],
+
+    // Accounting
+    accountingRule: '',
   })
+
+  // Each step component defines its own narrower FormData interface, but they all
+  // share a single flat state object. We cast through unknown to bridge the types.
+  const formDataBridge: unknown = formData
+  const setFormDataBridge: unknown = setFormData
 
   const pages = [
     {
@@ -118,8 +140,29 @@ const CreateSavingsProducts = () => {
       label: 'DETAILS',
       component: (
         <SavingsProductDetailsStep
-          formData={formData}
-          setFormData={setFormData}
+          formData={
+            formDataBridge as {
+              name: string
+              shortName: string
+              description: string
+              [key: string]: unknown
+            }
+          }
+          setFormData={
+            setFormDataBridge as (
+              updater: (prev: {
+                name: string
+                shortName: string
+                description: string
+                [key: string]: unknown
+              }) => {
+                name: string
+                shortName: string
+                description: string
+                [key: string]: unknown
+              }
+            ) => void
+          }
         />
       ),
     },
@@ -128,8 +171,41 @@ const CreateSavingsProducts = () => {
       label: 'CURRENCY',
       component: (
         <SavingsProductCurrencyStep
-          formData={formData}
-          setFormData={setFormData}
+          formData={
+            formDataBridge as {
+              currency: {
+                id: string
+                name: string
+                decimalPlaces: number
+              } | null
+              decimalPlaces: number
+              currencyMultiples: string
+              [key: string]: unknown
+            }
+          }
+          setFormData={
+            setFormDataBridge as (
+              updater: (prev: {
+                currency: {
+                  id: string
+                  name: string
+                  decimalPlaces: number
+                } | null
+                decimalPlaces: number
+                currencyMultiples: string
+                [key: string]: unknown
+              }) => {
+                currency: {
+                  id: string
+                  name: string
+                  decimalPlaces: number
+                } | null
+                decimalPlaces: number
+                currencyMultiples: string
+                [key: string]: unknown
+              }
+            ) => void
+          }
           currencyOptions={currencyOptions}
         />
       ),
@@ -139,8 +215,35 @@ const CreateSavingsProducts = () => {
       label: 'TERMS',
       component: (
         <SavingsProductTermsStep
-          formData={formData}
-          setFormData={setFormData}
+          formData={
+            formDataBridge as {
+              nominalAnnualInterestRate: number
+              interestCompoundingPeriod: string
+              interestPostingPeriod: string
+              interestCalculationType: string
+              interestCalculationDaysInYearType: string
+              [key: string]: unknown
+            }
+          }
+          setFormData={
+            setFormDataBridge as (
+              updater: (prev: {
+                nominalAnnualInterestRate: number
+                interestCompoundingPeriod: string
+                interestPostingPeriod: string
+                interestCalculationType: string
+                interestCalculationDaysInYearType: string
+                [key: string]: unknown
+              }) => {
+                nominalAnnualInterestRate: number
+                interestCompoundingPeriod: string
+                interestPostingPeriod: string
+                interestCalculationType: string
+                interestCalculationDaysInYearType: string
+                [key: string]: unknown
+              }
+            ) => void
+          }
           compoundingPeriodOptions={compoundingPeriodOptions}
           postingPeriodOptions={postingPeriodOptions}
           interestCalculationOptions={interestCalculationOptions}
@@ -153,8 +256,47 @@ const CreateSavingsProducts = () => {
       label: 'SETTINGS',
       component: (
         <SavingsProductSettingsStep
-          formData={formData}
-          setFormData={setFormData}
+          formData={
+            formDataBridge as {
+              minOpeningBalance: number
+              balanceRequiredForInterestCalculation: number
+              lockinPeriodFrequency: number
+              minBalance: number
+              withdrawalFeeForTransfers: boolean
+              enforceMinRequiredBalance: boolean
+              withHoldTax: boolean
+              allowOverdraft: boolean
+              trackDormancy: boolean
+              [key: string]: unknown
+            }
+          }
+          setFormData={
+            setFormDataBridge as (
+              updater: (prev: {
+                minOpeningBalance: number
+                balanceRequiredForInterestCalculation: number
+                lockinPeriodFrequency: number
+                minBalance: number
+                withdrawalFeeForTransfers: boolean
+                enforceMinRequiredBalance: boolean
+                withHoldTax: boolean
+                allowOverdraft: boolean
+                trackDormancy: boolean
+                [key: string]: unknown
+              }) => {
+                minOpeningBalance: number
+                balanceRequiredForInterestCalculation: number
+                lockinPeriodFrequency: number
+                minBalance: number
+                withdrawalFeeForTransfers: boolean
+                enforceMinRequiredBalance: boolean
+                withHoldTax: boolean
+                allowOverdraft: boolean
+                trackDormancy: boolean
+                [key: string]: unknown
+              }
+            ) => void
+          }
         />
       ),
     },
@@ -163,8 +305,41 @@ const CreateSavingsProducts = () => {
       label: 'CHARGES',
       component: (
         <SavingsProductChargesStep
-          formData={formData}
-          setFormData={setFormData}
+          formData={
+            formDataBridge as {
+              charges: {
+                id: string
+                name: string
+                chargeTimeType: string
+                amount: number
+                chargeCalculationType: string
+              }[]
+              [key: string]: unknown
+            }
+          }
+          setFormData={
+            setFormDataBridge as (
+              updater: (prev: {
+                charges: {
+                  id: string
+                  name: string
+                  chargeTimeType: string
+                  amount: number
+                  chargeCalculationType: string
+                }[]
+                [key: string]: unknown
+              }) => {
+                charges: {
+                  id: string
+                  name: string
+                  chargeTimeType: string
+                  amount: number
+                  chargeCalculationType: string
+                }[]
+                [key: string]: unknown
+              }
+            ) => void
+          }
           chargeOptions={chargeOptions}
         />
       ),
@@ -174,8 +349,17 @@ const CreateSavingsProducts = () => {
       label: 'ACCOUNTING',
       component: (
         <SavingsProductAccountingStep
-          formData={formData}
-          setFormData={setFormData}
+          formData={
+            formDataBridge as { accountingRule: string; [key: string]: unknown }
+          }
+          setFormData={
+            setFormDataBridge as (
+              updater: (prev: {
+                accountingRule: string
+                [key: string]: unknown
+              }) => { accountingRule: string; [key: string]: unknown }
+            ) => void
+          }
         />
       ),
     },

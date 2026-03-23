@@ -1,0 +1,92 @@
+{
+  "title": "Centres",
+  "addCenter": "Ajouter un Centre",
+  "searchPlaceholder": "Rechercher par Nom ou ID Externe...",
+  "showPending": "Afficher les Centres en Attente",
+  "failedToLoad": "Échec du chargement des centres. Veuillez réessayer.",
+  "table": {
+    "name": "Nom",
+    "accountNo": "N° de Compte",
+    "externalId": "ID Externe",
+    "status": "Statut",
+    "officeName": "Nom du Bureau"
+  },
+  "create": {
+    "heading": "Créer un Centre",
+    "labelName": "Nom*",
+    "labelOffice": "Bureau*",
+    "labelStaff": "Personnel",
+    "labelActive": "Actif",
+    "labelActivationDate": "Date d'Activation",
+    "labelExternalId": "Id Externe",
+    "labelSubmittedOn": "Soumis Le*",
+    "selectOffice": "Sélectionner un Bureau",
+    "selectStaff": "Sélectionner le Personnel",
+    "errorCreate": "Échec de la création du centre"
+  },
+  "edit": {
+    "heading": "Modifier le Centre",
+    "labelName": "Nom*",
+    "labelExternalId": "Id Externe",
+    "placeholderName": "Saisir le nom",
+    "placeholderExternalId": "Saisir l'id externe",
+    "breadcrumb": "Modifier"
+  },
+  "close": {
+    "heading": "Fermer le Centre",
+    "labelClosedOn": "Date de fermeture*",
+    "breadcrumb": "Fermer"
+  },
+  "view": {
+    "centerName": "Nom du Centre :",
+    "accountNo": "N° de Compte:",
+    "office": "Bureau:",
+    "externalId": "Id Externe:",
+    "activationDate": "Date d'Activation :",
+    "nextMeetingOn": "Prochaine Réunion le:",
+    "meetingFrequency": "Fréquence de Réunion:",
+    "missingInOpenAPI": "Manquant dans OpenAPI",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce centre?",
+    "activateTodo": "À FAIRE : activer le centre",
+    "tabs": {
+      "general": "Général",
+      "notes": "Notes"
+    },
+    "menu": {
+      "activate": "Activer",
+      "edit": "Modifier",
+      "addGroup": "Ajouter un Groupe",
+      "manageGroups": "Gérer les Groupes",
+      "centersSavingApplication": "Demande d'Épargne du Centre",
+      "more": "Plus",
+      "attendance": "Présence",
+      "assignStaff": "Attribuer du Personnel",
+      "unassignStaff": "Désattribuer du Personnel",
+      "delete": "Supprimer",
+      "close": "Fermer",
+      "attachMeeting": "Attacher une Réunion",
+      "staffAssignmentHistory": "Historique des attributions du personnel"
+    }
+  },
+  "general": {
+    "summaryDetails": "Détails Résumés",
+    "activeClients": "Clients Actifs:",
+    "activeGroupBorrowers": "Emprunteurs de Groupe Actifs:",
+    "activeGroupLoans": "Prêts de Groupe Actifs:",
+    "activeClientBorrowers": "Emprunteurs de Clients Actifs:",
+    "activeClientLoans": "Prêts de Clients Actifs:",
+    "activeOverdueClientLoans": "Prêts de Clients Actifs en Retard:",
+    "activeOverdueGroupLoans": "Prêts de Groupe Actifs en Retard:",
+    "groups": "Groupes",
+    "tableAccountNo": "N° de Compte",
+    "tableGroupName": "Nom du Groupe",
+    "tableOfficeName": "Nom du Bureau",
+    "tableSubmittedOn": "Soumis Le",
+    "noGroups": "Aucun groupe trouvé."
+  },
+  "notes": {
+    "heading": "Notes",
+    "placeholder": "Écrire une note ....",
+    "addButton": "+ Ajouter"
+  }
+}

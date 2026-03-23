@@ -3,6 +3,7 @@ node_modules/
 
 # Build outputs
 dist/
+dist-ssr/
 build/
 .vite/
 
@@ -16,6 +17,12 @@ pnpm-lock.yaml
 
 # Coverage
 coverage/
+
+# Generated docs
+docs/
+
+# Docker data
+data/
 
 # Misc
 .DS_Store
