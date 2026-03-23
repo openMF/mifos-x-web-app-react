@@ -21,7 +21,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 const ClientsFamilyMembersAddTab = ({
-  clientId,
+  clientId: _clientId, // Reserved for future use
   onCancel,
   onSubmitted,
 }: {
@@ -47,7 +47,8 @@ const ClientsFamilyMembersAddTab = ({
   const { t: tc } = useTranslation('common')
 
   // update helper
-  const set = (k: keyof typeof form, v: any) => setForm(f => ({ ...f, [k]: v }))
+  const set = (k: keyof typeof form, v: string | boolean) =>
+    setForm(f => ({ ...f, [k]: v }))
 
   // required validation
   const isValid =
@@ -72,7 +73,8 @@ const ClientsFamilyMembersAddTab = ({
         {/* First / Middle / Last Name */}
         <div className="space-y-1">
           <Label>
-            {t('familyMembers.labelFirstName')}<span className="text-red-500">*</span>
+            {t('familyMembers.labelFirstName')}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             value={form.firstName}
@@ -90,7 +92,8 @@ const ClientsFamilyMembersAddTab = ({
         </div>
         <div className="space-y-1">
           <Label>
-            {t('familyMembers.labelLastName')}<span className="text-red-500">*</span>
+            {t('familyMembers.labelLastName')}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             value={form.lastName}
@@ -110,7 +113,8 @@ const ClientsFamilyMembersAddTab = ({
         {/* Age + Dependent flag */}
         <div className="space-y-1">
           <Label>
-            {t('familyMembers.labelAge')}<span className="text-red-500">*</span>
+            {t('familyMembers.labelAge')}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
@@ -131,7 +135,8 @@ const ClientsFamilyMembersAddTab = ({
         {/* Relationship + Gender */}
         <div className="space-y-1">
           <Label>
-            {t('familyMembers.labelRelationship')}<span className="text-red-500">*</span>
+            {t('familyMembers.labelRelationship')}
+            <span className="text-red-500">*</span>
           </Label>
           <Select
             value={form.relationship}
@@ -141,26 +146,43 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SPOUSE">{t('familyMembers.relationshipSpouse')}</SelectItem>
-              <SelectItem value="CHILD">{t('familyMembers.relationshipChild')}</SelectItem>
-              <SelectItem value="PARENT">{t('familyMembers.relationshipParent')}</SelectItem>
-              <SelectItem value="SIBLING">{t('familyMembers.relationshipSibling')}</SelectItem>
-              <SelectItem value="OTHER">{t('familyMembers.relationshipOther')}</SelectItem>
+              <SelectItem value="SPOUSE">
+                {t('familyMembers.relationshipSpouse')}
+              </SelectItem>
+              <SelectItem value="CHILD">
+                {t('familyMembers.relationshipChild')}
+              </SelectItem>
+              <SelectItem value="PARENT">
+                {t('familyMembers.relationshipParent')}
+              </SelectItem>
+              <SelectItem value="SIBLING">
+                {t('familyMembers.relationshipSibling')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.relationshipOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
           <Label>
-            {t('familyMembers.labelGender')}<span className="text-red-500">*</span>
+            {t('familyMembers.labelGender')}
+            <span className="text-red-500">*</span>
           </Label>
           <Select value={form.gender} onValueChange={v => set('gender', v)}>
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MALE">{t('familyMembers.genderMale')}</SelectItem>
-              <SelectItem value="FEMALE">{t('familyMembers.genderFemale')}</SelectItem>
-              <SelectItem value="OTHER">{t('familyMembers.genderOther')}</SelectItem>
+              <SelectItem value="MALE">
+                {t('familyMembers.genderMale')}
+              </SelectItem>
+              <SelectItem value="FEMALE">
+                {t('familyMembers.genderFemale')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.genderOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -176,11 +198,21 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="EMPLOYED">{t('familyMembers.professionEmployed')}</SelectItem>
-              <SelectItem value="SELF_EMPLOYED">{t('familyMembers.professionSelfEmployed')}</SelectItem>
-              <SelectItem value="STUDENT">{t('familyMembers.professionStudent')}</SelectItem>
-              <SelectItem value="UNEMPLOYED">{t('familyMembers.professionUnemployed')}</SelectItem>
-              <SelectItem value="OTHER">{t('familyMembers.professionOther')}</SelectItem>
+              <SelectItem value="EMPLOYED">
+                {t('familyMembers.professionEmployed')}
+              </SelectItem>
+              <SelectItem value="SELF_EMPLOYED">
+                {t('familyMembers.professionSelfEmployed')}
+              </SelectItem>
+              <SelectItem value="STUDENT">
+                {t('familyMembers.professionStudent')}
+              </SelectItem>
+              <SelectItem value="UNEMPLOYED">
+                {t('familyMembers.professionUnemployed')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.professionOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -194,10 +226,18 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SINGLE">{t('familyMembers.maritalSingle')}</SelectItem>
-              <SelectItem value="MARRIED">{t('familyMembers.maritalMarried')}</SelectItem>
-              <SelectItem value="DIVORCED">{t('familyMembers.maritalDivorced')}</SelectItem>
-              <SelectItem value="WIDOWED">{t('familyMembers.maritalWidowed')}</SelectItem>
+              <SelectItem value="SINGLE">
+                {t('familyMembers.maritalSingle')}
+              </SelectItem>
+              <SelectItem value="MARRIED">
+                {t('familyMembers.maritalMarried')}
+              </SelectItem>
+              <SelectItem value="DIVORCED">
+                {t('familyMembers.maritalDivorced')}
+              </SelectItem>
+              <SelectItem value="WIDOWED">
+                {t('familyMembers.maritalWidowed')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -205,7 +245,8 @@ const ClientsFamilyMembersAddTab = ({
         {/* DOB with icon */}
         <div className="space-y-1">
           <Label>
-            {t('familyMembers.labelDateOfBirth')}<span className="text-red-500">*</span>
+            {t('familyMembers.labelDateOfBirth')}
+            <span className="text-red-500">*</span>
           </Label>
           <div className="relative">
             <Input

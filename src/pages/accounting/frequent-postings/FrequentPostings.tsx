@@ -21,7 +21,9 @@ import {
   JournalEntriesApi,
   OfficesApi,
   PaymentTypeApi,
+  type AccountingRuleData,
   type CurrencyData,
+  type GLAccountDataForLookup,
   type GetOfficesResponse,
   type GetPaymentTypeData,
 } from '@/fineract-api'
@@ -44,9 +46,13 @@ const FrequentPostings = () => {
     null
   )
 
-  const [accountingRules, setAccountingRules] = useState<any[] | null>(null)
+  const [accountingRules, setAccountingRules] = useState<
+    AccountingRuleData[] | null
+  >(null)
 
-  const [selectedRule, setSelectedRule] = useState<any | null>(null)
+  const [selectedRule, setSelectedRule] = useState<AccountingRuleData | null>(
+    null
+  )
   const [debitAmount, setDebitAmount] = useState('')
   const [creditAmount, setCreditAmount] = useState('')
   const [selectedDebitAccount, setSelectedDebitAccount] = useState('')
@@ -84,7 +90,7 @@ const FrequentPostings = () => {
         setPaymentTypes(paymentTypesRes.data)
         setAccountingRules(accountingRulesRes.data)
       } catch (err) {
-        console.log('Failed to fetch Dropdown Data', err)
+        console.error('Failed to fetch Dropdown Data', err)
       }
     }
     fetchDropdowns()
@@ -149,7 +155,7 @@ const FrequentPostings = () => {
       await journalEntryApi.createGLJournalEntry(formData.office, payload)
       alert('Frequnet postings entry created successfully!')
     } catch (err) {
-      console.log('Failed to create frequnet postings', err)
+      console.error('Failed to create frequnet postings', err)
     }
   }
 
@@ -222,8 +228,11 @@ const FrequentPostings = () => {
                   selectOnChange={setSelectedDebitAccount}
                   selectPlaceholder="Select Debit Account"
                   selectOptions={(selectedRule.debitAccounts || [])
-                    .filter((option: any) => option.id !== undefined)
-                    .map((option: any) => ({
+                    .filter(
+                      (option: GLAccountDataForLookup) =>
+                        option.id !== undefined
+                    )
+                    .map((option: GLAccountDataForLookup) => ({
                       id: option.id!,
                       name: option.name!,
                     }))}
@@ -247,8 +256,11 @@ const FrequentPostings = () => {
                   selectOnChange={setSelectedCreditAccount}
                   selectPlaceholder="Select Credit Account"
                   selectOptions={(selectedRule.creditAccounts || [])
-                    .filter((option: any) => option.id !== undefined)
-                    .map((option: any) => ({
+                    .filter(
+                      (option: GLAccountDataForLookup) =>
+                        option.id !== undefined
+                    )
+                    .map((option: GLAccountDataForLookup) => ({
                       id: option.id!,
                       name: option.name!,
                     }))}

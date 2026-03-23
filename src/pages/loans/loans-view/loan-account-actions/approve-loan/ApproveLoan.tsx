@@ -32,7 +32,7 @@ const ApproveLoan = () => {
     e.preventDefault()
     if (!canSubmit || !loanId) return
 
-    const payload: any = {
+    const payload: Record<string, unknown> = {
       locale: 'en',
       dateFormat: 'yyyy-MM-dd',
       approvedOnDate: approvedOn,

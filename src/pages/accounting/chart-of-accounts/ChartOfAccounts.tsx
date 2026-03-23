@@ -67,7 +67,7 @@ const ChartOfAccounts = () => {
         const response = await glApi.retrieveAllAccounts()
         setGlAccounts(response.data)
       } catch (err) {
-        console.log('Failed to fetch Gl Accounts', err)
+        console.error('Failed to fetch Gl Accounts', err)
       }
     }
     fetchGlAccounts()

@@ -47,7 +47,7 @@ const Users = () => {
         const res = await usersApi.retrieveAll41() // api call to fetch users
         setUsers(res.data)
       } catch (err) {
-        console.log('Failed to fetch User details', err)
+        console.error('Failed to fetch User details', err)
       }
     }
     fetchUsers()
