@@ -146,6 +146,8 @@
     "createdBy": "Creado Por: {{name}}",
     "date": "Fecha: {{date}}"
   },
+  "empty": "No hay clientes disponibles",
+  "noMatch": "No se encontraron clientes coincidentes",
   "address": {
     "heading": "Detalles de Dirección del Cliente",
     "addButton": "Agregar",

@@ -1,0 +1,10 @@
+{
+  "officeId": 1,
+  "firstname": "Manasvi",
+  "lastname": "Gupta",
+  "legalFormId": 1,
+  "active": true,
+  "activationDate": "15 April 2026",
+  "dateFormat": "dd MMMM yyyy",
+  "locale": "en"
+}

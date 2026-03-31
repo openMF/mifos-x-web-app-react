@@ -218,40 +218,73 @@ const Clients = () => {
           </TableHeader>
 
           <TableBody>
-            {filtered.map((c: ClientRow) => (
-              <TableRow
-                key={c.id}
-                onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {c.displayName ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.accountNumber ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.externalId ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c?.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-green-500"
-                    />
-                  )}
-                  {c?.status?.id === 200 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-yellow-500"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.officeName ?? '—'}
+            {rows.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-6 text-gray-500"
+                >
+                  {t('empty')}
                 </TableCell>
               </TableRow>
-            ))}
+            ) : filtered.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-6 text-gray-500"
+                >
+                  {t('noMatch')}
+                </TableCell>
+              </TableRow>
+            ) : (
+              filtered.map((c: ClientRow) => (
+                <TableRow
+                  key={c.id}
+                  tabIndex={0}
+                  role="button"
+                  onClick={() => {
+                    if (c.id) {
+                      navigate(`/clients/${c.id}/general`)
+                    }
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      if (c.id) {
+                        navigate(`/clients/${c.id}/general`)
+                      }
+                    }
+                  }}
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {c.displayName ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.accountNumber ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.externalId ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c?.status?.id === 300 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="w-4 h-4 text-green-500"
+                      />
+                    )}
+                    {c?.status?.id === 200 && (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="w-4 h-4 text-yellow-500"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.officeName ?? '—'}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

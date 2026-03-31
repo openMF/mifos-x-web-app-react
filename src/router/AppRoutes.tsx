@@ -43,6 +43,7 @@ import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 import Reports from '@/pages/reports/Reports'
+import RunReports from '@/pages/reports/RunReports'
 import Users from '@/pages/users/Users'
 import ViewUsers from '@/pages/users/ViewUsers'
 import CreateUsers from '@/pages/users/CreateUsers'
@@ -347,7 +348,7 @@ const AppRoutes = () => {
           </Route>
 
           {/* Reports */}
-          <Route path="/reports/run/:reportName" element={<Reports />} />
+          <Route path="/reports/run/:reportName" element={<RunReports />} />
           <Route path="/reports/:category" element={<Reports />} />
           <Route path="/reports" element={<Reports />} />
 
