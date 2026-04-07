@@ -41,7 +41,20 @@ const CreateUsers = () => {
     office: '',
     staff: '',
     roles: '',
+    password: '',
+    repeatPassword: '',
   })
+
+  const showPassword = !formData.sendPasswordToEmail
+  const passwordShort =
+    showPassword &&
+    formData.password.length > 0 &&
+    formData.password.length < 12
+
+  const passwordsDontMatch =
+    showPassword &&
+    formData.repeatPassword.length > 0 &&
+    formData.password !== formData.repeatPassword
 
   // fetch template for offices, roles, etc.
   useEffect(() => {
@@ -71,13 +84,12 @@ const CreateUsers = () => {
   }, [formData.office])
 
   const navigate = useNavigate()
-
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Users', href: '/users' },
+          { label: 'Users', href: '/appusers' },
           { label: 'Create Users', current: true },
         ]}
       />
@@ -109,16 +121,79 @@ const CreateUsers = () => {
 
           <div className="flex flex-wrap gap-6">
             <div className="w-full md:w-[48%] flex items-center gap-2">
-              <Checkbox id="manual-entries-1" />
+              <Checkbox
+                id="manual-entries-1"
+                checked={formData.passwordNeverExpiers}
+                onCheckedChange={value =>
+                  setFormData(prev => ({
+                    ...prev,
+                    passwordNeverExpiers: value === true,
+                  }))
+                }
+              />
               <Label htmlFor="manual-entries-1">Password never expires</Label>
             </div>
             <div className="w-full md:w-[48%] flex items-center gap-2">
-              <Checkbox id="manual-entries-2" />
+              <Checkbox
+                id="manual-entries-2"
+                checked={formData.sendPasswordToEmail}
+                onCheckedChange={value =>
+                  setFormData(prev => ({
+                    ...prev,
+                    sendPasswordToEmail: value === true,
+                    password: value === true ? '' : prev.password,
+                    repeatPassword: value === true ? '' : prev.repeatPassword,
+                  }))
+                }
+              />
               <Label htmlFor="manual-entries-2">
                 Send password to email address
               </Label>
             </div>
           </div>
+
+          {showPassword && (
+            <div className="flex flex-wrap gap-6">
+              <div className="w-full md:w-[48%] space-y-2">
+                <Label>Password *</Label>
+                <Input
+                  type="password"
+                  placeholder="Enter password"
+                  className={`w-full ${passwordShort ? 'border-red-500' : ''}`}
+                  value={formData.password}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, password: e.target.value }))
+                  }
+                />
+                {passwordShort && (
+                  <p className="text-sm text-red-500">
+                    Password must be at least 12 characters.
+                  </p>
+                )}
+              </div>
+
+              <div className="w-full md:w-[48%] space-y-2">
+                <Label>Repeat Password *</Label>
+                <Input
+                  type="password"
+                  placeholder="Repeat password"
+                  className={`w-full ${passwordsDontMatch ? 'border-red-500' : ''}`}
+                  value={formData.repeatPassword}
+                  onChange={e =>
+                    setFormData(prev => ({
+                      ...prev,
+                      repeatPassword: e.target.value,
+                    }))
+                  }
+                />
+                {passwordsDontMatch && (
+                  <p className="text-sm text-red-500">
+                    Passwords do not match.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-6">
             <AppSelect
