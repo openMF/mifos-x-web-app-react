@@ -10,7 +10,7 @@ import { loginFineract } from '@/pages/login/loginApi'
 
 interface AuthState {
   loading: boolean
-  user: any
+  user: Record<string, unknown> | null
   error: string | null
   isAuthenticated: boolean
 }
@@ -34,7 +34,8 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('mifosToken', encoded)
 
       return data
-    } catch (err: any) {
+    } catch (_err: unknown) {
+      // Reserved for future use
       return thunkAPI.rejectWithValue('Login failed')
     }
   }

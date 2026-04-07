@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from '@/fineract-api'
+import { DocumentsApi, SavingsAccountApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { Button } from '@/components/ui/button'
@@ -24,8 +24,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 const api = new SavingsAccountApi(getConfiguration())
+const docsApi = new DocumentsApi(getConfiguration())
 
-type Doc = any
+type Doc = Record<string, unknown>
 
 const SavingsDocumentsTab = () => {
   const { accountId } = useParams()
@@ -39,48 +40,50 @@ const SavingsDocumentsTab = () => {
   const [file, setFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!accountId) return
     setLoading(true)
     try {
-      const res = await (api as any).retrieveOne25(
+      const res = await api.retrieveOne25(
         Number(accountId),
         undefined,
         undefined,
         'documents'
       )
-      setDocs(res?.data?.documents || [])
+      const data = res?.data as Record<string, unknown> | undefined
+      setDocs((data?.documents as Doc[]) || [])
     } catch (e) {
       console.error('Failed to load documents', e)
     } finally {
       setLoading(false)
     }
-  }
+  }, [accountId])
 
   useEffect(() => {
     load()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId])
+  }, [load])
 
   // --- actions ---
   const uploadDocument = async () => {
     if (!accountId || !file || !name.trim()) return
     try {
-      const form = new FormData()
-      form.append('name', name.trim())
-      if (description) form.append('description', description)
-      form.append('file', file)
-
-      const resp = await fetch(
-        `/api/v1/savingsaccounts/${accountId}/documents`,
-        { method: 'POST', body: form }
+      await docsApi.createDocument(
+        'savings',
+        Number(accountId),
+        undefined,
+        undefined,
+        description || undefined,
+        undefined,
+        name.trim(),
+        file
       )
-      if (!resp.ok) throw new Error(`Upload failed: ${resp.status}`)
       setAdding(false)
       setName('')
       setDescription('')
       setFile(null)
-      fileInputRef.current && (fileInputRef.current.value = '')
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
       await load()
     } catch (e) {
       console.error(e)
@@ -90,21 +93,31 @@ const SavingsDocumentsTab = () => {
 
   const downloadDocument = async (doc: Doc) => {
     if (!accountId || !doc?.id) return
-    window.open(
-      `/api/v1/savingsaccounts/${accountId}/documents/${doc.id}/attachment`,
-      '_blank'
-    )
+    try {
+      const res = await docsApi.downloadFile(
+        'savings',
+        Number(accountId),
+        Number(doc.id),
+        { responseType: 'blob' }
+      )
+      const url = window.URL.createObjectURL(
+        new Blob([res.data as unknown as BlobPart])
+      )
+      const a = document.createElement('a')
+      a.href = url
+      a.download = (doc.fileName as string) || 'document'
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error('Download failed', e)
+    }
   }
 
   const deleteDocument = async (doc: Doc) => {
     if (!accountId || !doc?.id) return
     if (!confirm('Delete this document?')) return
     try {
-      const resp = await fetch(
-        `/api/v1/savingsaccounts/${accountId}/documents/${doc.id}`,
-        { method: 'DELETE' }
-      )
-      if (!resp.ok) throw new Error(`Delete failed: ${resp.status}`)
+      await docsApi.deleteDocument('savings', Number(accountId), Number(doc.id))
       await load()
     } catch (e) {
       console.error(e)
@@ -198,10 +211,10 @@ const SavingsDocumentsTab = () => {
               </TableRow>
             ) : (
               docs.map((d: Doc) => (
-                <TableRow key={d.id}>
-                  <TableCell>{d.name}</TableCell>
-                  <TableCell>{d.description || '—'}</TableCell>
-                  <TableCell>{d.fileName || d.fileName || '—'}</TableCell>
+                <TableRow key={d.id as string | number}>
+                  <TableCell>{String(d.name ?? '')}</TableCell>
+                  <TableCell>{String(d.description || '—')}</TableCell>
+                  <TableCell>{String(d.fileName || '—')}</TableCell>
                   <TableCell className="text-right">
                     <div className="inline-flex gap-2">
                       <Button

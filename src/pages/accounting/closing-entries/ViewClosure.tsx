@@ -48,7 +48,7 @@ const ViewClosure = () => {
       await closureApi.deleteGLClosure(Number(id))
       navigate('/accounting/closing-entries')
     } catch (err) {
-      console.log('Failed to delete closure', err)
+      console.error('Failed to delete closure', err)
     }
   }
 

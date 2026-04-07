@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/select'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useTranslation } from 'react-i18next'
 
 import { CentersApi, type GetCentersPageItems } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -51,6 +52,8 @@ const centersApi = new CentersApi(getConfiguration())
 
 const Centers = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('centers')
+  const { t: tc } = useTranslation('common')
 
   // State for centers data
   const [centers, setCenters] = useState<ExtendedCentersPageItem[]>([])
@@ -81,7 +84,9 @@ const Centers = () => {
         '', // orderBy
         '' // sortOrder
       )
-      const items = Array.from(response.data?.pageItems ?? []) as ExtendedCentersPageItem[]
+      const items = Array.from(
+        response.data?.pageItems ?? []
+      ) as ExtendedCentersPageItem[]
       setCenters(items)
     } catch (err) {
       console.error('Failed to fetch centers', err)
@@ -126,8 +131,8 @@ const Centers = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Centers', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), current: true },
         ]}
       />
 
@@ -137,7 +142,7 @@ const Centers = () => {
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
           onClick={() => navigate('/centers/create')}
         >
-          <Plus className="mr-2" /> Add Center
+          <Plus className="mr-2" /> {t('addCenter')}
         </Button>
       </div>
 
@@ -145,7 +150,7 @@ const Centers = () => {
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         {/* Search input */}
         <Input
-          placeholder="Search by Name or External ID..."
+          placeholder={t('searchPlaceholder')}
           value={searchTerm}
           onChange={e => {
             setSearchTerm(e.target.value)
@@ -161,7 +166,7 @@ const Centers = () => {
             onValueChange={handleItemsPerPageChange}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={tc('pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -177,7 +182,7 @@ const Centers = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
-            Prev
+            {tc('actions.prev')}
           </Button>
           <Button
             variant="outline"
@@ -185,7 +190,7 @@ const Centers = () => {
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {tc('actions.next')}
           </Button>
         </div>
       </div>
@@ -198,32 +203,48 @@ const Centers = () => {
           onCheckedChange={val => setChecked(!!val)}
         />
         <label htmlFor="closed-centers" className="text-base dark:text-white">
-          Show Pending Centers
+          {t('showPending')}
         </label>
       </div>
 
       {/* Centers Table */}
-      {loading && <p className="text-center py-8 text-zinc-500">Loading...</p>}
+      {loading && (
+        <p className="text-center py-8 text-zinc-500">
+          {tc('actions.loading')}
+        </p>
+      )}
 
-      {error && <p className="text-center py-8 text-red-500">{error}</p>}
+      {error && (
+        <p className="text-center py-8 text-red-500">{t('failedToLoad')}</p>
+      )}
 
       {!loading && !error && (
         <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
           <Table>
             {/* Caption */}
             <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-              Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-              of {totalPages}
+              {tc('pagination.showing', {
+                current: paginated.length,
+                total: filtered.length,
+                page,
+                pages: totalPages,
+              })}
             </TableCaption>
 
             {/* Table Header */}
             <TableHeader>
               <TableRow className="text-base">
-                <TableHead className="px-6 py-4">Name</TableHead>
-                <TableHead className="px-6 py-4">Account #</TableHead>
-                <TableHead className="px-6 py-4">External ID</TableHead>
-                <TableHead className="px-6 py-4">Status</TableHead>
-                <TableHead className="px-6 py-4">Office Name</TableHead>
+                <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.accountNo')}
+                </TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.externalId')}
+                </TableHead>
+                <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.officeName')}
+                </TableHead>
               </TableRow>
             </TableHeader>
 
@@ -258,7 +279,9 @@ const Centers = () => {
                       />
                     )}
                   </TableCell>
-                  <TableCell className="px-6 py-4">{center.officeName}</TableCell>
+                  <TableCell className="px-6 py-4">
+                    {center.officeName}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

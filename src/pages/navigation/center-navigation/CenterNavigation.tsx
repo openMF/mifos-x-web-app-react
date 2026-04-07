@@ -130,10 +130,14 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
 
         {centerSummary && (
           <>
-            <div className="font-medium">{t('navigation.numberOfActiveClients')}:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfActiveClients')}:
+            </div>
             <div>{centerSummary.activeClients}</div>
 
-            <div className="font-medium">{t('navigation.numberOfActiveClientLoans')}:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfActiveClientLoans')}:
+            </div>
             <div>{centerSummary.activeClientLoans}</div>
 
             <div className="font-medium">
@@ -141,10 +145,14 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
             </div>
             <div>{centerSummary.activeClientBorrowers}</div>
 
-            <div className="font-medium">{t('navigation.numberOfOverdueGroupLoans')}:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfOverdueGroupLoans')}:
+            </div>
             <div>{centerSummary.overdueGroupLoans}</div>
 
-            <div className="font-medium">{t('navigation.numberOfOverdueClientLoans')}:</div>
+            <div className="font-medium">
+              {t('navigation.numberOfOverdueClientLoans')}:
+            </div>
             <div>{centerSummary.overdueClientLoans}</div>
 
             <div className="font-medium">{t('navigation.numberOfGroups')}:</div>

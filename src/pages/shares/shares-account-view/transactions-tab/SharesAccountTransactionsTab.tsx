@@ -17,10 +17,37 @@ import {
   TableCell,
 } from '@/components/ui/table'
 
-type ShareAccount = any
-type ShareTx = any
+interface ShareAccount {
+  currency?: { code?: string }
+  purchasedShares?: ShareTx[]
+  [key: string]: unknown
+}
 
-const fmtDate = (d: any) => {
+interface ShareTx {
+  id?: number
+  purchasedDate?: unknown
+  requestedDate?: unknown
+  date?: unknown
+  submittedDate?: unknown
+  transactionType?: { value?: string }
+  type?: Record<string, unknown>
+  status?: Record<string, unknown>
+  approvalStatus?: { value?: string }
+  numberOfShares?: number
+  totalShares?: number
+  shares?: number
+  purchasedPrice?: number
+  purchasePrice?: number
+  redeemedPrice?: number
+  price?: number
+  chargeAmount?: number
+  charges?: number
+  amountReceived?: number
+  amountReturned?: number
+  amount?: number
+}
+
+const fmtDate = (d: unknown) => {
   if (!d) return '—'
   if (Array.isArray(d) && d.length >= 3) {
     const [y, m, day] = d
@@ -30,7 +57,7 @@ const fmtDate = (d: any) => {
       year: 'numeric',
     })
   }
-  const dt = new Date(d)
+  const dt = new Date(d as string | number)
   return isNaN(+dt) ? '—' : dt.toLocaleDateString()
 }
 
@@ -115,14 +142,13 @@ const SharesAccountTransactionsTab = () => {
                   t?.submittedDate ??
                   null
 
-                const typeLabel =
-                  t?.transactionType?.value ?? t?.type?.value ?? t?.type ?? '—'
+                const typeLabel = String(
+                  t?.transactionType?.value ?? t?.type?.value ?? '—'
+                )
 
-                const statusLabel =
-                  t?.status?.value ??
-                  t?.status ??
-                  t?.approvalStatus?.value ??
-                  ''
+                const statusLabel = String(
+                  t?.status?.value ?? t?.approvalStatus?.value ?? ''
+                )
 
                 const totalShares =
                   t?.numberOfShares ?? t?.totalShares ?? t?.shares ?? null

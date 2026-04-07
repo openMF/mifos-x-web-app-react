@@ -42,12 +42,12 @@ export const getAllHeaders = (): Record<string, string> => {
 }
 
 export const getApiBaseUrl = (): string => {
-  const url = envConfig.apiUrl;
-  const provider = envConfig.apiProvider;
-  const version = envConfig.apiVersion;
+  const url = envConfig.apiUrl
+  const provider = envConfig.apiProvider
+  const version = envConfig.apiVersion
 
   // When apiUrl is empty, build a relative URL so the request goes
   // through the same origin (nginx reverse-proxy → local Fineract)
-  const base = url ? url.replace(/\/$/, '') : '';
-  return `${base}${provider}${version}`;
+  const base = url ? url.replace(/\/$/, '') : ''
+  return `${base}${provider}${version}`
 }

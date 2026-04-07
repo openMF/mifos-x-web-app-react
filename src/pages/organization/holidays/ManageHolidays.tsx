@@ -58,7 +58,6 @@ const ManageHolidays = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submit payload:', form)
   }
 
   return (
@@ -132,24 +131,30 @@ const ManageHolidays = () => {
           {/* Offices checkboxes */}
           <div className="space-y-3 pt-2">
             <Label>Select applicable offices</Label>
-            {offices.map((o: any) => (
-              <div key={o.id} className="flex items-center gap-3">
-                <Checkbox
-                  id={`office-${o.id}`}
-                  checked={form.offices.includes(o.id)}
-                  onCheckedChange={v => {
-                    setForm(prev => {
-                      const updated = new Set(prev.offices)
-                      v ? updated.add(o.id) : updated.delete(o.id)
-                      return { ...prev, offices: Array.from(updated) }
-                    })
-                  }}
-                />
-                <Label htmlFor={`office-${o.id}`} className="select-none">
-                  {o.name}
-                </Label>
-              </div>
-            ))}
+            {offices
+              .filter(o => o.id != null)
+              .map(o => (
+                <div key={o.id} className="flex items-center gap-3">
+                  <Checkbox
+                    id={`office-${o.id}`}
+                    checked={form.offices.includes(o.id as number)}
+                    onCheckedChange={v => {
+                      setForm(prev => {
+                        const updated = new Set(prev.offices)
+                        if (v) {
+                          updated.add(o.id as number)
+                        } else {
+                          updated.delete(o.id as number)
+                        }
+                        return { ...prev, offices: Array.from(updated) }
+                      })
+                    }}
+                  />
+                  <Label htmlFor={`office-${o.id}`} className="select-none">
+                    {o.name}
+                  </Label>
+                </div>
+              ))}
           </div>
 
           {/* Actions */}

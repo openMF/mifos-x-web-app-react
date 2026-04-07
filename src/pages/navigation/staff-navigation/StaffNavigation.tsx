@@ -41,7 +41,10 @@ const StaffNavigation = ({ staffId }: StaffNavigationProps) => {
       year: 'numeric',
     }).format(new Date(dateString))
 
-  if (!staff) return <p className="text-gray-500">{t('navigation.loadingStaffDetails')}</p>
+  if (!staff)
+    return (
+      <p className="text-gray-500">{t('navigation.loadingStaffDetails')}</p>
+    )
 
   const dummyCenterCount = 3
 

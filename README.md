@@ -1,11 +1,10 @@
-
 # mifos-x-web-app-react
 
 This repo is for the **React version** of the Mifos-X web-app.  
-It is currently **work in progress** and not recommended for deployment.  
+It is currently **work in progress** and not recommended for deployment.
 
 The **main** branch contains release code.  
-All PRs should be submitted to the `dev` branch first, and will be merged to `main` at a release.  
+All PRs should be submitted to the `dev` branch first, and will be merged to `main` at a release.
 
 This project is part of **Google Summer of Code 2025** under [The Mifos Initiative](https://mifos.org).
 
@@ -13,11 +12,11 @@ This project is part of **Google Summer of Code 2025** under [The Mifos Initiati
 
 ## 🚀 Tech Stack
 
-- **React + TypeScript** – Frontend architecture  
-- **Tailwind CSS + ShadCN UI** – UI and styling  
-- **Redux Toolkit** – Global state management  
-- **Vite** – Build tool  
-- **Fineract API (OpenAPI-generated client)** – Backend integration  
+- **React + TypeScript** – Frontend architecture
+- **Tailwind CSS + ShadCN UI** – UI and styling
+- **Redux Toolkit** – Global state management
+- **Vite** – Build tool
+- **Fineract API (OpenAPI-generated client)** – Backend integration
 
 ---
 
@@ -49,14 +48,14 @@ root/
 ├── index.html            # App HTML shell
 ├── .eslintrc.js          # Linting rules
 ├── .gitignore
-````
+```
 
 ---
 
 ## ⚙️ Prerequisites
 
-* A working **Apache Fineract backend** running locally
-* Node.js and npm installed
+- A working **Apache Fineract backend** running locally
+- Node.js and npm installed
 
 ---
 
@@ -130,6 +129,7 @@ docker build -t mifos/web-app-react:custom .
 ```
 
 **Docker Features:**
+
 - Multi-stage build for optimized image size (~50MB)
 - Nginx web server with security headers
 - Runtime environment variable configuration
@@ -145,19 +145,18 @@ For Docker environment variables, see `.env.docker.sample`.
 
 The application uses environment variables for configuration. Copy `.env.sample` to `.env` or `.env.development.local` and adjust the values as needed.
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_FINERACT_API_URL` | Base URL for the Fineract server (protocol + host + port) | `https://localhost:8443` |
-| `VITE_FINERACT_API_PROVIDER` | API path prefix | `/fineract-provider` |
-| `VITE_FINERACT_API_VERSION` | API version path | `/api` |
-| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments | `default` |
+| Variable                                   | Description                                               | Default                  |
+| ------------------------------------------ | --------------------------------------------------------- | ------------------------ |
+| `VITE_FINERACT_API_URL`                    | Base URL for the Fineract server (protocol + host + port) | `https://localhost:8443` |
+| `VITE_FINERACT_API_PROVIDER`               | API path prefix                                           | `/fineract-provider`     |
+| `VITE_FINERACT_API_VERSION`                | API version path                                          | `/api`                   |
+| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments            | `default`                |
 
 ### Manual Fineract Setup (Without Docker)
 
 If running Apache Fineract manually (e.g., on `https://localhost:8443`):
 
 1. Create a file: `.env.development.local`
-
 
 2. Add the below configurations
 
@@ -178,5 +177,5 @@ VITE_FINERACT_PLUGIN_OIDC_ENABLED=false
 
 Contributions are welcome to improve the project.
 
-* Please read the [Contributing Guide](./CONTRIBUTING.md) before making a PR.
-* For OpenAPI-related issues, check [Issues](./ISSUES.md).
+- Please read the [Contributing Guide](./CONTRIBUTING.md) before making a PR.
+- For OpenAPI-related issues, check [Issues](./ISSUES.md).

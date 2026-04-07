@@ -40,7 +40,10 @@ const OfficeNavigation = ({ officeId }: OfficeNavigationProps) => {
     if (officeId) fetchOfficeDetails()
   }, [officeId])
 
-  if (!office) return <p className="text-gray-500">{t('navigation.loadingOfficeDetails')}</p>
+  if (!office)
+    return (
+      <p className="text-gray-500">{t('navigation.loadingOfficeDetails')}</p>
+    )
 
   return (
     <div>

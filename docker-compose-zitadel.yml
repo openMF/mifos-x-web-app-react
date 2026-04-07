@@ -31,9 +31,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        BUILD_DATE: "${BUILD_DATE:-}"
-        VCS_REF: "${VCS_REF:-}"
-        VERSION: "${VERSION:-dev}"
+        BUILD_DATE: '${BUILD_DATE:-}'
+        VCS_REF: '${VCS_REF:-}'
+        VERSION: '${VERSION:-dev}'
     image: mifos/web-app-react:dev
     restart: unless-stopped
     depends_on:
@@ -64,13 +64,13 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
     deploy:
       resources:
         limits:
           memory: 256M
-          cpus: "0.5"
+          cpus: '0.5'
 
   # ---------------------------------------------------------------------------
   # MariaDB Database
@@ -89,21 +89,28 @@ services:
     environment:
       - TZ=UTC
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      test:
+        [
+          'CMD',
+          'healthcheck.sh',
+          '--su-mysql',
+          '--connect',
+          '--innodb_initialized',
+        ]
       timeout: 10s
       retries: 10
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
     deploy:
       resources:
         limits:
           memory: 1G
-          cpus: "1.0"
-#    ports:
-#      - "3306:3306"
+          cpus: '1.0'
+  #    ports:
+  #      - "3306:3306"
 
   # ---------------------------------------------------------------------------
   # Apache Fineract Backend Server
@@ -117,7 +124,7 @@ services:
     volumes:
       - fineract_data:/.fineract
     healthcheck:
-      test: ["CMD", "sh", "-c", "nc -z localhost 8443"]
+      test: ['CMD', 'sh', '-c', 'nc -z localhost 8443']
       interval: 30s
       timeout: 10s
       retries: 10
@@ -186,10 +193,10 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
     deploy:
       resources:
         limits:
           memory: 2G
-          cpus: "2.0"
+          cpus: '2.0'

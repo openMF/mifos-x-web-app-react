@@ -7,6 +7,10 @@
  */
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  GetLoansLoanIdResponse,
+  GetLoansLoanIdTransactions,
+} from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import {
@@ -21,30 +25,40 @@ import { Button } from '@/components/ui/button'
 
 const loansApi = new LoansApi(getConfiguration())
 
-type Loan = any
-type Txn = any
+/** Extension for properties not on the generated type but returned at runtime. */
+type ExtendedLoan = GetLoansLoanIdResponse & {
+  officeName?: string
+}
 
-const fmtDate = (d: any) => {
+type ExtendedTxn = Omit<GetLoansLoanIdTransactions, 'transactionType'> & {
+  transactionType?: { value?: string }
+  principalComponent?: number
+  interestComponent?: number
+  feeChargeComponent?: number
+  penaltyChargeComponent?: number
+  balance?: number
+}
+
+const fmtDate = (d: string | null | undefined) => {
   if (!d) return '—'
-  if (Array.isArray(d) && d.length >= 3) {
-    const [y, m, day] = d
-    return new Date(y, (m ?? 1) - 1, day ?? 1).toLocaleDateString()
-  }
   const dt = new Date(d)
   return isNaN(+dt) ? '—' : dt.toLocaleDateString()
 }
 
 const LoansTransactions = () => {
   const { loanId } = useParams()
-  const [loan, setLoan] = useState<Loan | null>(null)
+  const [loan, setLoan] = useState<ExtendedLoan | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     ;(async () => {
       try {
         if (!loanId) return
-        const res = await loansApi.retrieveLoan(Number(loanId) as any)
-        setLoan(res.data)
+        const loanIdNum = Number(loanId)
+        const res = await loansApi.retrieveLoan(loanIdNum)
+        setLoan(res.data as ExtendedLoan)
+      } catch (err) {
+        console.error('Failed to fetch loan transactions', err)
       } finally {
         setLoading(false)
       }
@@ -66,9 +80,8 @@ const LoansTransactions = () => {
           minimumFractionDigits: 2,
         }).format(n)
 
-  const txns: Txn[] = Array.isArray(loan?.transactions)
-    ? loan!.transactions
-    : []
+  const txns: ExtendedTxn[] =
+    (loan?.transactions as ExtendedTxn[] | undefined) ?? []
 
   return (
     <div className="space-y-4">
@@ -121,7 +134,7 @@ const LoansTransactions = () => {
             )}
 
             {txns.map((t, i) => (
-              <TableRow key={t.id ?? i} className="text-base">
+              <TableRow key={String(t.id ?? i)} className="text-base">
                 <TableCell>{i + 1}</TableCell>
                 <TableCell>{t.id ?? '—'}</TableCell>
                 <TableCell>{t.officeName ?? loan?.officeName ?? '—'}</TableCell>
@@ -151,7 +164,8 @@ const LoansTransactions = () => {
                   {money(t.outstandingLoanBalance ?? t.balance)}
                 </TableCell>
                 <TableCell>
-                  <Button size="sm" variant="secondary">
+                  {/* TODO: Navigate to transaction detail view */}
+                  <Button size="sm" variant="secondary" disabled>
                     View
                   </Button>
                 </TableCell>

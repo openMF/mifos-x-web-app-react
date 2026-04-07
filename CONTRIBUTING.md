@@ -69,6 +69,7 @@ We follow a strict branching model to keep our history clean.
 - **Naming Convention:** Your branch name must include the Jira Ticket ID.
   - **Format:** `MXWAR-<ID>-<short-description>`
   - **Example:** `git checkout -b MXWAR-123-fix-login-button`
+
 ### Reserved Branch Names
 
 The following branch names and tags (and their derivatives/extensions) are reserved for use by Mifos Organisation. Any branches created by non-admins with these names will be deleted without notice:
@@ -83,6 +84,7 @@ The following branch names and tags (and their derivatives/extensions) are reser
 - `staging`
 - `prod` / `production`
 - `gsoc`
+
 ---
 
 ## Step 4: UI/UX Consistency
@@ -132,12 +134,14 @@ We maintain a linear, meaningful git history.
 **How to Squash (Example for last 2 commits):**
 
 1. **Start Interactive Rebase:**
+
    ```bash
    git rebase -i HEAD~2
    ```
 
 2. **Edit the Rebase File:**
    An editor will open listing the last two commits. It will look similar to this:
+
    ```text
    pick a1b2c3d Message of the older commit
    pick e4f5g6h Message of the newer commit
@@ -145,6 +149,7 @@ We maintain a linear, meaningful git history.
 
 3. **Squash the Commits:**
    Change the second `pick` to `squash` or `s`:
+
    ```text
    pick a1b2c3d Message of the older commit
    s e4f5g6h Message of the newer commit
@@ -161,7 +166,6 @@ We maintain a linear, meaningful git history.
    ```bash
    git push --force-with-lease
    ```
-
 
 ---
 
@@ -375,7 +379,7 @@ src/
 ├── router/           # React Router setup
 ├── App.tsx           # Root component with global providers
 ├── index.css         # Global Tailwind styles
-├── main.tsx          # React entry point 
+├── main.tsx          # React entry point
 ```
 
 ---

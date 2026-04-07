@@ -1,0 +1,92 @@
+{
+  "title": "Centers",
+  "addCenter": "Add Center",
+  "searchPlaceholder": "Search by Name or External ID...",
+  "showPending": "Show Pending Centers",
+  "failedToLoad": "Failed to load centers. Please try again.",
+  "table": {
+    "name": "Name",
+    "accountNo": "Account #",
+    "externalId": "External ID",
+    "status": "Status",
+    "officeName": "Office Name"
+  },
+  "create": {
+    "heading": "Create Center",
+    "labelName": "Name*",
+    "labelOffice": "Office*",
+    "labelStaff": "Staff",
+    "labelActive": "Active",
+    "labelActivationDate": "Activation Date",
+    "labelExternalId": "External Id",
+    "labelSubmittedOn": "Submitted On*",
+    "selectOffice": "Select Office",
+    "selectStaff": "Select Staff",
+    "errorCreate": "Failed to create center"
+  },
+  "edit": {
+    "heading": "Edit Center",
+    "labelName": "Name*",
+    "labelExternalId": "External Id",
+    "placeholderName": "Enter name",
+    "placeholderExternalId": "Enter external id",
+    "breadcrumb": "Edit"
+  },
+  "close": {
+    "heading": "Close Center",
+    "labelClosedOn": "Closed on date*",
+    "breadcrumb": "Close"
+  },
+  "view": {
+    "centerName": "Center Name :",
+    "accountNo": "Account #:",
+    "office": "Office:",
+    "externalId": "External Id:",
+    "activationDate": "Activation Date :",
+    "nextMeetingOn": "Next Meeting on:",
+    "meetingFrequency": "Meeting Frequency:",
+    "missingInOpenAPI": "Missing in OpenAPI",
+    "confirmDelete": "Are you sure you want to delete this center?",
+    "activateTodo": "TODO: activate center",
+    "tabs": {
+      "general": "General",
+      "notes": "Notes"
+    },
+    "menu": {
+      "activate": "Activate",
+      "edit": "Edit",
+      "addGroup": "Add Group",
+      "manageGroups": "Manage Groups",
+      "centersSavingApplication": "Centers Saving Application",
+      "more": "More",
+      "attendance": "Attendance",
+      "assignStaff": "Assign Staff",
+      "unassignStaff": "Unassign Staff",
+      "delete": "Delete",
+      "close": "Close",
+      "attachMeeting": "Attach Meeting",
+      "staffAssignmentHistory": "Staff assignment history"
+    }
+  },
+  "general": {
+    "summaryDetails": "Summary Details",
+    "activeClients": "Active Clients:",
+    "activeGroupBorrowers": "Active Group Borrowers:",
+    "activeGroupLoans": "Active Group Loans:",
+    "activeClientBorrowers": "Active Client Borrowers:",
+    "activeClientLoans": "Active Client Loans:",
+    "activeOverdueClientLoans": "Active Overdue Client Loans:",
+    "activeOverdueGroupLoans": "Active Overdue Group Loans:",
+    "groups": "Groups",
+    "tableAccountNo": "Account No",
+    "tableGroupName": "Group Name",
+    "tableOfficeName": "Office Name",
+    "tableSubmittedOn": "Submitted On",
+    "noGroups": "No groups found."
+  },
+  "notes": {
+    "heading": "Notes",
+    "placeholder": "Write a note ....",
+    "addButton": "+ Add"
+  }
+}

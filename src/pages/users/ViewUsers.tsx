@@ -23,7 +23,11 @@ import { Button } from '@/components/ui/button'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { UsersApi, type GetUsersResponse, type GetUsersUserIdResponse } from '@/fineract-api'
+import {
+  UsersApi,
+  type GetUsersResponse as _GetUsersResponse, // Reserved for future use
+  type GetUsersUserIdResponse,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -45,10 +49,9 @@ const ViewUsers = () => {
     const fetchViewUsers = async () => {
       try {
         const response = await usersApi.retrieveOne31(Number(id))
-        console.log('res: ', response.data)
         setUsers(response.data)
       } catch (err) {
-        console.log('Failed to fetch User details', err)
+        console.error('Failed to fetch User details', err)
       }
     }
     fetchViewUsers()
@@ -99,7 +102,7 @@ const ViewUsers = () => {
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-                  // onClick={handleDelete}
+                    // onClick={handleDelete}
                   >
                     Confirm
                   </AlertDialogAction>
@@ -162,12 +165,14 @@ const ViewUsers = () => {
           <div className="font-medium">Roles</div>
           <div className="text-zinc-600 dark:text-zinc-400">
             {users?.selectedRoles?.length
-              ? users.selectedRoles.map((role) => role.name).join(', ')
+              ? users.selectedRoles.map(role => role.name).join(', ')
               : '—'}
           </div>
 
           <div className="font-medium">Is Self Service</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{'Missing in OpenApi'}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {'Missing in OpenApi'}
+          </div>
         </div>
 
         {/* back button */}

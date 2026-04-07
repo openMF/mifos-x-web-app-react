@@ -7,11 +7,15 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Admin Users
 
 ### `/users`
+
 **Missing in `GetUsersResponse`:**
+
 - `isSelfServiceUser`
 
 ### `/users/{id}`
+
 **Missing in `GetUsersUserIdResponse`:**
+
 - `isSelfServiceUser`
 
 ---
@@ -19,7 +23,9 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Admin Products
 
 ### `/products/loan-products/{id}/general`
+
 **Missing in `GetLoanProductsProductIdResponse`:**
+
 - `externalId`
 - `startDate`
 - `closeDate`
@@ -31,7 +37,9 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - Unnecessary fields also present
 
 ### `/products/saving-products/{id}/general`
+
 **Missing in `GetSavingsProductsProductIdResponse`:**
+
 - `enforceMinRequiredBalance`
 - `withHoldTax`
 - `allowOverdraft`
@@ -39,9 +47,11 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - Additional fields missing
 
 ### `/products/share`
+
 - Not present in OpenAPI
 
 ### `/products/products-mix`
+
 - `loanproducts?associations=productMixes`
 - `GetLoanProductsResponse` does not include product mix data
 
@@ -50,25 +60,32 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Admin Organization
 
 ### `/organization/offices`
+
 - `GetOfficesResponse` missing `parentName`
 
 ### `/organization/currencies`
+
 - `/v1/currencies (retrieveCurrencies)` → mapped to `ApplicationCurrencyConfigurationData`, but fetch fails
 - `CurrencyData` with extra fields works instead
 
 ### `/organization/tellers/create`
+
 - `PostTellersRequest` missing `endDate` → impossible to create tellers
 
 ### `/organization/holidays/create`
+
 - `retrieveRepaymentScheduleUpdationTypeOptions` not mapped to any interface
 
 ### `/organization/holidays/{id}/edit`
+
 - `GetHolidayResponse` missing `description` → cannot fetch previous value for edit
 
 ### `/organization/employees/{id}/edit`
+
 - `UpdateStaffResponse`, `PutStaffResponse` missing required values for editing
 
 ### `/organization/tellers/{id}/edit`
+
 - `GetTellersResponse` missing `endDate` and `description` → edit blocked
 
 ---
@@ -76,10 +93,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Admin System
 
 ### `/system/data-tables`
+
 - `GetDataTablesResponse` missing `entitySubType`
 - Page works, but causes many TypeScript errors
 
 ### `/system/roles-and-permissions`
+
 - `GetRolesResponse` missing `status`
 
 ---
@@ -87,12 +106,14 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Institution Centers
 
 ### `/centers`
+
 - `GetCentersResponse` → references `GetCentersPageItems`
 - `GetCentersPageItems` missing:
   - `accountNo`
   - `externalId`
 
 ### `/centers/{id}/general`
+
 - `GetCentersCenterIdResponse` missing:
   - `accountNo`
   - `externalId`
@@ -100,6 +121,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - Causes TypeScript errors
 
 ### `/centers` (POST)
+
 - `PostCentersRequest` incomplete → only has:
   - `name`
   - `officeId`
@@ -107,9 +129,11 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - Other required fields missing
 
 ### `/centers/{id}/notes`
+
 - No endpoint defined in OpenAPI generator
 
 ### `/centers/{id}`
+
 - `GetCentersCenterIdResponse` missing `staff` data
 
 ---
@@ -117,12 +141,14 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Institution Groups
 
 ### `/groups`
+
 - `GetGroupsResponse` → references `GetGroupsPageItems`
 - `GetGroupsPageItems` missing:
   - `accountNo`
   - `externalId`
 
 ### `/groups` (POST)
+
 - `PostGroupsResponse` missing:
   - `staffId`
   - `externalId`
@@ -135,4 +161,5 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ## Institution Clients
 
 ### `/clients/{id}/charges/{chargeId}`
+
 - `GetClientsChargesPageItems` missing `clientTransactionDatas`

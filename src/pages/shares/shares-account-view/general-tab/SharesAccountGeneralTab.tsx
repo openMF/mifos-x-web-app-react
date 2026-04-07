@@ -17,9 +17,17 @@ import {
   TableCell,
 } from '@/components/ui/table'
 
-type ShareAccount = any
+interface ShareAccount {
+  timeline?: Record<string, unknown>
+  currency?: { name?: string; code?: string }
+  summary?: Record<string, unknown>
+  externalId?: string
+  savingsAccountId?: number
+  savingsAccountNumber?: number
+  [key: string]: unknown
+}
 
-const fmtDate = (d: any) => {
+const fmtDate = (d: unknown) => {
   if (!d) return 'Not Activated'
   if (Array.isArray(d) && d.length >= 3) {
     const [y, m, day] = d
@@ -29,7 +37,7 @@ const fmtDate = (d: any) => {
       year: 'numeric',
     })
   }
-  const dt = new Date(d)
+  const dt = new Date(d as string | number)
   return isNaN(+dt)
     ? 'Not Activated'
     : dt.toLocaleDateString(undefined, {
@@ -40,7 +48,7 @@ const fmtDate = (d: any) => {
 }
 
 // helper: format number to 2 decimals
-const to2 = (n: any) =>
+const to2 = (n: unknown) =>
   new Intl.NumberFormat(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -77,9 +85,9 @@ const SharesAccountGeneralTab = () => {
   }
   if (!data) return null
 
-  const tl = (data as any).timeline || {}
-  const cur = (data as any).currency || {}
-  const summary = (data as any).summary || {}
+  const tl = data.timeline || {}
+  const cur = data.currency || {}
+  const summary = data.summary || {}
   const activatedOn = tl.activatedOnDate ?? tl.activatedDate ?? null
 
   const currencyLabel = [cur.name, cur.code ? `[${cur.code}]` : '']
@@ -87,10 +95,10 @@ const SharesAccountGeneralTab = () => {
     .join(' ')
 
   // linked savings account for dividend posting
-  const savingsAccountId = (data as any).savingsAccountId
+  const savingsAccountId = data.savingsAccountId
   const savingsAccountNo =
-    (data as any).savingsAccountNumber != null
-      ? String((data as any).savingsAccountNumber).padStart(9, '0')
+    data.savingsAccountNumber != null
+      ? String(data.savingsAccountNumber).padStart(9, '0')
       : '—'
   const savingsLink =
     clientId && savingsAccountId
@@ -114,7 +122,7 @@ const SharesAccountGeneralTab = () => {
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">External Id</TableCell>
-              <TableCell>{(data as any).externalId || 'Unassigned'}</TableCell>
+              <TableCell>{data.externalId || 'Unassigned'}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">
@@ -150,13 +158,13 @@ const SharesAccountGeneralTab = () => {
                 Pending for Approval Shares
               </TableCell>
               <TableCell className="text-right">
-                {to2((summary as any).totalPendingForApprovalShares)}
+                {to2(summary.totalPendingForApprovalShares)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">Approved Shares</TableCell>
               <TableCell className="text-right">
-                {to2((summary as any).totalApprovedShares)}
+                {to2(summary.totalApprovedShares)}
               </TableCell>
             </TableRow>
           </TableBody>

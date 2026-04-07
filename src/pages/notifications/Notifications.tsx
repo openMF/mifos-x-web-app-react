@@ -43,7 +43,7 @@ const Notifications = () => {
         const response = await notiApi.getAllNotifications()
         setNotificationData(response.data)
       } catch (err) {
-        console.log('Failed to fetch Notification Data', err)
+        console.error('Failed to fetch Notification Data', err)
       }
     }
     fetchNotificationDetails()
@@ -111,7 +111,12 @@ const Notifications = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            {t('pagination.showing', { current: paginated.length, total: totalItems, page, pages: totalPages })}
+            {t('pagination.showing', {
+              current: paginated.length,
+              total: totalItems,
+              page,
+              pages: totalPages,
+            })}
           </TableCaption>
           <TableHeader>
             <TableRow className="text-base">

@@ -18,12 +18,24 @@ import {
   TableCell,
 } from '@/components/ui/table'
 
+interface ShareCharge {
+  id?: number
+  name?: string
+  penalty?: boolean
+  chargeTimeType?: { value?: string }
+  chargeCalculationType?: { value?: string }
+  amount?: number
+  amountPaid?: number
+  amountWaived?: number
+  amountOutstanding?: number
+}
+
 const SharesAccountChargesTab = () => {
   const { accountId } = useParams()
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(true) // loading state
-  const [charges, setCharges] = useState<any[]>([]) // list of charges
+  const [charges, setCharges] = useState<ShareCharge[]>([]) // list of charges
   const [accountStatus, setAccountStatus] = useState<string>('') // account status text
 
   // fetch share account charges when accountId changes
@@ -50,7 +62,7 @@ const SharesAccountChargesTab = () => {
   // action handlers
   const onPay = (id: number) => alert(`Pay charge ${id}`)
   const onWaive = (id: number) => alert(`Waive charge ${id}`)
-  const onEdit = (c: any) => navigate(`edit/${c.id}`)
+  const onEdit = (c: ShareCharge) => navigate(`edit/${c.id}`)
   const onDelete = (id: number) => {
     if (confirm('Delete this charge?')) alert(`Delete charge ${id}`)
   }
@@ -88,7 +100,7 @@ const SharesAccountChargesTab = () => {
               </TableRow>
             ) : (
               // render each charge row
-              charges.map((c: any) => (
+              charges.map(c => (
                 <TableRow key={c.id}>
                   <TableCell>{c?.name ?? '—'}</TableCell>
                   <TableCell>{c?.penalty ? 'Penalty' : 'Fee'}</TableCell>
@@ -111,7 +123,7 @@ const SharesAccountChargesTab = () => {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => onDelete(c.id)}
+                            onClick={() => c.id != null && onDelete(c.id)}
                           >
                             Delete
                           </Button>
@@ -123,14 +135,14 @@ const SharesAccountChargesTab = () => {
                               <Button
                                 className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
                                 size="sm"
-                                onClick={() => onPay(c.id)}
+                                onClick={() => c.id != null && onPay(c.id)}
                               >
                                 Pay
                               </Button>
                               <Button
                                 className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
                                 size="sm"
-                                onClick={() => onWaive(c.id)}
+                                onClick={() => c.id != null && onWaive(c.id)}
                               >
                                 Waive
                               </Button>

@@ -36,7 +36,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
         <SelectValue placeholder={t('fields.language')} />
       </SelectTrigger>
       <SelectContent>
-        {SUPPORTED_LANGUAGES.map((lang) => (
+        {SUPPORTED_LANGUAGES.map(lang => (
           <SelectItem key={lang.code} value={lang.code}>
             {lang.label}
           </SelectItem>
