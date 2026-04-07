@@ -26,13 +26,22 @@ type ChargeOption = {
   chargeCalculationType: string
 }
 
+interface SavingsProductChargesFormData {
+  charges: ChargeOption[]
+  [key: string]: unknown
+}
+
 const SavingsProductChargesStep = ({
   formData,
   setFormData,
   chargeOptions,
 }: {
-  formData: any
-  setFormData: (val: any) => void
+  formData: SavingsProductChargesFormData
+  setFormData: (
+    updater: (
+      prev: SavingsProductChargesFormData
+    ) => SavingsProductChargesFormData
+  ) => void
   chargeOptions: ChargeOption[]
 }) => {
   const [selectedChargeId, setSelectedChargeId] = useState('')
@@ -40,7 +49,7 @@ const SavingsProductChargesStep = ({
   const handleAdd = () => {
     const selectedCharge = chargeOptions.find(c => c.id === selectedChargeId)
     if (selectedCharge) {
-      setFormData((prev: any) => ({
+      setFormData(prev => ({
         ...prev,
         charges: [...(prev.charges || []), selectedCharge],
       }))
@@ -49,7 +58,7 @@ const SavingsProductChargesStep = ({
   }
 
   const handleRemove = (id: string) => {
-    setFormData((prev: any) => ({
+    setFormData(prev => ({
       ...prev,
       charges: prev.charges.filter((c: ChargeOption) => c.id !== id),
     }))

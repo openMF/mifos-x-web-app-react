@@ -8,7 +8,7 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import AppSelect from '@/components/custom/select/AppSelect'
+import { default as _AppSelect } from '@/components/custom/select/AppSelect' // Reserved for future use
 
 // interface LoanProductDetailProps {
 //     fund: string;

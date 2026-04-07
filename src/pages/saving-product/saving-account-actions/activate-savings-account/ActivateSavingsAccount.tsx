@@ -28,7 +28,6 @@ const ActivateSavingsAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Activated On Date:', activatedOnDate)
     backToAccount()
   }
 

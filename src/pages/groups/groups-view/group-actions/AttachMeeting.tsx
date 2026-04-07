@@ -33,7 +33,7 @@ const AttachMeeting = () => {
     'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY'
   >('DAILY')
   const [interval, setInterval] = useState<number>(1)
-  const [saving, setSaving] = useState(false)
+  const [saving, _setSaving] = useState(false) // Reserved for future use
 
   const canSubmit = Boolean(startDate) && !saving
 
@@ -47,12 +47,16 @@ const AttachMeeting = () => {
         ]}
       />
 
-      <h1 className="text-2xl font-semibold mt-2 mb-6">{t('attachMeeting.heading')}</h1>
+      <h1 className="text-2xl font-semibold mt-2 mb-6">
+        {t('attachMeeting.heading')}
+      </h1>
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-6 max-w-xl">
         {/* Meeting Start Date */}
         <div className="mb-6">
-          <Label htmlFor="meeting-start">{t('attachMeeting.labelStartDate')}</Label>
+          <Label htmlFor="meeting-start">
+            {t('attachMeeting.labelStartDate')}
+          </Label>
           <Input
             id="meeting-start"
             type="date"
@@ -88,13 +92,23 @@ const AttachMeeting = () => {
                 }
               >
                 <SelectTrigger className="mt-2">
-                  <SelectValue placeholder={t('attachMeeting.placeholderFrequency')} />
+                  <SelectValue
+                    placeholder={t('attachMeeting.placeholderFrequency')}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DAILY">{t('attachMeeting.daily')}</SelectItem>
-                  <SelectItem value="WEEKLY">{t('attachMeeting.weekly')}</SelectItem>
-                  <SelectItem value="MONTHLY">{t('attachMeeting.monthly')}</SelectItem>
-                  <SelectItem value="YEARLY">{t('attachMeeting.yearly')}</SelectItem>
+                  <SelectItem value="DAILY">
+                    {t('attachMeeting.daily')}
+                  </SelectItem>
+                  <SelectItem value="WEEKLY">
+                    {t('attachMeeting.weekly')}
+                  </SelectItem>
+                  <SelectItem value="MONTHLY">
+                    {t('attachMeeting.monthly')}
+                  </SelectItem>
+                  <SelectItem value="YEARLY">
+                    {t('attachMeeting.yearly')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -106,7 +120,9 @@ const AttachMeeting = () => {
                 onValueChange={v => setInterval(parseInt(v, 10))}
               >
                 <SelectTrigger className="mt-2">
-                  <SelectValue placeholder={t('attachMeeting.placeholderInterval')} />
+                  <SelectValue
+                    placeholder={t('attachMeeting.placeholderInterval')}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 12 }).map((_, i) => {

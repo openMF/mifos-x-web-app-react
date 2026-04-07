@@ -31,7 +31,6 @@ const ApproveSharesAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Approve Shares:', { approvedDate, note })
     backToAccount()
   }
 

@@ -17,10 +17,19 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { DownloadCloud, X, Plus } from 'lucide-react'
+import type { GetLoansLoanIdResponse } from '@/fineract-api'
 
-// context types
-type Loan = any
-type Ctx = { loan: Loan | null; refresh?: () => Promise<void> }
+// Extension for documents property not on the generated type
+type ExtendedLoan = GetLoansLoanIdResponse & {
+  documents?: Array<{
+    id?: number | string
+    name?: string
+    description?: string
+    fileName?: string
+  }>
+}
+
+type Ctx = { loan: ExtendedLoan | null; refresh?: () => Promise<void> }
 
 type LoanDoc = {
   id?: number | string
@@ -44,7 +53,7 @@ const LoansDocumentsTab = () => {
   // load docs from loan object
   useEffect(() => {
     const fromLoan = Array.isArray(loan?.documents)
-      ? loan!.documents.map((d: any) => ({
+      ? loan!.documents!.map(d => ({
           id: d.id,
           name: d.name ?? d.fileName ?? '—',
           description: d.description ?? '',

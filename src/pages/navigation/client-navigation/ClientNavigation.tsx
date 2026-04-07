@@ -60,7 +60,9 @@ const ClientNavigation = ({ clientId }: ClientNavigationProps) => {
             <span className="font-medium">{client.accountNo}</span> |{' '}
             {t('fields.externalId')}:{' '}
             <span className="font-medium">
-              {typeof client.externalId || t('actions.na')}
+              {(typeof client.externalId === 'string'
+                ? client.externalId
+                : client.externalId?.value) || t('actions.na')}
             </span>
           </p>
         </div>

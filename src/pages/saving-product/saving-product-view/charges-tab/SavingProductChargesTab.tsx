@@ -8,7 +8,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from '@/fineract-api'
+import {
+  SavingsAccountApi,
+  type SavingsAccountChargeData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { Button } from '@/components/ui/button'
@@ -29,7 +32,7 @@ const SavingProductChargesTab = () => {
 
   // state
   const [loading, setLoading] = useState(true)
-  const [charges, setCharges] = useState<any[]>([])
+  const [charges, setCharges] = useState<SavingsAccountChargeData[]>([])
   const [showInactive, setShowInactive] = useState(false)
   const [accountStatus, setAccountStatus] = useState<string>('')
 
@@ -38,7 +41,7 @@ const SavingProductChargesTab = () => {
     if (!accountId) return
     ;(async () => {
       try {
-        const res = await (api as any).retrieveOne25(
+        const res = await api.retrieveOne25(
           Number(accountId),
           undefined,
           undefined,
@@ -55,15 +58,16 @@ const SavingProductChargesTab = () => {
   }, [accountId])
 
   // filter charges based on toggle
-  const filtered = charges.filter((c: any) =>
-    showInactive ? c?.active === false : c?.active !== false
+  const filtered = charges.filter(c =>
+    showInactive ? c?.isActive === false : c?.isActive !== false
   )
 
   // action handlers
   const onPay = (id: number) => alert(`Pay charge ${id}`)
   const onWaive = (id: number) => alert(`Waive charge ${id}`)
   const onInactivate = (id: number) => alert(`Inactivate charge ${id}`)
-  const onEdit = (charge: any) => navigate(`edit/${charge.id}`)
+  const onEdit = (charge: SavingsAccountChargeData) =>
+    navigate(`edit/${charge.id}`)
   const onDelete = (id: number) => {
     if (confirm('Delete this charge?')) alert(`Delete charge ${id}`)
   }
@@ -114,7 +118,7 @@ const SavingProductChargesTab = () => {
               </TableRow>
             ) : (
               // list charges
-              filtered.map((charge: any) => (
+              filtered.map(charge => (
                 <TableRow key={charge.id} className="select-row">
                   <TableCell>{charge.name}</TableCell>
                   <TableCell>{charge.penalty ? 'Penalty' : 'Fee'}</TableCell>
@@ -141,7 +145,7 @@ const SavingProductChargesTab = () => {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => onDelete(charge.id)}
+                            onClick={() => onDelete(charge.id!)}
                           >
                             Delete
                           </Button>
@@ -154,21 +158,21 @@ const SavingProductChargesTab = () => {
                               <Button
                                 className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
                                 size="sm"
-                                onClick={() => onPay(charge.id)}
+                                onClick={() => onPay(charge.id!)}
                               >
                                 $
                               </Button>
                               <Button
                                 className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
                                 size="sm"
-                                onClick={() => onWaive(charge.id)}
+                                onClick={() => onWaive(charge.id!)}
                               >
                                 Flag
                               </Button>
-                              {charge?.recurring && (
+                              {'recurring' in charge && charge.recurring && (
                                 <Button
                                   size="sm"
-                                  onClick={() => onInactivate(charge.id)}
+                                  onClick={() => onInactivate(charge.id!)}
                                 >
                                   Ban
                                 </Button>

@@ -57,7 +57,7 @@ const ViewHolidays = () => {
       await holidayApi.delete6(Number(id))
       navigate('/organization/holidays')
     } catch (err) {
-      console.log('Failed to delete Holiday', err)
+      console.error('Failed to delete Holiday', err)
     }
   }
 
@@ -67,7 +67,7 @@ const ViewHolidays = () => {
       await holidayApi.handleCommands1(Number(id), {}, 'activate')
       navigate('/organization/holidays')
     } catch (err) {
-      console.log('Failed to enable Holiday', err)
+      console.error('Failed to enable Holiday', err)
     }
   }
 

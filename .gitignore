@@ -34,3 +34,8 @@ docs/
 
 # Docker data (should never be committed)
 data/
+
+# Playwright artifacts
+playwright-report/
+test-results/
+blob-report/

@@ -21,7 +21,7 @@ import {
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const tellersApi = new TellerCashManagementApi(getConfiguration())
+const _tellersApi = new TellerCashManagementApi(getConfiguration()) // Reserved for future use
 const officesApi = new OfficesApi(getConfiguration())
 
 const CreateTellers = () => {
@@ -54,7 +54,8 @@ const CreateTellers = () => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (_e: React.FormEvent) => {
+    // Reserved for future use: _e
     // e.preventDefault();
     // const { tellerName, officeId, startDate } = formData;
     // if (!tellerName || !officeId || !startDate) {
