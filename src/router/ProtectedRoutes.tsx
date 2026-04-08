@@ -8,8 +8,7 @@
 import { Outlet, Navigate } from 'react-router-dom'
 
 const ProtectedRoutes = () => {
-  // const token = localStorage.getItem('mifosToken')
-  const token = true
+  const token = localStorage.getItem('mifosToken')
   return token ? <Outlet /> : <Navigate to="/login" />
 }
 
