@@ -28,3 +28,14 @@ src/fineract-api/
 
 docs/
 .env
+.env.docker
+.env.local
+.env.*.local
+
+# Docker data (should never be committed)
+data/
+
+# Playwright artifacts
+playwright-report/
+test-results/
+blob-report/

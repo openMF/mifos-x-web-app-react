@@ -25,7 +25,7 @@ const tellersApi = new TellerCashManagementApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
 
 // helper: converts [yyyy, mm, dd] array → yyyy-MM-dd
-const toInputDate = (d: any): string => {
+const toInputDate = (d: unknown): string => {
   if (Array.isArray(d) && d.length >= 3) {
     const [y, m, day] = d
     return `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`

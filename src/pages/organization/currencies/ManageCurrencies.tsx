@@ -53,28 +53,32 @@ const ManageCurrencies = () => {
   }, [])
 
   const updateCurrencyConfig = async (updatedList: string[]) => {
-    await currenciesApi.updateCurrencies({ currencies: updatedList } as any)
+    await currenciesApi.updateCurrencies({ currencies: updatedList })
   }
 
   // add selected currency
   const handleAddCurrency = async () => {
     if (!selectedCurrency || activeCurrencies.includes(selectedCurrency)) return
+    const prev = [...activeCurrencies]
     const updated = [...activeCurrencies, selectedCurrency]
     setActiveCurrencies(updated)
     try {
       await updateCurrencyConfig(updated)
     } catch (e) {
+      setActiveCurrencies(prev)
       console.error('Failed to add currency', e)
     }
   }
 
   // delete selected currency
   const handleDeleteCurrency = async (code: string) => {
+    const prev = [...activeCurrencies]
     const updated = activeCurrencies.filter(c => c !== code)
     setActiveCurrencies(updated)
     try {
       await updateCurrencyConfig(updated)
     } catch (e) {
+      setActiveCurrencies(prev)
       console.error('Failed to delete currency', e)
     }
   }

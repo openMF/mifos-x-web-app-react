@@ -1,0 +1,87 @@
+{
+  "adhocQuery": "Requête ad hoc",
+  "auditTrails": "Journaux d'audit",
+  "bulkLoanReassignment": "Réaffectation massive des prêts",
+  "collateralManagement": "Gestion des garanties",
+  "configurations": "Configurations",
+  "configureMakerCheckerTasks": "Configurer les tâches de vérification",
+  "currencyConfiguration": "Configuration des devises",
+  "entityDataTableChecks": "Vérifications de table de données d'entité",
+  "entityToEntityMapping": "Mappage d'entité à entité",
+  "errors": {
+    "failedCreateOffice": "Échec de la création de l'agence",
+    "failedLoadFunds": "Échec du chargement des fonds.",
+    "failedLoadOffices": "Échec du chargement des agences."
+  },
+  "externalServices": "Services externes",
+  "funds": {
+    "create": "Créer un fonds",
+    "edit": "Modifier le fonds",
+    "fields": {
+      "externalId": "Identifiant externe",
+      "name": "Nom du fonds"
+    },
+    "messages": {
+      "createError": "Échec de la création du fonds",
+      "createSuccess": "Fonds créé avec succès.",
+      "created": "Fonds créé avec succès",
+      "deleted": "Fonds supprimé avec succès",
+      "noFunds": "Aucun fonds créé.",
+      "updateError": "Échec de la mise à jour du fonds",
+      "updateSuccess": "Fonds mis à jour avec succès.",
+      "updated": "Fonds mis à jour avec succès"
+    },
+    "title": "Gérer les fonds"
+  },
+  "investors": "Investisseurs",
+  "manageCodes": "Gérer les codes",
+  "manageDataTables": "Gérer les tables de données",
+  "manageEmployees": "Gérer les employés",
+  "manageExternalEvents": "Événements externes",
+  "manageHolidays": "Gérer les jours fériés",
+  "manageHooks": "Gérer les hooks",
+  "manageJobs": "Gérer les tâches",
+  "manageReports": "Gérer les rapports",
+  "manageRolesAndPermissions": "Gérer les rôles et permissions",
+  "manageSurveys": "Gérer les enquêtes",
+  "manageTaxConfigurations": "Gérer les configurations fiscales",
+  "nav": {
+    "funds": "Fonds"
+  },
+  "offices": {
+    "create": "Créer une agence",
+    "fields": {
+      "externalId": "Identifiant externe",
+      "name": "Nom de l'agence",
+      "officeName": "Nom de l'agence",
+      "officeNameStar": "Nom de l'agence*",
+      "openedOn": "Date d'ouverture*",
+      "openingDate": "Date d'ouverture",
+      "parentOffice": "Agence parente",
+      "pleaseSelectOffice": "Veuillez sélectionner une agence"
+    },
+    "manage": "Gérer les agences",
+    "messages": {
+      "createError": "Échec de la création de l'agence",
+      "createSuccess": "Agence créée avec succès.",
+      "created": "Agence créée avec succès.",
+      "noOffices": "Aucune agence trouvée.",
+      "updateSuccess": "Agence mise à jour avec succès."
+    },
+    "title": "Agences",
+    "unnamedOffice": "Agence sans nom"
+  },
+  "searchByMaker": "Rechercher par créateur",
+  "searchEvents": "Rechercher des événements",
+  "searchReports": "Rechercher des rapports",
+  "smsCampaigns": "Campagnes SMS",
+  "standingInstructionsHistory": "Historique des instructions permanentes",
+  "success": {
+    "fundSaved": "Fonds enregistré avec succès.",
+    "officeCreated": "Agence créée avec succès.",
+    "officeSaved": "Agence enregistrée avec succès."
+  },
+  "tellerCashierManagement": "Gestion des caissiers",
+  "title": "Organisation",
+  "workingDays": "Jours ouvrables"
+}

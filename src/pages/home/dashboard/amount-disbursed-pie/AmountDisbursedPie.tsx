@@ -24,6 +24,7 @@ import {
 import { RunReportsApi, OfficesApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { useTranslation } from 'react-i18next'
 
 const runreportApi = new RunReportsApi(getConfiguration())
 const officeApi = new OfficesApi(getConfiguration())
@@ -46,8 +47,11 @@ const AmountDisbursedPie = () => {
   const [officeData, setOfficeData] = useState<{ id: number; name: string }[]>(
     []
   )
-  const [chartData, setChartData] = useState<any[]>([])
+  const [chartData, setChartData] = useState<
+    { name: string; visitors: number; fill: string }[]
+  >([])
   const [chartConfig, setChartConfig] = useState<ChartConfig>({})
+  const { t } = useTranslation('common')
 
   //api call to fetch the data for the different offices
   useEffect(() => {
@@ -70,7 +74,9 @@ const AmountDisbursedPie = () => {
           }
         )
 
-        const rows: any[] = Array.isArray(res.data) ? res.data : []
+        const rows: Record<string, unknown>[] = Array.isArray(res.data)
+          ? (res.data as Record<string, unknown>[])
+          : []
         const raw = rows[0]
         if (!raw) {
           setChartData([])
@@ -108,15 +114,17 @@ const AmountDisbursedPie = () => {
     <Card className="flex flex-col h-full">
       <CardHeader className="gap-4">
         <div>
-          <CardTitle className="text-xl">Amount Pending / Disbursed</CardTitle>
-          <CardDescription>Select an office to view the chart</CardDescription>
+          <CardTitle className="text-xl">
+            {t('dashboard.amountPendingDisbursed')}
+          </CardTitle>
+          <CardDescription>{t('dashboard.selectOfficeToView')}</CardDescription>
         </div>
         <div className="w-full max-w-sm flex flex-col gap-2">
           <AppSelect
-            selectLabel="Office"
+            selectLabel={t('fields.office')}
             selectValue={officeId.toString()}
             selectOnChange={value => setOfficeId(Number(value))}
-            selectPlaceholder="Select office"
+            selectPlaceholder={t('ui.selectOffice')}
             selectOptions={(officeData || [])
               .filter(option => option.id !== undefined)
               .map(option => ({
@@ -155,7 +163,7 @@ const AmountDisbursedPie = () => {
           </ChartContainer>
         ) : (
           <p className="text-center text-muted-foreground text-sm mt-4">
-            No pending or disbursed amounts found (all values are 0).
+            {t('dashboard.noPendingDisbursed')}
           </p>
         )}
       </CardContent>

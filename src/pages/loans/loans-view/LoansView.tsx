@@ -12,6 +12,10 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 
+import type {
+  GetLoansLoanIdResponse,
+  GetLoansLoanIdStatus,
+} from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
@@ -21,7 +25,13 @@ import { Menu } from 'lucide-react'
 
 const loansApi = new LoansApi(getConfiguration())
 
-type Loan = any
+/** Extension for properties the API may return but are not on the generated type. */
+type ExtendedLoan = GetLoansLoanIdResponse & {
+  group?: { name?: string }
+  inArrears?: boolean
+  loanStatus?: GetLoansLoanIdStatus
+  loanStatusType?: { value?: string }
+}
 
 /* permissions */
 const granted = new Set<string>([
@@ -53,13 +63,12 @@ const hasPerm = (p: string) => granted.has(p)
 
 /* loan stages helper */
 type LoanStage = 'CREATED' | 'APPROVED' | 'ACTIVE' | 'CLOSED'
-const getLoanStage = (ln: any): LoanStage => {
-  const s = ln?.status || {}
-  if (s.pendingApproval || s.submittedAndPendingApproval) return 'CREATED'
+const getLoanStage = (ln: ExtendedLoan): LoanStage => {
+  const s = ln.status ?? ({} as GetLoansLoanIdStatus)
+  if (s.pendingApproval) return 'CREATED'
   if (
-    (s.approved && !s.active) ||
-    s.waitingForDisbursal ||
-    String(s.value).toLowerCase() === 'approved'
+    (!s.active && s.waitingForDisbursal) ||
+    (s.description ?? '').toLowerCase() === 'approved'
   ) {
     return 'APPROVED'
   }
@@ -68,16 +77,26 @@ const getLoanStage = (ln: any): LoanStage => {
 }
 
 /* build dropdown menu based on loan stage + perms */
-function buildLoanMenu(loan: any, groupId?: string, loanId?: string) {
+interface MenuItem {
+  label: string
+  path?: string
+  disabled?: boolean
+  children?: MenuItem[]
+}
+
+function buildLoanMenu(loan: ExtendedLoan, groupId?: string, loanId?: string) {
   const stage = getLoanStage(loan)
   const id = loanId
-  const items: any[] = []
+  const items: MenuItem[] = []
 
   const add = (label: string, path: string, perm?: string) => {
     if (!perm || hasPerm(perm)) items.push({ label, path })
   }
-  const allow = (label: string, path: string, perm?: string) =>
-    !perm || hasPerm(perm) ? { label, path } : null
+  const allow = (
+    label: string,
+    path: string,
+    perm?: string
+  ): MenuItem | null => (!perm || hasPerm(perm) ? { label, path } : null)
   const compact = <T,>(a: Array<T | null | undefined>) =>
     a.filter(Boolean) as T[]
 
@@ -324,11 +343,11 @@ function buildLoanMenu(loan: any, groupId?: string, loanId?: string) {
   }
 
   const prefix = groupId ? `groups/${groupId}/` : ''
-  return items.map((it: any) =>
+  return items.map(it =>
     it.children
       ? {
           ...it,
-          children: it.children.map((c: any) => ({
+          children: it.children.map(c => ({
             ...c,
             path: `${prefix}${c.path}`,
           })),
@@ -339,15 +358,16 @@ function buildLoanMenu(loan: any, groupId?: string, loanId?: string) {
 
 const LoansView = () => {
   const { groupId, loanId } = useParams()
-  const [loan, setLoan] = useState<Loan>()
+  const [loan, setLoan] = useState<ExtendedLoan>()
 
   // fetch loan data
   useEffect(() => {
     if (!loanId) return
     ;(async () => {
       try {
-        const res = await loansApi.retrieveLoan(Number(loanId) as any)
-        setLoan(res.data)
+        const loanIdNum = Number(loanId)
+        const res = await loansApi.retrieveLoan(loanIdNum)
+        setLoan(res.data as ExtendedLoan)
       } catch (err) {
         console.error('Failed to fetch loan', err)
       }
@@ -355,23 +375,19 @@ const LoansView = () => {
   }, [loanId])
 
   // status handling
-  const s = (loan && (loan.status || (loan as any).loanStatus)) || {}
-  const statusVal = String(
-    s.value ?? (loan as any)?.loanStatusType?.value ?? ''
+  const s = loan?.status ?? loan?.loanStatus ?? ({} as GetLoansLoanIdStatus)
+  const statusDesc = (
+    s.description ??
+    loan?.loanStatusType?.value ??
+    ''
   ).toLowerCase()
 
-  const inArrears = Boolean(loan?.inArrears)
-  const isActive = Boolean(s.active || statusVal === 'active')
+  const inArrears = Boolean(loan?.inArrears ?? loan?.summary?.inArrears)
+  const isActive = Boolean(s.active || statusDesc === 'active')
   const isApproved = Boolean(
-    (s.approved && !s.active) ||
-    s.waitingForDisbursal ||
-    statusVal === 'approved'
+    (!s.active && s.waitingForDisbursal) || statusDesc === 'approved'
   )
-  const isPending = Boolean(
-    s.pendingApproval ||
-    s.submittedAndPendingApproval ||
-    statusVal.includes('pending')
-  )
+  const isPending = Boolean(s.pendingApproval || statusDesc.includes('pending'))
 
   const statusColor = inArrears
     ? 'text-yellow-400'

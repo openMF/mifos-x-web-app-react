@@ -27,7 +27,6 @@ const AddChargeSavingsAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Selected charge id:', chargeId)
     backToAccount()
   }
 

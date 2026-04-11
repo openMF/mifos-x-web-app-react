@@ -82,7 +82,7 @@ const CreateJournalEntry = () => {
         setPaymentTypes(paymentTypesRes.data)
         setGlAccounts(glAccountsRes.data)
       } catch (err) {
-        console.log('Failed to fetch Dropdown Data', err)
+        console.error('Failed to fetch Dropdown Data', err)
       }
     }
     fetchDropdowns()
@@ -180,7 +180,7 @@ const CreateJournalEntry = () => {
       navigate('/accounting/chart-of-accounts')
     } catch (err) {
       alert('Failed to create journal entry')
-      console.log('Failed to create journal entry', err)
+      console.error('Failed to create journal entry', err)
     }
   }
 

@@ -27,7 +27,6 @@ const CreateRolesAndPermissions = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // structure only
-    console.log('Submit payload:', form)
   }
 
   return (

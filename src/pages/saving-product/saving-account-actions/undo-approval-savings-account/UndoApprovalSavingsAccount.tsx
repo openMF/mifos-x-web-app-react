@@ -28,7 +28,6 @@ const UndoApprovalSavingsAccount = () => {
   }
 
   const onSubmit = () => {
-    console.log('Undo Approval Note:', note)
     backToTransactions()
   }
 

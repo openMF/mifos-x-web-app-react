@@ -28,7 +28,7 @@ const ViewCodes = () => {
         const res = await codesApi.retrieveCode(Number(id))
         setCodes(res.data)
       } catch (err) {
-        console.log('Could not fetch code data', err)
+        console.error('Could not fetch code data', err)
       }
     }
     fetchCodes()

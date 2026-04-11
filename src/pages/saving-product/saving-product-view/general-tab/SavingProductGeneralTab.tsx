@@ -8,7 +8,13 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { SavingsAccountApi, type SavingsAccountData } from '@/fineract-api'
+import {
+  SavingsAccountApi,
+  type SavingsAccountData,
+  type SavingsAccountStatusEnumData,
+  type SavingsAccountSummaryData,
+  type SavingsAccountSubStatusEnumData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { Table, TableBody, TableRow, TableCell } from '@/components/ui/table'
@@ -24,15 +30,15 @@ const SavingProductGeneralTab = () => {
     if (!accountId) return
     ;(async () => {
       try {
-        const res = await (api as any).retrieveOne25(
+        const res = await api.retrieveOne25(
           Number(accountId),
           undefined,
           undefined,
           'all'
         )
-        setAcct(res.data as SavingsAccountData)
+        setAcct(res.data)
       } catch (e) {
-        console.log('Could not load savings account', e)
+        console.error('Could not load savings account', e)
       } finally {
         setLoading(false)
       }
@@ -48,25 +54,24 @@ const SavingProductGeneralTab = () => {
   }
   if (!acct) return null
 
-  const status: any = (acct as any).status || {}
+  const status: SavingsAccountStatusEnumData = acct.status || {}
   const isRejected = !!status.rejected
   const isPending = !!status.submittedAndPendingApproval
   const isActive = !!status.active
 
-  const currency = (acct as any).currency || {}
+  const currency = acct.currency || {}
   const currencyCode = currency.code || ''
   const currencyName = currency.name || ''
 
-  const timeline = (acct as any).timeline || {}
-  const activatedOn =
-    timeline.activatedOnDate ?? (acct as any).activatedOnDate ?? null
+  const timeline = acct.timeline || {}
+  const activatedOn = timeline.activatedOnDate ?? acct.activatedOnDate ?? null
 
-  const summary = (acct as any).summary || {}
-  const subStatus = (acct as any).subStatus || { id: 0 }
+  const summary: SavingsAccountSummaryData = acct.summary || {}
+  const subStatus: SavingsAccountSubStatusEnumData = acct.subStatus || { id: 0 }
 
   const yesNo = (v?: boolean) => (v ? 'Yes' : 'No')
 
-  const fmtDate = (d: any) => {
+  const fmtDate = (d: unknown) => {
     if (!d) return 'Not Activated'
     if (Array.isArray(d)) {
       const dt = new Date(d[0], (d[1] ?? 1) - 1, d[2] ?? 1)
@@ -76,7 +81,7 @@ const SavingProductGeneralTab = () => {
         year: 'numeric',
       })
     }
-    return new Date(d).toLocaleDateString(undefined, {
+    return new Date(d as string | number).toLocaleDateString(undefined, {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
@@ -99,9 +104,7 @@ const SavingProductGeneralTab = () => {
                       External Id
                     </TableCell>
                     <TableCell>
-                      {(acct as any).externalId
-                        ? (acct as any).externalId
-                        : 'Not Provided'}
+                      {acct.externalId ? acct.externalId : 'Not Provided'}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -111,7 +114,7 @@ const SavingProductGeneralTab = () => {
                   <TableRow>
                     <TableCell className="bg-zinc-100">Field Officer</TableCell>
                     <TableCell>
-                      {(acct as any).fieldOfficerName || 'Unassigned'}
+                      {acct.fieldOfficerName || 'Unassigned'}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -125,8 +128,8 @@ const SavingProductGeneralTab = () => {
                       Nominal Interest Rate
                     </TableCell>
                     <TableCell className="text-right">
-                      {(acct as any).nominalAnnualInterestRate
-                        ? `${(acct as any).nominalAnnualInterestRate} %`
+                      {acct.nominalAnnualInterestRate
+                        ? `${acct.nominalAnnualInterestRate} %`
                         : '0 %'}
                     </TableCell>
                   </TableRow>
@@ -145,7 +148,7 @@ const SavingProductGeneralTab = () => {
                       Field Officer
                     </TableCell>
                     <TableCell>
-                      {(acct as any).fieldOfficerName || 'Unassigned'}
+                      {acct.fieldOfficerName || 'Unassigned'}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -177,7 +180,7 @@ const SavingProductGeneralTab = () => {
                       </TableCell>
                     </TableRow>
                   ) : null}
-                  {summary.totalInterestEarned >= 0 ? (
+                  {(summary.totalInterestEarned ?? -1) >= 0 ? (
                     <TableRow>
                       <TableCell className="bg-zinc-100">
                         Total Interest Earned
@@ -229,7 +232,7 @@ const SavingProductGeneralTab = () => {
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {summary.totalInterestEarned >= 0 ? (
+                {(summary.totalInterestEarned ?? -1) >= 0 ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Interest Earned
@@ -249,7 +252,7 @@ const SavingProductGeneralTab = () => {
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {summary.interestNotPosted >= 0 ? (
+                {(summary.interestNotPosted ?? -1) >= 0 ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Interest Earned Not Posted
@@ -259,17 +262,17 @@ const SavingProductGeneralTab = () => {
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(summary as any).totalOverdraftInterestDerived ? (
+                {summary.totalOverdraftInterestDerived ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Interest On Overdraft
                     </TableCell>
                     <TableCell className="text-right">
-                      {(summary as any).totalOverdraftInterestDerived}
+                      {summary.totalOverdraftInterestDerived}
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {summary.interestNotPosted < 0 ? (
+                {(summary.interestNotPosted ?? 0) < 0 ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Overdraft Interest Not Posted
@@ -279,13 +282,13 @@ const SavingProductGeneralTab = () => {
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).nominalAnnualInterestRate ? (
+                {acct.nominalAnnualInterestRate ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Nominal Interest Rate
                     </TableCell>
                     <TableCell className="text-right">
-                      {(acct as any).nominalAnnualInterestRate} %
+                      {acct.nominalAnnualInterestRate} %
                     </TableCell>
                   </TableRow>
                 ) : null}
@@ -294,48 +297,44 @@ const SavingProductGeneralTab = () => {
                     Interest Compounding Period
                   </TableCell>
                   <TableCell>
-                    {(acct as any).interestCompoundingPeriodType?.value}
+                    {acct.interestCompoundingPeriodType?.value}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="bg-zinc-100">
                     Interest Posting Period
                   </TableCell>
-                  <TableCell>
-                    {(acct as any).interestPostingPeriodType?.value}
-                  </TableCell>
+                  <TableCell>{acct.interestPostingPeriodType?.value}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="bg-zinc-100">
                     Interest Calculated Using
                   </TableCell>
-                  <TableCell>
-                    {(acct as any).interestCalculationType?.value}
-                  </TableCell>
+                  <TableCell>{acct.interestCalculationType?.value}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="bg-zinc-100">Days in Year</TableCell>
                   <TableCell>
-                    {(acct as any).interestCalculationDaysInYearType?.value}
+                    {acct.interestCalculationDaysInYearType?.value}
                   </TableCell>
                 </TableRow>
-                {(acct as any).withdrawalFee?.amount ? (
+                {acct.withdrawalFee?.amount ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Withdrawal Fee
                     </TableCell>
                     <TableCell className="text-right">
-                      {(acct as any).withdrawalFee.amount}
+                      {acct.withdrawalFee.amount}
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).lastActiveTransactionDate ? (
+                {acct.lastActiveTransactionDate ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Last Active Transaction Date
                     </TableCell>
                     <TableCell>
-                      {fmtDate((acct as any).lastActiveTransactionDate)}
+                      {fmtDate(acct.lastActiveTransactionDate)}
                     </TableCell>
                   </TableRow>
                 ) : null}
@@ -345,83 +344,83 @@ const SavingProductGeneralTab = () => {
                     <TableCell>{subStatus.value}</TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).daysToInactive ? (
+                {acct.daysToInactive ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Days to Inactive
                     </TableCell>
-                    <TableCell>{(acct as any).daysToInactive}</TableCell>
+                    <TableCell>{acct.daysToInactive}</TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).daysToDormancy ? (
+                {acct.daysToDormancy ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Days to Dormancy
                     </TableCell>
-                    <TableCell>{(acct as any).daysToDormancy}</TableCell>
+                    <TableCell>{acct.daysToDormancy}</TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).daysToEscheat ? (
+                {acct.daysToEscheat ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Days to Escheat
                     </TableCell>
-                    <TableCell>{(acct as any).daysToEscheat}</TableCell>
+                    <TableCell>{acct.daysToEscheat}</TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).annualFee?.amount ? (
+                {acct.annualFee?.amount ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">Annual Fee</TableCell>
                     <TableCell className="text-right">
-                      {(acct as any).annualFee.amount}
+                      {acct.annualFee.amount}
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).allowOverdraft ? (
+                {acct.allowOverdraft ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Overdraft Limit
                     </TableCell>
                     <TableCell className="text-right">
-                      {(acct as any).overdraftLimit}
+                      {acct.overdraftLimit}
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).allowOverdraft ? (
+                {acct.allowOverdraft ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Minimum Overdraft Required for Interest Calculation
                     </TableCell>
                     <TableCell>
-                      {(acct as any).minOverdraftForInterestCalculation}
+                      {acct.minOverdraftForInterestCalculation}
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).minBalanceForInterestCalculation ? (
+                {acct.minBalanceForInterestCalculation ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Min Balance Required for Interest Calculation
                     </TableCell>
                     <TableCell>
-                      {(acct as any).minBalanceForInterestCalculation}
+                      {acct.minBalanceForInterestCalculation}
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).minRequiredBalance ? (
+                {acct.minRequiredBalance ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Minimum Required Balance
                     </TableCell>
-                    <TableCell>{(acct as any).minRequiredBalance}</TableCell>
+                    <TableCell>{acct.minRequiredBalance}</TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).enforceMinRequiredBalance !== undefined ? (
+                {acct.enforceMinRequiredBalance !== undefined ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Enforce Minimum Required Balance
                     </TableCell>
                     <TableCell>
-                      {yesNo((acct as any).enforceMinRequiredBalance)}
+                      {yesNo(acct.enforceMinRequiredBalance)}
                     </TableCell>
                   </TableRow>
                 ) : null}
@@ -435,18 +434,23 @@ const SavingProductGeneralTab = () => {
                     </TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).onHoldFunds ? (
+                {acct.onHoldFunds ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">On Hold Funds</TableCell>
-                    <TableCell>{(acct as any).onHoldFunds}</TableCell>
+                    <TableCell>{acct.onHoldFunds}</TableCell>
                   </TableRow>
                 ) : null}
-                {(acct as any).withHoldTax ? (
+                {acct.withHoldTax ? (
                   <TableRow>
                     <TableCell className="bg-zinc-100">
                       Withhold Tax Group
                     </TableCell>
-                    <TableCell>{(acct as any).taxGroup?.name}</TableCell>
+                    <TableCell>
+                      {String(
+                        (acct.taxGroup as Record<string, unknown> | undefined)
+                          ?.name ?? '—'
+                      )}
+                    </TableCell>
                   </TableRow>
                 ) : null}
               </TableBody>
@@ -464,9 +468,7 @@ const SavingProductGeneralTab = () => {
                     External Id
                   </TableCell>
                   <TableCell>
-                    {(acct as any).externalId
-                      ? (acct as any).externalId
-                      : 'Not Provided'}
+                    {acct.externalId ? acct.externalId : 'Not Provided'}
                   </TableCell>
                 </TableRow>
                 <TableRow>

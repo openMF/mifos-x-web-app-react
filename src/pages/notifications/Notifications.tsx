@@ -26,10 +26,12 @@ import { useEffect, useState } from 'react'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { type GetNotificationsResponse, NotificationApi } from '@/fineract-api'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useTranslation } from 'react-i18next'
 
 const notiApi = new NotificationApi(getConfiguration())
 
 const Notifications = () => {
+  const { t, i18n } = useTranslation('common')
   const [notificationData, setNotificationData] =
     useState<GetNotificationsResponse | null>(null)
   const [page, setPage] = useState(1)
@@ -41,7 +43,7 @@ const Notifications = () => {
         const response = await notiApi.getAllNotifications()
         setNotificationData(response.data)
       } catch (err) {
-        console.log('Failed to fetch Notification Data', err)
+        console.error('Failed to fetch Notification Data', err)
       }
     }
     fetchNotificationDetails()
@@ -64,8 +66,8 @@ const Notifications = () => {
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Notifications', current: true },
+          { label: t('nav.home'), href: '/home' },
+          { label: t('nav.notifications'), current: true },
         ]}
       />
 
@@ -76,7 +78,7 @@ const Notifications = () => {
             onValueChange={handleItemsPerPageChange}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={t('pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -92,7 +94,7 @@ const Notifications = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
-            Prev
+            {t('actions.prev')}
           </Button>
 
           <Button
@@ -101,7 +103,7 @@ const Notifications = () => {
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {t('actions.next')}
           </Button>
         </div>
       </div>
@@ -109,16 +111,20 @@ const Notifications = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {totalItems} items • Page {page} of{' '}
-            {totalPages}
+            {t('pagination.showing', {
+              current: paginated.length,
+              total: totalItems,
+              page,
+              pages: totalPages,
+            })}
           </TableCaption>
           <TableHeader>
             <TableRow className="text-base">
               <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
-                Notification
+                {t('nav.notification')}
               </TableHead>
               <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
-                Created At
+                {t('fields.createdAt')}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -130,7 +136,7 @@ const Notifications = () => {
                   colSpan={2}
                   className="px-6 py-6 text-center text-gray-500 dark:text-gray-400"
                 >
-                  You don't have any notifications
+                  {t('status.noNotifications')}
                 </TableCell>
               </TableRow>
             ) : (
@@ -140,18 +146,18 @@ const Notifications = () => {
                   className="hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
                 >
                   <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
-                    {notification.content || 'No content'}
+                    {notification.content || t('status.noContent')}
                   </TableCell>
                   <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
                     {notification.createdAt
-                      ? new Intl.DateTimeFormat('en-GB', {
+                      ? new Intl.DateTimeFormat(i18n.language, {
                           day: '2-digit',
                           month: 'long',
                           year: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit',
                         }).format(new Date(notification.createdAt))
-                      : 'N/A'}
+                      : t('actions.na')}
                   </TableCell>
                 </TableRow>
               ))

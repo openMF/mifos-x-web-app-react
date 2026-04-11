@@ -11,6 +11,15 @@ import AppSelect from '@/components/custom/select/AppSelect'
 
 type Option = { id: string; name: string }
 
+interface SavingsProductTermsFormData {
+  nominalAnnualInterestRate: number
+  interestCompoundingPeriod: string
+  interestPostingPeriod: string
+  interestCalculationType: string
+  interestCalculationDaysInYearType: string
+  [key: string]: unknown
+}
+
 const SavingsProductTermsStep = ({
   formData,
   setFormData,
@@ -19,8 +28,10 @@ const SavingsProductTermsStep = ({
   interestCalculationOptions,
   daysInYearOptions,
 }: {
-  formData: any
-  setFormData: (val: any) => void
+  formData: SavingsProductTermsFormData
+  setFormData: (
+    updater: (prev: SavingsProductTermsFormData) => SavingsProductTermsFormData
+  ) => void
   compoundingPeriodOptions: Option[]
   postingPeriodOptions: Option[]
   interestCalculationOptions: Option[]
@@ -36,7 +47,7 @@ const SavingsProductTermsStep = ({
           placeholder="e.g., 5.0"
           value={formData.nominalAnnualInterestRate}
           onChange={e =>
-            setFormData((prev: any) => ({
+            setFormData(prev => ({
               ...prev,
               nominalAnnualInterestRate: +e.target.value,
             }))
@@ -52,7 +63,7 @@ const SavingsProductTermsStep = ({
             selectPlaceholder="Select period"
             selectValue={formData.interestCompoundingPeriod}
             selectOnChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 interestCompoundingPeriod: val,
               }))
@@ -66,7 +77,7 @@ const SavingsProductTermsStep = ({
             selectPlaceholder="Select period"
             selectValue={formData.interestPostingPeriod}
             selectOnChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 interestPostingPeriod: val,
               }))
@@ -84,7 +95,7 @@ const SavingsProductTermsStep = ({
             selectPlaceholder="Select type"
             selectValue={formData.interestCalculationType}
             selectOnChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 interestCalculationType: val,
               }))
@@ -98,7 +109,7 @@ const SavingsProductTermsStep = ({
             selectPlaceholder="Select days"
             selectValue={formData.interestCalculationDaysInYearType}
             selectOnChange={val =>
-              setFormData((prev: any) => ({
+              setFormData(prev => ({
                 ...prev,
                 interestCalculationDaysInYearType: val,
               }))

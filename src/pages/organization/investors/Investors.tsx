@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Search, Info } from 'lucide-react'
 
-type InvestorRow = {}
+type InvestorRow = Record<string, unknown>
 
 const Investors = () => {
   const [filters, setFilters] = useState({

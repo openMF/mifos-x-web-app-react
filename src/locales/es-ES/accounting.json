@@ -1,0 +1,15 @@
+{
+  "accountLinkedFinancialActivities": "Cuentas vinculadas a actividades financieras",
+  "accountNumberPreferences": "Preferencias de número de cuenta",
+  "accountingRules": "Reglas contables",
+  "accruals": "Devengos",
+  "chartOfAccounts": "Plan de cuentas",
+  "closingEntries": "Asientos de cierre",
+  "createJournalEntries": "Crear asientos de diario",
+  "createJournalEntry": "Crear asiento de diario",
+  "frequentPostings": "Publicaciones frecuentes",
+  "fundMapping": "Mapeo de fondos",
+  "migrateOpeningBalances": "Migrar saldos de apertura (por oficina)",
+  "searchAccounts": "Buscar cuentas",
+  "title": "Contabilidad"
+}

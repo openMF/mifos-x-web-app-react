@@ -23,6 +23,7 @@ import {
   type StaffData,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
@@ -30,6 +31,8 @@ const staffApi = new StaffApi(getConfiguration())
 
 const CreateGroups = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('groups')
+  const { t: tc } = useTranslation('common')
 
   const [offices, setOffices] = useState<GetOfficesResponse[]>([])
   const [staff, setStaff] = useState<StaffData[]>([])
@@ -88,7 +91,7 @@ const CreateGroups = () => {
       navigate('/groups')
     } catch (e) {
       console.error('Failed to create group', e)
-      alert('Failed to create group')
+      alert(t('create.errorCreate'))
     }
   }
 
@@ -96,17 +99,17 @@ const CreateGroups = () => {
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Create', current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/groups' },
+          { label: t('create.heading'), current: true },
         ]}
       />
       <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">Create Group</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('create.heading')}</h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label>Name*</Label>
+            <Label>{t('create.labelName')}</Label>
             <Input
               value={formData.name}
               onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
@@ -115,9 +118,9 @@ const CreateGroups = () => {
           </div>
 
           <AppSelect
-            selectLabel="Office*"
+            selectLabel={t('create.labelOffice')}
             selectValue={formData.officeId}
-            selectPlaceholder="Select Office"
+            selectPlaceholder={t('create.selectOffice')}
             selectClassname="w-full space-y-2"
             selectOnChange={value =>
               setFormData(p => ({ ...p, officeId: value, staffId: '' }))
@@ -129,9 +132,9 @@ const CreateGroups = () => {
           />
 
           <AppSelect
-            selectLabel="Staff"
+            selectLabel={t('create.labelStaff')}
             selectValue={formData.staffId}
-            selectPlaceholder="Select Staff"
+            selectPlaceholder={t('create.selectStaff')}
             selectClassname="w-full space-y-2"
             selectOnChange={value =>
               setFormData(p => ({ ...p, staffId: value }))
@@ -149,12 +152,12 @@ const CreateGroups = () => {
                 setFormData(p => ({ ...p, active: Boolean(v) }))
               }
             />
-            <Label className="text-md">Active</Label>
+            <Label className="text-md">{t('create.labelActive')}</Label>
           </div>
 
           {formData.active && (
             <div className="space-y-2">
-              <Label>Activation Date</Label>
+              <Label>{t('create.labelActivationDate')}</Label>
               <Input
                 type="date"
                 value={formData.activationDate}
@@ -166,7 +169,7 @@ const CreateGroups = () => {
           )}
 
           <div className="space-y-2">
-            <Label>External Id</Label>
+            <Label>{t('create.labelExternalId')}</Label>
             <Input
               value={formData.externalId}
               onChange={e =>
@@ -176,7 +179,7 @@ const CreateGroups = () => {
           </div>
 
           <div className="space-y-2">
-            <Label>Submitted On*</Label>
+            <Label>{t('create.labelSubmittedOn')}</Label>
             <Input
               type="date"
               value={formData.submittedOnDate}
@@ -193,13 +196,13 @@ const CreateGroups = () => {
               variant="outline"
               onClick={() => navigate('/groups')}
             >
-              Cancel
+              {tc('actions.cancel')}
             </Button>
             <Button
               type="submit"
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
-              Submit
+              {tc('actions.submit')}
             </Button>
           </div>
         </form>
