@@ -5,116 +5,123 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { SavingsAccountApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
-const api = new SavingsAccountApi(getConfiguration());
+const api = new SavingsAccountApi(getConfiguration())
 
-type Note = any;
+interface Note {
+  id: number
+  note?: string
+  createdByUsername?: string
+  createdByFirstname?: string
+  createdOn?: number[] | string
+}
 
 const SavingsNotesTab = () => {
-  const { accountId } = useParams();
+  const { accountId } = useParams()
 
-  const [loading, setLoading] = useState(true);
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [loading, setLoading] = useState(true)
+  const [notes, setNotes] = useState<Note[]>([])
 
   // add
-  const [newNote, setNewNote] = useState("");
-  const [adding, setAdding] = useState(false);
+  const [newNote, setNewNote] = useState('')
+  const [adding, setAdding] = useState(false)
 
   // edit
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editText, setEditText] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editText, setEditText] = useState('')
 
-  const load = async () => {
-    if (!accountId) return;
-    setLoading(true);
+  const load = useCallback(async () => {
+    if (!accountId) return
+    setLoading(true)
     try {
-      const res = await (api as any).retrieveOne25(
+      const res = await api.retrieveOne25(
         Number(accountId),
         undefined,
         undefined,
-        "notes"
-      );
-      setNotes(res?.data?.notes || []);
+        'notes'
+      )
+      const data = res?.data as Record<string, unknown> | undefined
+      setNotes((data?.notes as Note[]) || [])
     } catch (e) {
-      console.error("Failed to load notes", e);
+      console.error('Failed to load notes', e)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }, [accountId])
 
   useEffect(() => {
-    load();
-  }, [accountId]);
+    load()
+  }, [accountId, load])
 
   const addNote = async () => {
-    if (!accountId || !newNote.trim()) return;
-    setAdding(true);
+    if (!accountId || !newNote.trim()) return
+    setAdding(true)
     try {
       const resp = await fetch(`/api/v1/savingsaccounts/${accountId}/notes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ note: newNote.trim() }),
-      });
-      if (!resp.ok) throw new Error(`Add failed: ${resp.status}`);
-      setNewNote("");
-      await load();
+      })
+      if (!resp.ok) throw new Error(`Add failed: ${resp.status}`)
+      setNewNote('')
+      await load()
     } catch (e) {
-      console.error(e);
-      alert("Failed to add note");
+      console.error(e)
+      alert('Failed to add note')
     } finally {
-      setAdding(false);
+      setAdding(false)
     }
-  };
+  }
 
   const beginEdit = (n: Note) => {
-    setEditingId(n.id);
-    setEditText(n.note || "");
-  };
+    setEditingId(n.id)
+    setEditText(n.note || '')
+  }
 
   const saveEdit = async () => {
-    if (!accountId || editingId == null) return;
+    if (!accountId || editingId == null) return
     try {
       const resp = await fetch(
         `/api/v1/savingsaccounts/${accountId}/notes/${editingId}`,
         {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ note: editText }),
         }
-      );
-      if (!resp.ok) throw new Error(`Edit failed: ${resp.status}`);
-      setEditingId(null);
-      setEditText("");
-      await load();
+      )
+      if (!resp.ok) throw new Error(`Edit failed: ${resp.status}`)
+      setEditingId(null)
+      setEditText('')
+      await load()
     } catch (e) {
-      console.error(e);
-      alert("Failed to edit note");
+      console.error(e)
+      alert('Failed to edit note')
     }
-  };
+  }
 
   const deleteNote = async (noteId: number) => {
-    if (!accountId) return;
-    if (!confirm("Delete this note?")) return;
+    if (!accountId) return
+    if (!confirm('Delete this note?')) return
     try {
       const resp = await fetch(
         `/api/v1/savingsaccounts/${accountId}/notes/${noteId}`,
-        { method: "DELETE" }
-      );
-      if (!resp.ok) throw new Error(`Delete failed: ${resp.status}`);
-      await load();
+        { method: 'DELETE' }
+      )
+      if (!resp.ok) throw new Error(`Delete failed: ${resp.status}`)
+      await load()
     } catch (e) {
-      console.error(e);
-      alert("Failed to delete note");
+      console.error(e)
+      alert('Failed to delete note')
     }
-  };
+  }
 
   return (
     <div className="space-y-4">
@@ -125,7 +132,7 @@ const SavingsNotesTab = () => {
         <Input
           placeholder="Write a note …"
           value={newNote}
-          onChange={(e) => setNewNote(e.target.value)}
+          onChange={e => setNewNote(e.target.value)}
           className="min-h-[64px]"
         />
         <Button onClick={addNote} disabled={!newNote.trim() || adding}>
@@ -150,11 +157,15 @@ const SavingsNotesTab = () => {
               {/* Header meta */}
               <div className="flex justify-between items-center mb-2 text-xs opacity-70">
                 <div>
-                  {n.createdByUsername || n.createdByFirstname || "—"}{" "}
+                  {n.createdByUsername || n.createdByFirstname || '—'}{' '}
                   {n.createdOn && (
                     <span className="ml-2">
                       {Array.isArray(n.createdOn)
-                        ? new Date(n.createdOn[0], (n.createdOn[1] ?? 1) - 1, n.createdOn[2] ?? 1).toLocaleDateString()
+                        ? new Date(
+                            n.createdOn[0],
+                            (n.createdOn[1] ?? 1) - 1,
+                            n.createdOn[2] ?? 1
+                          ).toLocaleDateString()
                         : new Date(n.createdOn).toLocaleDateString()}
                     </span>
                   )}
@@ -169,8 +180,8 @@ const SavingsNotesTab = () => {
                         size="sm"
                         variant="outline"
                         onClick={() => {
-                          setEditingId(null);
-                          setEditText("");
+                          setEditingId(null)
+                          setEditText('')
                         }}
                       >
                         Cancel
@@ -178,7 +189,11 @@ const SavingsNotesTab = () => {
                     </>
                   ) : (
                     <>
-                      <Button size="sm" variant="outline" onClick={() => beginEdit(n)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => beginEdit(n)}
+                      >
                         Edit
                       </Button>
                       <Button
@@ -197,18 +212,20 @@ const SavingsNotesTab = () => {
               {editingId === n.id ? (
                 <Input
                   value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
+                  onChange={e => setEditText(e.target.value)}
                   className="min-h-[88px]"
                 />
               ) : (
-                <div className="text-sm whitespace-pre-wrap">{n.note || "—"}</div>
+                <div className="text-sm whitespace-pre-wrap">
+                  {n.note || '—'}
+                </div>
               )}
             </div>
           ))
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingsNotesTab;
+export default SavingsNotesTab

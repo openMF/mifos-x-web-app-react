@@ -1,0 +1,15 @@
+{
+  "accountLinkedFinancialActivities": "Attività finanziarie collegate al conto",
+  "accountNumberPreferences": "Preferenze numero conto",
+  "accountingRules": "Regole contabili",
+  "accruals": "Ratei e risconti",
+  "chartOfAccounts": "Piano dei conti",
+  "closingEntries": "Registrazioni di chiusura",
+  "createJournalEntries": "Crea registrazioni",
+  "createJournalEntry": "Crea registrazione",
+  "frequentPostings": "Registrazioni frequenti",
+  "fundMapping": "Mappatura fondi",
+  "migrateOpeningBalances": "Migra saldi iniziali",
+  "searchAccounts": "Cerca conti",
+  "title": "Contabilità"
+}

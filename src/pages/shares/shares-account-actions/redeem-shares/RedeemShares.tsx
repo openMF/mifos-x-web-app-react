@@ -5,44 +5,46 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const RedeemShares = () => {
-  const { clientId, sharesAccountId } = useParams();
-  const navigate = useNavigate();
+  const { clientId, sharesAccountId } = useParams()
+  const navigate = useNavigate()
 
-  const [requestedDate, setRequestedDate] = useState("");
-  const [requestedShares, setRequestedShares] = useState("");
+  const [requestedDate, setRequestedDate] = useState('')
+  const [requestedShares, setRequestedShares] = useState('')
 
   const backToAccount = () => {
     if (clientId && sharesAccountId) {
-      navigate(-1);
+      navigate(-1)
     } else if (clientId) {
-      navigate(`/clients/${clientId}/shares`);
+      navigate(`/clients/${clientId}/shares`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Redeem Shares:", { requestedDate, requestedShares });
-    backToAccount();
-  };
+    backToAccount()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Clients", href: "/clients" },
-          { label: "Shares", href: clientId ? `/clients/${clientId}/shares` : "/clients" },
-          { label: "Redeem Shares", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Clients', href: '/clients' },
+          {
+            label: 'Shares',
+            href: clientId ? `/clients/${clientId}/shares` : '/clients',
+          },
+          { label: 'Redeem Shares', current: true },
         ]}
       />
 
@@ -57,7 +59,7 @@ const RedeemShares = () => {
               <Input
                 type="date"
                 value={requestedDate}
-                onChange={(e) => setRequestedDate(e.target.value)}
+                onChange={e => setRequestedDate(e.target.value)}
               />
             </div>
 
@@ -67,7 +69,7 @@ const RedeemShares = () => {
               <Input
                 type="number"
                 value={requestedShares}
-                onChange={(e) => setRequestedShares(e.target.value)}
+                onChange={e => setRequestedShares(e.target.value)}
                 placeholder="0"
               />
             </div>
@@ -75,7 +77,7 @@ const RedeemShares = () => {
             {/* Current Price*/}
             <div className="space-y-2">
               <Label>Current Price*</Label>
-              <Input  disabled readOnly placeholder="—" />
+              <Input disabled readOnly placeholder="—" />
             </div>
 
             {/* Actions */}
@@ -95,7 +97,7 @@ const RedeemShares = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RedeemShares;
+export default RedeemShares

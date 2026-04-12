@@ -5,46 +5,46 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
-import { Button } from "@/components/ui/button";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { OfficesApi, type GetOfficesResponse } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { format } from "date-fns";
+import { Button } from '@/components/ui/button'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { format } from 'date-fns'
 
-const officesApi = new OfficesApi(getConfiguration());
+const officesApi = new OfficesApi(getConfiguration())
 
 const ViewOffices = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [office, setOffice] = useState<GetOfficesResponse>();
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [office, setOffice] = useState<GetOfficesResponse>()
 
   // fetch office details
   useEffect(() => {
     const fetchOffice = async () => {
       try {
-        const res = await officesApi.retrieveOffice(Number(id));
-        setOffice(res.data);
+        const res = await officesApi.retrieveOffice(Number(id))
+        setOffice(res.data)
       } catch (err) {
-        console.error("Failed to fetch office", err);
+        console.error('Failed to fetch office', err)
       }
-    };
-    fetchOffice();
-  }, [id]);
+    }
+    fetchOffice()
+  }, [id])
 
-  if (!office) return <div className="p-10 text-center">Loading...</div>;
+  if (!office) return <div className="p-10 text-center">Loading...</div>
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Offices", href: "/organization/offices" },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Offices', href: '/organization/offices' },
           { label: `${office.id}`, current: true },
         ]}
       />
@@ -68,7 +68,7 @@ const ViewOffices = () => {
         {/* office details */}
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Parent Office</div>
-          <div>{"missing in openapi"}</div>
+          <div>{'missing in openapi'}</div>
 
           <div className="font-medium">Opened On</div>
           <div>
@@ -79,16 +79,16 @@ const ViewOffices = () => {
                     office.openingDate[1] - 1,
                     office.openingDate[2]
                   ),
-                  "dd MMMM yyyy"
+                  'dd MMMM yyyy'
                 )
-              : "—"}
+              : '—'}
           </div>
 
           <div className="font-medium">Name Decorated</div>
-          <div>{office.nameDecorated || "—"}</div>
+          <div>{office.nameDecorated || '—'}</div>
 
           <div className="font-medium">External Id</div>
-          <div>{office.externalId || "—"}</div>
+          <div>{office.externalId || '—'}</div>
         </div>
 
         {/* back button */}
@@ -96,14 +96,14 @@ const ViewOffices = () => {
           <Button
             variant="outline"
             className="w-28 cursor-pointer"
-            onClick={() => navigate("/organization/offices")}
+            onClick={() => navigate('/organization/offices')}
           >
             Back
           </Button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewOffices;
+export default ViewOffices

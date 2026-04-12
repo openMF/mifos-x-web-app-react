@@ -5,46 +5,45 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { Button } from "@/components/ui/button";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { Button } from '@/components/ui/button'
 
 const AddChargeSavingsAccount = () => {
-  const { groupId, accountId } = useParams();
-  const navigate = useNavigate();
+  const { groupId, accountId } = useParams()
+  const navigate = useNavigate()
 
-  const [chargeId, setChargeId] = useState<string>("");
+  const [chargeId, setChargeId] = useState<string>('')
 
   const backToAccount = () => {
     if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`);
+      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Selected charge id:", chargeId);
-    backToAccount();
-  };
+    backToAccount()
+  }
 
   const chargeOptions = [
-    { id: "1", name: "Monthly Fee" },
-    { id: "2", name: "Dormancy Fee" },
-    { id: "3", name: "Card Replacement" },
-  ];
+    { id: '1', name: 'Monthly Fee' },
+    { id: '2', name: 'Dormancy Fee' },
+    { id: '3', name: 'Card Replacement' },
+  ]
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Add Charge", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Add Charge', current: true },
         ]}
       />
 
@@ -69,7 +68,11 @@ const AddChargeSavingsAccount = () => {
               <Button variant="outline" onClick={backToAccount}>
                 Cancel
               </Button>
-              <Button className="bg-[#0e77b7] hover:bg-[#0662a3]" onClick={onSubmit} disabled={!chargeId}>
+              <Button
+                className="bg-[#0e77b7] hover:bg-[#0662a3]"
+                onClick={onSubmit}
+                disabled={!chargeId}
+              >
                 Submit
               </Button>
             </div>
@@ -77,7 +80,7 @@ const AddChargeSavingsAccount = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AddChargeSavingsAccount;
+export default AddChargeSavingsAccount

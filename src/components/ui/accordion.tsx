@@ -5,12 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import * as React from "react"
-import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDownIcon } from "lucide-react"
+import * as React from 'react'
+import * as AccordionPrimitive from '@radix-ui/react-accordion'
+import { ChevronDownIcon } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
-import { accordionRootClass } from "../styles/accordion"
+import { cn } from '@/lib/utils'
+import { accordionRootClass } from '../styles/accordion'
 
 function Accordion({
   ...props
@@ -25,7 +25,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("border-b last:border-b-0", className)}
+      className={cn('border-b last:border-b-0', className)}
       {...props}
     />
   )
@@ -40,10 +40,7 @@ function AccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
-        className={cn(
-          accordionRootClass,
-          className
-        )}
+        className={cn(accordionRootClass, className)}
         {...props}
       >
         {children}
@@ -64,7 +61,7 @@ function AccordionContent({
       className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
       {...props}
     >
-      <div className={cn("pt-0 pb-4", className)}>{children}</div>
+      <div className={cn('pt-0 pb-4', className)}>{children}</div>
     </AccordionPrimitive.Content>
   )
 }

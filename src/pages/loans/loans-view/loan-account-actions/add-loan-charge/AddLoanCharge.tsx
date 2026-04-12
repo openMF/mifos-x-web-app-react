@@ -5,62 +5,67 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useMemo } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import AppSelect from '@/components/custom/select/AppSelect'
 
 const AddLoanCharge = () => {
-  const navigate = useNavigate();
-  const { id: groupId } = useParams();
+  const navigate = useNavigate()
+  const { id: groupId } = useParams()
 
   // form state
-  const [chargeId, setChargeId] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
-  const [chargeCalculation, setChargeCalculation] = useState<string>(""); 
-  const [chargeTime, setChargeTime] = useState<string>("");              
-  const [dueOn, setDueOn] = useState<string>("");
+  const [chargeId, setChargeId] = useState<string>('')
+  const [amount, setAmount] = useState<string>('')
+  const [chargeCalculation, setChargeCalculation] = useState<string>('')
+  const [chargeTime, setChargeTime] = useState<string>('')
+  const [dueOn, setDueOn] = useState<string>('')
 
   const chargeOptions = [
-    { id: "1", name: "Processing Fee (USD)", calc: "Flat", time: "Specified due date" },
-    { id: "2", name: "Late Fee (INR)", calc: "Percent", time: "Overdue on" },
-  ];
+    {
+      id: '1',
+      name: 'Processing Fee (USD)',
+      calc: 'Flat',
+      time: 'Specified due date',
+    },
+    { id: '2', name: 'Late Fee (INR)', calc: 'Percent', time: 'Overdue on' },
+  ]
 
   const needsDueDate = useMemo(
-    () => chargeTime.toLowerCase().includes("due"),
+    () => chargeTime.toLowerCase().includes('due'),
     [chargeTime]
-  );
+  )
 
   // when user selects a charge, populate meta fields
   const onChangeCharge = (val: string) => {
-    setChargeId(val);
-    const meta = chargeOptions.find(o => o.id === val);
-    setChargeCalculation(meta?.calc ?? "");
-    setChargeTime(meta?.time ?? "");
-  };
+    setChargeId(val)
+    const meta = chargeOptions.find(o => o.id === val)
+    setChargeCalculation(meta?.calc ?? '')
+    setChargeTime(meta?.time ?? '')
+  }
 
   // form can submit only if required fields are filled
-  const canSubmit = chargeId && amount && (!needsDueDate || dueOn);
+  const canSubmit = chargeId && amount && (!needsDueDate || dueOn)
 
   // handle confirm submit
   const onSubmit = async () => {
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "GroupTest", href: `/groups/${groupId ?? ""}/general` },
-          { label: "Add Loan Charge", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'GroupTest', href: `/groups/${groupId ?? ''}/general` },
+          { label: 'Add Loan Charge', current: true },
         ]}
       />
 
@@ -87,7 +92,7 @@ const AddLoanCharge = () => {
             <Input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={e => setAmount(e.target.value)}
               placeholder="Enter amount"
               className="w-full"
               min="0"
@@ -114,7 +119,7 @@ const AddLoanCharge = () => {
               <Input
                 type="date"
                 value={dueOn}
-                onChange={(e) => setDueOn(e.target.value)}
+                onChange={e => setDueOn(e.target.value)}
                 className="w-full"
               />
             </div>
@@ -141,7 +146,7 @@ const AddLoanCharge = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AddLoanCharge;
+export default AddLoanCharge

@@ -5,39 +5,41 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 const CreateRolesAndPermissions = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [form, setForm] = useState({
-    name: "",
-    description: "",
-  });
+    name: '',
+    description: '',
+  })
 
-  const handleChange = (field: "name" | "description", value: string) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: 'name' | 'description', value: string) =>
+    setForm(prev => ({ ...prev, [field]: value }))
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     // structure only
-    console.log("Submit payload:", form);
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Roles and Permissions", href: "/system/roles-and-permissions" },
-          { label: "Add", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          {
+            label: 'Roles and Permissions',
+            href: '/system/roles-and-permissions',
+          },
+          { label: 'Add', current: true },
         ]}
       />
 
@@ -50,7 +52,7 @@ const CreateRolesAndPermissions = () => {
             <Label>Name*</Label>
             <Input
               value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              onChange={e => handleChange('name', e.target.value)}
               required
             />
           </div>
@@ -60,7 +62,7 @@ const CreateRolesAndPermissions = () => {
             <Label>Description*</Label>
             <Input
               value={form.description}
-              onChange={(e) => handleChange("description", e.target.value)}
+              onChange={e => handleChange('description', e.target.value)}
               required
             />
           </div>
@@ -70,18 +72,21 @@ const CreateRolesAndPermissions = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/system/roles-and-permissions")}
+              onClick={() => navigate('/system/roles-and-permissions')}
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-[#1074b9] hover:bg-[#1074c9] text-white">
+            <Button
+              type="submit"
+              className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+            >
               Submit
             </Button>
           </div>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateRolesAndPermissions;
+export default CreateRolesAndPermissions

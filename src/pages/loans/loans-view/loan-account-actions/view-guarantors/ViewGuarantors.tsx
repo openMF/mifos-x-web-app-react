@@ -5,39 +5,33 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
 const ViewGuarantors = () => {
-
   // placeholder values
   const leftRows = [
-    { label: "Disbursement Date", value: "" },
-    { label: "Currency", value: "" },
-    { label: "Loan Officer", value: "" },
-    { label: "External Id", value: "" },
-  ];
+    { label: 'Disbursement Date', value: '' },
+    { label: 'Currency', value: '' },
+    { label: 'Loan Officer', value: '' },
+    { label: 'External Id', value: '' },
+  ]
 
   const rightRows = [
-    { label: "Loan Purpose", value: "" },
-    { label: "Approved Amount", value: "" },
-    { label: "Disburse Amount", value: "" },
-    { label: "Arrears By", value: "" },
-  ];
+    { label: 'Loan Purpose', value: '' },
+    { label: 'Approved Amount', value: '' },
+    { label: 'Disburse Amount', value: '' },
+    { label: 'Arrears By', value: '' },
+  ]
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "View Guarantors", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'View Guarantors', current: true },
         ]}
       />
 
@@ -50,7 +44,7 @@ const ViewGuarantors = () => {
           {/* left table */}
           <Table className="text-sm border rounded">
             <TableBody>
-              {leftRows.map((r) => (
+              {leftRows.map(r => (
                 <TableRow key={r.label} className="border-b last:border-0">
                   <TableCell className="w-1/2 p-3">{r.label}</TableCell>
                   <TableCell className="p-3 bg-muted">{r.value}</TableCell>
@@ -62,7 +56,7 @@ const ViewGuarantors = () => {
           {/* right table */}
           <Table className="text-sm border rounded">
             <TableBody>
-              {rightRows.map((r) => (
+              {rightRows.map(r => (
                 <TableRow key={r.label} className="border-b last:border-0">
                   <TableCell className="w-1/2 p-3">{r.label}</TableCell>
                   <TableCell className="p-3 bg-muted">{r.value}</TableCell>
@@ -73,7 +67,7 @@ const ViewGuarantors = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewGuarantors;
+export default ViewGuarantors

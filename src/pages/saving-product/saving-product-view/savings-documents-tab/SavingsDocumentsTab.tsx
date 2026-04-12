@@ -5,13 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { DocumentsApi, SavingsAccountApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -19,105 +19,123 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
-const api = new SavingsAccountApi(getConfiguration());
+const api = new SavingsAccountApi(getConfiguration())
+const docsApi = new DocumentsApi(getConfiguration())
 
-type Doc = any;
+type Doc = Record<string, unknown>
 
 const SavingsDocumentsTab = () => {
-  const { accountId } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [docs, setDocs] = useState<Doc[]>([]);
+  const { accountId } = useParams()
+  const [loading, setLoading] = useState(true)
+  const [docs, setDocs] = useState<Doc[]>([])
 
   // add form
-  const [adding, setAdding] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [adding, setAdding] = useState(false)
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [file, setFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const load = async () => {
-    if (!accountId) return;
-    setLoading(true);
+  const load = useCallback(async () => {
+    if (!accountId) return
+    setLoading(true)
     try {
-      const res = await (api as any).retrieveOne25(
+      const res = await api.retrieveOne25(
         Number(accountId),
         undefined,
         undefined,
-        "documents"
-      );
-      setDocs(res?.data?.documents || []);
+        'documents'
+      )
+      const data = res?.data as Record<string, unknown> | undefined
+      setDocs((data?.documents as Doc[]) || [])
     } catch (e) {
-      console.error("Failed to load documents", e);
+      console.error('Failed to load documents', e)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }, [accountId])
 
   useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId]);
+    load()
+  }, [load])
 
   // --- actions ---
   const uploadDocument = async () => {
-    if (!accountId || !file || !name.trim()) return;
+    if (!accountId || !file || !name.trim()) return
     try {
-      const form = new FormData();
-      form.append("name", name.trim());
-      if (description) form.append("description", description);
-      form.append("file", file);
-
-      const resp = await fetch(
-        `/api/v1/savingsaccounts/${accountId}/documents`,
-        { method: "POST", body: form }
-      );
-      if (!resp.ok) throw new Error(`Upload failed: ${resp.status}`);
-      setAdding(false);
-      setName("");
-      setDescription("");
-      setFile(null);
-      fileInputRef.current && (fileInputRef.current.value = "");
-      await load();
+      await docsApi.createDocument(
+        'savings',
+        Number(accountId),
+        undefined,
+        undefined,
+        description || undefined,
+        undefined,
+        name.trim(),
+        file
+      )
+      setAdding(false)
+      setName('')
+      setDescription('')
+      setFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      await load()
     } catch (e) {
-      console.error(e);
-      alert("Upload failed");
+      console.error(e)
+      alert('Upload failed')
     }
-  };
+  }
 
   const downloadDocument = async (doc: Doc) => {
-    if (!accountId || !doc?.id) return;
-    window.open(
-      `/api/v1/savingsaccounts/${accountId}/documents/${doc.id}/attachment`,
-      "_blank"
-    );
-  };
+    if (!accountId || !doc?.id) return
+    try {
+      const res = await docsApi.downloadFile(
+        'savings',
+        Number(accountId),
+        Number(doc.id),
+        { responseType: 'blob' }
+      )
+      const url = window.URL.createObjectURL(
+        new Blob([res.data as unknown as BlobPart])
+      )
+      const a = document.createElement('a')
+      a.href = url
+      a.download = (doc.fileName as string) || 'document'
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error('Download failed', e)
+    }
+  }
 
   const deleteDocument = async (doc: Doc) => {
-    if (!accountId || !doc?.id) return;
-    if (!confirm("Delete this document?")) return;
+    if (!accountId || !doc?.id) return
+    if (!confirm('Delete this document?')) return
     try {
-      const resp = await fetch(
-        `/api/v1/savingsaccounts/${accountId}/documents/${doc.id}`,
-        { method: "DELETE" }
-      );
-      if (!resp.ok) throw new Error(`Delete failed: ${resp.status}`);
-      await load();
+      await docsApi.deleteDocument('savings', Number(accountId), Number(doc.id))
+      await load()
     } catch (e) {
-      console.error(e);
-      alert("Delete failed");
+      console.error(e)
+      alert('Delete failed')
     }
-  };
+  }
 
   return (
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <h3 className="text-lg font-semibold ">Documents</h3>
-        <Button className="bg-[#0e77b7] hover:bg-[#0662a3]" onClick={() => setAdding((v) => !v)}>+ Add</Button>
+        <Button
+          className="bg-[#0e77b7] hover:bg-[#0662a3]"
+          onClick={() => setAdding(v => !v)}
+        >
+          + Add
+        </Button>
       </div>
 
       {/* Add form */}
@@ -128,7 +146,7 @@ const SavingsDocumentsTab = () => {
             <Input
               id="doc-name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               placeholder="Document name"
             />
           </div>
@@ -137,7 +155,7 @@ const SavingsDocumentsTab = () => {
             <Input
               id="doc-desc"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={e => setDescription(e.target.value)}
               placeholder="Optional"
             />
           </div>
@@ -147,12 +165,21 @@ const SavingsDocumentsTab = () => {
               id="doc-file"
               type="file"
               ref={fileInputRef}
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              onChange={e => setFile(e.target.files?.[0] ?? null)}
             />
           </div>
 
           <div className="md:col-span-3 flex gap-2 justify-end">
-            <Button variant="outline" onClick={() => { setAdding(false); setName(""); setDescription(""); setFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAdding(false)
+                setName('')
+                setDescription('')
+                setFile(null)
+                if (fileInputRef.current) fileInputRef.current.value = ''
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={uploadDocument} disabled={!name.trim() || !file}>
@@ -184,16 +211,24 @@ const SavingsDocumentsTab = () => {
               </TableRow>
             ) : (
               docs.map((d: Doc) => (
-                <TableRow key={d.id}>
-                  <TableCell>{d.name}</TableCell>
-                  <TableCell>{d.description || "—"}</TableCell>
-                  <TableCell>{d.fileName || d.fileName || "—"}</TableCell>
+                <TableRow key={d.id as string | number}>
+                  <TableCell>{String(d.name ?? '')}</TableCell>
+                  <TableCell>{String(d.description || '—')}</TableCell>
+                  <TableCell>{String(d.fileName || '—')}</TableCell>
                   <TableCell className="text-right">
                     <div className="inline-flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => downloadDocument(d)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => downloadDocument(d)}
+                      >
                         Download
                       </Button>
-                      <Button size="sm" variant="destructive" onClick={() => deleteDocument(d)}>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deleteDocument(d)}
+                      >
                         Delete
                       </Button>
                     </div>
@@ -205,7 +240,7 @@ const SavingsDocumentsTab = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingsDocumentsTab;
+export default SavingsDocumentsTab

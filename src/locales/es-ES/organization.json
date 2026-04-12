@@ -1,0 +1,87 @@
+{
+  "adhocQuery": "Consulta ad hoc",
+  "auditTrails": "Rastros de auditoría",
+  "bulkLoanReassignment": "Reasignación masiva de préstamos",
+  "collateralManagement": "Gestión de garantías",
+  "configurations": "Configuraciones",
+  "configureMakerCheckerTasks": "Configurar tareas de revisión",
+  "currencyConfiguration": "Configuración de moneda",
+  "entityDataTableChecks": "Verificaciones de tabla de datos de entidades",
+  "entityToEntityMapping": "Mapeo de entidad a entidad",
+  "errors": {
+    "failedCreateOffice": "Error al crear la oficina",
+    "failedLoadFunds": "Error al cargar fondos.",
+    "failedLoadOffices": "Error al cargar oficinas."
+  },
+  "externalServices": "Servicios externos",
+  "funds": {
+    "create": "Crear fondo",
+    "edit": "Editar fondo",
+    "fields": {
+      "externalId": "Id. externo",
+      "name": "Nombre del fondo"
+    },
+    "messages": {
+      "createError": "Error al crear el fondo",
+      "createSuccess": "Fondo creado exitosamente.",
+      "created": "Fondo creado exitosamente",
+      "deleted": "Fondo eliminado exitosamente",
+      "noFunds": "No se han creado fondos.",
+      "updateError": "Error al actualizar el fondo",
+      "updateSuccess": "Fondo actualizado exitosamente.",
+      "updated": "Fondo actualizado exitosamente"
+    },
+    "title": "Gestionar fondos"
+  },
+  "investors": "Inversores",
+  "manageCodes": "Gestionar códigos",
+  "manageDataTables": "Gestionar tablas de datos",
+  "manageEmployees": "Gestionar empleados",
+  "manageExternalEvents": "Gestionar eventos externos",
+  "manageHolidays": "Gestionar festivos",
+  "manageHooks": "Gestionar hooks",
+  "manageJobs": "Gestionar trabajos",
+  "manageReports": "Gestionar informes",
+  "manageRolesAndPermissions": "Gestionar roles y permisos",
+  "manageSurveys": "Gestionar encuestas",
+  "manageTaxConfigurations": "Gestionar configuraciones de impuestos",
+  "nav": {
+    "funds": "Fondos"
+  },
+  "offices": {
+    "create": "Crear oficina",
+    "fields": {
+      "externalId": "Id. externo",
+      "name": "Nombre de la oficina",
+      "officeName": "Nombre de la oficina",
+      "officeNameStar": "Nombre de la oficina*",
+      "openedOn": "Fecha de apertura*",
+      "openingDate": "Fecha de apertura",
+      "parentOffice": "Oficina padre*",
+      "pleaseSelectOffice": "Seleccione una oficina"
+    },
+    "manage": "Gestionar oficinas",
+    "messages": {
+      "createError": "Error al crear la oficina",
+      "createSuccess": "Oficina creada exitosamente.",
+      "created": "Oficina creada exitosamente.",
+      "noOffices": "No se encontraron oficinas.",
+      "updateSuccess": "Oficina actualizada exitosamente."
+    },
+    "title": "Oficinas",
+    "unnamedOffice": "Oficina sin nombre"
+  },
+  "searchByMaker": "Buscar por creador",
+  "searchEvents": "Buscar eventos",
+  "searchReports": "Buscar informes",
+  "smsCampaigns": "Campañas SMS",
+  "standingInstructionsHistory": "Historial de instrucciones permanentes",
+  "success": {
+    "fundSaved": "Fondo guardado exitosamente.",
+    "officeCreated": "Oficina creada exitosamente.",
+    "officeSaved": "Oficina guardada exitosamente."
+  },
+  "tellerCashierManagement": "Gestión de cajeros",
+  "title": "Organización",
+  "workingDays": "Días laborables"
+}

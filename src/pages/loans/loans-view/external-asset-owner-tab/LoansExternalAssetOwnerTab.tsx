@@ -7,11 +7,7 @@
  */
 
 const LoansExternalAssetOwnerTab = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <div></div>
 }
 
 export default LoansExternalAssetOwnerTab

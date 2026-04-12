@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,33 +14,33 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-} from "@/components/ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
+} from '@/components/ui/dropdown-menu'
+import { useNavigate } from 'react-router-dom'
 
 interface DropdownOption {
-  label: string;
-  path?: string;
-  disabled?: boolean;
-  onClick?:()=>void;
-  children?: DropdownOption[];
+  label: string
+  path?: string
+  disabled?: boolean
+  onClick?: () => void
+  children?: DropdownOption[]
 }
 
 interface DropdownProps {
-  name: React.ReactNode;
-  options: DropdownOption[];
-  onSelect?: (path?: string) => void;
+  name: React.ReactNode
+  options: DropdownOption[]
+  onSelect?: (path?: string) => void
 }
 
 const Dropdown = ({ name, options, onSelect }: DropdownProps) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleSelect = (path?: string) => {
     if (onSelect) {
-      onSelect(path);
+      onSelect(path)
     } else if (path) {
-      navigate(`/${path}`);
+      navigate(`/${path}`)
     }
-  };
+  }
 
   return (
     <DropdownMenu>
@@ -89,7 +89,7 @@ const Dropdown = ({ name, options, onSelect }: DropdownProps) => {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
 
-export default Dropdown;
+export default Dropdown

@@ -5,49 +5,49 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const Foreclosure = () => {
-  const navigate = useNavigate();
-  const { groupId } = useParams();
+  const navigate = useNavigate()
+  const { groupId } = useParams()
 
   // form state
-  const [transactionDate, setTransactionDate] = useState("");
-  const [principal] = useState("");
-  const [interest] = useState("");
-  const [feeAmount] = useState("");
-  const [penaltyAmount, setPenaltyAmount] = useState("");
-  const [transactionAmount] = useState("");
-  const [note, setNote] = useState("");
+  const [transactionDate, setTransactionDate] = useState('')
+  const [principal] = useState('')
+  const [interest] = useState('')
+  const [feeAmount] = useState('')
+  const [penaltyAmount, setPenaltyAmount] = useState('')
+  const [transactionAmount] = useState('')
+  const [note, setNote] = useState('')
 
   // simple validation
   const canSubmit =
     Boolean(transactionDate) &&
-    penaltyAmount !== "" &&
-    transactionAmount !== "" &&
-    note.trim().length > 0;
+    penaltyAmount !== '' &&
+    transactionAmount !== '' &&
+    note.trim().length > 0
 
   // handle submit
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "GroupTest", href: `/groups/${groupId ?? ""}/general` },
-          { label: "Foreclosure", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'GroupTest', href: `/groups/${groupId ?? ''}/general` },
+          { label: 'Foreclosure', current: true },
         ]}
       />
 
@@ -62,7 +62,7 @@ const Foreclosure = () => {
             <Input
               type="date"
               value={transactionDate}
-              onChange={(e) => setTransactionDate(e.target.value)}
+              onChange={e => setTransactionDate(e.target.value)}
             />
           </div>
 
@@ -92,7 +92,7 @@ const Foreclosure = () => {
               min="0"
               step="0.01"
               value={penaltyAmount}
-              onChange={(e) => setPenaltyAmount(e.target.value)}
+              onChange={e => setPenaltyAmount(e.target.value)}
               placeholder="0"
             />
           </div>
@@ -108,14 +108,18 @@ const Foreclosure = () => {
             <Label>Note*</Label>
             <textarea
               value={note}
-              onChange={(e) => setNote(e.target.value)}
+              onChange={e => setNote(e.target.value)}
               className="w-full min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -129,7 +133,7 @@ const Foreclosure = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Foreclosure;
+export default Foreclosure

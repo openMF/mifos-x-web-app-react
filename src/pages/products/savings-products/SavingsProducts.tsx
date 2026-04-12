@@ -5,19 +5,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -26,52 +26,55 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
 import {
   SavingsProductApi,
   type GetSavingsProductsResponse,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const savingsApi = new SavingsProductApi(getConfiguration());
+const savingsApi = new SavingsProductApi(getConfiguration())
 
 const SavingsProducts = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // list + ui state
-  const [products, setProducts] = useState<GetSavingsProductsResponse[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [products, setProducts] = useState<GetSavingsProductsResponse[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   // load products once
   useEffect(() => {
     const fetchSavings = async () => {
       try {
-        const res = await savingsApi.retrieveAll34();
-        setProducts(res.data || []);
+        const res = await savingsApi.retrieveAll34()
+        setProducts(res.data || [])
       } catch (err) {
-        console.error("Failed to fetch savings products", err);
+        console.error('Failed to fetch savings products', err)
       }
-    };
-    fetchSavings();
-  }, []);
+    }
+    fetchSavings()
+  }, [])
 
   // filter + paginate
-  const filtered = products.filter((p) =>
+  const filtered = products.filter(p =>
     p.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  )
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Products", href: "/products" },
-          { label: "Saving Products", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Products', href: '/products' },
+          { label: 'Saving Products', current: true },
         ]}
       />
 
@@ -79,7 +82,7 @@ const SavingsProducts = () => {
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-white text-base"
-          onClick={() => navigate("/products/saving-products/create")}
+          onClick={() => navigate('/products/saving-products/create')}
         >
           + Create Savings Product
         </Button>
@@ -90,9 +93,9 @@ const SavingsProducts = () => {
         <Input
           placeholder="Search Saving Products..."
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -100,9 +103,9 @@ const SavingsProducts = () => {
         <div className="flex items-center gap-2">
           <Select
             value={itemsPerPage.toString()}
-            onValueChange={(value) => {
-              setItemsPerPage(parseInt(value));
-              setPage(1);
+            onValueChange={value => {
+              setItemsPerPage(parseInt(value))
+              setPage(1)
             }}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
@@ -139,7 +142,8 @@ const SavingsProducts = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
           <TableHeader>
             <TableRow className="text-base">
@@ -149,7 +153,7 @@ const SavingsProducts = () => {
           </TableHeader>
 
           <TableBody>
-            {paginated.map((product) => (
+            {paginated.map(product => (
               <TableRow
                 key={product.id}
                 onClick={() =>
@@ -169,7 +173,7 @@ const SavingsProducts = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingsProducts;
+export default SavingsProducts

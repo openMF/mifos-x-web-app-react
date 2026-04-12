@@ -5,102 +5,117 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { LoansApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import type { GetLoansLoanIdResponse } from '@/fineract-api'
+import { LoansApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const loansApi = new LoansApi(getConfiguration());
+const loansApi = new LoansApi(getConfiguration())
 
-type Loan = any;
+/** Extension for properties not on the generated type but returned at runtime. */
+type ExtendedLoan = GetLoansLoanIdResponse & {
+  loanOfficer?: { displayName?: string }
+  purpose?: { name?: string }
+  approvedPrincipalAmount?: number
+  principalDisbursed?: number
+  disbursedAmount?: number
+}
 
 function formatCurrency(n: number | null | undefined, code: string) {
-  if (n === null || n === undefined) return "Not Provided";
+  if (n === null || n === undefined) return 'Not Provided'
   try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: code, minimumFractionDigits: 2 }).format(n);
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: code,
+      minimumFractionDigits: 2,
+    }).format(n)
   } catch {
-    return String(n);
+    return String(n)
   }
 }
 
-function formatDate(d: any) {
-  if (!d) return "Not Available";
-  if (Array.isArray(d) && d.length >= 3) {
-    const [y, m, day] = d;
-    return new Date(y, (m ?? 1) - 1, day ?? 1).toLocaleDateString();
-  }
-  const dt = new Date(d);
-  return isNaN(+dt) ? "Not Available" : dt.toLocaleDateString();
+function formatDate(d: string | null | undefined) {
+  if (!d) return 'Not Available'
+  const dt = new Date(d)
+  return isNaN(+dt) ? 'Not Available' : dt.toLocaleDateString()
 }
 
-const Row = ({ label, value, shaded = false }: { label: string; value: string; shaded?: boolean }) => (
-  <div className={`grid grid-cols-2 gap-4 px-4 py-3 ${shaded ? "bg-zinc-100 dark:bg-zinc-800/60" : ""}`}>
+const Row = ({
+  label,
+  value,
+  shaded = false,
+}: {
+  label: string
+  value: string
+  shaded?: boolean
+}) => (
+  <div
+    className={`grid grid-cols-2 gap-4 px-4 py-3 ${shaded ? 'bg-zinc-100 dark:bg-zinc-800/60' : ''}`}
+  >
     <div className="text-zinc-600 dark:text-zinc-300">{label}</div>
     <div className="text-right">{value}</div>
   </div>
-);
+)
 
 const LoansGeneralTab = () => {
-  const { loanId } = useParams();
-  const [loan, setLoan] = useState<Loan | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { loanId } = useParams()
+  const [loan, setLoan] = useState<ExtendedLoan | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
-        if (!loanId) return;
-        const res = await loansApi.retrieveLoan(Number(loanId) as any);
-        setLoan(res.data);
+        if (!loanId) return
+        const loanIdNum = Number(loanId)
+        const res = await loansApi.retrieveLoan(loanIdNum)
+        setLoan(res.data as ExtendedLoan)
+      } catch (err) {
+        console.error('Failed to fetch loan', err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, [loanId]);
+    })()
+  }, [loanId])
 
   if (loading) {
-    return <div className="text-sm text-zinc-600 dark:text-zinc-300">Loading…</div>;
+    return (
+      <div className="text-sm text-zinc-600 dark:text-zinc-300">Loading…</div>
+    )
   }
 
-  const currencyCode = loan?.currency?.code ?? "USD";
-  const currencyName = loan?.currency?.name ? `${loan.currency.name} ${currencyCode}` : "Not Available";
+  const currency = loan?.currency
+  const currencyCode = currency?.code ?? 'USD'
+  const currencyName = currency?.name
+    ? `${currency.name} ${currencyCode}`
+    : 'Not Available'
 
+  const timeline = loan?.timeline
   const disbursementDate =
-    loan?.timeline?.actualDisbursementDate ??
-    loan?.timeline?.expectedDisbursementDate ??
-    null;
+    timeline?.actualDisbursementDate ??
+    timeline?.expectedDisbursementDate ??
+    null
 
   const loanOfficer =
-    loan?.loanOfficerName ??
-    loan?.loanOfficer?.displayName ??
-    "Unassigned";
+    loan?.loanOfficerName ?? loan?.loanOfficer?.displayName ?? 'Unassigned'
 
-  const externalId = loan?.externalId ?? "Not Available";
+  const externalId = loan?.externalId ?? 'Not Available'
 
   // Purpose & amounts
   const loanPurpose =
-    loan?.purpose?.name ??
-    loan?.loanPurposeName ??
-    "Not Provided";
+    loan?.purpose?.name ?? loan?.loanPurposeName ?? 'Not Provided'
 
-  const proposedAmount =
-    loan?.proposedPrincipal ??
-    loan?.principal ??
-    null;
+  const proposedAmount = loan?.proposedPrincipal ?? loan?.principal ?? null
 
   const approvedAmount =
-    loan?.approvedPrincipal ??
-    loan?.approvedPrincipalAmount ??
-    null;
+    loan?.approvedPrincipal ?? loan?.approvedPrincipalAmount ?? null
 
   const disbursedAmount =
-    loan?.principalDisbursed ??
-    loan?.disbursedAmount ??
-    null;
+    loan?.principalDisbursed ?? loan?.disbursedAmount ?? null
 
+  const summary = loan?.summary
   const arrearsBy =
-    typeof loan?.summary?.totalOverdue === "number"
-      ? loan.summary.totalOverdue
-      : null;
+    typeof summary?.totalOverdue === 'number' ? summary.totalOverdue : null
 
   return (
     <div className="space-y-10 text-black dark:text-white">
@@ -136,12 +151,14 @@ const LoansGeneralTab = () => {
         <Row
           label="Arrears By:"
           value={
-            arrearsBy === null ? "Not Provided" : formatCurrency(arrearsBy, currencyCode)
+            arrearsBy === null
+              ? 'Not Provided'
+              : formatCurrency(arrearsBy, currencyCode)
           }
         />
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default LoansGeneralTab;
+export default LoansGeneralTab

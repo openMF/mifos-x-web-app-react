@@ -5,48 +5,48 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import AppSelect from '@/components/custom/select/AppSelect'
 
 const LoanReschedule = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
-  const [fromInstallmentOn, setFromInstallmentOn] = useState("");
-  const [reasonId, setReasonId] = useState("");
-  const [submittedOn, setSubmittedOn] = useState("");
-  const [comments, setComments] = useState("");
+  const [fromInstallmentOn, setFromInstallmentOn] = useState('')
+  const [reasonId, setReasonId] = useState('')
+  const [submittedOn, setSubmittedOn] = useState('')
+  const [comments, setComments] = useState('')
 
   // checkboxes
-  const [chgRepaymentDate, setChgRepaymentDate] = useState(false);
-  const [midTermGrace, setMidTermGrace] = useState(false);
-  const [extendPeriod, setExtendPeriod] = useState(false);
-  const [adjustRates, setAdjustRates] = useState(false);
+  const [chgRepaymentDate, setChgRepaymentDate] = useState(false)
+  const [midTermGrace, setMidTermGrace] = useState(false)
+  const [extendPeriod, setExtendPeriod] = useState(false)
+  const [adjustRates, setAdjustRates] = useState(false)
 
   // validation
-  const canSubmit = Boolean(fromInstallmentOn && submittedOn && reasonId);
+  const canSubmit = Boolean(fromInstallmentOn && submittedOn && reasonId)
 
   // handle submit
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Reschedule", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Reschedule', current: true },
         ]}
       />
 
@@ -61,7 +61,7 @@ const LoanReschedule = () => {
             <Input
               type="date"
               value={fromInstallmentOn}
-              onChange={(e) => setFromInstallmentOn(e.target.value)}
+              onChange={e => setFromInstallmentOn(e.target.value)}
             />
           </div>
 
@@ -83,7 +83,7 @@ const LoanReschedule = () => {
             <Input
               type="date"
               value={submittedOn}
-              onChange={(e) => setSubmittedOn(e.target.value)}
+              onChange={e => setSubmittedOn(e.target.value)}
             />
           </div>
 
@@ -92,7 +92,7 @@ const LoanReschedule = () => {
             <Label>Comments</Label>
             <Input
               value={comments}
-              onChange={(e) => setComments(e.target.value)}
+              onChange={e => setComments(e.target.value)}
             />
           </div>
 
@@ -101,7 +101,7 @@ const LoanReschedule = () => {
             <label className="flex items-center gap-3">
               <Checkbox
                 checked={chgRepaymentDate}
-                onCheckedChange={(v) => setChgRepaymentDate(Boolean(v))}
+                onCheckedChange={v => setChgRepaymentDate(Boolean(v))}
               />
               <span>Change Repayment Date</span>
             </label>
@@ -109,7 +109,7 @@ const LoanReschedule = () => {
             <label className="flex items-center gap-3">
               <Checkbox
                 checked={midTermGrace}
-                onCheckedChange={(v) => setMidTermGrace(Boolean(v))}
+                onCheckedChange={v => setMidTermGrace(Boolean(v))}
               />
               <span>Introduce Mid-term grace periods</span>
             </label>
@@ -117,7 +117,7 @@ const LoanReschedule = () => {
             <label className="flex items-center gap-3">
               <Checkbox
                 checked={extendPeriod}
-                onCheckedChange={(v) => setExtendPeriod(Boolean(v))}
+                onCheckedChange={v => setExtendPeriod(Boolean(v))}
               />
               <span>Extend Repayment Period</span>
             </label>
@@ -125,7 +125,7 @@ const LoanReschedule = () => {
             <label className="flex items-center gap-3">
               <Checkbox
                 checked={adjustRates}
-                onCheckedChange={(v) => setAdjustRates(Boolean(v))}
+                onCheckedChange={v => setAdjustRates(Boolean(v))}
               />
               <span>Adjust interest rates for remainder of loan</span>
             </label>
@@ -133,7 +133,11 @@ const LoanReschedule = () => {
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -147,7 +151,7 @@ const LoanReschedule = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoanReschedule;
+export default LoanReschedule

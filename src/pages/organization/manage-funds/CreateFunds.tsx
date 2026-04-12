@@ -5,52 +5,52 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { FundsApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { FundsApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const fundsApi = new FundsApi(getConfiguration());
+const fundsApi = new FundsApi(getConfiguration())
 
 const CreateFunds = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    name: "",
-    externalId: "",
-  });
+    name: '',
+    externalId: '',
+  })
 
   // handle create fund
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       await fundsApi.createFund({
         name: formData.name,
         externalId: formData.externalId || undefined,
-      });
+      })
 
-      navigate("/organization/manage-funds");
+      navigate('/organization/manage-funds')
     } catch (err) {
-      console.error("Failed to create fund", err);
-      alert("Failed to create fund");
+      console.error('Failed to create fund', err)
+      alert('Failed to create fund')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Manage Funds", href: "/organization/manage-funds" },
-          { label: "Create", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Manage Funds', href: '/organization/manage-funds' },
+          { label: 'Create', current: true },
         ]}
       />
 
@@ -63,8 +63,8 @@ const CreateFunds = () => {
             <Label>Name*</Label>
             <Input
               value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              onChange={e =>
+                setFormData(prev => ({ ...prev, name: e.target.value }))
               }
               required
             />
@@ -75,8 +75,8 @@ const CreateFunds = () => {
             <Label>External Id</Label>
             <Input
               value={formData.externalId}
-              onChange={(e) =>
-                setFormData((prev) => ({
+              onChange={e =>
+                setFormData(prev => ({
                   ...prev,
                   externalId: e.target.value,
                 }))
@@ -89,7 +89,7 @@ const CreateFunds = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/organization/manage-funds")}
+              onClick={() => navigate('/organization/manage-funds')}
             >
               Cancel
             </Button>
@@ -103,7 +103,7 @@ const CreateFunds = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateFunds;
+export default CreateFunds

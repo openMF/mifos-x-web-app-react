@@ -5,8 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Table,
@@ -16,65 +16,70 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+} from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   FixedDepositProductApi,
   type GetFixedDepositProductsResponse,
-} from "@/fineract-api";
+} from '@/fineract-api'
 
 // API instance for Fixed Deposit Products
-const fdApi = new FixedDepositProductApi(getConfiguration());
+const fdApi = new FixedDepositProductApi(getConfiguration())
 
 const FixedDepositProducts = () => {
-  const [products, setProducts] = useState<GetFixedDepositProductsResponse[]>([]);
-  const [searchTerm, setSearchTerm] = useState(""); // search filter
-  const [page, setPage] = useState(1); // pagination page
-  const [itemsPerPage, setItemsPerPage] = useState(10); // items shown per page
-  const navigate = useNavigate();
+  const [products, setProducts] = useState<GetFixedDepositProductsResponse[]>(
+    []
+  )
+  const [searchTerm, setSearchTerm] = useState('') // search filter
+  const [page, setPage] = useState(1) // pagination page
+  const [itemsPerPage, setItemsPerPage] = useState(10) // items shown per page
+  const navigate = useNavigate()
 
   // Fetch FD products on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fdApi.retrieveAll30(); // API call to fetch all FD products
-        setProducts(res.data || []);
+        const res = await fdApi.retrieveAll30() // API call to fetch all FD products
+        setProducts(res.data || [])
       } catch (err) {
-        console.error("Failed to fetch FD products", err);
+        console.error('Failed to fetch FD products', err)
       }
-    };
-    fetchData();
-  }, []);
+    }
+    fetchData()
+  }, [])
 
   // Apply search filter
-  const filtered = products.filter((p) =>
+  const filtered = products.filter(p =>
     p.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
   // Pagination calculations
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumb navigation */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Products", href: "/products" },
-          { label: "Fixed Deposit Products", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Products', href: '/products' },
+          { label: 'Fixed Deposit Products', current: true },
         ]}
       />
 
@@ -82,7 +87,7 @@ const FixedDepositProducts = () => {
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate("/products/fixed-deposits/create")}
+          onClick={() => navigate('/products/fixed-deposits/create')}
         >
           <Plus className="mr-2" /> Create Fixed Deposit Product
         </Button>
@@ -93,9 +98,9 @@ const FixedDepositProducts = () => {
         <Input
           placeholder="Filter"
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -103,9 +108,9 @@ const FixedDepositProducts = () => {
         <div className="flex items-center gap-2">
           <Select
             value={itemsPerPage.toString()}
-            onValueChange={(val) => {
-              setItemsPerPage(parseInt(val));
-              setPage(1);
+            onValueChange={val => {
+              setItemsPerPage(parseInt(val))
+              setPage(1)
             }}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
@@ -143,7 +148,8 @@ const FixedDepositProducts = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
           <TableHeader>
             <TableRow className="text-base">
@@ -152,11 +158,13 @@ const FixedDepositProducts = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginated.map((p) => (
+            {paginated.map(p => (
               <TableRow
                 key={p.id}
                 className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-                onClick={() => navigate(`/products/fixed-deposit-products/${p.id}/general`)}
+                onClick={() =>
+                  navigate(`/products/fixed-deposit-products/${p.id}/general`)
+                }
               >
                 <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
                   {p.name}
@@ -170,7 +178,7 @@ const FixedDepositProducts = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FixedDepositProducts;
+export default FixedDepositProducts

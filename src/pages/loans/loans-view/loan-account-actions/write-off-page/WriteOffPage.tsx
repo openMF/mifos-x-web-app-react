@@ -5,39 +5,39 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const WriteOffPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
-  const [writeOffOn, setWriteOffOn] = useState("");
-  const [amountDisplay] = useState(""); 
-  const [note, setNote] = useState("");
+  const [writeOffOn, setWriteOffOn] = useState('')
+  const [amountDisplay] = useState('')
+  const [note, setNote] = useState('')
 
   // validation
-  const canSubmit = Boolean(writeOffOn);
+  const canSubmit = Boolean(writeOffOn)
 
   // handle submit
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Write Off", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Write Off', current: true },
         ]}
       />
 
@@ -52,7 +52,7 @@ const WriteOffPage = () => {
             <Input
               type="date"
               value={writeOffOn}
-              onChange={(e) => setWriteOffOn(e.target.value)}
+              onChange={e => setWriteOffOn(e.target.value)}
             />
           </div>
 
@@ -65,15 +65,16 @@ const WriteOffPage = () => {
           {/* note */}
           <div className="space-y-2">
             <Label>Note</Label>
-            <Input
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
+            <Input value={note} onChange={e => setNote(e.target.value)} />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -87,7 +88,7 @@ const WriteOffPage = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default WriteOffPage;
+export default WriteOffPage

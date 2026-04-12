@@ -5,36 +5,33 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-"use client"
+'use client'
 
-import * as React from "react"
-import * as TogglePrimitive from "@radix-ui/react-toggle"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from 'react'
+import * as TogglePrimitive from '@radix-ui/react-toggle'
+import { cva, type VariantProps } from 'class-variance-authority'
 
-import { cn } from "@/lib/utils"
-import { toggleRootClass } from "../styles/toggle"
+import { cn } from '@/lib/utils'
+import { toggleRootClass } from '../styles/toggle'
 
-const toggleVariants = cva(
-  toggleRootClass,
-  {
-    variants: {
-      variant: {
-        default: "bg-transparent",
-        outline:
-          "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground",
-      },
-      size: {
-        default: "h-9 px-2 min-w-9",
-        sm: "h-8 px-1.5 min-w-8",
-        lg: "h-10 px-2.5 min-w-10",
-      },
+const toggleVariants = cva(toggleRootClass, {
+  variants: {
+    variant: {
+      default: 'bg-transparent',
+      outline:
+        'border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground',
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      default: 'h-9 px-2 min-w-9',
+      sm: 'h-8 px-1.5 min-w-8',
+      lg: 'h-10 px-2.5 min-w-10',
     },
-  }
-)
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+})
 
 function Toggle({
   className,
@@ -52,4 +49,5 @@ function Toggle({
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Toggle, toggleVariants }

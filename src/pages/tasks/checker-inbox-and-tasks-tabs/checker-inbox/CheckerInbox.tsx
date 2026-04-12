@@ -5,16 +5,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -22,68 +22,72 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
+} from '@/components/ui/table'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   MakerCheckerOr4EyeFunctionalityApi,
   type AuditData,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
 const dummyData = [
   {
     id: 1,
-    madeOnDate: "2025-06-25",
-    processingResult: "Pending",
-    maker: "admin",
-    actionName: "CREATE",
-    entityName: "Client",
+    madeOnDate: '2025-06-25',
+    processingResult: 'Pending',
+    maker: 'admin',
+    actionName: 'CREATE',
+    entityName: 'Client',
   },
   {
     id: 2,
-    madeOnDate: "2025-06-24",
-    processingResult: "Approved",
-    maker: "john",
-    actionName: "UPDATE",
-    entityName: "Loan",
+    madeOnDate: '2025-06-24',
+    processingResult: 'Approved',
+    maker: 'john',
+    actionName: 'UPDATE',
+    entityName: 'Loan',
   },
-];
+]
 
-const makerCheckerApi = new MakerCheckerOr4EyeFunctionalityApi(getConfiguration());
+const makerCheckerApi = new MakerCheckerOr4EyeFunctionalityApi(
+  getConfiguration()
+)
 
 const CheckerInboxContent = () => {
-  const [tasks, setTasks] = useState<AuditData[] | null>(null);
-  const [filter, setFilter] = useState("");
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [_tasks, setTasks] = useState<AuditData[] | null>(null) // Reserved for future use: _tasks
+  const [filter, setFilter] = useState('')
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
 
   useEffect(() => {
     const fetchRescheduledLoanDetails = async () => {
       try {
-        const response = await makerCheckerApi.retrieveCommands();
-        setTasks(response.data);
+        const response = await makerCheckerApi.retrieveCommands()
+        setTasks(response.data)
       } catch (err) {
-        console.error("Couldn't fetch rescheduled loan details", err);
+        console.error("Couldn't fetch rescheduled loan details", err)
       }
-    };
+    }
 
-    fetchRescheduledLoanDetails();
-  }, []);
+    fetchRescheduledLoanDetails()
+  }, [])
 
   const handleToggle = (id: number) => {
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
+    setSelectedRows(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
 
   const handleSelectAll = () => {
     setSelectedRows(
-      selectedRows.length === dummyData.length ? [] : dummyData.map((item) => item.id)
-    );
-  };
+      selectedRows.length === dummyData.length
+        ? []
+        : dummyData.map(item => item.id)
+    )
+  }
 
-  const filteredData = dummyData.filter((item) =>
+  const filteredData = dummyData.filter(item =>
     item.maker.toLowerCase().includes(filter.toLowerCase())
-  );
+  )
 
   return (
     <div className="space-y-6">
@@ -92,7 +96,7 @@ const CheckerInboxContent = () => {
         <Input
           placeholder="Search by maker"
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={e => setFilter(e.target.value)}
           className="w-full md:max-w-sm"
         />
 
@@ -130,7 +134,9 @@ const CheckerInboxContent = () => {
           </SelectContent>
         </Select>
         <Input placeholder="Resource ID" />
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">Search</Button>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          Search
+        </Button>
       </div>
 
       {/* Data Table */}
@@ -154,7 +160,7 @@ const CheckerInboxContent = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.map((row) => (
+              {filteredData.map(row => (
                 <TableRow key={row.id} className="hover:bg-muted">
                   <TableCell>
                     <Checkbox
@@ -179,7 +185,7 @@ const CheckerInboxContent = () => {
         </p>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CheckerInboxContent;
+export default CheckerInboxContent

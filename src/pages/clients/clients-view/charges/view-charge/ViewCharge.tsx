@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 // import {
 //   Table,
 //   TableBody,
@@ -19,59 +19,79 @@ import { Button } from "@/components/ui/button";
 //   TableRow,
 // } from "@/components/ui/table";
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDollarSign, faFlag, faTrash, faStop } from "@fortawesome/free-solid-svg-icons";
-import { ClientChargesApi, type GetClientsChargesPageItems } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faDollarSign,
+  faFlag,
+  faTrash,
+  faStop,
+} from '@fortawesome/free-solid-svg-icons'
+import {
+  ClientChargesApi,
+  type GetClientsChargesPageItems,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { formatDate } from '@/lib/date-utils'
+import { useTranslation } from 'react-i18next'
 
-const chargeApi=new ClientChargesApi(getConfiguration());
+const chargeApi = new ClientChargesApi(getConfiguration())
 const ViewCharge = () => {
-  const navigate = useNavigate();
-  const { clientId, chargeId } = useParams<{ clientId: string; chargeId: string }>();
+  const navigate = useNavigate()
+  const { clientId, chargeId } = useParams<{
+    clientId: string
+    chargeId: string
+  }>()
 
-  const [charge, setCharge] = useState<GetClientsChargesPageItems>();
+  const [charge, setCharge] = useState<GetClientsChargesPageItems>()
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
 
   useEffect(() => {
-    if (!clientId || !chargeId) return;
+    if (!clientId || !chargeId) return
     const fetchDetails = async () => {
       try {
-        const res = await chargeApi.retrieveClientCharge(Number(clientId), Number(chargeId));
-        setCharge(res.data);
+        const res = await chargeApi.retrieveClientCharge(
+          Number(clientId),
+          Number(chargeId)
+        )
+        setCharge(res.data)
       } catch (err) {
-        console.log("Couldn't fetch charge details", err);
+        console.error("Couldn't fetch charge details", err)
       }
-    };
-    fetchDetails();
-  }, [clientId, chargeId]);
-
+    }
+    fetchDetails()
+  }, [clientId, chargeId])
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Clients", href: "/clients" },
-          { label: "Client", href: `/clients/${clientId}/general` },
-          { label: charge?.name || "Charge", current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/clients' },
+          { label: t('client'), href: `/clients/${clientId}/general` },
+          { label: charge?.name || t('charge.breadcrumbLabel'), current: true },
         ]}
       />
 
       {/* top actions */}
       <div className="flex  gap-3 mb-4">
-        <Button onClick={() => navigate("pay")} className="bg-[#1074b9] text-white">
+        <Button
+          onClick={() => navigate('pay')}
+          className="bg-[#1074b9] text-white"
+        >
           <FontAwesomeIcon icon={faDollarSign} className="mr-2" />
-          Pay
+          {t('charge.buttonPay')}
         </Button>
         <Button onClick={() => {}} className="bg-[#1074b9] text-white">
           <FontAwesomeIcon icon={faFlag} className="mr-2" />
-          Waive Charge
+          {t('charge.buttonWaive')}
         </Button>
         <Button onClick={() => {}} className="bg-[#1074b9] text-white">
           <FontAwesomeIcon icon={faTrash} className="mr-2" />
-          Delete
+          {t('charge.buttonDelete')}
         </Button>
       </div>
 
@@ -80,7 +100,11 @@ const ViewCharge = () => {
         <div className="px-6 py-4 text-lg font-semibold flex items-center gap-2">
           <FontAwesomeIcon
             icon={faStop}
-            className={(charge?.isWaived || charge?.isPaid) ? "text-zinc-400" : "text-green-600"}
+            className={
+              charge?.isWaived || charge?.isPaid
+                ? 'text-zinc-400'
+                : 'text-green-600'
+            }
           />
           {charge?.name}
         </div>
@@ -88,14 +112,42 @@ const ViewCharge = () => {
         <div className="border-t px-6 py-4">
           <table className="w-full text-sm">
             <tbody>
-              <tr><td className="w-1/3 p-3">Currency</td><td className="p-3">{charge?.currency?.name}</td></tr>
-              <tr><td className="p-3">Charge Time Type</td><td className="p-3">{charge?.chargeTimeType?.code}</td></tr>
-              <tr><td className="p-3">Charge Calculation Type</td><td className="p-3">{charge?.chargeCalculationType?.code}</td></tr>
-              <tr><td className="p-3">Due as of</td><td className="p-3">{charge?.dueDate}</td></tr>
-              <tr><td className="p-3">Due</td><td className="p-3">{charge?.amount}</td></tr>
-              <tr><td className="p-3">Paid</td><td className="p-3">{charge?.amountPaid}</td></tr>
-              <tr><td className="p-3">Waived</td><td className="p-3">{charge?.amountWaived}</td></tr>
-              <tr><td className="p-3">Outstanding</td><td className="p-3">{charge?.amountOutstanding}</td></tr>
+              <tr>
+                <td className="w-1/3 p-3">{t('charge.labelCurrency')}</td>
+                <td className="p-3">{charge?.currency?.name}</td>
+              </tr>
+              <tr>
+                <td className="p-3">{t('charge.labelChargeTimeType')}</td>
+                <td className="p-3">{charge?.chargeTimeType?.code}</td>
+              </tr>
+              <tr>
+                <td className="p-3">
+                  {t('charge.labelChargeCalculationType')}
+                </td>
+                <td className="p-3">{charge?.chargeCalculationType?.code}</td>
+              </tr>
+              <tr>
+                <td className="p-3">{t('charge.labelDueAsOf')}</td>
+                <td className="p-3">
+                  {formatDate(charge?.dueDate as number[] | undefined)}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-3">{t('charge.labelDue')}</td>
+                <td className="p-3">{charge?.amount}</td>
+              </tr>
+              <tr>
+                <td className="p-3">{t('charge.labelPaid')}</td>
+                <td className="p-3">{charge?.amountPaid}</td>
+              </tr>
+              <tr>
+                <td className="p-3">{t('charge.labelWaived')}</td>
+                <td className="p-3">{charge?.amountWaived}</td>
+              </tr>
+              <tr>
+                <td className="p-3">{t('charge.labelOutstanding')}</td>
+                <td className="p-3">{charge?.amountOutstanding}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -140,7 +192,7 @@ const ViewCharge = () => {
         </div> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewCharge;
+export default ViewCharge

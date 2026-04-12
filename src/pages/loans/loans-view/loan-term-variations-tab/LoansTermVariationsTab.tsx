@@ -7,11 +7,7 @@
  */
 
 const LoansTermVariationsTab = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <div></div>
 }
 
 export default LoansTermVariationsTab

@@ -5,58 +5,58 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 
 const PrepayLoan = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
-  const [transactionDate, setTransactionDate] = useState("");
-  const [principalDisplay] = useState("");
-  const [interestDisplay] = useState("");
-  const [feesDisplay] = useState("");
-  const [penaltiesDisplay] = useState("");
-  const [currencyCode] = useState("");
-  const [amountDisplay] = useState("");
+  const [transactionDate, setTransactionDate] = useState('')
+  const [principalDisplay] = useState('')
+  const [interestDisplay] = useState('')
+  const [feesDisplay] = useState('')
+  const [penaltiesDisplay] = useState('')
+  const [currencyCode] = useState('')
+  const [amountDisplay] = useState('')
 
-  const [externalId, setExternalId] = useState("");
-  const [paymentTypeId, setPaymentTypeId] = useState("");
-  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+  const [externalId, setExternalId] = useState('')
+  const [paymentTypeId, setPaymentTypeId] = useState('')
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false)
 
   // extra payment details
-  const [accountNumber, setAccountNumber] = useState("");
-  const [checkNumber, setCheckNumber] = useState("");
-  const [routingCode, setRoutingCode] = useState("");
-  const [receiptNumber, setReceiptNumber] = useState("");
-  const [bankNumber, setBankNumber] = useState("");
+  const [accountNumber, setAccountNumber] = useState('')
+  const [checkNumber, setCheckNumber] = useState('')
+  const [routingCode, setRoutingCode] = useState('')
+  const [receiptNumber, setReceiptNumber] = useState('')
+  const [bankNumber, setBankNumber] = useState('')
 
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState('')
 
   // simple validation
-  const canSubmit = Boolean(transactionDate);
+  const canSubmit = Boolean(transactionDate)
 
   // handle submit
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Prepay Loan", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Prepay Loan', current: true },
         ]}
       />
 
@@ -71,7 +71,7 @@ const PrepayLoan = () => {
             <Input
               type="date"
               value={transactionDate}
-              onChange={(e) => setTransactionDate(e.target.value)}
+              onChange={e => setTransactionDate(e.target.value)}
             />
           </div>
 
@@ -107,7 +107,10 @@ const PrepayLoan = () => {
           {/* external id */}
           <div className="space-y-2">
             <Label>External Id</Label>
-            <Input value={externalId} onChange={(e) => setExternalId(e.target.value)} />
+            <Input
+              value={externalId}
+              onChange={e => setExternalId(e.target.value)}
+            />
           </div>
 
           {/* payment type */}
@@ -126,7 +129,7 @@ const PrepayLoan = () => {
           <div className="flex items-center gap-3">
             <Switch
               checked={showPaymentDetails}
-              onCheckedChange={(v) => setShowPaymentDetails(Boolean(v))}
+              onCheckedChange={v => setShowPaymentDetails(Boolean(v))}
             />
             <span className="text-sm font-medium">Show Payment Details</span>
           </div>
@@ -136,23 +139,38 @@ const PrepayLoan = () => {
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label>Account #</Label>
-                <Input value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                <Input
+                  value={accountNumber}
+                  onChange={e => setAccountNumber(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label>Cheque #</Label>
-                <Input value={checkNumber} onChange={(e) => setCheckNumber(e.target.value)} />
+                <Input
+                  value={checkNumber}
+                  onChange={e => setCheckNumber(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label>Routing Code</Label>
-                <Input value={routingCode} onChange={(e) => setRoutingCode(e.target.value)} />
+                <Input
+                  value={routingCode}
+                  onChange={e => setRoutingCode(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label>Receipt #</Label>
-                <Input value={receiptNumber} onChange={(e) => setReceiptNumber(e.target.value)} />
+                <Input
+                  value={receiptNumber}
+                  onChange={e => setReceiptNumber(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label>Bank #</Label>
-                <Input value={bankNumber} onChange={(e) => setBankNumber(e.target.value)} />
+                <Input
+                  value={bankNumber}
+                  onChange={e => setBankNumber(e.target.value)}
+                />
               </div>
             </div>
           )}
@@ -162,14 +180,18 @@ const PrepayLoan = () => {
             <Label>Note</Label>
             <textarea
               value={note}
-              onChange={(e) => setNote(e.target.value)}
+              onChange={e => setNote(e.target.value)}
               className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -183,7 +205,7 @@ const PrepayLoan = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PrepayLoan;
+export default PrepayLoan

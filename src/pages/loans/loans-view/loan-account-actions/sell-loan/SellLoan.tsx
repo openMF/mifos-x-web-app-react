@@ -5,43 +5,43 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const SellLoan = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
-  const [settlementDate, setSettlementDate] = useState("");
-  const [purchasePriceRatio, setPurchasePriceRatio] = useState("");
-  const [ownerExternalId, setOwnerExternalId] = useState("");
-  const [transferExternalId, setTransferExternalId] = useState("");
+  const [settlementDate, setSettlementDate] = useState('')
+  const [purchasePriceRatio, setPurchasePriceRatio] = useState('')
+  const [ownerExternalId, setOwnerExternalId] = useState('')
+  const [transferExternalId, setTransferExternalId] = useState('')
 
-  // validation 
+  // validation
   const canSubmit =
     Boolean(settlementDate) &&
     Boolean(purchasePriceRatio) &&
-    Boolean(ownerExternalId);
+    Boolean(ownerExternalId)
 
   // submit handler
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Sell Loan", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Sell Loan', current: true },
         ]}
       />
 
@@ -56,7 +56,7 @@ const SellLoan = () => {
             <Input
               type="date"
               value={settlementDate}
-              onChange={(e) => setSettlementDate(e.target.value)}
+              onChange={e => setSettlementDate(e.target.value)}
             />
           </div>
 
@@ -68,7 +68,7 @@ const SellLoan = () => {
               step="0.01"
               min="0"
               value={purchasePriceRatio}
-              onChange={(e) => setPurchasePriceRatio(e.target.value)}
+              onChange={e => setPurchasePriceRatio(e.target.value)}
               placeholder="e.g. 1.00"
             />
           </div>
@@ -78,7 +78,7 @@ const SellLoan = () => {
             <Label>Owner External Id*</Label>
             <Input
               value={ownerExternalId}
-              onChange={(e) => setOwnerExternalId(e.target.value)}
+              onChange={e => setOwnerExternalId(e.target.value)}
             />
           </div>
 
@@ -87,13 +87,17 @@ const SellLoan = () => {
             <Label>Transfer External Id</Label>
             <Input
               value={transferExternalId}
-              onChange={(e) => setTransferExternalId(e.target.value)}
+              onChange={e => setTransferExternalId(e.target.value)}
             />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -107,7 +111,7 @@ const SellLoan = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SellLoan;
+export default SellLoan

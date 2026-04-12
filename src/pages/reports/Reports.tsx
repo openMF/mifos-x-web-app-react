@@ -5,9 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -16,71 +16,79 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { ReportsApi, type GetReportsResponse } from "@/fineract-api";
-import { useParams, useNavigate } from "react-router-dom";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { ReportsApi, type GetReportsResponse } from '@/fineract-api'
+import { useParams, useNavigate } from 'react-router-dom'
 
-const reportsApi = new ReportsApi(getConfiguration());
+const reportsApi = new ReportsApi(getConfiguration())
 
 const Reports = () => {
-  const { category } = useParams();
-  const navigate = useNavigate();
+  const { category } = useParams()
+  const navigate = useNavigate()
 
-  const [reports, setReports] = useState<GetReportsResponse[]>([]);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-
+  const [reports, setReports] = useState<GetReportsResponse[]>([])
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchReports = async () => {
+      setLoading(true) // Start the spinner
       try {
-        const response = await reportsApi.retrieveReportList();
-        const details = response.data ?? [];
+        const response = await reportsApi.retrieveReportList()
+        const details = response.data ?? []
 
         if (!category) {
-          setReports(details);
+          setReports(details)
         } else {
           const filtered = details.filter(
-            (e) => e.reportCategory === category.charAt(0).toUpperCase() + category.slice(1)
-          );
-          setReports(filtered);
+            e =>
+              e.reportCategory ===
+              category.charAt(0).toUpperCase() + category.slice(1)
+          )
+          setReports(filtered)
         }
       } catch (error) {
-        console.error("Failed to fetch reports", error);
+        console.error('Failed to fetch reports', error)
+      } finally {
+        setLoading(false) // Stop the spinner even if there is an error
       }
-    };
-    fetchReports();
-  }, [category]);
+    }
+    fetchReports()
+  }, [category])
 
-  const filtered = reports.filter((report) =>
+  const filtered = reports.filter(report =>
     report.reportName?.toLowerCase().includes(search.toLowerCase())
-  );
+  )
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(parseInt(value));
-    setPage(1);
-  };
+    setItemsPerPage(parseInt(value))
+    setPage(1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Reports", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Reports', current: true },
         ]}
       />
 
@@ -91,20 +99,23 @@ const Reports = () => {
         <Input
           placeholder="Search reports..."
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearch(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
 
         <div className="flex items-center gap-2">
-          <Select value={itemsPerPage.toString()} onValueChange={handleItemsPerPageChange}>
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={handleItemsPerPageChange}
+          >
             <SelectTrigger className="w-[140px] h-11 text-base">
               <SelectValue placeholder="Items per page" />
             </SelectTrigger>
             <SelectContent>
-              {[5, 10, 25, 50].map((num) => (
+              {[5, 10, 25, 50].map(num => (
                 <SelectItem key={num} value={num.toString()}>
                   {num}
                 </SelectItem>
@@ -112,7 +123,12 @@ const Reports = () => {
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
             Prev
           </Button>
 
@@ -131,7 +147,8 @@ const Reports = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} reports • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} reports • Page{' '}
+            {page} of {totalPages}
           </TableCaption>
 
           <TableHeader>
@@ -143,22 +160,52 @@ const Reports = () => {
           </TableHeader>
 
           <TableBody>
-            {paginated.map((report, idx) => (
-              <TableRow
-                key={idx}
-                className="hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer transition-colors"
-                onClick={() => navigate(`/reports/run/${encodeURIComponent(report.reportName!)}`)}
-              >
-                <TableCell className="px-6 py-4 font-medium">{report.reportName}</TableCell>
-                <TableCell className="px-6 py-4">{report.reportType}</TableCell>
-                <TableCell className="px-6 py-4">{report.reportCategory}</TableCell>
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  className="h-24 text-center text-zinc-500"
+                >
+                  Loading reports from demo server...
+                </TableCell>
               </TableRow>
-            ))}
+            ) : paginated.length > 0 ? (
+              paginated.map((report, idx) => (
+                <TableRow
+                  key={idx}
+                  className="hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer transition-colors"
+                  onClick={() =>
+                    navigate(
+                      `/reports/run/${encodeURIComponent(report.reportName!)}`
+                    )
+                  }
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {report.reportName}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {report.reportType}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {report.reportCategory}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  className="h-24 text-center text-zinc-500"
+                >
+                  No reports found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Reports;
+export default Reports

@@ -5,16 +5,33 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
+
+interface SavingsProductSettingsFormData {
+  minOpeningBalance: number
+  balanceRequiredForInterestCalculation: number
+  lockinPeriodFrequency: number
+  minBalance: number
+  withdrawalFeeForTransfers: boolean
+  enforceMinRequiredBalance: boolean
+  withHoldTax: boolean
+  allowOverdraft: boolean
+  trackDormancy: boolean
+  [key: string]: unknown
+}
 
 const SavingsProductSettingsStep = ({
   formData,
   setFormData,
 }: {
-  formData: any;
-  setFormData: (val: any) => void;
+  formData: SavingsProductSettingsFormData
+  setFormData: (
+    updater: (
+      prev: SavingsProductSettingsFormData
+    ) => SavingsProductSettingsFormData
+  ) => void
 }) => {
   return (
     <div className="flex flex-col gap-6">
@@ -26,8 +43,8 @@ const SavingsProductSettingsStep = ({
             type="number"
             placeholder="e.g., 500"
             value={formData.minOpeningBalance}
-            onChange={(e) =>
-              setFormData((prev: any) => ({
+            onChange={e =>
+              setFormData(prev => ({
                 ...prev,
                 minOpeningBalance: +e.target.value,
               }))
@@ -40,8 +57,8 @@ const SavingsProductSettingsStep = ({
             type="number"
             placeholder="e.g., 1000"
             value={formData.balanceRequiredForInterestCalculation}
-            onChange={(e) =>
-              setFormData((prev: any) => ({
+            onChange={e =>
+              setFormData(prev => ({
                 ...prev,
                 balanceRequiredForInterestCalculation: +e.target.value,
               }))
@@ -58,8 +75,8 @@ const SavingsProductSettingsStep = ({
             type="number"
             placeholder="e.g., 12 (months)"
             value={formData.lockinPeriodFrequency}
-            onChange={(e) =>
-              setFormData((prev: any) => ({
+            onChange={e =>
+              setFormData(prev => ({
                 ...prev,
                 lockinPeriodFrequency: +e.target.value,
               }))
@@ -72,8 +89,8 @@ const SavingsProductSettingsStep = ({
             type="number"
             placeholder="e.g., 200"
             value={formData.minBalance}
-            onChange={(e) =>
-              setFormData((prev: any) => ({
+            onChange={e =>
+              setFormData(prev => ({
                 ...prev,
                 minBalance: +e.target.value,
               }))
@@ -88,21 +105,23 @@ const SavingsProductSettingsStep = ({
           <Checkbox
             id="withdrawalFee"
             checked={formData.withdrawalFeeForTransfers}
-            onCheckedChange={(val) =>
-              setFormData((prev: any) => ({
+            onCheckedChange={val =>
+              setFormData(prev => ({
                 ...prev,
                 withdrawalFeeForTransfers: val as boolean,
               }))
             }
           />
-          <Label htmlFor="withdrawalFee">Apply Withdrawal Fee for Transfers</Label>
+          <Label htmlFor="withdrawalFee">
+            Apply Withdrawal Fee for Transfers
+          </Label>
         </div>
         <div className="flex items-center space-x-2">
           <Checkbox
             id="enforceMinBalance"
             checked={formData.enforceMinRequiredBalance}
-            onCheckedChange={(val) =>
-              setFormData((prev: any) => ({
+            onCheckedChange={val =>
+              setFormData(prev => ({
                 ...prev,
                 enforceMinRequiredBalance: val as boolean,
               }))
@@ -114,8 +133,8 @@ const SavingsProductSettingsStep = ({
           <Checkbox
             id="withholdTax"
             checked={formData.withHoldTax}
-            onCheckedChange={(val) =>
-              setFormData((prev: any) => ({
+            onCheckedChange={val =>
+              setFormData(prev => ({
                 ...prev,
                 withHoldTax: val as boolean,
               }))
@@ -132,8 +151,8 @@ const SavingsProductSettingsStep = ({
           <Checkbox
             id="overdraftAllowed"
             checked={formData.allowOverdraft}
-            onCheckedChange={(val) =>
-              setFormData((prev: any) => ({
+            onCheckedChange={val =>
+              setFormData(prev => ({
                 ...prev,
                 allowOverdraft: val as boolean,
               }))
@@ -150,8 +169,8 @@ const SavingsProductSettingsStep = ({
           <Checkbox
             id="dormancyTracking"
             checked={formData.trackDormancy}
-            onCheckedChange={(val) =>
-              setFormData((prev: any) => ({
+            onCheckedChange={val =>
+              setFormData(prev => ({
                 ...prev,
                 trackDormancy: val as boolean,
               }))
@@ -161,7 +180,7 @@ const SavingsProductSettingsStep = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingsProductSettingsStep;
+export default SavingsProductSettingsStep

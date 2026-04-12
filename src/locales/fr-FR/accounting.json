@@ -1,0 +1,15 @@
+{
+  "accountLinkedFinancialActivities": "Activités financières liées au compte",
+  "accountNumberPreferences": "Préférences de numéro de compte",
+  "accountingRules": "Règles comptables",
+  "accruals": "Charges à payer",
+  "chartOfAccounts": "Plan comptable",
+  "closingEntries": "Écritures de clôture",
+  "createJournalEntries": "Créer des écritures",
+  "createJournalEntry": "Créer une écriture",
+  "frequentPostings": "Publications fréquentes",
+  "fundMapping": "Mappage des fonds",
+  "migrateOpeningBalances": "Migrer les soldes d'ouverture",
+  "searchAccounts": "Rechercher des comptes",
+  "title": "Comptabilité"
+}

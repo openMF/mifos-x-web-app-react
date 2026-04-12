@@ -5,23 +5,31 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { Outlet, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import Dropdown from "@/components/custom/navbar/Dropdown";
-import AppTabs from "@/components/custom/tabs/AppTabs";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import Dropdown from '@/components/custom/navbar/Dropdown'
+import AppTabs from '@/components/custom/tabs/AppTabs'
 
-import { ShareAccountApi, type GetAccountsTypeAccountIdResponse } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import {
+  ShareAccountApi,
+  type GetAccountsTypeAccountIdResponse,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-import { faCircle, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Menu } from "lucide-react";
+import { faCircle, faMoneyBill } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Menu } from 'lucide-react'
 
-const shareApi = new ShareAccountApi(getConfiguration());
+const shareApi = new ShareAccountApi(getConfiguration())
 
-type MenuItem = { label: string; path?: string; disabled?: boolean; children?: MenuItem[] };
+type MenuItem = {
+  label: string
+  path?: string
+  disabled?: boolean
+  children?: MenuItem[]
+}
 
 /** Build dropdown menu items for shares account actions.
  *  Rules depend on account status:
@@ -35,104 +43,119 @@ function buildSharesMenu(
   clientId?: string,
   accountId?: string
 ): MenuItem[] {
-  const base = `clients/${clientId}/shares-accounts/${accountId}/actions`;
-  const link = (name: string) => `${base}/${name.replace(/\s+/g, "")}`;
-  const s = statusValue.toLowerCase();
+  const base = `clients/${clientId}/shares-accounts/${accountId}/actions`
+  const link = (name: string) => `${base}/${name.replace(/\s+/g, '')}`
+  const s = statusValue.toLowerCase()
 
-  if (s === "active") {
+  if (s === 'active') {
     return [
-      { label: "Apply Additional Shares", path: link("Apply Additional Shares") },
-      { label: "Redeem Shares", path: link("Redeem Shares") },
-      { label: "More", children: [{ label: "Close", path: link("Close") }] },
-    ];
-  }
-
-  if (s === "approved") {
-    return [
-      { label: "Undo Approval", path: link("Undo Approval") },
-      { label: "Activate", path: link("Activate") },
-    ];
-  }
-
-  if (s.includes("pending")) {
-    return [
-      { label: "Modify Application", path: link("Modify Application") },
-      { label: "Approve", path: link("Approve") },
       {
-        label: "More",
+        label: 'Apply Additional Shares',
+        path: link('Apply Additional Shares'),
+      },
+      { label: 'Redeem Shares', path: link('Redeem Shares') },
+      { label: 'More', children: [{ label: 'Close', path: link('Close') }] },
+    ]
+  }
+
+  if (s === 'approved') {
+    return [
+      { label: 'Undo Approval', path: link('Undo Approval') },
+      { label: 'Activate', path: link('Activate') },
+    ]
+  }
+
+  if (s.includes('pending')) {
+    return [
+      { label: 'Modify Application', path: link('Modify Application') },
+      { label: 'Approve', path: link('Approve') },
+      {
+        label: 'More',
         children: [
-          { label: "Reject", path: link("Reject") },
-          { label: "Delete", path: link("Delete") },
+          { label: 'Reject', path: link('Reject') },
+          { label: 'Delete', path: link('Delete') },
         ],
       },
-    ];
+    ]
   }
 
-  return [{ label: "No actions", disabled: true }];
+  return [{ label: 'No actions', disabled: true }]
 }
 
 const SharesAccountView = () => {
-  const { clientId, sharesAccountId } = useParams();
-  const [acct, setAcct] = useState<GetAccountsTypeAccountIdResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { clientId, sharesAccountId } = useParams()
+  const [acct, setAcct] = useState<GetAccountsTypeAccountIdResponse | null>(
+    null
+  )
+  const [loading, setLoading] = useState(true)
 
   // load shares account details by ID
   useEffect(() => {
-    if (!sharesAccountId) return;
-    (async () => {
+    if (!sharesAccountId) return
+    ;(async () => {
       try {
-        const res = await (shareApi as any).retrieveAccount(
+        const res = await shareApi.retrieveAccount(
           Number(sharesAccountId),
-          "share",
+          'share',
           { params: { template: false } }
-        );
-        setAcct(res.data as GetAccountsTypeAccountIdResponse);
+        )
+        setAcct(res.data)
       } catch (e) {
-        console.error("Failed to load share account", e);
+        console.error('Failed to load share account', e)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, [sharesAccountId]);
+    })()
+  }, [sharesAccountId])
 
   // determine status color for header indicator
-  const statusValue = String((acct as any)?.status?.value ?? "").toLowerCase();
-  const statusColor =
-    statusValue.includes("pending")
-      ? "text-orange-400"
-      : statusValue === "approved"
-      ? "text-blue-500"
-      : statusValue === "active"
-      ? "text-green-400"
-      : "text-zinc-400";
+  const statusObj = acct?.status as Record<string, unknown> | undefined
+  const statusValue = String(statusObj?.value ?? '').toLowerCase()
+  const statusColor = statusValue.includes('pending')
+    ? 'text-orange-400'
+    : statusValue === 'approved'
+      ? 'text-blue-500'
+      : statusValue === 'active'
+        ? 'text-green-400'
+        : 'text-zinc-400'
 
   // basic account info
-  const productName = acct?.productName ?? "—";
-  const accountNo = acct?.accountNo ?? "—";
-  const holderName = (acct as any)?.clientName ?? (acct as any)?.groupName ?? "—";
-  const currentMarketPrice = acct?.currentMarketPrice ?? "—";
+  const productName = acct?.productName ?? '—'
+  const accountNo = acct?.accountNo ?? '—'
+  const holderName = acct?.clientName ?? '—'
+  const currentMarketPrice = acct?.currentMarketPrice ?? '—'
 
   // sub-tabs inside Shares account view
-  const base = `clients/${clientId}/shares-accounts/${sharesAccountId}`;
+  const base = `clients/${clientId}/shares-accounts/${sharesAccountId}`
   const tabs = [
-    { label: "General", href: `${base}/general` },
-    { label: "Transactions", href: `${base}/transactions` },
-    { label: "Charges", href: `${base}/charges` },
-    { label: "Dividends", href: `${base}/dividends` },
-  ];
+    { label: 'General', href: `${base}/general` },
+    { label: 'Transactions', href: `${base}/transactions` },
+    { label: 'Charges', href: `${base}/charges` },
+    { label: 'Dividends', href: `${base}/dividends` },
+  ]
 
   // dynamic actions dropdown, based on account status
-  const actions = buildSharesMenu(statusValue, clientId, String(sharesAccountId));
+  const actions = buildSharesMenu(
+    statusValue,
+    clientId,
+    String(sharesAccountId)
+  )
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* breadcrumbs for navigation */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Clients", href: "/clients" },
-          { label: holderName, href: clientId ? `/clients/${clientId}` : "/clients" },
-          { label: "Shares", href: clientId ? `/clients/${clientId}/shares` : "/clients" },
+          { label: 'Home', href: '/home' },
+          { label: 'Clients', href: '/clients' },
+          {
+            label: holderName,
+            href: clientId ? `/clients/${clientId}` : '/clients',
+          },
+          {
+            label: 'Shares',
+            href: clientId ? `/clients/${clientId}/shares` : '/clients',
+          },
         ]}
       />
 
@@ -141,9 +164,15 @@ const SharesAccountView = () => {
         {/* top header with account info */}
         <div className="bg-[#0e77b7] text-white p-6 flex justify-between items-start">
           <div className="space-y-2">
-            <FontAwesomeIcon icon={faMoneyBill} className="text-black w-10 h-10" />
+            <FontAwesomeIcon
+              icon={faMoneyBill}
+              className="text-black w-10 h-10"
+            />
             <div className="text-xl font-semibold flex items-center gap-2">
-              <FontAwesomeIcon icon={faCircle} className={`${statusColor} w-3 h-3`} />
+              <FontAwesomeIcon
+                icon={faCircle}
+                className={`${statusColor} w-3 h-3`}
+              />
               <span>Shares Account</span>
             </div>
 
@@ -170,7 +199,14 @@ const SharesAccountView = () => {
                     <tr>
                       <td className="pr-3">Lockin Period :</td>
                       <td>
-                        {acct.lockinPeriod} {(acct as any)?.lockPeriodTypeEnum?.value}
+                        {acct.lockinPeriod}{' '}
+                        {String(
+                          (
+                            acct?.lockPeriodTypeEnum as
+                              | Record<string, unknown>
+                              | undefined
+                          )?.value ?? ''
+                        )}
                       </td>
                     </tr>
                   ) : null}
@@ -182,7 +218,11 @@ const SharesAccountView = () => {
           {/* actions dropdown */}
           <div className="flex flex-col">
             <Dropdown
-              name={<span className="flex items-center gap-2"><Menu /></span>}
+              name={
+                <span className="flex items-center gap-2">
+                  <Menu />
+                </span>
+              }
               options={actions}
             />
           </div>
@@ -192,12 +232,10 @@ const SharesAccountView = () => {
         <AppTabs tabs={tabs} />
 
         {/* child routes render here */}
-        <div className="p-6">
-          {loading ? <div>Loading…</div> : <Outlet />}
-        </div>
+        <div className="p-6">{loading ? <div>Loading…</div> : <Outlet />}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SharesAccountView;
+export default SharesAccountView

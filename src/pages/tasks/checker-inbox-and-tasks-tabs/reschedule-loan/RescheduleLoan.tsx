@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useEffect, useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
   TableBody,
@@ -16,54 +16,53 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/components/ui/table'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   RescheduleLoansApi,
   type GetLoanRescheduleRequestResponse,
-} from "@/fineract-api";
+} from '@/fineract-api'
 
-const rescheduleLoanApi = new RescheduleLoansApi(getConfiguration());
+const rescheduleLoanApi = new RescheduleLoansApi(getConfiguration())
 
 const RescheduleLoan = () => {
-  const [rescheduleLoans, setRescheduleLoans] = useState<GetLoanRescheduleRequestResponse[]>([]);
-  const [search, setSearch] = useState("");
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [rescheduleLoans, setRescheduleLoans] = useState<
+    GetLoanRescheduleRequestResponse[]
+  >([])
+  const [search, setSearch] = useState('')
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
 
   useEffect(() => {
     const fetchRescheduledLoanDetails = async () => {
       try {
-        const response = await rescheduleLoanApi.retrieveAllRescheduleRequest("pending");
-        setRescheduleLoans(response.data ?? []);
+        const response =
+          await rescheduleLoanApi.retrieveAllRescheduleRequest('pending')
+        setRescheduleLoans(response.data ?? [])
       } catch (err) {
-        console.log("Couldn't fetch rescheduled loan details", err);
+        console.error("Couldn't fetch rescheduled loan details", err)
       }
-    };
+    }
 
-    fetchRescheduledLoanDetails();
-  }, []);
+    fetchRescheduledLoanDetails()
+  }, [])
 
-  const filteredLoans = rescheduleLoans.filter((loan) =>
+  const filteredLoans = rescheduleLoans.filter(loan =>
     loan.clientName?.toLowerCase().includes(search.toLowerCase())
-  );
+  )
 
   const handleToggle = (id: number) => {
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  };
+    setSelectedRows(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    )
+  }
 
   const handleSelectAll = () => {
-    setSelectedRows(filteredLoans.map((loan) => loan.id!));
-  };
+    setSelectedRows(filteredLoans.map(loan => loan.id!))
+  }
 
-  const approveSelected = () => {
-    console.log("Approved", selectedRows);
-  };
+  const approveSelected = () => {}
 
-  const rejectSelected = () => {
-    console.log("Rejected", selectedRows);
-  };
+  const rejectSelected = () => {}
 
   return (
     <div className="space-y-6 mt-6">
@@ -73,21 +72,26 @@ const RescheduleLoan = () => {
             <Input
               placeholder="Filter by name"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
               className="w-full md:w-1/2"
             />
             <div className="flex gap-2">
-              <Button className="bg-green-600 text-white" onClick={approveSelected}>
+              <Button
+                className="bg-green-600 text-white"
+                onClick={approveSelected}
+              >
                 Approve
               </Button>
-              <Button className="bg-yellow-600 text-white" onClick={rejectSelected}>
+              <Button
+                className="bg-yellow-600 text-white"
+                onClick={rejectSelected}
+              >
                 Reject
               </Button>
             </div>
           </div>
         )}
       </div>
-
 
       {filteredLoans.length > 0 ? (
         <Table>
@@ -107,19 +111,25 @@ const RescheduleLoan = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredLoans.map((loan) => (
-              <TableRow key={loan.id} onClick={() => handleToggle(loan.id!)} className="cursor-pointer">
+            {filteredLoans.map(loan => (
+              <TableRow
+                key={loan.id}
+                onClick={() => handleToggle(loan.id!)}
+                className="cursor-pointer"
+              >
                 <TableCell>
                   <Checkbox
                     checked={selectedRows.includes(loan.id!)}
                     onCheckedChange={() => handleToggle(loan.id!)}
                   />
                 </TableCell>
-                <TableCell>{loan.clientName ?? "Unnamed"}</TableCell>
+                <TableCell>{loan.clientName ?? 'Unnamed'}</TableCell>
                 <TableCell>{loan.id}</TableCell>
                 <TableCell>{loan.loanAccountNumber}</TableCell>
                 <TableCell>{loan.rescheduleFromDate}</TableCell>
-                <TableCell>{loan.rescheduleReasonCodeValue?.name ?? "-"}</TableCell>
+                <TableCell>
+                  {loan.rescheduleReasonCodeValue?.name ?? '-'}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -130,7 +140,7 @@ const RescheduleLoan = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default RescheduleLoan;
+export default RescheduleLoan

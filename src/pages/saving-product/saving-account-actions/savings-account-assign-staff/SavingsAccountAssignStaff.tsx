@@ -5,52 +5,51 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const SavingsAccountAssignStaff = () => {
-  const { groupId, accountId } = useParams();
-  const navigate = useNavigate();
+  const { groupId, accountId } = useParams()
+  const navigate = useNavigate()
 
   // form state
-  const [staffId, setStaffId] = useState<string>("");
-  const [assignmentDate, setAssignmentDate] = useState<string>("");
+  const [staffId, setStaffId] = useState<string>('')
+  const [assignmentDate, setAssignmentDate] = useState<string>('')
 
-  // go back to savings account general page 
+  // go back to savings account general page
   const backToAccount = () => {
     if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`);
+      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   // submit handler — placeholder for API call
   const onSubmit = () => {
-    console.log({ staffId, assignmentDate });
-    backToAccount();
-  };
+    backToAccount()
+  }
 
   const staffOptions = [
-    { id: "101", name: "Alice M." },
-    { id: "102", name: "Brian K." },
-    { id: "103", name: "Chandra P." },
-  ];
+    { id: '101', name: 'Alice M.' },
+    { id: '102', name: 'Brian K.' },
+    { id: '103', name: 'Chandra P.' },
+  ]
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* breadcrumbs navigation */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Assign Staff", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Assign Staff', current: true },
         ]}
       />
 
@@ -79,7 +78,7 @@ const SavingsAccountAssignStaff = () => {
               <Input
                 type="date"
                 value={assignmentDate}
-                onChange={(e) => setAssignmentDate(e.target.value)}
+                onChange={e => setAssignmentDate(e.target.value)}
               />
             </div>
 
@@ -100,7 +99,7 @@ const SavingsAccountAssignStaff = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingsAccountAssignStaff;
+export default SavingsAccountAssignStaff

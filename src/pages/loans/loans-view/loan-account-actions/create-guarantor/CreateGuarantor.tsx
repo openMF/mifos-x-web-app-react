@@ -5,37 +5,37 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const CreateGuarantor = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [existingClient, setExistingClient] = useState(true);
-  const [name, setName] = useState("");
-  const [relationshipId, setRelationshipId] = useState("");
+  const [existingClient, setExistingClient] = useState(true)
+  const [name, setName] = useState('')
+  const [relationshipId, setRelationshipId] = useState('')
 
-  const canSubmit = Boolean(name);
+  const canSubmit = Boolean(name)
 
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Create Guarantor", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Create Guarantor', current: true },
         ]}
       />
 
@@ -48,7 +48,7 @@ const CreateGuarantor = () => {
             <Label className="text-base">Existing Client</Label>
             <Checkbox
               checked={existingClient}
-              onCheckedChange={(v) => setExistingClient(Boolean(v))}
+              onCheckedChange={v => setExistingClient(Boolean(v))}
             />
           </div>
 
@@ -57,26 +57,32 @@ const CreateGuarantor = () => {
             <Label>Name*</Label>
             <Input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               placeholder="Enter name"
             />
           </div>
 
           {/* Relationship */}
           <div className="w-full space-y-2">
-            {<AppSelect
-              selectLabel="Relationship"
-              selectPlaceholder="Select relationship"
-              selectValue={relationshipId}
-              selectOnChange={setRelationshipId}
-              selectOptions={[]}
-              selectClassname="w-full space-y-2"
-            />}
+            {
+              <AppSelect
+                selectLabel="Relationship"
+                selectPlaceholder="Select relationship"
+                selectValue={relationshipId}
+                selectOnChange={setRelationshipId}
+                selectOptions={[]}
+                selectClassname="w-full space-y-2"
+              />
+            }
           </div>
 
           {/* Actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -90,7 +96,7 @@ const CreateGuarantor = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateGuarantor;
+export default CreateGuarantor

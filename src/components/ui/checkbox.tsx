@@ -5,12 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import * as React from "react"
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { CheckIcon } from "lucide-react"
+import * as React from 'react'
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
+import { CheckIcon } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
-import { checkboxRootClass } from "../styles/checkbox"
+import { cn } from '@/lib/utils'
+import { checkboxRootClass } from '../styles/checkbox'
 
 function Checkbox({
   className,
@@ -19,10 +19,7 @@ function Checkbox({
   return (
     <CheckboxPrimitive.Root
       data-slot="checkbox"
-      className={cn(
-        checkboxRootClass,
-        className
-      )}
+      className={cn(checkboxRootClass, className)}
       {...props}
     >
       <CheckboxPrimitive.Indicator

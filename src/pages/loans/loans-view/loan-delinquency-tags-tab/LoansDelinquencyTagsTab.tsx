@@ -7,11 +7,7 @@
  */
 
 const LoansDelinquencyTagsTab = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <div></div>
 }
 
 export default LoansDelinquencyTagsTab

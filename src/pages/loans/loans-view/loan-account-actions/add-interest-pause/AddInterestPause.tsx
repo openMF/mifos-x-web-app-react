@@ -5,39 +5,39 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const AddInterestPause = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [maturityText] = useState<string>("");
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [maturityText] = useState<string>('')
 
   // simple validation
-  const canSubmit = Boolean(startDate && endDate);
+  const canSubmit = Boolean(startDate && endDate)
 
   // handle submit
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Add Interest Pause", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Add Interest Pause', current: true },
         ]}
       />
 
@@ -47,7 +47,7 @@ const AddInterestPause = () => {
 
         {/* maturity date info */}
         <div className="text-sm text-muted-foreground mb-4">
-          Maturity Date{maturityText ? ` : ${maturityText}` : ""}
+          Maturity Date{maturityText ? ` : ${maturityText}` : ''}
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">
@@ -57,7 +57,7 @@ const AddInterestPause = () => {
             <Input
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={e => setStartDate(e.target.value)}
             />
           </div>
 
@@ -67,13 +67,17 @@ const AddInterestPause = () => {
             <Input
               type="date"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              onChange={e => setEndDate(e.target.value)}
             />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -87,7 +91,7 @@ const AddInterestPause = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AddInterestPause;
+export default AddInterestPause

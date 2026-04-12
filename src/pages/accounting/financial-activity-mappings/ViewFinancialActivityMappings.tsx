@@ -5,52 +5,52 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   MappingFinancialActivitiesToAccountsApi,
   type GetFinancialActivityAccountsResponse,
-} from "@/fineract-api";
+} from '@/fineract-api'
 
 // API client
-const activityApi = new MappingFinancialActivitiesToAccountsApi(getConfiguration());
+const activityApi = new MappingFinancialActivitiesToAccountsApi(
+  getConfiguration()
+)
 
 const ViewFinancialActivityMappings = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const navigate = useNavigate()
+  const { id } = useParams()
 
   // Loaded mapping record
-  const [mapping, setMapping] = useState<GetFinancialActivityAccountsResponse>();
+  const [mapping, setMapping] = useState<GetFinancialActivityAccountsResponse>()
 
   // Fetch mapping by id
   useEffect(() => {
-
     const fetchMapping = async () => {
       try {
-        const response = await activityApi.retreive(Number(id));
-        setMapping(response.data);
+        const response = await activityApi.retreive(Number(id))
+        setMapping(response.data)
       } catch (err) {
-        console.error("Failed to fetch financial activity mapping", err);
+        console.error('Failed to fetch financial activity mapping', err)
       }
-    };
+    }
 
-    fetchMapping();
-  }, [id]);
+    fetchMapping()
+  }, [id])
 
   // Delete mapping then go back
   const handleDelete = async () => {
-
     try {
-      await activityApi.deleteGLAccount(Number(id));
-      navigate("/accounting/financial-activity-mappings");
+      await activityApi.deleteGLAccount(Number(id))
+      navigate('/accounting/financial-activity-mappings')
     } catch (err) {
-      console.log("Failed to delete mappings", err)
+      console.error('Failed to delete mappings', err)
     }
   }
 
@@ -59,9 +59,12 @@ const ViewFinancialActivityMappings = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Accounting" },
-          { label: "Financial Activity Mappings", href: "/accounting/financial-activity-mappings" },
+          { label: 'Home', href: '/home' },
+          { label: 'Accounting' },
+          {
+            label: 'Financial Activity Mappings',
+            href: '/accounting/financial-activity-mappings',
+          },
           { label: `${mapping?.id}`, current: true },
         ]}
       />
@@ -73,7 +76,9 @@ const ViewFinancialActivityMappings = () => {
           <Button
             className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer text-white"
             onClick={() =>
-              navigate(`/accounting/financial-activity-mappings/${mapping?.id}/edit`)
+              navigate(
+                `/accounting/financial-activity-mappings/${mapping?.id}/edit`
+              )
             }
           >
             <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
@@ -98,11 +103,14 @@ const ViewFinancialActivityMappings = () => {
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Financial Activity</div>
           <div className="text-zinc-600 dark:text-zinc-400">
-            ({mapping?.financialActivityData?.id}) {mapping?.financialActivityData?.name}
+            ({mapping?.financialActivityData?.id}){' '}
+            {mapping?.financialActivityData?.name}
           </div>
 
           <div className="font-medium">Account Type</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{mapping?.financialActivityData?.mappedGLAccountType}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {mapping?.financialActivityData?.mappedGLAccountType}
+          </div>
 
           <div className="font-medium">Account Name</div>
           <div className="text-zinc-600 dark:text-zinc-400">
@@ -115,14 +123,14 @@ const ViewFinancialActivityMappings = () => {
           <Button
             variant="outline"
             className="w-28 cursor-pointer"
-            onClick={() => navigate("/accounting/financial-activity-mappings")}
+            onClick={() => navigate('/accounting/financial-activity-mappings')}
           >
             Back
           </Button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewFinancialActivityMappings;
+export default ViewFinancialActivityMappings

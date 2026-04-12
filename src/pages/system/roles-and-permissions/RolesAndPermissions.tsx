@@ -5,12 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus, PenSquare } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Plus, PenSquare } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -19,70 +19,70 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { RolesApi, type GetRolesResponse } from "@/fineract-api";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { RolesApi, type GetRolesResponse } from '@/fineract-api'
 
 // API instance
-const rolesApi = new RolesApi(getConfiguration());
+const rolesApi = new RolesApi(getConfiguration())
 
 const RolesAndPermissions = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // State
-  const [roles, setRoles] = useState<GetRolesResponse[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [roles, setRoles] = useState<GetRolesResponse[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   // Fetch all roles on mount
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await rolesApi.retrieveAllRoles();
-        setRoles(response.data || []);
+        const response = await rolesApi.retrieveAllRoles()
+        setRoles(response.data || [])
       } catch (err) {
-        console.error("Failed to fetch roles", err);
+        console.error('Failed to fetch roles', err)
       }
-    };
-    fetchRoles();
-  }, []);
+    }
+    fetchRoles()
+  }, [])
 
   // Filter by search term
-  const filtered = roles.filter((role) =>
+  const filtered = roles.filter(role =>
     role.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
   const paginated = filtered.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
-  );
+  )
 
   // Items per page handler
   const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(parseInt(value));
-    setPage(1);
-  };
+    setItemsPerPage(parseInt(value))
+    setPage(1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Roles and Permissions", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          { label: 'Roles and Permissions', current: true },
         ]}
       />
 
@@ -90,7 +90,7 @@ const RolesAndPermissions = () => {
       <div className="flex justify-between items-center mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate("/system/roles-and-permissions/add")}
+          onClick={() => navigate('/system/roles-and-permissions/add')}
         >
           <Plus className="mr-2" /> Add Role
         </Button>
@@ -102,9 +102,9 @@ const RolesAndPermissions = () => {
         <Input
           placeholder="Filter"
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -149,7 +149,8 @@ const RolesAndPermissions = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
 
           {/* Table header */}
@@ -164,15 +165,17 @@ const RolesAndPermissions = () => {
 
           {/* Table body */}
           <TableBody>
-            {paginated.map((role) => (
+            {paginated.map(role => (
               <TableRow
                 key={role.id}
                 className="text-base hover:bg-muted cursor-pointer"
               >
                 <TableCell className="px-6 py-4">{role.name}</TableCell>
-                <TableCell className="px-6 py-4">{role.description || "—"}</TableCell>
                 <TableCell className="px-6 py-4">
-                  {"missing in OpenApi"}
+                  {role.description || '—'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {'missing in OpenApi'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {role.description && (
@@ -188,7 +191,7 @@ const RolesAndPermissions = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RolesAndPermissions;
+export default RolesAndPermissions

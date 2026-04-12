@@ -5,25 +5,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 const EntityToEntityMapping = () => {
   const rows = [
-    "Offices --> Loan Products",
-    "Offices --> Savings Products",
-    "Offices --> Charges/Fees",
-    "Roles --> Loan Products",
-    "Roles --> Savings Products",
-  ];
+    'Offices --> Loan Products',
+    'Offices --> Savings Products',
+    'Offices --> Charges/Fees',
+    'Roles --> Loan Products',
+    'Roles --> Savings Products',
+  ]
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
-
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Entity to Entity Mapping", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          { label: 'Entity to Entity Mapping', current: true },
         ]}
       />
 
@@ -39,7 +38,7 @@ const EntityToEntityMapping = () => {
             <div
               key={text}
               className={`px-6 py-4 ${
-                i % 2 === 1 ? "bg-zinc-50 dark:bg-zinc-800/40" : ""
+                i % 2 === 1 ? 'bg-zinc-50 dark:bg-zinc-800/40' : ''
               }`}
             >
               {text}
@@ -48,7 +47,7 @@ const EntityToEntityMapping = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EntityToEntityMapping;
+export default EntityToEntityMapping

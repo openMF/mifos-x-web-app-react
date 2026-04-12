@@ -5,71 +5,71 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { FundsApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { FundsApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const fundsApi = new FundsApi(getConfiguration());
+const fundsApi = new FundsApi(getConfiguration())
 
 const EditFunds = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams()
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    name: "",
-    externalId: "",
-  });
+    name: '',
+    externalId: '',
+  })
 
   // fetch fund details to pre-fill form
   useEffect(() => {
     const fetchFund = async () => {
       try {
-        const res = await fundsApi.retrieveFund(Number(id));
+        const res = await fundsApi.retrieveFund(Number(id))
         setFormData({
-          name: res.data.name ?? "",
-          externalId: res.data.externalId ?? "",
-        });
+          name: res.data.name ?? '',
+          externalId: res.data.externalId ?? '',
+        })
       } catch (err) {
-        console.error("Failed to fetch fund", err);
+        console.error('Failed to fetch fund', err)
       }
-    };
+    }
 
-    if (id) fetchFund();
-  }, [id]);
+    if (id) fetchFund()
+  }, [id])
 
   // handle fund update
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       await fundsApi.updateFund(Number(id), {
         name: formData.name,
         externalId: formData.externalId || undefined,
-      });
+      })
 
-      navigate("/organization/manage-funds");
+      navigate('/organization/manage-funds')
     } catch (err) {
-      console.error("Failed to update fund", err);
-      alert("Failed to update fund");
+      console.error('Failed to update fund', err)
+      alert('Failed to update fund')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Manage Funds", href: "/organization/manage-funds" },
-          { label: id ?? "", href: `/organization/manage-funds/${id}` },
-          { label: "Edit", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Manage Funds', href: '/organization/manage-funds' },
+          { label: id ?? '', href: `/organization/manage-funds/${id}` },
+          { label: 'Edit', current: true },
         ]}
       />
 
@@ -82,8 +82,8 @@ const EditFunds = () => {
             <Label>Name*</Label>
             <Input
               value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              onChange={e =>
+                setFormData(prev => ({ ...prev, name: e.target.value }))
               }
               required
             />
@@ -94,8 +94,8 @@ const EditFunds = () => {
             <Label>External Id</Label>
             <Input
               value={formData.externalId}
-              onChange={(e) =>
-                setFormData((prev) => ({
+              onChange={e =>
+                setFormData(prev => ({
                   ...prev,
                   externalId: e.target.value,
                 }))
@@ -108,7 +108,7 @@ const EditFunds = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/organization/manage-funds")}
+              onClick={() => navigate('/organization/manage-funds')}
             >
               Cancel
             </Button>
@@ -122,7 +122,7 @@ const EditFunds = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditFunds;
+export default EditFunds

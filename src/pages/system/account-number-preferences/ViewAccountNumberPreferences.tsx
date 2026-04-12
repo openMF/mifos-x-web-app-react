@@ -5,14 +5,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from "@/components/ui/button";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Button } from '@/components/ui/button'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,46 +23,46 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
 
 import {
   AccountNumberFormatApi,
   type GetAccountNumberFormatsIdResponse,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const accountNumberApi = new AccountNumberFormatApi(getConfiguration());
+const accountNumberApi = new AccountNumberFormatApi(getConfiguration())
 
 const ViewAccountNumberPreferences = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const navigate = useNavigate()
+  const { id } = useParams()
   const [accountPref, setAccountPref] =
-    useState<GetAccountNumberFormatsIdResponse | null>(null);
+    useState<GetAccountNumberFormatsIdResponse | null>(null)
 
   // Fetch details for selected account number preference
   useEffect(() => {
     const fetchAccountNumberPreference = async () => {
       try {
-        const res = await accountNumberApi.retrieveOne(Number(id));
-        setAccountPref(res.data);
+        const res = await accountNumberApi.retrieveOne(Number(id))
+        setAccountPref(res.data)
       } catch (err) {
-        console.error("Failed to fetch account preference details", err);
+        console.error('Failed to fetch account preference details', err)
       }
-    };
+    }
 
-    fetchAccountNumberPreference();
-  }, [id]);
+    fetchAccountNumberPreference()
+  }, [id])
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System" },
+          { label: 'Home', href: '/home' },
+          { label: 'System' },
           {
-            label: "Account Number Preferences",
-            href: "/system/account-number-preferences/",
+            label: 'Account Number Preferences',
+            href: '/system/account-number-preferences/',
           },
           { label: `${accountPref?.id}`, current: true },
         ]}
@@ -75,9 +75,7 @@ const ViewAccountNumberPreferences = () => {
             <Button
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
               onClick={() =>
-                navigate(
-                  `/account-number-preferences/${accountPref?.id}/edit`
-                )
+                navigate(`/account-number-preferences/${accountPref?.id}/edit`)
               }
             >
               <FontAwesomeIcon icon={faPenToSquare} /> Edit
@@ -101,9 +99,7 @@ const ViewAccountNumberPreferences = () => {
                   <AlertDialogCancel className="cursor-pointer">
                     Cancel
                   </AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-                  >
+                  <AlertDialogAction className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">
                     Confirm
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -135,14 +131,14 @@ const ViewAccountNumberPreferences = () => {
           <Button
             variant="outline"
             className="w-28 cursor-pointer"
-            onClick={() => navigate("/system/account-number-preferences/")}
+            onClick={() => navigate('/system/account-number-preferences/')}
           >
             Back
           </Button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewAccountNumberPreferences;
+export default ViewAccountNumberPreferences

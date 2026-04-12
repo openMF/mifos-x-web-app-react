@@ -5,8 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Table,
@@ -16,66 +16,66 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus, CheckCircle2 } from "lucide-react";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+} from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Plus, CheckCircle2 } from 'lucide-react'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { getConfiguration } from "@/lib/fineract-openapi";
-import {
-  FloatingRatesApi,
-  type GetFloatingRatesResponse,
-} from "@/fineract-api";
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { FloatingRatesApi, type GetFloatingRatesResponse } from '@/fineract-api'
 
 // API instance for floating rates
-const floatingRateApi = new FloatingRatesApi(getConfiguration());
+const floatingRateApi = new FloatingRatesApi(getConfiguration())
 
 const FloatingRates = () => {
   // Component state
-  const [rates, setRates] = useState<GetFloatingRatesResponse[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const navigate = useNavigate();
+  const [rates, setRates] = useState<GetFloatingRatesResponse[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const navigate = useNavigate()
 
   // Fetch floating rates on mount
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const res = await floatingRateApi.retrieveAll22(); // API call
-        setRates(res.data || []);
+        const res = await floatingRateApi.retrieveAll22() // API call
+        setRates(res.data || [])
       } catch (err) {
-        console.error("Failed to fetch floating rates", err);
+        console.error('Failed to fetch floating rates', err)
       }
-    };
-    fetchRates();
-  }, []);
+    }
+    fetchRates()
+  }, [])
 
   // Filter by search term
-  const filtered = rates.filter((r) =>
+  const filtered = rates.filter(r =>
     r.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
   // Pagination logic
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Products", href: "/products" },
-          { label: "Floating Rates", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Products', href: '/products' },
+          { label: 'Floating Rates', current: true },
         ]}
       />
 
@@ -83,7 +83,7 @@ const FloatingRates = () => {
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate("/products/floating-rates/create")}
+          onClick={() => navigate('/products/floating-rates/create')}
         >
           <Plus className="mr-2" /> Create Floating Rate
         </Button>
@@ -95,9 +95,9 @@ const FloatingRates = () => {
         <Input
           placeholder="Filter"
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -106,9 +106,9 @@ const FloatingRates = () => {
         <div className="flex items-center gap-2">
           <Select
             value={itemsPerPage.toString()}
-            onValueChange={(val) => {
-              setItemsPerPage(parseInt(val));
-              setPage(1);
+            onValueChange={val => {
+              setItemsPerPage(parseInt(val))
+              setPage(1)
             }}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
@@ -122,10 +122,20 @@ const FloatingRates = () => {
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
             Prev
           </Button>
-          <Button variant="outline" size="sm" disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          >
             Next
           </Button>
         </div>
@@ -135,7 +145,8 @@ const FloatingRates = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
 
           {/* Table header */}
@@ -150,7 +161,7 @@ const FloatingRates = () => {
 
           {/* Table body */}
           <TableBody>
-            {paginated.map((r) => (
+            {paginated.map(r => (
               <TableRow
                 key={r.id}
                 className="text-base hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
@@ -168,7 +179,9 @@ const FloatingRates = () => {
 
                 {/* Base lending rate indicator */}
                 <TableCell className="px-6 py-4 text-green-600">
-                  {r.isBaseLendingRate ? <CheckCircle2 className="w-5 h-5" /> : null}
+                  {r.isBaseLendingRate ? (
+                    <CheckCircle2 className="w-5 h-5" />
+                  ) : null}
                 </TableCell>
 
                 {/* Active indicator */}
@@ -181,7 +194,7 @@ const FloatingRates = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FloatingRates;
+export default FloatingRates

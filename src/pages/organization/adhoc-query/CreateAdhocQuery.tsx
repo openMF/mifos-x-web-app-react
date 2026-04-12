@@ -5,38 +5,38 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { AdhocQueryApiApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { AdhocQueryApiApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const adhocQueryApi = new AdhocQueryApiApi(getConfiguration());
+const adhocQueryApi = new AdhocQueryApiApi(getConfiguration())
 
 const CreateAdhocQuery = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
   const [formData, setFormData] = useState({
-    name: "",
-    query: "",
-    tableName: "",
-    tableFields: "",
-    email: "",
-    reportRunFrequency: "",
+    name: '',
+    query: '',
+    tableName: '',
+    tableFields: '',
+    email: '',
+    reportRunFrequency: '',
     isActive: false,
-  });
+  })
 
   // submit handler, create adhoc query via API
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       await adhocQueryApi.createAdHocQuery({
         name: formData.name,
@@ -46,23 +46,23 @@ const CreateAdhocQuery = () => {
         email: formData.email || undefined,
         reportRunFrequency: Number(formData.reportRunFrequency) || undefined,
         isActive: formData.isActive,
-      });
-      navigate("/organization/adhoc-query");
+      })
+      navigate('/organization/adhoc-query')
     } catch (err) {
-      console.error("Failed to create Adhoc Query", err);
-      alert("Failed to create Adhoc Query");
+      console.error('Failed to create Adhoc Query', err)
+      alert('Failed to create Adhoc Query')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Adhoc Query", href: "/organization/adhoc-query" },
-          { label: "Create", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Adhoc Query', href: '/organization/adhoc-query' },
+          { label: 'Create', current: true },
         ]}
       />
 
@@ -76,7 +76,9 @@ const CreateAdhocQuery = () => {
             <Label>Name*</Label>
             <Input
               value={formData.name}
-              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, name: e.target.value }))
+              }
               required
             />
           </div>
@@ -86,7 +88,9 @@ const CreateAdhocQuery = () => {
             <Label>SQL Query*</Label>
             <Input
               value={formData.query}
-              onChange={(e) => setFormData((prev) => ({ ...prev, query: e.target.value }))}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, query: e.target.value }))
+              }
               required
             />
           </div>
@@ -96,7 +100,9 @@ const CreateAdhocQuery = () => {
             <Label>Insert into table*</Label>
             <Input
               value={formData.tableName}
-              onChange={(e) => setFormData((prev) => ({ ...prev, tableName: e.target.value }))}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, tableName: e.target.value }))
+              }
               required
             />
           </div>
@@ -106,7 +112,9 @@ const CreateAdhocQuery = () => {
             <Label>Table Fields*</Label>
             <Input
               value={formData.tableFields}
-              onChange={(e) => setFormData((prev) => ({ ...prev, tableFields: e.target.value }))}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, tableFields: e.target.value }))
+              }
               required
             />
           </div>
@@ -116,7 +124,9 @@ const CreateAdhocQuery = () => {
             <Label>Email</Label>
             <Input
               value={formData.email}
-              onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, email: e.target.value }))
+              }
             />
           </div>
 
@@ -126,13 +136,13 @@ const CreateAdhocQuery = () => {
             selectValue={formData.reportRunFrequency}
             selectPlaceholder="Select frequency"
             selectClassname="w-full space-y-2"
-            selectOnChange={(val) =>
-              setFormData((prev) => ({ ...prev, reportRunFrequency: val }))
+            selectOnChange={val =>
+              setFormData(prev => ({ ...prev, reportRunFrequency: val }))
             }
             selectOptions={[
-              { id: "daily", name: "Daily" },
-              { id: "weekly", name: "Weekly" },
-              { id: "monthly", name: "Monthly" },
+              { id: 'daily', name: 'Daily' },
+              { id: 'weekly', name: 'Weekly' },
+              { id: 'monthly', name: 'Monthly' },
             ]}
           />
 
@@ -140,8 +150,8 @@ const CreateAdhocQuery = () => {
           <div className="flex items-center space-x-3">
             <Checkbox
               checked={formData.isActive}
-              onCheckedChange={(val) =>
-                setFormData((prev) => ({ ...prev, isActive: Boolean(val) }))
+              onCheckedChange={val =>
+                setFormData(prev => ({ ...prev, isActive: Boolean(val) }))
               }
             />
             <Label className="text-md">Active</Label>
@@ -152,18 +162,21 @@ const CreateAdhocQuery = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/organization/adhoc-query")}
+              onClick={() => navigate('/organization/adhoc-query')}
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-[#1074b9] hover:bg-[#1074c9] text-white">
+            <Button
+              type="submit"
+              className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+            >
               Submit
             </Button>
           </div>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateAdhocQuery;
+export default CreateAdhocQuery

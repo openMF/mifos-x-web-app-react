@@ -5,41 +5,50 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { CalendarIcon } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
+import { CalendarIcon } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useTranslation } from 'react-i18next'
 
 const ClientsFamilyMembersAddTab = ({
-  clientId,
+  clientId: _clientId, // Reserved for future use
   onCancel,
   onSubmitted,
 }: {
-  clientId?: string;
-  onCancel?: () => void;
-  onSubmitted?: () => void;
+  clientId?: string
+  onCancel?: () => void
+  onSubmitted?: () => void
 }) => {
   // form state for all input fields
   const [form, setForm] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    qualification: "",
-    age: "",
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    qualification: '',
+    age: '',
     isDependent: false,
-    relationship: "",
-    gender: "",
-    profession: "",
-    maritalStatus: "",
-    dob: "",
-  });
+    relationship: '',
+    gender: '',
+    profession: '',
+    maritalStatus: '',
+    dob: '',
+  })
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
 
   // update helper for form fields
-  const set = (k: keyof typeof form, v: any) =>
-    setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: keyof typeof form, v: string | boolean) =>
+    setForm(f => ({ ...f, [k]: v }))
 
   // basic validation check for required fields
   const isValid =
@@ -48,14 +57,14 @@ const ClientsFamilyMembersAddTab = ({
     form.age &&
     form.relationship &&
     form.gender &&
-    form.dob;
+    form.dob
 
   // handle submit
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isValid) return;
-    onSubmitted?.();
-  };
+    e.preventDefault()
+    if (!isValid) return
+    onSubmitted?.()
+  }
 
   return (
     <form onSubmit={submit} className="p-0">
@@ -63,138 +72,169 @@ const ClientsFamilyMembersAddTab = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
         {/* Names */}
         <div className="space-y-1">
-          <Label>First Name*</Label>
+          <Label>{t('familyMembers.labelFirstName')}</Label>
           <Input
             value={form.firstName}
-            onChange={(e) => set("firstName", e.target.value)}
+            onChange={e => set('firstName', e.target.value)}
             className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
           />
         </div>
         <div className="space-y-1">
-          <Label>Middle Name</Label>
+          <Label>{t('familyMembers.labelMiddleName')}</Label>
           <Input
             value={form.middleName}
-            onChange={(e) => set("middleName", e.target.value)}
+            onChange={e => set('middleName', e.target.value)}
             className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
           />
         </div>
         <div className="space-y-1">
-          <Label>Last Name*</Label>
+          <Label>{t('familyMembers.labelLastName')}</Label>
           <Input
             value={form.lastName}
-            onChange={(e) => set("lastName", e.target.value)}
+            onChange={e => set('lastName', e.target.value)}
             className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
           />
         </div>
         <div className="space-y-1">
-          <Label>Qualification</Label>
+          <Label>{t('familyMembers.labelQualification')}</Label>
           <Input
             value={form.qualification}
-            onChange={(e) => set("qualification", e.target.value)}
+            onChange={e => set('qualification', e.target.value)}
             className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
           />
         </div>
 
         {/* Age + Dependent checkbox */}
         <div className="space-y-1">
-          <Label>Age*</Label>
+          <Label>{t('familyMembers.labelAge')}</Label>
           <Input
             type="number"
             min={0}
             value={form.age}
-            onChange={(e) => set("age", e.target.value)}
+            onChange={e => set('age', e.target.value)}
             className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
           />
         </div>
         <div className="flex items-center gap-3 mt-6">
-          <Label className="m-0">Is Dependent?</Label>
+          <Label className="m-0">{t('familyMembers.labelIsDependent')}</Label>
           <Checkbox
             checked={form.isDependent}
-            onCheckedChange={(v) => set("isDependent", !!v)}
+            onCheckedChange={v => set('isDependent', !!v)}
           />
         </div>
 
         {/* Relationship + Gender */}
         <div className="space-y-1">
-          <Label>Relationship*</Label>
+          <Label>{t('familyMembers.labelRelationship')}</Label>
           <Select
             value={form.relationship}
-            onValueChange={(v) => set("relationship", v)}
+            onValueChange={v => set('relationship', v)}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SPOUSE">Spouse</SelectItem>
-              <SelectItem value="CHILD">Child</SelectItem>
-              <SelectItem value="PARENT">Parent</SelectItem>
-              <SelectItem value="SIBLING">Sibling</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem value="SPOUSE">
+                {t('familyMembers.relationshipSpouse')}
+              </SelectItem>
+              <SelectItem value="CHILD">
+                {t('familyMembers.relationshipChild')}
+              </SelectItem>
+              <SelectItem value="PARENT">
+                {t('familyMembers.relationshipParent')}
+              </SelectItem>
+              <SelectItem value="SIBLING">
+                {t('familyMembers.relationshipSibling')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.relationshipOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
-          <Label>Gender*</Label>
-          <Select
-            value={form.gender}
-            onValueChange={(v) => set("gender", v)}
-          >
+          <Label>{t('familyMembers.labelGender')}</Label>
+          <Select value={form.gender} onValueChange={v => set('gender', v)}>
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MALE">Male</SelectItem>
-              <SelectItem value="FEMALE">Female</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem value="MALE">
+                {t('familyMembers.genderMale')}
+              </SelectItem>
+              <SelectItem value="FEMALE">
+                {t('familyMembers.genderFemale')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.genderOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Profession + Marital Status */}
         <div className="space-y-1">
-          <Label>Profession</Label>
+          <Label>{t('familyMembers.labelProfession')}</Label>
           <Select
             value={form.profession}
-            onValueChange={(v) => set("profession", v)}
+            onValueChange={v => set('profession', v)}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="EMPLOYED">Employed</SelectItem>
-              <SelectItem value="SELF_EMPLOYED">Self-Employed</SelectItem>
-              <SelectItem value="STUDENT">Student</SelectItem>
-              <SelectItem value="UNEMPLOYED">Unemployed</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem value="EMPLOYED">
+                {t('familyMembers.professionEmployed')}
+              </SelectItem>
+              <SelectItem value="SELF_EMPLOYED">
+                {t('familyMembers.professionSelfEmployed')}
+              </SelectItem>
+              <SelectItem value="STUDENT">
+                {t('familyMembers.professionStudent')}
+              </SelectItem>
+              <SelectItem value="UNEMPLOYED">
+                {t('familyMembers.professionUnemployed')}
+              </SelectItem>
+              <SelectItem value="OTHER">
+                {t('familyMembers.professionOther')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
-          <Label>Marital Status</Label>
+          <Label>{t('familyMembers.labelMaritalStatus')}</Label>
           <Select
             value={form.maritalStatus}
-            onValueChange={(v) => set("maritalStatus", v)}
+            onValueChange={v => set('maritalStatus', v)}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SINGLE">Single</SelectItem>
-              <SelectItem value="MARRIED">Married</SelectItem>
-              <SelectItem value="DIVORCED">Divorced</SelectItem>
-              <SelectItem value="WIDOWED">Widowed</SelectItem>
+              <SelectItem value="SINGLE">
+                {t('familyMembers.maritalSingle')}
+              </SelectItem>
+              <SelectItem value="MARRIED">
+                {t('familyMembers.maritalMarried')}
+              </SelectItem>
+              <SelectItem value="DIVORCED">
+                {t('familyMembers.maritalDivorced')}
+              </SelectItem>
+              <SelectItem value="WIDOWED">
+                {t('familyMembers.maritalWidowed')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Date of Birth */}
         <div className="space-y-1">
-          <Label>Date Of Birth*</Label>
+          <Label>{t('familyMembers.labelDateOfBirth')}</Label>
           <div className="relative">
             <Input
               type="date"
               value={form.dob}
-              onChange={(e) => set("dob", e.target.value)}
+              onChange={e => set('dob', e.target.value)}
               className="w-full rounded-none border-0 border-b border-zinc-300 pr-10 focus-visible:ring-0"
             />
             <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
@@ -205,18 +245,18 @@ const ClientsFamilyMembersAddTab = ({
       {/* Footer buttons */}
       <div className="flex items-center gap-4 justify-center mt-8">
         <Button type="button" variant="outline" onClick={() => onCancel?.()}>
-          Cancel
+          {tc('actions.cancel')}
         </Button>
         <Button
           type="submit"
           disabled={!isValid}
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white"
         >
-          Submit
+          {tc('actions.submit')}
         </Button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default ClientsFamilyMembersAddTab;
+export default ClientsFamilyMembersAddTab

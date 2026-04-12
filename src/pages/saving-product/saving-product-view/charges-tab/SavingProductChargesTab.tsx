@@ -5,13 +5,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import {
+  SavingsAccountApi,
+  type SavingsAccountChargeData,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableHeader,
@@ -19,54 +22,55 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
-const api = new SavingsAccountApi(getConfiguration());
+const api = new SavingsAccountApi(getConfiguration())
 
 const SavingProductChargesTab = () => {
-  const { accountId } = useParams();
-  const navigate = useNavigate();
+  const { accountId } = useParams()
+  const navigate = useNavigate()
 
   // state
-  const [loading, setLoading] = useState(true);
-  const [charges, setCharges] = useState<any[]>([]);
-  const [showInactive, setShowInactive] = useState(false);
-  const [accountStatus, setAccountStatus] = useState<string>("");
+  const [loading, setLoading] = useState(true)
+  const [charges, setCharges] = useState<SavingsAccountChargeData[]>([])
+  const [showInactive, setShowInactive] = useState(false)
+  const [accountStatus, setAccountStatus] = useState<string>('')
 
   // fetch charges from API
   useEffect(() => {
-    if (!accountId) return;
-    (async () => {
+    if (!accountId) return
+    ;(async () => {
       try {
-        const res = await (api as any).retrieveOne25(
+        const res = await api.retrieveOne25(
           Number(accountId),
           undefined,
           undefined,
-          "charges"
-        );
-        setCharges(res?.data?.charges || []);
-        setAccountStatus(res?.data?.status?.value || "");
+          'charges'
+        )
+        setCharges(res?.data?.charges || [])
+        setAccountStatus(res?.data?.status?.value || '')
       } catch (e) {
-        console.error("Failed to load charges", e);
+        console.error('Failed to load charges', e)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, [accountId]);
+    })()
+  }, [accountId])
 
   // filter charges based on toggle
-  const filtered = charges.filter((c: any) =>
-    showInactive ? c?.active === false : c?.active !== false
-  );
+  const filtered = charges.filter(c =>
+    showInactive ? c?.isActive === false : c?.isActive !== false
+  )
 
-  // action handlers 
-  const onPay = (id: number) => alert(`Pay charge ${id}`);
-  const onWaive = (id: number) => alert(`Waive charge ${id}`);
-  const onInactivate = (id: number) => alert(`Inactivate charge ${id}`);
-  const onEdit = (charge: any) => navigate(`edit/${charge.id}`);
+  // action handlers
+  const onPay = (id: number) => alert(`Pay charge ${id}`)
+  const onWaive = (id: number) => alert(`Waive charge ${id}`)
+  const onInactivate = (id: number) => alert(`Inactivate charge ${id}`)
+  const onEdit = (charge: SavingsAccountChargeData) =>
+    navigate(`edit/${charge.id}`)
   const onDelete = (id: number) => {
-    if (confirm("Delete this charge?")) alert(`Delete charge ${id}`);
-  };
+    if (confirm('Delete this charge?')) alert(`Delete charge ${id}`)
+  }
 
   return (
     <div className="tab-container">
@@ -75,10 +79,10 @@ const SavingProductChargesTab = () => {
         <h3 className="m-0">Charges</h3>
         {charges.length > 0 && (
           <Button
-            onClick={() => setShowInactive((v) => !v)}
+            onClick={() => setShowInactive(v => !v)}
             className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
           >
-            {showInactive ? "View Active Charges" : "View Inactive Charges"}
+            {showInactive ? 'View Active Charges' : 'View Inactive Charges'}
           </Button>
         )}
       </div>
@@ -114,16 +118,16 @@ const SavingProductChargesTab = () => {
               </TableRow>
             ) : (
               // list charges
-              filtered.map((charge: any) => (
+              filtered.map(charge => (
                 <TableRow key={charge.id} className="select-row">
                   <TableCell>{charge.name}</TableCell>
-                  <TableCell>{charge.penalty ? "Penalty" : "Fee"}</TableCell>
+                  <TableCell>{charge.penalty ? 'Penalty' : 'Fee'}</TableCell>
                   <TableCell>{charge?.chargeTimeType?.value}</TableCell>
-                  <TableCell>{charge?.dueDate || ""}</TableCell>
+                  <TableCell>{charge?.dueDate || ''}</TableCell>
                   <TableCell>
                     {Array.isArray(charge?.feeOnMonthDay)
-                      ? charge.feeOnMonthDay.join("/")
-                      : ""}
+                      ? charge.feeOnMonthDay.join('/')
+                      : ''}
                   </TableCell>
                   <TableCell>{charge?.chargeCalculationType?.value}</TableCell>
                   <TableCell>{charge?.amount}</TableCell>
@@ -132,7 +136,7 @@ const SavingProductChargesTab = () => {
                   <TableCell>{charge?.amountOutstanding}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {accountStatus === "Submitted and pending approval" ? (
+                      {accountStatus === 'Submitted and pending approval' ? (
                         <>
                           {/* editable in draft mode */}
                           <Button size="sm" onClick={() => onEdit(charge)}>
@@ -141,7 +145,7 @@ const SavingProductChargesTab = () => {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => onDelete(charge.id)}
+                            onClick={() => onDelete(charge.id!)}
                           >
                             Delete
                           </Button>
@@ -154,21 +158,21 @@ const SavingProductChargesTab = () => {
                               <Button
                                 className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
                                 size="sm"
-                                onClick={() => onPay(charge.id)}
+                                onClick={() => onPay(charge.id!)}
                               >
                                 $
                               </Button>
                               <Button
                                 className="bg-[#0e77b7] hover:bg-[#0d6aa4]"
                                 size="sm"
-                                onClick={() => onWaive(charge.id)}
+                                onClick={() => onWaive(charge.id!)}
                               >
                                 Flag
                               </Button>
-                              {charge?.recurring && (
+                              {'recurring' in charge && charge.recurring && (
                                 <Button
                                   size="sm"
-                                  onClick={() => onInactivate(charge.id)}
+                                  onClick={() => onInactivate(charge.id!)}
                                 >
                                   Ban
                                 </Button>
@@ -186,7 +190,7 @@ const SavingProductChargesTab = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingProductChargesTab;
+export default SavingProductChargesTab

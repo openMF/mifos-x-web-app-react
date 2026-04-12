@@ -5,15 +5,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
 
 import {
   CollectionSheetApi,
@@ -21,86 +21,87 @@ import {
   StaffApi,
   type GetOfficesResponse,
   type StaffData,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+  type PostCollectionSheetResponse,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-import { SearchIcon } from "lucide-react";
+import { SearchIcon } from 'lucide-react'
 
 // Create API instances
-const officeApi = new OfficesApi(getConfiguration());
-const staffApi = new StaffApi(getConfiguration());
-const collectionSheetApi = new CollectionSheetApi(getConfiguration());
+const officeApi = new OfficesApi(getConfiguration())
+const staffApi = new StaffApi(getConfiguration())
+const collectionSheetApi = new CollectionSheetApi(getConfiguration())
 
 const IndividualCollectionSheet = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null);
-  const [staff, setStaff] = useState<StaffData[] | null>(null);
-  const [collectionSheet, setCollectionSheet] = useState<any>(null);
+  const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null)
+  const [staff, setStaff] = useState<StaffData[] | null>(null)
+  const [_collectionSheet, setCollectionSheet] =
+    useState<PostCollectionSheetResponse | null>(null) // Reserved for future use
 
   const [formData, setFormData] = useState({
-    office: "",
-    date: "",
-    staff: "",
-    client: "",
-  });
+    office: '',
+    date: '',
+    staff: '',
+    client: '',
+  })
 
   useEffect(() => {
     const fetchDropdowns = async () => {
       try {
-        const officesRes = await officeApi.retrieveOffices();
-        setOffices(officesRes.data);
+        const officesRes = await officeApi.retrieveOffices()
+        setOffices(officesRes.data)
       } catch (err) {
-        console.log("Failed to fetch offices", err);
+        console.error('Failed to fetch offices', err)
       }
-    };
-    fetchDropdowns();
-  }, []);
+    }
+    fetchDropdowns()
+  }, [])
 
   const fetchStaff = async (officeId: string) => {
     try {
-      const res = await staffApi.retrieveAll16(Number(officeId));
-      setStaff(res.data);
+      const res = await staffApi.retrieveAll16(Number(officeId))
+      setStaff(res.data)
     } catch (err) {
-      console.log("Failed to fetch staff", err);
+      console.error('Failed to fetch staff', err)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!formData.office) {
-      alert("Please fill all required fields.");
-      return;
+      alert('Please fill all required fields.')
+      return
     }
 
     const payload = {
       officeId: Number(formData.office),
       transactionDate: formData.date,
-      dateFormat: "yyyy-MM-dd",
-      locale: "en",
+      dateFormat: 'yyyy-MM-dd',
+      locale: 'en',
       staffId: formData.staff ? Number(formData.staff) : undefined,
-    };
+    }
 
     try {
-      console.log("Sending collection payload", payload);
+      const response = await collectionSheetApi.generateCollectionSheet(
+        payload,
+        'generateCollectionSheet'
+      )
 
-      const response = await collectionSheetApi.generateCollectionSheet(payload, "generateCollectionSheet")
-
-      console.log("Collection Sheet Response:", response.data);
-      setCollectionSheet(response.data);
+      setCollectionSheet(response.data)
     } catch (err) {
-      console.log("Failed to generate collection sheet", err);
+      console.error('Failed to generate collection sheet', err)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
-
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Individual Collection Sheet", current: true }
+          { label: 'Home', href: '/home' },
+          { label: 'Individual Collection Sheet', current: true },
         ]}
       />
 
@@ -116,19 +117,17 @@ const IndividualCollectionSheet = () => {
               <AppSelect
                 selectLabel="Branch Office *"
                 selectValue={formData.office}
-                selectOnChange={(value) => {
-                  setFormData((prev) => ({ ...prev, office: value }));
-                  fetchStaff(value);
+                selectOnChange={value => {
+                  setFormData(prev => ({ ...prev, office: value }))
+                  fetchStaff(value)
                 }}
                 selectPlaceholder="Select Office"
-                selectOptions={
-                  (offices || [])
-                    .filter((option) => option.id !== undefined)
-                    .map((option) => ({
-                      id: option.id!,
-                      name: option.name!
-                    }))
-                }
+                selectOptions={(offices || [])
+                  .filter(option => option.id !== undefined)
+                  .map(option => ({
+                    id: option.id!,
+                    name: option.name!,
+                  }))}
                 selectClassname="w-full space-y-2"
               />
             </div>
@@ -139,8 +138,8 @@ const IndividualCollectionSheet = () => {
               <Input
                 type="date"
                 className="w-full pl-3"
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, date: e.target.value }))
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, date: e.target.value }))
                 }
               />
             </div>
@@ -150,18 +149,16 @@ const IndividualCollectionSheet = () => {
               <AppSelect
                 selectLabel="Staff"
                 selectValue={formData.staff}
-                selectOnChange={(value) =>
-                  setFormData((prev) => ({ ...prev, staff: value }))
+                selectOnChange={value =>
+                  setFormData(prev => ({ ...prev, staff: value }))
                 }
                 selectPlaceholder="Select Staff"
-                selectOptions={
-                  (staff || [])
-                    .filter((option) => option.id !== undefined)
-                    .map((option) => ({
-                      id: option.id!,
-                      name: option.displayName!
-                    }))
-                }
+                selectOptions={(staff || [])
+                  .filter(option => option.id !== undefined)
+                  .map(option => ({
+                    id: option.id!,
+                    name: option.displayName!,
+                  }))}
                 selectClassname="w-full space-y-2"
               />
             </div>
@@ -172,7 +169,7 @@ const IndividualCollectionSheet = () => {
                 type="button"
                 variant="outline"
                 className="cursor-pointer"
-                onClick={() => navigate("/accounting")}
+                onClick={() => navigate('/accounting')}
               >
                 Cancel
               </Button>
@@ -187,10 +184,8 @@ const IndividualCollectionSheet = () => {
           </div>
         </div>
       </form>
-
-
     </div>
-  );
-};
+  )
+}
 
-export default IndividualCollectionSheet;
+export default IndividualCollectionSheet

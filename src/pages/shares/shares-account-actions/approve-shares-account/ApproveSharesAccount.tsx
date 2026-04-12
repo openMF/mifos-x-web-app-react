@@ -5,45 +5,47 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const ApproveSharesAccount = () => {
-  const { clientId, sharesAccountId } = useParams();
-  const navigate = useNavigate();
+  const { clientId, sharesAccountId } = useParams()
+  const navigate = useNavigate()
 
-  const [approvedDate, setApprovedDate] = useState("");
-  const [note, setNote] = useState("");
+  const [approvedDate, setApprovedDate] = useState('')
+  const [note, setNote] = useState('')
 
   const backToAccount = () => {
     if (clientId && sharesAccountId) {
-      navigate(`/clients/${clientId}/shares/${sharesAccountId}`);
+      navigate(`/clients/${clientId}/shares/${sharesAccountId}`)
     } else if (clientId) {
-      navigate(`/clients/${clientId}/shares`);
+      navigate(`/clients/${clientId}/shares`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Approve Shares:", { approvedDate, note });
-    backToAccount();
-  };
+    backToAccount()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Clients", href: "/clients" },
-          { label: "Shares", href: clientId ? `/clients/${clientId}/shares` : "/clients" },
-          { label: "Approve", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Clients', href: '/clients' },
+          {
+            label: 'Shares',
+            href: clientId ? `/clients/${clientId}/shares` : '/clients',
+          },
+          { label: 'Approve', current: true },
         ]}
       />
 
@@ -59,7 +61,7 @@ const ApproveSharesAccount = () => {
               <Input
                 type="date"
                 value={approvedDate}
-                onChange={(e) => setApprovedDate(e.target.value)}
+                onChange={e => setApprovedDate(e.target.value)}
               />
             </div>
 
@@ -70,7 +72,7 @@ const ApproveSharesAccount = () => {
                 rows={3}
                 className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent px-3 py-2"
                 value={note}
-                onChange={(e) => setNote(e.target.value)}
+                onChange={e => setNote(e.target.value)}
               />
             </div>
 
@@ -87,7 +89,7 @@ const ApproveSharesAccount = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ApproveSharesAccount;
+export default ApproveSharesAccount

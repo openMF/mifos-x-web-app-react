@@ -5,91 +5,98 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
 
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { AccountingClosureApi, OfficesApi, type GetOfficesResponse } from "@/fineract-api";
+import { getConfiguration } from '@/lib/fineract-openapi'
+import {
+  AccountingClosureApi,
+  OfficesApi,
+  type GetOfficesResponse,
+} from '@/fineract-api'
 
 // API clients
-const officesApi = new OfficesApi(getConfiguration());
-const closureApi = new AccountingClosureApi(getConfiguration());
+const officesApi = new OfficesApi(getConfiguration())
+const closureApi = new AccountingClosureApi(getConfiguration())
 
 const CreateClosure = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // Offices list + form state
-  const [offices, setOffices] = useState<GetOfficesResponse[]>([]);
+  const [offices, setOffices] = useState<GetOfficesResponse[]>([])
 
   const [formData, setFormData] = useState({
-    officeId: "",
-    closingDate: "",
-    comments: "",
-  });
+    officeId: '',
+    closingDate: '',
+    comments: '',
+  })
 
   // Load offices on mount
   useEffect(() => {
     const fetchOffices = async () => {
       try {
-        const response = await officesApi.retrieveOffices();
-        setOffices(response.data || []);
+        const response = await officesApi.retrieveOffices()
+        setOffices(response.data || [])
       } catch (err) {
-        console.error("Failed to fetch offices", err);
+        console.error('Failed to fetch offices', err)
       }
-    };
-    fetchOffices();
-  }, []);
+    }
+    fetchOffices()
+  }, [])
 
   // Generic field updater
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
 
   // Submit: validate, format date, call API, then navigate
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!formData.officeId || !formData.closingDate) {
-      alert("Please fill all required fields.");
-      return;
+      alert('Please fill all required fields.')
+      return
     }
 
-    const formattedDate = new Date(formData.closingDate).toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
+    const formattedDate = new Date(formData.closingDate).toLocaleDateString(
+      'en-GB',
+      {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      }
+    )
 
     try {
       await closureApi.createGLClosure({
         officeId: Number(formData.officeId),
         closingDate: formattedDate,
         comments: formData.comments,
-        locale: "en",
-        dateFormat: "dd MMMM yyyy",
-      });
-      alert("Closure created successfully!");
-      navigate("/accounting/closing-entries");
+        locale: 'en',
+        dateFormat: 'dd MMMM yyyy',
+      })
+      alert('Closure created successfully!')
+      navigate('/accounting/closing-entries')
     } catch (err) {
-      console.error("Failed to create closure", err);
-      alert("Failed to create closure");
+      console.error('Failed to create closure', err)
+      alert('Failed to create closure')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Accounting", href: "/accounting" },
-          { label: "Closing Entries", href: "/accounting/closing-entries" },
-          { label: "Create", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Accounting', href: '/accounting' },
+          { label: 'Closing Entries', href: '/accounting/closing-entries' },
+          { label: 'Create', current: true },
         ]}
       />
 
@@ -105,10 +112,10 @@ const CreateClosure = () => {
               selectLabel="Office*"
               selectPlaceholder="Select Office"
               selectValue={formData.officeId}
-              selectOnChange={(val) => handleChange("officeId", val)}
-              selectOptions={offices.map((o) => ({
-                id: o.id?.toString() || "",
-                name: o.name || "",
+              selectOnChange={val => handleChange('officeId', val)}
+              selectOptions={offices.map(o => ({
+                id: o.id?.toString() || '',
+                name: o.name || '',
               }))}
               selectClassname="w-full space-y-2"
             />
@@ -120,7 +127,7 @@ const CreateClosure = () => {
             <Input
               type="date"
               value={formData.closingDate}
-              onChange={(e) => handleChange("closingDate", e.target.value)}
+              onChange={e => handleChange('closingDate', e.target.value)}
               required
             />
           </div>
@@ -130,7 +137,7 @@ const CreateClosure = () => {
             <Label>Comments</Label>
             <Input
               value={formData.comments}
-              onChange={(e) => handleChange("comments", e.target.value)}
+              onChange={e => handleChange('comments', e.target.value)}
             />
           </div>
 
@@ -139,7 +146,7 @@ const CreateClosure = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/accounting/closing-entries")}
+              onClick={() => navigate('/accounting/closing-entries')}
             >
               Cancel
             </Button>
@@ -153,7 +160,7 @@ const CreateClosure = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateClosure;
+export default CreateClosure

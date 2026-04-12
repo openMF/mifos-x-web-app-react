@@ -5,19 +5,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "@/app/store";
-import AppRoutes from "./router/AppRoutes";
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from '@/app/store'
+import AppRoutes from './router/AppRoutes'
 
 const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <AppRoutes/>
+        <AppRoutes />
       </BrowserRouter>
     </Provider>
-  );
-};
+  )
+}
 
-export default App;
+export default App

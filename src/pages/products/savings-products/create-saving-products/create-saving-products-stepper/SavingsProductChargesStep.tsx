@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Trash } from 'lucide-react'
+import AppSelect from '@/components/custom/select/AppSelect'
 import {
   Table,
   TableBody,
@@ -16,46 +16,53 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
 type ChargeOption = {
-  id: string;
-  name: string;
-  amount: number;
-  chargeTimeType: string;
-  chargeCalculationType: string;
-};
+  id: string
+  name: string
+  amount: number
+  chargeTimeType: string
+  chargeCalculationType: string
+}
+
+interface SavingsProductChargesFormData {
+  charges: ChargeOption[]
+  [key: string]: unknown
+}
 
 const SavingsProductChargesStep = ({
   formData,
   setFormData,
   chargeOptions,
 }: {
-  formData: any;
-  setFormData: (val: any) => void;
-  chargeOptions: ChargeOption[];
+  formData: SavingsProductChargesFormData
+  setFormData: (
+    updater: (
+      prev: SavingsProductChargesFormData
+    ) => SavingsProductChargesFormData
+  ) => void
+  chargeOptions: ChargeOption[]
 }) => {
-  const [selectedChargeId, setSelectedChargeId] = useState("");
+  const [selectedChargeId, setSelectedChargeId] = useState('')
 
   const handleAdd = () => {
-    const selectedCharge = chargeOptions.find(
-      (c) => c.id === selectedChargeId
-    );
+    const selectedCharge = chargeOptions.find(c => c.id === selectedChargeId)
     if (selectedCharge) {
-      setFormData((prev: any) => ({
+      setFormData(prev => ({
         ...prev,
         charges: [...(prev.charges || []), selectedCharge],
-      }));
-      setSelectedChargeId("");
+      }))
+      setSelectedChargeId('')
     }
-  };
+  }
 
   const handleRemove = (id: string) => {
-    setFormData((prev: any) => ({
+    setFormData(prev => ({
       ...prev,
       charges: prev.charges.filter((c: ChargeOption) => c.id !== id),
-    }));
-  };
+    }))
+  }
 
   return (
     <div className="space-y-6">
@@ -67,7 +74,7 @@ const SavingsProductChargesStep = ({
             selectPlaceholder="Select Charge"
             selectValue={selectedChargeId}
             selectOnChange={setSelectedChargeId}
-            selectOptions={chargeOptions.map((c) => ({
+            selectOptions={chargeOptions.map(c => ({
               id: c.id,
               name: c.name,
             }))}
@@ -115,7 +122,7 @@ const SavingsProductChargesStep = ({
         </Table>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SavingsProductChargesStep;
+export default SavingsProductChargesStep

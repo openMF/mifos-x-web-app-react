@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,58 +19,55 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import {
-  AdhocQueryApiApi,
-  type AdHocData,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { AdhocQueryApiApi, type AdHocData } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-const adhocApi = new AdhocQueryApiApi(getConfiguration());
+const adhocApi = new AdhocQueryApiApi(getConfiguration())
 
 const ViewAdhocQuery = () => {
-  const navigate = useNavigate();
-  const { id } = useParams(); // route id
-  const [query, setQuery] = useState<AdHocData>(); // current record
+  const navigate = useNavigate()
+  const { id } = useParams() // route id
+  const [query, setQuery] = useState<AdHocData>() // current record
 
   useEffect(() => {
     // load record by id
     const fetchQuery = async () => {
       try {
-        const res = await adhocApi.retrieveAdHocQuery(Number(id));
-        setQuery(res.data);
+        const res = await adhocApi.retrieveAdHocQuery(Number(id))
+        setQuery(res.data)
       } catch (err) {
-        console.error("Failed to fetch adhoc query", err);
+        console.error('Failed to fetch adhoc query', err)
       }
-    };
-    fetchQuery();
-  }, [id]);
+    }
+    fetchQuery()
+  }, [id])
 
   // delete record then return to list
   const handleDelete = async () => {
     try {
-      await adhocApi.deleteAdHocQuery(Number(id));
-      navigate("/organization/adhoc-query");
+      await adhocApi.deleteAdHocQuery(Number(id))
+      navigate('/organization/adhoc-query')
     } catch (err) {
-      console.error("Failed to delete adhoc query", err);
+      console.error('Failed to delete adhoc query', err)
     }
-  };
+  }
 
   // simple loading guard
-  if (!query) return <div className="p-10 text-center">Loading...</div>;
+  if (!query) return <div className="p-10 text-center">Loading...</div>
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Adhoc Query", href: "/organization/adhoc-query" },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Adhoc Query', href: '/organization/adhoc-query' },
           { label: `${query.id}`, current: true },
         ]}
       />
@@ -80,7 +77,9 @@ const ViewAdhocQuery = () => {
         <div className="flex mb-6 gap-4">
           <Button
             className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
-            onClick={() => navigate(`/organization/adhoc-query/${query.id}/edit`)}
+            onClick={() =>
+              navigate(`/organization/adhoc-query/${query.id}/edit`)
+            }
           >
             <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
             Edit
@@ -120,19 +119,29 @@ const ViewAdhocQuery = () => {
 
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Name</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{query.name || "—"}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {query.name || '—'}
+          </div>
 
           <div className="font-medium">Query</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{query.query || "—"}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {query.query || '—'}
+          </div>
 
           <div className="font-medium">Table Affected</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{query.tableName || "—"}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {query.tableName || '—'}
+          </div>
 
           <div className="font-medium">Status</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{query.isActive ? "Active" : "Inactive"}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {query.isActive ? 'Active' : 'Inactive'}
+          </div>
 
           <div className="font-medium">Created By</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{query.createdBy || "—"}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {query.createdBy || '—'}
+          </div>
         </div>
 
         {/* back */}
@@ -140,14 +149,14 @@ const ViewAdhocQuery = () => {
           <Button
             variant="outline"
             className="w-28 cursor-pointer"
-            onClick={() => navigate("/organization/adhoc-queries")}
+            onClick={() => navigate('/organization/adhoc-queries')}
           >
             Back
           </Button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewAdhocQuery;
+export default ViewAdhocQuery

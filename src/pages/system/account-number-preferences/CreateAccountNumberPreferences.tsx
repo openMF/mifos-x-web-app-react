@@ -5,48 +5,50 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
 
 const ACCOUNT_TYPES = [
-  { id: "CLIENT", name: "Client" },
-  { id: "GROUP", name: "Group" },
-  { id: "CENTER", name: "Center" },
-  { id: "LOAN", name: "Loan" },
-  { id: "SAVINGS", name: "Savings" },
-  { id: "SHARE", name: "Share" },
-];
+  { id: 'CLIENT', name: 'Client' },
+  { id: 'GROUP', name: 'Group' },
+  { id: 'CENTER', name: 'Center' },
+  { id: 'LOAN', name: 'Loan' },
+  { id: 'SAVINGS', name: 'Savings' },
+  { id: 'SHARE', name: 'Share' },
+]
 
 const CreateAccountNumberPreferences = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [form, setForm] = useState({
-    accountType: "",
-    prefix: "",
-  });
+    accountType: '',
+    prefix: '',
+  })
 
-  const handleChange = (field: "accountType" | "prefix", value: string) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: 'accountType' | 'prefix', value: string) =>
+    setForm(prev => ({ ...prev, [field]: value }))
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Submit payload:", form);
-  };
+    e.preventDefault()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Account Number Preferences", href: "/system/account-number-preferences" },
-          { label: "Create", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          {
+            label: 'Account Number Preferences',
+            href: '/system/account-number-preferences',
+          },
+          { label: 'Create', current: true },
         ]}
       />
 
@@ -60,7 +62,7 @@ const CreateAccountNumberPreferences = () => {
               selectLabel="Account Type*"
               selectPlaceholder="Select"
               selectValue={form.accountType}
-              selectOnChange={(val) => handleChange("accountType", val)}
+              selectOnChange={val => handleChange('accountType', val)}
               selectClassname="w-full"
               selectOptions={ACCOUNT_TYPES}
             />
@@ -71,7 +73,7 @@ const CreateAccountNumberPreferences = () => {
             <Label>Prefix Field</Label>
             <Input
               value={form.prefix}
-              onChange={(e) => handleChange("prefix", e.target.value)}
+              onChange={e => handleChange('prefix', e.target.value)}
               placeholder=""
             />
           </div>
@@ -81,18 +83,21 @@ const CreateAccountNumberPreferences = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/system/account-number-preferences")}
+              onClick={() => navigate('/system/account-number-preferences')}
             >
               Cancel
             </Button>
-            <Button type="submit" className="bg-[#1074b9] hover:bg-[#1074c9] text-white">
+            <Button
+              type="submit"
+              className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+            >
               Submit
             </Button>
           </div>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateAccountNumberPreferences;
+export default CreateAccountNumberPreferences

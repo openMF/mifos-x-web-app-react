@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+.vite/
+
+# Generated files
+src/fineract-api/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Coverage
+coverage/
+
+# Generated docs
+docs/
+
+# Docker data
+data/
+
+# Misc
+.DS_Store
+*.log

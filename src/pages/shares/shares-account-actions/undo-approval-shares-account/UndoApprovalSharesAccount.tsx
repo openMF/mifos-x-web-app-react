@@ -5,37 +5,39 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
 
 const UndoApprovalSharesAccount = () => {
-  const { clientId, sharesAccountId } = useParams();
-  const navigate = useNavigate();
+  const { clientId, sharesAccountId } = useParams()
+  const navigate = useNavigate()
 
   const backToAccount = () => {
     if (clientId && sharesAccountId) {
-      navigate(-1);
+      navigate(-1)
     } else if (clientId) {
-      navigate(`/clients/${clientId}/shares`);
+      navigate(`/clients/${clientId}/shares`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Undo approval of shares account:", sharesAccountId);
-    backToAccount();
-  };
+    backToAccount()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Clients", href: "/clients" },
-          { label: "Shares", href: clientId ? `/clients/${clientId}/shares` : "/clients" },
-          { label: "Undo Approval", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Clients', href: '/clients' },
+          {
+            label: 'Shares',
+            href: clientId ? `/clients/${clientId}/shares` : '/clients',
+          },
+          { label: 'Undo Approval', current: true },
         ]}
       />
 
@@ -44,7 +46,7 @@ const UndoApprovalSharesAccount = () => {
           <h2 className="text-2xl font-semibold mb-6">Undo Approval</h2>
 
           <p className="text-center text-base md:text-lg mb-8">
-            Are you sure you want to undo approval of shares account with ID:{" "}
+            Are you sure you want to undo approval of shares account with ID:{' '}
             <strong>{sharesAccountId}</strong> ?
           </p>
 
@@ -59,7 +61,7 @@ const UndoApprovalSharesAccount = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UndoApprovalSharesAccount;
+export default UndoApprovalSharesAccount

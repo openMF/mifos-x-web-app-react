@@ -5,13 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-"use client"
+'use client'
 
-import * as React from "react"
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import * as React from 'react'
+import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 
-import { cn } from "@/lib/utils"
-import { tooltipContentRoot } from "../styles/tooltip"
+import { cn } from '@/lib/utils'
+import { tooltipContentRoot } from '../styles/tooltip'
 
 function TooltipProvider({
   delayDuration = 0,
@@ -53,10 +53,7 @@ function TooltipContent({
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
         sideOffset={sideOffset}
-        className={cn(
-          tooltipContentRoot,
-          className
-        )}
+        className={cn(tooltipContentRoot, className)}
         {...props}
       >
         {children}

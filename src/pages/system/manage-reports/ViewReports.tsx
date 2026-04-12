@@ -5,51 +5,51 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from "@/components/ui/button";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Button } from '@/components/ui/button'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
-import { ReportsApi, type GetReportsResponse } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { ReportsApi, type GetReportsResponse } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const reportsApi = new ReportsApi(getConfiguration());
+const reportsApi = new ReportsApi(getConfiguration())
 
 const ViewReports = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [report, setReport] = useState<GetReportsResponse>();
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [report, setReport] = useState<GetReportsResponse>()
 
   // Fetch report details
   useEffect(() => {
-    if (!id || isNaN(Number(id))) return;
+    if (!id || isNaN(Number(id))) return
 
     const fetchReport = async () => {
       try {
         const response = await reportsApi.retrieveReport(Number(id), {
           params: { template: true },
-        });
-        setReport(response.data);
+        })
+        setReport(response.data)
       } catch (err) {
-        console.error("Failed to fetch report details", err);
+        console.error('Failed to fetch report details', err)
       }
-    };
+    }
 
-    fetchReport();
-  }, [id]);
+    fetchReport()
+  }, [id])
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System" },
-          { label: "Manage Reports", href: "/system/reports" },
+          { label: 'Home', href: '/home' },
+          { label: 'System' },
+          { label: 'Manage Reports', href: '/system/reports' },
           { label: `${report?.id}`, current: true },
         ]}
       />
@@ -73,19 +73,23 @@ const ViewReports = () => {
         {/* Report details */}
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Report Type:</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{report?.reportType}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {report?.reportType}
+          </div>
 
           <div className="font-medium">Report Category:</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{report?.reportCategory}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {report?.reportCategory}
+          </div>
 
           <div className="font-medium">Core Report:</div>
           <div className="text-zinc-600 dark:text-zinc-400">
-            {report?.coreReport ? "Yes" : "No"}
+            {report?.coreReport ? 'Yes' : 'No'}
           </div>
 
           <div className="font-medium">User Report:</div>
           <div className="text-zinc-600 dark:text-zinc-400">
-            {report?.useReport ? "Yes" : "No"}
+            {report?.useReport ? 'Yes' : 'No'}
           </div>
         </div>
 
@@ -94,14 +98,14 @@ const ViewReports = () => {
           <Button
             variant="outline"
             className="w-28 cursor-pointer"
-            onClick={() => navigate("/system/reports")}
+            onClick={() => navigate('/system/reports')}
           >
             Back
           </Button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewReports;
+export default ViewReports

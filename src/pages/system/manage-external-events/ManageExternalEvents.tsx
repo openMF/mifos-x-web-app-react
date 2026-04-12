@@ -5,17 +5,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -24,112 +24,116 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/table'
+import { Switch } from '@/components/ui/switch'
 import {
   ExternalEventConfigurationApi,
   type ExternalEventConfigurationItemData,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const externalEventsApi = new ExternalEventConfigurationApi(getConfiguration());
+const externalEventsApi = new ExternalEventConfigurationApi(getConfiguration())
 
 const ManageExternalEvents = () => {
-  const [externalEvents, setExternalEvents] = useState<ExternalEventConfigurationItemData[]>([]);
-  const [baseline, setBaseline] = useState<Record<string, boolean>>({});
+  const [externalEvents, setExternalEvents] = useState<
+    ExternalEventConfigurationItemData[]
+  >([])
+  const [baseline, setBaseline] = useState<Record<string, boolean>>({})
 
-  const [filter, setFilter] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [page, setPage] = useState(1);
-  const [submitting, setSubmitting] = useState(false);
+  const [filter, setFilter] = useState('')
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [page, setPage] = useState(1)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const res = await externalEventsApi.retrieveExternalEventConfiguration();
-        const list = res.data.externalEventConfiguration ?? [];
-        setExternalEvents(list);
+        const res = await externalEventsApi.retrieveExternalEventConfiguration()
+        const list = res.data.externalEventConfiguration ?? []
+        setExternalEvents(list)
 
-        const map: Record<string, boolean> = {};
+        const map: Record<string, boolean> = {}
         for (const it of list) {
-          if (it?.type) map[it.type] = !!it.enabled;
+          if (it?.type) map[it.type] = !!it.enabled
         }
-        setBaseline(map);
+        setBaseline(map)
       } catch (err) {
-        console.log("Couldn't fetch External Events Data", err);
+        console.error("Couldn't fetch External Events Data", err)
       }
-    };
-    fetchDetails();
-  }, []);
+    }
+    fetchDetails()
+  }, [])
 
-  const filtered = externalEvents.filter((e) =>
-    (e.type ?? "").toLowerCase().includes(filter.toLowerCase())
-  );
+  const filtered = externalEvents.filter(e =>
+    (e.type ?? '').toLowerCase().includes(filter.toLowerCase())
+  )
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const start = (page - 1) * itemsPerPage;
-  const paginated = filtered.slice(start, start + itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const start = (page - 1) * itemsPerPage
+  const paginated = filtered.slice(start, start + itemsPerPage)
 
-  let isDirty = false;
+  let isDirty = false
   for (const item of externalEvents) {
-    const t = item.type ?? "";
-    if (!t) continue;
+    const t = item.type ?? ''
+    if (!t) continue
     if ((item.enabled ?? false) !== (baseline[t] ?? false)) {
-      isDirty = true;
-      break;
+      isDirty = true
+      break
     }
   }
 
   const toggle = (idxOnPage: number) => {
-    const idx = start + idxOnPage; 
-    const target = paginated[idxOnPage];
-    const originalIndex = externalEvents.findIndex((e) => e.type === target.type);
-    if (originalIndex === -1) return;
+    const _idx = start + idxOnPage // Reserved for future use
+    const target = paginated[idxOnPage]
+    const originalIndex = externalEvents.findIndex(e => e.type === target.type)
+    if (originalIndex === -1) return
 
-    setExternalEvents((prev) =>
-      prev.map((e, i) => (i === originalIndex ? { ...e, enabled: !e.enabled } : e))
-    );
-  };
+    setExternalEvents(prev =>
+      prev.map((e, i) =>
+        i === originalIndex ? { ...e, enabled: !e.enabled } : e
+      )
+    )
+  }
 
   const applyChanges = async () => {
     // build only changed keys
-    const externalEventConfigurations: Record<string, boolean> = {};
+    const externalEventConfigurations: Record<string, boolean> = {}
     for (const it of externalEvents) {
-      const t = it.type ?? "";
-      if (!t) continue;
-      const curr = !!it.enabled;
-      const base = !!baseline[t];
-      if (curr !== base) externalEventConfigurations[t] = curr;
+      const t = it.type ?? ''
+      if (!t) continue
+      const curr = !!it.enabled
+      const base = !!baseline[t]
+      if (curr !== base) externalEventConfigurations[t] = curr
     }
-    if (Object.keys(externalEventConfigurations).length === 0) return;
+    if (Object.keys(externalEventConfigurations).length === 0) return
 
-    const payload = { changes: { externalEventConfigurations } };
+    const _payload = { changes: { externalEventConfigurations } } // Reserved for future use
 
     try {
-      setSubmitting(true);
+      setSubmitting(true)
 
       // refresh baseline after success
-      const newBase: Record<string, boolean> = {};
+      const newBase: Record<string, boolean> = {}
       for (const it of externalEvents) {
-        if (it?.type) newBase[it.type] = !!it.enabled;
+        if (it?.type) newBase[it.type] = !!it.enabled
       }
-      setBaseline(newBase);
-      alert("External events updated.");
+      setBaseline(newBase)
+      alert('External events updated.')
     } catch (err) {
-      console.error("Failed to apply changes", err);
-      alert("Failed to apply changes.");
+      console.error('Failed to apply changes', err)
+      alert('Failed to apply changes.')
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Manage External Events", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          { label: 'Manage External Events', current: true },
         ]}
       />
 
@@ -139,10 +143,12 @@ const ManageExternalEvents = () => {
         <Button
           variant="secondary"
           disabled={!isDirty || submitting}
-          className={!isDirty || submitting ? "opacity-60 cursor-not-allowed" : ""}
+          className={
+            !isDirty || submitting ? 'opacity-60 cursor-not-allowed' : ''
+          }
           onClick={applyChanges}
         >
-          {submitting ? "Applying…" : "Apply Changes"}
+          {submitting ? 'Applying…' : 'Apply Changes'}
         </Button>
       </div>
 
@@ -151,9 +157,9 @@ const ManageExternalEvents = () => {
         <Input
           placeholder="Search events…"
           value={filter}
-          onChange={(e) => {
-            setFilter(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setFilter(e.target.value)
+            setPage(1)
           }}
           className="max-w-md h-11 text-base"
         />
@@ -161,9 +167,9 @@ const ManageExternalEvents = () => {
         <div className="flex items-center gap-2">
           <Select
             value={itemsPerPage.toString()}
-            onValueChange={(v) => {
-              setItemsPerPage(parseInt(v, 10));
-              setPage(1);
+            onValueChange={v => {
+              setItemsPerPage(parseInt(v, 10))
+              setPage(1)
             }}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
@@ -200,7 +206,8 @@ const ManageExternalEvents = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
           <TableHeader>
             <TableRow className="text-base">
@@ -220,8 +227,14 @@ const ManageExternalEvents = () => {
                       checked={!!row.enabled}
                       onCheckedChange={() => toggle(idx)}
                     />
-                    <span className={row.enabled ? "text-green-600 font-medium" : "text-rose-500 font-medium"}>
-                      {row.enabled ? "Enabled" : "Disabled"}
+                    <span
+                      className={
+                        row.enabled
+                          ? 'text-green-600 font-medium'
+                          : 'text-rose-500 font-medium'
+                      }
+                    >
+                      {row.enabled ? 'Enabled' : 'Disabled'}
                     </span>
                   </div>
                 </TableCell>
@@ -230,7 +243,10 @@ const ManageExternalEvents = () => {
 
             {paginated.length === 0 && (
               <TableRow>
-                <TableCell colSpan={2} className="text-center py-8 text-zinc-500">
+                <TableCell
+                  colSpan={2}
+                  className="text-center py-8 text-zinc-500"
+                >
                   No events found.
                 </TableCell>
               </TableRow>
@@ -239,7 +255,7 @@ const ManageExternalEvents = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ManageExternalEvents;
+export default ManageExternalEvents

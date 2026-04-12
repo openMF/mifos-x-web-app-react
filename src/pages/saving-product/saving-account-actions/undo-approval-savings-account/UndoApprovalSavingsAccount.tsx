@@ -5,41 +5,40 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const UndoApprovalSavingsAccount = () => {
-  const { groupId, accountId } = useParams();
-  const navigate = useNavigate();
+  const { groupId, accountId } = useParams()
+  const navigate = useNavigate()
 
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState('')
 
   const backToTransactions = () => {
     if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/transactions`);
+      navigate(`/groups/${groupId}/savings-accounts/${accountId}/transactions`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Undo Approval Note:", note);
-    backToTransactions();
-  };
+    backToTransactions()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Undo Approval", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Undo Approval', current: true },
         ]}
       />
 
@@ -55,7 +54,7 @@ const UndoApprovalSavingsAccount = () => {
               <Input
                 className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent px-3 py-2"
                 value={note}
-                onChange={(e) => setNote(e.target.value)}
+                onChange={e => setNote(e.target.value)}
               />
             </div>
 
@@ -64,13 +63,18 @@ const UndoApprovalSavingsAccount = () => {
               <Button variant="outline" onClick={backToTransactions}>
                 Cancel
               </Button>
-              <Button className="bg-[#0e77b7] hover:bg-[#0662a3]" onClick={onSubmit}>Confirm</Button>
+              <Button
+                className="bg-[#0e77b7] hover:bg-[#0662a3]"
+                onClick={onSubmit}
+              >
+                Confirm
+              </Button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UndoApprovalSavingsAccount;
+export default UndoApprovalSavingsAccount

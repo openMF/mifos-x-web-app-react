@@ -5,14 +5,26 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { SavingsAccountApi } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { SavingsAccountApi, type CurrencyData } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+interface TransactionRecord {
+  id?: number
+  date?: string
+  externalId?: string
+  transactionType?: { value?: string }
+  debit?: unknown
+  credit?: unknown
+  amount?: number
+  runningBalance?: number
+  note?: string
+}
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
   TableHeader,
@@ -20,41 +32,41 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
-const api = new SavingsAccountApi(getConfiguration());
+const api = new SavingsAccountApi(getConfiguration())
 
 const SavingProductTransactionTab = () => {
-  const { accountId, transactionId } = useParams();
-  const navigate = useNavigate();
+  const { accountId, transactionId } = useParams()
+  const navigate = useNavigate()
 
-  const [loading, setLoading] = useState(true);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [currency, setCurrency] = useState<any>(null);
+  const [loading, setLoading] = useState(true)
+  const [transactions, setTransactions] = useState<TransactionRecord[]>([])
+  const [currency, setCurrency] = useState<CurrencyData | null>(null)
 
   useEffect(() => {
-    if (!accountId) return;
-    (async () => {
+    if (!accountId) return
+    ;(async () => {
       try {
-        const res = await (api as any).retrieveOne25(
+        const res = await api.retrieveOne25(
           Number(accountId),
           undefined,
           undefined,
-          "transactions"
-        );
-        setTransactions(res.data?.transactions || []);
-        setCurrency(res.data?.currency || null);
+          'transactions'
+        )
+        setTransactions(res.data?.transactions || [])
+        setCurrency(res.data?.currency || null)
       } catch (e) {
-        console.error("Failed to load transactions", e);
+        console.error('Failed to load transactions', e)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, [accountId]);
+    })()
+  }, [accountId])
 
   const tx = transactionId
-    ? transactions.find((t) => String(t.id) === String(transactionId))
-    : null;
+    ? transactions.find(t => String(t.id) === String(transactionId))
+    : null
 
   if (transactionId && tx) {
     return (
@@ -80,11 +92,11 @@ const SavingProductTransactionTab = () => {
             <b>Note:</b> {tx.note}
           </p>
         )}
-        <Button className="mt-4" onClick={() => navigate("../")}>
+        <Button className="mt-4" onClick={() => navigate('../')}>
           Back
         </Button>
       </div>
-    );
+    )
   }
 
   return (
@@ -131,11 +143,17 @@ const SavingProductTransactionTab = () => {
                   <TableCell>{idx + 1}</TableCell>
                   <TableCell>{t.id}</TableCell>
                   <TableCell>{t.date}</TableCell>
-                  <TableCell>{t.externalId || "—"}</TableCell>
+                  <TableCell>{t.externalId || '—'}</TableCell>
                   <TableCell>{t.transactionType?.value}</TableCell>
-                  <TableCell className="text-right">{t.debit || "N/A"}</TableCell>
-                  <TableCell className="text-right">{t.credit || "—"}</TableCell>
-                  <TableCell className="text-right">{t.runningBalance || "—"}</TableCell>
+                  <TableCell className="text-right">
+                    {String(t.debit ?? 'N/A')}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {String(t.credit ?? '—')}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {t.runningBalance || '—'}
+                  </TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="outline"
@@ -152,7 +170,7 @@ const SavingProductTransactionTab = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingProductTransactionTab;
+export default SavingProductTransactionTab

@@ -5,81 +5,81 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
 
 import {
   TellerCashManagementApi,
   OfficesApi,
   type GetOfficesResponse,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const tellersApi = new TellerCashManagementApi(getConfiguration());
-const officesApi = new OfficesApi(getConfiguration());
+const tellersApi = new TellerCashManagementApi(getConfiguration())
+const officesApi = new OfficesApi(getConfiguration())
 
 // helper: converts [yyyy, mm, dd] array → yyyy-MM-dd
-const toInputDate = (d: any): string => {
+const toInputDate = (d: unknown): string => {
   if (Array.isArray(d) && d.length >= 3) {
-    const [y, m, day] = d;
-    return `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const [y, m, day] = d
+    return `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`
   }
-  return typeof d === "string" ? d : "";
-};
+  return typeof d === 'string' ? d : ''
+}
 
 const EditTellers = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams()
+  const navigate = useNavigate()
 
-  const [offices, setOffices] = useState<GetOfficesResponse[]>([]);
+  const [offices, setOffices] = useState<GetOfficesResponse[]>([])
 
   const [formData, setFormData] = useState({
-    tellerName: "",
-    officeId: "",       // office cannot be changed, only displayed
-    description: "",
-    startDate: "",      // yyyy-MM-dd
-    endDate: "",        // yyyy-MM-dd
-    status: "ACTIVE",   // ACTIVE | INACTIVE
-  });
+    tellerName: '',
+    officeId: '', // office cannot be changed, only displayed
+    description: '',
+    startDate: '', // yyyy-MM-dd
+    endDate: '', // yyyy-MM-dd
+    status: 'ACTIVE', // ACTIVE | INACTIVE
+  })
 
   // fetch offices + teller details
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const offRes = await officesApi.retrieveOffices();
-        setOffices(offRes.data || []);
+        const offRes = await officesApi.retrieveOffices()
+        setOffices(offRes.data || [])
 
         if (id) {
-          const tRes = await tellersApi.findTeller(Number(id));
-          const t = tRes.data ?? {};
+          const tRes = await tellersApi.findTeller(Number(id))
+          const t = tRes.data ?? {}
           setFormData({
-            tellerName: t.name ?? "",
-            officeId: (t.officeId ?? "").toString(),
-            description: t.name ?? "",
+            tellerName: t.name ?? '',
+            officeId: (t.officeId ?? '').toString(),
+            description: t.name ?? '',
             startDate: toInputDate(t.startDate),
             endDate: toInputDate(t.name), // ⚠️ looks wrong, probably should be t.endDate
-            status: (t.status as "ACTIVE" | "INACTIVE") ?? "ACTIVE",
-          });
+            status: (t.status as 'ACTIVE' | 'INACTIVE') ?? 'ACTIVE',
+          })
         }
       } catch (err) {
-        console.error("Failed to load teller/offices", err);
+        console.error('Failed to load teller/offices', err)
       }
-    };
-    fetchData();
-  }, [id]);
+    }
+    fetchData()
+  }, [id])
 
   const handleChange = (field: string, value: string) =>
-    setFormData((p) => ({ ...p, [field]: value }));
+    setFormData(p => ({ ...p, [field]: value }))
 
   // submit updated teller
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       await tellersApi.updateTeller(Number(id), {
         name: formData.tellerName,
@@ -87,26 +87,26 @@ const EditTellers = () => {
         description: formData.description || undefined,
         startDate: formData.startDate || undefined,
         endDate: formData.endDate || undefined,
-        status: formData.status as "ACTIVE" | "INACTIVE",
-        locale: "en",
-        dateFormat: "yyyy-MM-dd",
-      });
-      alert("Teller updated successfully!");
-      navigate("/organization/tellers");
+        status: formData.status as 'ACTIVE' | 'INACTIVE',
+        locale: 'en',
+        dateFormat: 'yyyy-MM-dd',
+      })
+      alert('Teller updated successfully!')
+      navigate('/organization/tellers')
     } catch (err) {
-      console.error("Failed to update teller", err);
-      alert("Failed to update teller");
+      console.error('Failed to update teller', err)
+      alert('Failed to update teller')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Tellers", href: "/organization/tellers" },
-          { label: "Edit", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Tellers', href: '/organization/tellers' },
+          { label: 'Edit', current: true },
         ]}
       />
 
@@ -119,7 +119,7 @@ const EditTellers = () => {
             <Label>Teller Name*</Label>
             <Input
               value={formData.tellerName}
-              onChange={(e) => handleChange("tellerName", e.target.value)}
+              onChange={e => handleChange('tellerName', e.target.value)}
               required
             />
           </div>
@@ -132,9 +132,9 @@ const EditTellers = () => {
               selectValue={formData.officeId}
               selectOnChange={() => {}} // disabled
               selectClassname="w-full space-y-2"
-              selectOptions={offices.map((o) => ({
-                id: o.id?.toString() || "",
-                name: o.name || "",
+              selectOptions={offices.map(o => ({
+                id: o.id?.toString() || '',
+                name: o.name || '',
               }))}
             />
           </div>
@@ -144,7 +144,7 @@ const EditTellers = () => {
             <Label>Description</Label>
             <Input
               value={formData.description}
-              onChange={(e) => handleChange("description", e.target.value)}
+              onChange={e => handleChange('description', e.target.value)}
             />
           </div>
 
@@ -154,7 +154,7 @@ const EditTellers = () => {
             <Input
               type="date"
               value={formData.startDate}
-              onChange={(e) => handleChange("startDate", e.target.value)}
+              onChange={e => handleChange('startDate', e.target.value)}
               required
             />
           </div>
@@ -165,7 +165,7 @@ const EditTellers = () => {
             <Input
               type="date"
               value={formData.endDate}
-              onChange={(e) => handleChange("endDate", e.target.value)}
+              onChange={e => handleChange('endDate', e.target.value)}
             />
           </div>
 
@@ -175,11 +175,11 @@ const EditTellers = () => {
               selectLabel="Status*"
               selectPlaceholder="Select Status"
               selectValue={formData.status}
-              selectOnChange={(val) => handleChange("status", val)}
+              selectOnChange={val => handleChange('status', val)}
               selectClassname="w-full space-y-2"
               selectOptions={[
-                { id: "ACTIVE", name: "Active" },
-                { id: "INACTIVE", name: "Inactive" },
+                { id: 'ACTIVE', name: 'Active' },
+                { id: 'INACTIVE', name: 'Inactive' },
               ]}
             />
           </div>
@@ -189,7 +189,7 @@ const EditTellers = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/organization/tellers")}
+              onClick={() => navigate('/organization/tellers')}
             >
               Cancel
             </Button>
@@ -203,7 +203,7 @@ const EditTellers = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditTellers;
+export default EditTellers

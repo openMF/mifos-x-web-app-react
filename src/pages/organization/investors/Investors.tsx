@@ -5,53 +5,51 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Search, Info } from "lucide-react";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Search, Info } from 'lucide-react'
 
-type InvestorRow = {
-};
+type InvestorRow = Record<string, unknown>
 
 const Investors = () => {
   const [filters, setFilters] = useState({
-    q: "",
-    effectiveFrom: "",
-    effectiveTo: "",
-    settlementFrom: "",
-    settlementTo: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState<InvestorRow[]>([]);
+    q: '',
+    effectiveFrom: '',
+    effectiveTo: '',
+    settlementFrom: '',
+    settlementTo: '',
+  })
+  const [loading, setLoading] = useState(false)
+  const [rows, setRows] = useState<InvestorRow[]>([])
 
   const handleChange = (field: keyof typeof filters, value: string) =>
-    setFilters((p) => ({ ...p, [field]: value }));
+    setFilters(p => ({ ...p, [field]: value }))
 
   const onSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
     try {
-      setRows([]); // placeholder to show "No data found"
+      setRows([]) // placeholder to show "No data found"
     } catch (err) {
-      console.error("Search failed", err);
-      setRows([]);
+      console.error('Search failed', err)
+      setRows([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Investors", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Investors', current: true },
         ]}
       />
-
 
       <div className="bg-white dark:bg-zinc-900 rounded-md border shadow p-5">
         <form onSubmit={onSearch} className="p-6">
@@ -62,7 +60,7 @@ const Investors = () => {
               <Label>Search by Text</Label>
               <Input
                 value={filters.q}
-                onChange={(e) => handleChange("q", e.target.value)}
+                onChange={e => handleChange('q', e.target.value)}
                 placeholder="e.g. investor name, ID"
               />
             </div>
@@ -73,7 +71,7 @@ const Investors = () => {
               <Input
                 type="date"
                 value={filters.effectiveFrom}
-                onChange={(e) => handleChange("effectiveFrom", e.target.value)}
+                onChange={e => handleChange('effectiveFrom', e.target.value)}
               />
             </div>
 
@@ -83,7 +81,7 @@ const Investors = () => {
               <Input
                 type="date"
                 value={filters.effectiveTo}
-                onChange={(e) => handleChange("effectiveTo", e.target.value)}
+                onChange={e => handleChange('effectiveTo', e.target.value)}
               />
             </div>
 
@@ -93,7 +91,7 @@ const Investors = () => {
               <Input
                 type="date"
                 value={filters.settlementFrom}
-                onChange={(e) => handleChange("settlementFrom", e.target.value)}
+                onChange={e => handleChange('settlementFrom', e.target.value)}
               />
             </div>
 
@@ -104,7 +102,7 @@ const Investors = () => {
                 type="date"
                 className="md:max-w-sm"
                 value={filters.settlementTo}
-                onChange={(e) => handleChange("settlementTo", e.target.value)}
+                onChange={e => handleChange('settlementTo', e.target.value)}
               />
             </div>
           </div>
@@ -117,7 +115,7 @@ const Investors = () => {
               disabled={loading}
             >
               <Search className="mr-2 h-4 w-4" />
-              {loading ? "Searching..." : "Search"}
+              {loading ? 'Searching...' : 'Search'}
             </Button>
           </div>
 
@@ -135,7 +133,7 @@ const Investors = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Investors;
+export default Investors

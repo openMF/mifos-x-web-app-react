@@ -6,3 +6,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 /// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_FINERACT_API_URL: string
+  readonly VITE_FINERACT_API_PROVIDER: string
+  readonly VITE_FINERACT_API_VERSION: string
+  readonly VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}

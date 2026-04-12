@@ -5,56 +5,56 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const ApproveLoan = () => {
-  const navigate = useNavigate();
-  const { loanId } = useParams();
+  const navigate = useNavigate()
+  const { loanId } = useParams()
 
   // form state
-  const [approvedOn, setApprovedOn] = useState("");
-  const [expectedDisbursementOn, setExpectedDisbursementOn] = useState("");
-  const [currencyCode] = useState("");         
-  const [approvedAmountDisplay] = useState(""); 
-  const [transactionAmount, setTransactionAmount] = useState("");
-  const [note, setNote] = useState("");
+  const [approvedOn, setApprovedOn] = useState('')
+  const [expectedDisbursementOn, setExpectedDisbursementOn] = useState('')
+  const [currencyCode] = useState('')
+  const [approvedAmountDisplay] = useState('')
+  const [transactionAmount, setTransactionAmount] = useState('')
+  const [note, setNote] = useState('')
 
   // validation
-  const canSubmit = approvedOn && transactionAmount;
+  const canSubmit = approvedOn && transactionAmount
 
   // handle submit
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit || !loanId) return;
+    e.preventDefault()
+    if (!canSubmit || !loanId) return
 
-    const payload: any = {
-      locale: "en",
-      dateFormat: "yyyy-MM-dd",
+    const payload: Record<string, unknown> = {
+      locale: 'en',
+      dateFormat: 'yyyy-MM-dd',
       approvedOnDate: approvedOn,
       approvedLoanAmount: Number(transactionAmount),
       note: note || undefined,
-    };
+    }
     if (expectedDisbursementOn) {
-      payload.expectedDisbursementDate = expectedDisbursementOn;
+      payload.expectedDisbursementDate = expectedDisbursementOn
     }
 
-    navigate(-1);
-  };
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Clients", href: "/clients" },
-          { label: "NewTest test", href: `/clients/${loanId}/general` }, 
-          { label: "Approve", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Clients', href: '/clients' },
+          { label: 'NewTest test', href: `/clients/${loanId}/general` },
+          { label: 'Approve', current: true },
         ]}
       />
 
@@ -69,7 +69,7 @@ const ApproveLoan = () => {
             <Input
               type="date"
               value={approvedOn}
-              onChange={(e) => setApprovedOn(e.target.value)}
+              onChange={e => setApprovedOn(e.target.value)}
             />
           </div>
 
@@ -79,7 +79,7 @@ const ApproveLoan = () => {
             <Input
               type="date"
               value={expectedDisbursementOn}
-              onChange={(e) => setExpectedDisbursementOn(e.target.value)}
+              onChange={e => setExpectedDisbursementOn(e.target.value)}
             />
           </div>
 
@@ -98,7 +98,7 @@ const ApproveLoan = () => {
             <Input
               type="number"
               value={transactionAmount}
-              onChange={(e) => setTransactionAmount(e.target.value)}
+              onChange={e => setTransactionAmount(e.target.value)}
               min="0"
               step="0.01"
               placeholder="Enter amount"
@@ -108,15 +108,16 @@ const ApproveLoan = () => {
           {/* note */}
           <div className="w-full space-y-2">
             <Label>Note</Label>
-            <Input
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
+            <Input value={note} onChange={e => setNote(e.target.value)} />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-4">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -130,7 +131,7 @@ const ApproveLoan = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ApproveLoan;
+export default ApproveLoan

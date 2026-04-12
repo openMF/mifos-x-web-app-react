@@ -6,15 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
 const LoanScreenReports = () => {
+  return <div></div>
+}
 
-
-  return (
-    <div>
-
-    </div>
-  );
-};
-
-export default LoanScreenReports;
+export default LoanScreenReports

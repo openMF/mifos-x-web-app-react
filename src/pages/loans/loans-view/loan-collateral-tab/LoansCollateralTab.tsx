@@ -5,12 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 
 const LoansCollateralTab = () => {
-  const { groupId, loanId } = useParams();
-  const navigate = useNavigate();
+  const { groupId, loanId } = useParams()
+  const navigate = useNavigate()
 
   return (
     <div className="bg-transparent">
@@ -21,14 +21,16 @@ const LoansCollateralTab = () => {
         <Button
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white rounded-md border-0 shadow-none"
           onClick={() =>
-            navigate(`/groups/${groupId}/loans-accounts/${loanId}/loan-collateral/add`)
+            navigate(
+              `/groups/${groupId}/loans-accounts/${loanId}/loan-collateral/add`
+            )
           }
         >
           Add Collateral
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoansCollateralTab;
+export default LoansCollateralTab

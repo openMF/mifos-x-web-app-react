@@ -5,12 +5,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import * as React from "react"
-import * as SelectPrimitive from "@radix-ui/react-select"
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import * as React from 'react'
+import * as SelectPrimitive from '@radix-ui/react-select'
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
-import { selectContentPopperRoot, selectContentRoot, selectItemRoot, selectTriggerRoot } from "../styles/select"
+import { cn } from '@/lib/utils'
+import {
+  selectContentPopperRoot,
+  selectContentRoot,
+  selectItemRoot,
+  selectTriggerRoot,
+} from '../styles/select'
 
 function Select({
   ...props
@@ -32,20 +37,17 @@ function SelectValue({
 
 function SelectTrigger({
   className,
-  size = "default",
+  size = 'default',
   children,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: "sm" | "default"
+  size?: 'sm' | 'default'
 }) {
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
-      className={cn(
-        selectTriggerRoot,
-        className
-      )}
+      className={cn(selectTriggerRoot, className)}
       {...props}
     >
       {children}
@@ -59,7 +61,7 @@ function SelectTrigger({
 function SelectContent({
   className,
   children,
-  position = "popper",
+  position = 'popper',
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
@@ -68,8 +70,7 @@ function SelectContent({
         data-slot="select-content"
         className={cn(
           selectContentRoot,
-          position === "popper" &&
-            selectContentPopperRoot,
+          position === 'popper' && selectContentPopperRoot,
           className
         )}
         position={position}
@@ -78,9 +79,9 @@ function SelectContent({
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
           className={cn(
-            "p-1",
-            position === "popper" &&
-              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"
+            'p-1',
+            position === 'popper' &&
+              'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1'
           )}
         >
           {children}
@@ -98,7 +99,7 @@ function SelectLabel({
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("text-muted-foreground px-2 py-1.5 text-xs", className)}
+      className={cn('text-muted-foreground px-2 py-1.5 text-xs', className)}
       {...props}
     />
   )
@@ -112,10 +113,7 @@ function SelectItem({
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
-      className={cn(
-        selectItemRoot,
-        className
-      )}
+      className={cn(selectItemRoot, className)}
       {...props}
     >
       <span className="absolute right-2 flex size-3.5 items-center justify-center">
@@ -135,7 +133,7 @@ function SelectSeparator({
   return (
     <SelectPrimitive.Separator
       data-slot="select-separator"
-      className={cn("bg-border pointer-events-none -mx-1 my-1 h-px", className)}
+      className={cn('bg-border pointer-events-none -mx-1 my-1 h-px', className)}
       {...props}
     />
   )
@@ -149,7 +147,7 @@ function SelectScrollUpButton({
     <SelectPrimitive.ScrollUpButton
       data-slot="select-scroll-up-button"
       className={cn(
-        "flex cursor-default items-center justify-center py-1",
+        'flex cursor-default items-center justify-center py-1',
         className
       )}
       {...props}
@@ -167,7 +165,7 @@ function SelectScrollDownButton({
     <SelectPrimitive.ScrollDownButton
       data-slot="select-scroll-down-button"
       className={cn(
-        "flex cursor-default items-center justify-center py-1",
+        'flex cursor-default items-center justify-center py-1',
         className
       )}
       {...props}

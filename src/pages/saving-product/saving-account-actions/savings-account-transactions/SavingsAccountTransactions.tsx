@@ -5,63 +5,53 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const SavingsAccountTransactions = () => {
-  const { groupId, accountId } = useParams();
-  const navigate = useNavigate();
+  const { groupId, accountId } = useParams()
+  const navigate = useNavigate()
 
-  const [transactionDate, setTransactionDate] = useState("");
-  const [amount, setAmount] = useState("");
-  const [paymentTypeId, setPaymentTypeId] = useState("");
-  const [note, setNote] = useState("");
-  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+  const [transactionDate, setTransactionDate] = useState('')
+  const [amount, setAmount] = useState('')
+  const [paymentTypeId, setPaymentTypeId] = useState('')
+  const [note, setNote] = useState('')
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false)
 
   // extra details
-  const [accountNumber, setAccountNumber] = useState("");
-  const [checkNumber, setCheckNumber] = useState("");
-  const [routingCode, setRoutingCode] = useState("");
-  const [receiptNumber, setReceiptNumber] = useState("");
-  const [bankNumber, setBankNumber] = useState("");
+  const [accountNumber, setAccountNumber] = useState('')
+  const [checkNumber, setCheckNumber] = useState('')
+  const [routingCode, setRoutingCode] = useState('')
+  const [receiptNumber, setReceiptNumber] = useState('')
+  const [bankNumber, setBankNumber] = useState('')
 
   const backToAccount = () => {
     if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`);
+      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Transaction:", {
-      transactionDate,
-      amount,
-      paymentTypeId,
-      note,
-      accountNumber,
-      checkNumber,
-      routingCode,
-      receiptNumber,
-      bankNumber,
-    });
-    backToAccount();
-  };
+    // TODO: Call savings account transaction API
+    backToAccount()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Deposit", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Deposit', current: true },
         ]}
       />
 
@@ -79,7 +69,7 @@ const SavingsAccountTransactions = () => {
               <Input
                 type="date"
                 value={transactionDate}
-                onChange={(e) => setTransactionDate(e.target.value)}
+                onChange={e => setTransactionDate(e.target.value)}
               />
             </div>
 
@@ -94,7 +84,7 @@ const SavingsAccountTransactions = () => {
                   type="number"
                   placeholder="0.00"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={e => setAmount(e.target.value)}
                 />
               </div>
             </div>
@@ -108,9 +98,9 @@ const SavingsAccountTransactions = () => {
                 selectOnChange={setPaymentTypeId}
                 selectPlaceholder="Select payment type"
                 selectOptions={[
-                  { id: 1, name: "Cash" },
-                  { id: 2, name: "Cheque" },
-                  { id: 3, name: "Bank Transfer" },
+                  { id: 1, name: 'Cash' },
+                  { id: 2, name: 'Cheque' },
+                  { id: 3, name: 'Bank Transfer' },
                 ]}
                 selectClassname="w-full"
               />
@@ -122,9 +112,12 @@ const SavingsAccountTransactions = () => {
                 type="checkbox"
                 id="toggle-details"
                 checked={showPaymentDetails}
-                onChange={(e) => setShowPaymentDetails(e.target.checked)}
+                onChange={e => setShowPaymentDetails(e.target.checked)}
               />
-              <Label htmlFor="toggle-details" className={showPaymentDetails ? "text-rose-500" : ""}>
+              <Label
+                htmlFor="toggle-details"
+                className={showPaymentDetails ? 'text-rose-500' : ''}
+              >
                 Show Payment Details
               </Label>
             </div>
@@ -134,23 +127,38 @@ const SavingsAccountTransactions = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>Account #</Label>
-                  <Input value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                  <Input
+                    value={accountNumber}
+                    onChange={e => setAccountNumber(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label>Cheque #</Label>
-                  <Input value={checkNumber} onChange={(e) => setCheckNumber(e.target.value)} />
+                  <Input
+                    value={checkNumber}
+                    onChange={e => setCheckNumber(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label>Routing Code</Label>
-                  <Input value={routingCode} onChange={(e) => setRoutingCode(e.target.value)} />
+                  <Input
+                    value={routingCode}
+                    onChange={e => setRoutingCode(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label>Receipt #</Label>
-                  <Input value={receiptNumber} onChange={(e) => setReceiptNumber(e.target.value)} />
+                  <Input
+                    value={receiptNumber}
+                    onChange={e => setReceiptNumber(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label>Bank #</Label>
-                  <Input value={bankNumber} onChange={(e) => setBankNumber(e.target.value)} />
+                  <Input
+                    value={bankNumber}
+                    onChange={e => setBankNumber(e.target.value)}
+                  />
                 </div>
               </div>
             )}
@@ -162,7 +170,7 @@ const SavingsAccountTransactions = () => {
                 rows={3}
                 className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent px-3 py-2"
                 value={note}
-                onChange={(e) => setNote(e.target.value)}
+                onChange={e => setNote(e.target.value)}
               />
             </div>
 
@@ -172,7 +180,7 @@ const SavingsAccountTransactions = () => {
                 Cancel
               </Button>
               <Button
-              className="bg-[#0e77b7] hover:bg-[#0662a3]"
+                className="bg-[#0e77b7] hover:bg-[#0662a3]"
                 onClick={onSubmit}
                 disabled={!transactionDate || !amount || !paymentTypeId}
               >
@@ -183,7 +191,7 @@ const SavingsAccountTransactions = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SavingsAccountTransactions;
+export default SavingsAccountTransactions

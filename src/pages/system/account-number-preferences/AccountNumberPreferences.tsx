@@ -5,9 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 
 import {
   Table,
@@ -17,74 +17,79 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   AccountNumberFormatApi,
   type GetAccountNumberFormatsIdResponse,
-} from "@/fineract-api";
+} from '@/fineract-api'
 
 // API client for Account Number Preferences
-const preferencesApi = new AccountNumberFormatApi(getConfiguration());
+const preferencesApi = new AccountNumberFormatApi(getConfiguration())
 
 const AccountNumberPreferences = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // State for preferences data
-  const [preferences, setPreferences] = useState<GetAccountNumberFormatsIdResponse[]>([]);
+  const [preferences, setPreferences] = useState<
+    GetAccountNumberFormatsIdResponse[]
+  >([])
   // State for search input
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('')
   // Pagination states
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   // Fetch all preferences on mount
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const response = await preferencesApi.retrieveAll3();
-        setPreferences(response.data || []);
+        const response = await preferencesApi.retrieveAll3()
+        setPreferences(response.data || [])
       } catch (err) {
-        console.error("Failed to fetch account number preferences", err);
+        console.error('Failed to fetch account number preferences', err)
       }
-    };
-    fetchPreferences();
-  }, []);
+    }
+    fetchPreferences()
+  }, [])
 
   // Filtered preferences by account type
-  const filtered = preferences.filter((pref) =>
+  const filtered = preferences.filter(pref =>
     pref.accountType?.value?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
   // Pagination logic
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   // Change items per page
   const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(parseInt(value));
-    setPage(1);
-  };
+    setItemsPerPage(parseInt(value))
+    setPage(1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Account Number Preferences", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          { label: 'Account Number Preferences', current: true },
         ]}
       />
 
@@ -92,7 +97,7 @@ const AccountNumberPreferences = () => {
       <div className="flex justify-between items-center mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate("/system/account-number-preferences/create")}
+          onClick={() => navigate('/system/account-number-preferences/create')}
         >
           <Plus className="mr-2" /> Create Preference
         </Button>
@@ -104,9 +109,9 @@ const AccountNumberPreferences = () => {
         <Input
           placeholder="Filter"
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -153,24 +158,29 @@ const AccountNumberPreferences = () => {
         <Table>
           {/* Table info caption */}
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
 
           {/* Table header */}
           <TableHeader>
             <TableRow>
-              <TableHead className="px-6 py-4">Account Number Preferences</TableHead>
+              <TableHead className="px-6 py-4">
+                Account Number Preferences
+              </TableHead>
             </TableRow>
           </TableHeader>
 
           {/* Table body */}
           <TableBody>
-            {paginated.map((pref) => (
+            {paginated.map(pref => (
               <TableRow
                 key={pref.accountType?.id}
                 className="text-base hover:bg-muted cursor-pointer"
                 onClick={() =>
-                  navigate(`/system/account-number-preferences/${pref.accountType?.id}`)
+                  navigate(
+                    `/system/account-number-preferences/${pref.accountType?.id}`
+                  )
                 }
               >
                 <TableCell className="px-6 py-4 font-medium">
@@ -182,7 +192,7 @@ const AccountNumberPreferences = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AccountNumberPreferences;
+export default AccountNumberPreferences

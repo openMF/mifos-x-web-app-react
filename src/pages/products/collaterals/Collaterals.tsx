@@ -5,8 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Table,
@@ -16,62 +16,65 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/components/ui/select'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   CollateralManagementApi,
   type CollateralManagementData,
-} from "@/fineract-api";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+} from '@/fineract-api'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
 
 // API instance for Collateral management
-const collateralApi = new CollateralManagementApi(getConfiguration());
+const collateralApi = new CollateralManagementApi(getConfiguration())
 
 const Collaterals = () => {
-  const [collaterals, setCollaterals] = useState<CollateralManagementData[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const navigate = useNavigate();
+  const [collaterals, setCollaterals] = useState<CollateralManagementData[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const navigate = useNavigate()
 
   // Fetch all collaterals on component mount
   useEffect(() => {
     const fetchCollaterals = async () => {
       try {
-        const res = await collateralApi.getAllCollaterals();
-        setCollaterals(res.data || []);
+        const res = await collateralApi.getAllCollaterals()
+        setCollaterals(res.data || [])
       } catch (err) {
-        console.error("Failed to fetch collaterals", err);
+        console.error('Failed to fetch collaterals', err)
       }
-    };
-    fetchCollaterals();
-  }, []);
+    }
+    fetchCollaterals()
+  }, [])
 
   // Apply filtering and pagination
-  const filtered = collaterals.filter((c) =>
+  const filtered = collaterals.filter(c =>
     c.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  )
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumb Navigation */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Products", href: "/products" },
-          { label: "Collaterals", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Products', href: '/products' },
+          { label: 'Collaterals', current: true },
         ]}
       />
 
@@ -79,7 +82,7 @@ const Collaterals = () => {
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
-          onClick={() => navigate("/products/collaterals/create")}
+          onClick={() => navigate('/products/collaterals/create')}
         >
           <Plus className="mr-2" /> Create Collateral
         </Button>
@@ -90,9 +93,9 @@ const Collaterals = () => {
         <Input
           placeholder="Search Collaterals..."
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -100,9 +103,9 @@ const Collaterals = () => {
         <div className="flex items-center gap-2">
           <Select
             value={itemsPerPage.toString()}
-            onValueChange={(val) => {
-              setItemsPerPage(parseInt(val));
-              setPage(1);
+            onValueChange={val => {
+              setItemsPerPage(parseInt(val))
+              setPage(1)
             }}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
@@ -140,7 +143,8 @@ const Collaterals = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
 
           <TableHeader>
@@ -154,10 +158,12 @@ const Collaterals = () => {
           </TableHeader>
 
           <TableBody>
-            {paginated.map((collateral) => (
+            {paginated.map(collateral => (
               <TableRow
                 key={collateral.id}
-                onClick={() => navigate(`/products/collaterals/${collateral.id}`)}
+                onClick={() =>
+                  navigate(`/products/collaterals/${collateral.id}`)
+                }
                 className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
               >
                 <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
@@ -181,7 +187,7 @@ const Collaterals = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Collaterals;
+export default Collaterals

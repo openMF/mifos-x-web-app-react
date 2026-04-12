@@ -5,9 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 
 import {
   Table,
@@ -17,134 +17,169 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import {
   GeneralLedgerAccountApi,
   JournalEntriesApi,
   OfficesApi,
   type GetGLAccountsResponse,
   type GetOfficesResponse,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const officeApi = new OfficesApi(getConfiguration());
-const glApi = new GeneralLedgerAccountApi(getConfiguration());
-const journalEntryApi = new JournalEntriesApi(getConfiguration());
+const officeApi = new OfficesApi(getConfiguration())
+const glApi = new GeneralLedgerAccountApi(getConfiguration())
+const journalEntryApi = new JournalEntriesApi(getConfiguration())
 
 type Row = {
-  id: number | string;
-  office: string;
-  transactionId: string;
-  transactionDate: string;
-  type: string;
-  createdBy: string;
-  submittedOn: string;
-  accountCode: string;
-  accountName: string;
-  currency: string;
-};
+  id: number | string
+  office: string
+  transactionId: string
+  transactionDate: string
+  type: string
+  createdBy: string
+  submittedOn: string
+  accountCode: string
+  accountName: string
+  currency: string
+}
 
 const SearchJournalEntry = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null);
-  const [glAccounts, setGlAccounts] = useState<GetGLAccountsResponse[]>([]);
+  const [_offices, setOffices] = useState<GetOfficesResponse[] | null>(null) // Reserved for future use
+  const [_glAccounts, setGlAccounts] = useState<GetGLAccountsResponse[]>([]) // Reserved for future use
 
-  const [entries, setEntries] = useState<Row[]>([]); // <-- you were missing this
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [entries, setEntries] = useState<Row[]>([]) // <-- you were missing this
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
         const [officesRes, glAccountsRes, journalRes] = await Promise.all([
           officeApi.retrieveOffices(),
           glApi.retrieveAllAccounts(
             undefined, // type
             undefined, // searchParam
-            1,         // usage: ONLY accounts used for journal entries
-            true,      // manualEntriesAllowed
-            false      // disabled
+            1, // usage: ONLY accounts used for journal entries
+            true, // manualEntriesAllowed
+            false // disabled
           ),
           // list journal entries; method names differ between SDKs, but most expose retrieveAll()
           journalEntryApi.retrieveAll1(),
-        ]);
+        ])
 
-        setOffices(officesRes.data ?? []);
-        setGlAccounts(glAccountsRes.data ?? []);
+        setOffices(officesRes.data ?? [])
+        setGlAccounts(glAccountsRes.data ?? [])
 
-        const items = (journalRes?.data as any)?.pageItems ?? journalRes?.data ?? [];
+        const rawData = journalRes?.data as
+          | Record<string, unknown>
+          | unknown[]
+          | undefined
+        const items =
+          rawData &&
+          !Array.isArray(rawData) &&
+          Array.isArray((rawData as Record<string, unknown>).pageItems)
+            ? (rawData as Record<string, unknown>).pageItems
+            : (rawData ?? [])
         // Normalize each item into the table shape you render
-        const mapped: Row[] = (Array.isArray(items) ? items : []).map((r: any) => ({
-          id: r.id ?? r.entryId ?? r.transactionId ?? "",
-          office: r.officeName ?? r.office?.name ?? "",
-          transactionId: r.transactionId ?? "",
-          transactionDate:
-            // Fineract often returns dates as arrays [yyyy, mm, dd]
-            Array.isArray(r.transactionDate) && r.transactionDate.length >= 3
-              ? new Date(r.transactionDate[0], (r.transactionDate[1] ?? 1) - 1, r.transactionDate[2])
-                  .toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
-              : r.transactionDate ?? "",
-          type: (r.entryType ?? r.type ?? "").toString(),
-          createdBy: r.createdByUserName ?? r.createdBy ?? "",
-          submittedOn:
-            Array.isArray(r.submittedOnDate) && r.submittedOnDate.length >= 3
-              ? new Date(r.submittedOnDate[0], (r.submittedOnDate[1] ?? 1) - 1, r.submittedOnDate[2])
-                  .toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
-              : r.submittedOnDate ?? "",
-          accountCode: r.accountCode ?? r.glAccountCode ?? r.glCode ?? "",
-          accountName: r.accountName ?? r.glAccountName ?? "",
-          currency: r.currencyCode ?? r.currency?.code ?? "",
-        }));
+        const mapped: Row[] = (Array.isArray(items) ? items : []).map(
+          (r: Record<string, unknown>) => ({
+            id: (r.id ?? r.entryId ?? r.transactionId ?? '') as number | string,
+            office: (r.officeName ??
+              (r.office as Record<string, unknown> | undefined)?.name ??
+              '') as string,
+            transactionId: (r.transactionId ?? '') as string,
+            transactionDate:
+              // Fineract often returns dates as arrays [yyyy, mm, dd]
+              Array.isArray(r.transactionDate) && r.transactionDate.length >= 3
+                ? new Date(
+                    r.transactionDate[0] as number,
+                    ((r.transactionDate[1] as number) ?? 1) - 1,
+                    r.transactionDate[2] as number
+                  ).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                  })
+                : ((r.transactionDate ?? '') as string),
+            type: ((r.entryType ?? r.type ?? '') as string).toString(),
+            createdBy: (r.createdByUserName ?? r.createdBy ?? '') as string,
+            submittedOn:
+              Array.isArray(r.submittedOnDate) && r.submittedOnDate.length >= 3
+                ? new Date(
+                    r.submittedOnDate[0] as number,
+                    ((r.submittedOnDate[1] as number) ?? 1) - 1,
+                    r.submittedOnDate[2] as number
+                  ).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                  })
+                : ((r.submittedOnDate ?? '') as string),
+            accountCode: (r.accountCode ??
+              r.glAccountCode ??
+              r.glCode ??
+              '') as string,
+            accountName: (r.accountName ?? r.glAccountName ?? '') as string,
+            currency: (r.currencyCode ??
+              (r.currency as Record<string, unknown> | undefined)?.code ??
+              '') as string,
+          })
+        )
 
-        setEntries(mapped);
+        setEntries(mapped)
       } catch (err) {
-        console.error("Failed to fetch journal entries", err);
-        setEntries([]); // safe fallback
+        console.error('Failed to fetch journal entries', err)
+        setEntries([]) // safe fallback
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   const filtered = entries.filter(
-    (e) =>
+    e =>
       e.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       e.accountName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-  const paginated = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
 
   const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(parseInt(value, 10));
-    setPage(1);
-  };
+    setItemsPerPage(parseInt(value, 10))
+    setPage(1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Accounting", href: "/accounting" },
-          { label: "Search Journal Entries", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Accounting', href: '/accounting' },
+          { label: 'Search Journal Entries', current: true },
         ]}
       />
 
       <div className="flex justify-between items-center mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate("/accounting/journal-entries/create")}
+          onClick={() => navigate('/accounting/journal-entries/create')}
         >
           <Plus className="mr-2" /> Create Journal Entry
         </Button>
@@ -154,15 +189,18 @@ const SearchJournalEntry = () => {
         <Input
           placeholder="Search by Transaction ID or Account Name"
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
 
         <div className="flex items-center gap-2">
-          <Select value={itemsPerPage.toString()} onValueChange={handleItemsPerPageChange}>
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={handleItemsPerPageChange}
+          >
             <SelectTrigger className="w-[140px] h-11 text-base">
               <SelectValue placeholder="Items per page" />
             </SelectTrigger>
@@ -174,7 +212,12 @@ const SearchJournalEntry = () => {
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
             Prev
           </Button>
 
@@ -192,7 +235,8 @@ const SearchJournalEntry = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-x-auto">
         <Table className="w-full table-fixed">
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
           <TableHeader>
             <TableRow>
@@ -211,27 +255,52 @@ const SearchJournalEntry = () => {
           <TableBody>
             {paginated.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={10} className="text-center text-gray-500 py-6">
+                <TableCell
+                  colSpan={10}
+                  className="text-center text-gray-500 py-6"
+                >
                   No journal entries found.
                 </TableCell>
               </TableRow>
             ) : (
-              paginated.map((entry) => (
+              paginated.map(entry => (
                 <TableRow
                   key={entry.id}
-                  onClick={() => navigate(`/accounting/journal-entries/${entry.id}`)}
+                  onClick={() =>
+                    navigate(`/accounting/journal-entries/${entry.id}`)
+                  }
                   className="hover:bg-muted cursor-pointer"
                 >
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.id}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.office}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.transactionId}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.transactionDate}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.type}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.createdBy}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.submittedOn}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.accountCode}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.accountName}</TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">{entry.currency}</TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.id}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.office}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.transactionId}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.transactionDate}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.type}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.createdBy}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.submittedOn}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.accountCode}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.accountName}
+                  </TableCell>
+                  <TableCell className="whitespace-pre-wrap break-words">
+                    {entry.currency}
+                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -239,7 +308,7 @@ const SearchJournalEntry = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchJournalEntry;
+export default SearchJournalEntry

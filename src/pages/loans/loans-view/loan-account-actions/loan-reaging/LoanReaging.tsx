@@ -5,43 +5,45 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 const LoanReaging = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // form state
-  const [numInstallments, setNumInstallments] = useState<string>("");
-  const [freqNumber, setFreqNumber] = useState<string>("");
-  const [freqTypeId, setFreqTypeId] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
-  const [reason, setReason] = useState<string>("");
-  const [externalId, setExternalId] = useState<string>("");
+  const [numInstallments, setNumInstallments] = useState<string>('')
+  const [freqNumber, setFreqNumber] = useState<string>('')
+  const [freqTypeId, setFreqTypeId] = useState<string>('')
+  const [startDate, setStartDate] = useState<string>('')
+  const [reason, setReason] = useState<string>('')
+  const [externalId, setExternalId] = useState<string>('')
 
   // validation
-  const canSubmit = Boolean(numInstallments && freqNumber && freqTypeId && startDate);
+  const canSubmit = Boolean(
+    numInstallments && freqNumber && freqTypeId && startDate
+  )
 
   // handle submit
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    navigate(-1);
-  };
+    e.preventDefault()
+    if (!canSubmit) return
+    navigate(-1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Re-Age", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Re-Age', current: true },
         ]}
       />
 
@@ -58,7 +60,7 @@ const LoanReaging = () => {
               min="1"
               step="1"
               value={numInstallments}
-              onChange={(e) => setNumInstallments(e.target.value)}
+              onChange={e => setNumInstallments(e.target.value)}
             />
           </div>
 
@@ -70,7 +72,7 @@ const LoanReaging = () => {
               min="1"
               step="1"
               value={freqNumber}
-              onChange={(e) => setFreqNumber(e.target.value)}
+              onChange={e => setFreqNumber(e.target.value)}
             />
           </div>
 
@@ -92,17 +94,14 @@ const LoanReaging = () => {
             <Input
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={e => setStartDate(e.target.value)}
             />
           </div>
 
           {/* reason */}
           <div className="space-y-2">
             <Label>Reason</Label>
-            <Input
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-            />
+            <Input value={reason} onChange={e => setReason(e.target.value)} />
           </div>
 
           {/* external id */}
@@ -110,13 +109,17 @@ const LoanReaging = () => {
             <Label>External Id</Label>
             <Input
               value={externalId}
-              onChange={(e) => setExternalId(e.target.value)}
+              onChange={e => setExternalId(e.target.value)}
             />
           </div>
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
-            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button
@@ -130,7 +133,7 @@ const LoanReaging = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoanReaging;
+export default LoanReaging

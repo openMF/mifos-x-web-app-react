@@ -5,47 +5,50 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import AppSelect from "@/components/custom/select/AppSelect";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useTranslation } from 'react-i18next'
 
-import { getConfiguration } from "@/lib/fineract-openapi";
+import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   CentersApi,
   OfficesApi,
   StaffApi,
   type GetOfficesResponse,
   type StaffData,
-} from "@/fineract-api";
+} from '@/fineract-api'
 
 // API instances
-const centersApi = new CentersApi(getConfiguration());
-const officesApi = new OfficesApi(getConfiguration());
-const staffApi = new StaffApi(getConfiguration());
+const centersApi = new CentersApi(getConfiguration())
+const officesApi = new OfficesApi(getConfiguration())
+const staffApi = new StaffApi(getConfiguration())
 
 const CreateCenters = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const { t } = useTranslation('centers')
+  const { t: tc } = useTranslation('common')
 
   // Dropdown data
-  const [offices, setOffices] = useState<GetOfficesResponse[]>([]);
-  const [staff, setStaff] = useState<StaffData[]>([]);
+  const [offices, setOffices] = useState<GetOfficesResponse[]>([])
+  const [staff, setStaff] = useState<StaffData[]>([])
 
   // Form state
   const [formData, setFormData] = useState({
-    name: "",
-    officeId: "",
-    staffId: "",
+    name: '',
+    officeId: '',
+    staffId: '',
     active: false,
-    externalId: "",
-    submittedOnDate: "",
-    activationDate: "",
-  });
+    externalId: '',
+    submittedOnDate: '',
+    activationDate: '',
+  })
 
   // Fetch offices + staff on mount
   useEffect(() => {
@@ -54,58 +57,58 @@ const CreateCenters = () => {
         const [officesRes, staffRes] = await Promise.all([
           officesApi.retrieveOffices(),
           staffApi.retrieveAll16(),
-        ]);
-        const officeItems = Array.from(officesRes.data ?? []);
-        const staffItems = Array.from(staffRes.data ?? []);
-        setOffices(officeItems);
-        setStaff(staffItems);
+        ])
+        const officeItems = Array.from(officesRes.data ?? [])
+        const staffItems = Array.from(staffRes.data ?? [])
+        setOffices(officeItems)
+        setStaff(staffItems)
       } catch (err) {
-        console.error("Failed to fetch offices/staff", err);
+        console.error('Failed to fetch offices/staff', err)
       }
-    };
+    }
 
-    fetchInitialData();
-  }, []);
+    fetchInitialData()
+  }, [])
 
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       await centersApi.create7({
         ...formData,
         officeId: Number(formData.officeId),
         active: formData.active,
-      });
-      navigate("/centers");
+      })
+      navigate('/centers')
     } catch (err) {
-      console.error("Failed to create center", err);
-      alert("Failed to create center");
+      console.error('Failed to create center', err)
+      alert(t('create.errorCreate'))
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Centers", href: "/centers" },
-          { label: "Create", current: true },
+          { label: tc('nav.home'), href: '/home' },
+          { label: t('title'), href: '/centers' },
+          { label: t('create.heading'), current: true },
         ]}
       />
 
       {/* Form card */}
       <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">Create Center</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('create.heading')}</h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Center Name */}
           <div className="space-y-2">
-            <Label>Name*</Label>
+            <Label>{t('create.labelName')}</Label>
             <Input
               value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              onChange={e =>
+                setFormData(prev => ({ ...prev, name: e.target.value }))
               }
               required
             />
@@ -113,31 +116,31 @@ const CreateCenters = () => {
 
           {/* Office select */}
           <AppSelect
-            selectLabel="Office*"
+            selectLabel={t('create.labelOffice')}
             selectValue={formData.officeId}
-            selectPlaceholder="Select Office"
+            selectPlaceholder={t('create.selectOffice')}
             selectClassname="w-full space-y-2"
-            selectOnChange={(value) =>
-              setFormData((prev) => ({ ...prev, officeId: value }))
+            selectOnChange={value =>
+              setFormData(prev => ({ ...prev, officeId: value }))
             }
-            selectOptions={offices.map((o) => ({
-              id: o.id?.toString() ?? "",
-              name: o.name ?? "",
+            selectOptions={offices.map(o => ({
+              id: o.id?.toString() ?? '',
+              name: o.name ?? '',
             }))}
           />
 
           {/* Staff select */}
           <AppSelect
-            selectLabel="Staff"
+            selectLabel={t('create.labelStaff')}
             selectValue={formData.staffId}
-            selectPlaceholder="Select Staff"
+            selectPlaceholder={t('create.selectStaff')}
             selectClassname="w-full space-y-2"
-            selectOnChange={(value) =>
-              setFormData((prev) => ({ ...prev, staffId: value }))
+            selectOnChange={value =>
+              setFormData(prev => ({ ...prev, staffId: value }))
             }
-            selectOptions={staff.map((s) => ({
-              id: s.id?.toString() ?? "",
-              name: s.displayName ?? "",
+            selectOptions={staff.map(s => ({
+              id: s.id?.toString() ?? '',
+              name: s.displayName ?? '',
             }))}
           />
 
@@ -145,22 +148,22 @@ const CreateCenters = () => {
           <div className="flex items-center space-x-3">
             <Checkbox
               checked={formData.active}
-              onCheckedChange={(val) =>
-                setFormData((prev) => ({ ...prev, active: Boolean(val) }))
+              onCheckedChange={val =>
+                setFormData(prev => ({ ...prev, active: Boolean(val) }))
               }
             />
-            <Label className="text-md">Active</Label>
+            <Label className="text-md">{t('create.labelActive')}</Label>
           </div>
 
           {/* Activation date */}
           {formData.active && (
             <div className="space-y-2">
-              <Label>Activation Date</Label>
+              <Label>{t('create.labelActivationDate')}</Label>
               <Input
                 type="date"
                 value={formData.activationDate}
-                onChange={(e) =>
-                  setFormData((prev) => ({
+                onChange={e =>
+                  setFormData(prev => ({
                     ...prev,
                     activationDate: e.target.value,
                   }))
@@ -171,23 +174,23 @@ const CreateCenters = () => {
 
           {/* External ID */}
           <div className="space-y-2">
-            <Label>External Id</Label>
+            <Label>{t('create.labelExternalId')}</Label>
             <Input
               value={formData.externalId}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, externalId: e.target.value }))
+              onChange={e =>
+                setFormData(prev => ({ ...prev, externalId: e.target.value }))
               }
             />
           </div>
 
           {/* Submitted On date */}
           <div className="space-y-2">
-            <Label>Submitted On*</Label>
+            <Label>{t('create.labelSubmittedOn')}</Label>
             <Input
               type="date"
               value={formData.submittedOnDate}
-              onChange={(e) =>
-                setFormData((prev) => ({
+              onChange={e =>
+                setFormData(prev => ({
                   ...prev,
                   submittedOnDate: e.target.value,
                 }))
@@ -201,21 +204,21 @@ const CreateCenters = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/centers")}
+              onClick={() => navigate('/centers')}
             >
-              Cancel
+              {tc('actions.cancel')}
             </Button>
             <Button
               type="submit"
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
-              Submit
+              {tc('actions.submit')}
             </Button>
           </div>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateCenters;
+export default CreateCenters

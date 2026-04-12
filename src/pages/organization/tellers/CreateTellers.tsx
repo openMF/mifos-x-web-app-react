@@ -5,60 +5,63 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
 
-import { TellerCashManagementApi, OfficesApi, type GetOfficesResponse } from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
+import {
+  TellerCashManagementApi,
+  OfficesApi,
+  type GetOfficesResponse,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-const tellersApi = new TellerCashManagementApi(getConfiguration());
-const officesApi = new OfficesApi(getConfiguration());
+const _tellersApi = new TellerCashManagementApi(getConfiguration()) // Reserved for future use
+const officesApi = new OfficesApi(getConfiguration())
 
 const CreateTellers = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [offices, setOffices] = useState<GetOfficesResponse[]>([]);
+  const [offices, setOffices] = useState<GetOfficesResponse[]>([])
 
   const [formData, setFormData] = useState({
-    tellerName: "",
-    officeId: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    status: "", // true = active, false = inactive
-  });
+    tellerName: '',
+    officeId: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    status: '', // true = active, false = inactive
+  })
 
   useEffect(() => {
     const fetchOffices = async () => {
       try {
-        const res = await officesApi.retrieveOffices();
-        setOffices(res.data || []);
+        const res = await officesApi.retrieveOffices()
+        setOffices(res.data || [])
       } catch (err) {
-        console.error("Failed to fetch offices", err);
+        console.error('Failed to fetch offices', err)
       }
-    };
-    fetchOffices();
-  }, []);
+    }
+    fetchOffices()
+  }, [])
 
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (_e: React.FormEvent) => {
+    // Reserved for future use: _e
     // e.preventDefault();
     // const { tellerName, officeId, startDate } = formData;
-
     // if (!tellerName || !officeId || !startDate) {
     //   alert("Please fill all required fields.");
     //   return;
     // }
-
     // try {
     //   await tellersApi.createTeller({
     //     name: formData.tellerName,
@@ -76,16 +79,16 @@ const CreateTellers = () => {
     //   console.error("Failed to create teller", err);
     //   alert("Failed to create teller");
     // }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Organization", href: "/organization" },
-          { label: "Tellers", href: "/organization/tellers" },
-          { label: "Create", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Organization', href: '/organization' },
+          { label: 'Tellers', href: '/organization/tellers' },
+          { label: 'Create', current: true },
         ]}
       />
 
@@ -98,7 +101,7 @@ const CreateTellers = () => {
             <Label>Teller Name*</Label>
             <Input
               value={formData.tellerName}
-              onChange={(e) => handleChange("tellerName", e.target.value)}
+              onChange={e => handleChange('tellerName', e.target.value)}
               required
             />
           </div>
@@ -109,11 +112,11 @@ const CreateTellers = () => {
               selectLabel="Office*"
               selectPlaceholder="Select Office"
               selectValue={formData.officeId}
-              selectOnChange={(val) => handleChange("officeId", val)}
+              selectOnChange={val => handleChange('officeId', val)}
               selectClassname="w-full space-y-2"
-              selectOptions={offices.map((o) => ({
-                id: o.id?.toString() || "",
-                name: o.name || "",
+              selectOptions={offices.map(o => ({
+                id: o.id?.toString() || '',
+                name: o.name || '',
               }))}
             />
           </div>
@@ -123,7 +126,7 @@ const CreateTellers = () => {
             <Label>Description</Label>
             <Input
               value={formData.description}
-              onChange={(e) => handleChange("description", e.target.value)}
+              onChange={e => handleChange('description', e.target.value)}
             />
           </div>
 
@@ -133,7 +136,7 @@ const CreateTellers = () => {
             <Input
               type="date"
               value={formData.startDate}
-              onChange={(e) => handleChange("startDate", e.target.value)}
+              onChange={e => handleChange('startDate', e.target.value)}
               required
             />
           </div>
@@ -144,7 +147,7 @@ const CreateTellers = () => {
             <Input
               type="date"
               value={formData.endDate}
-              onChange={(e) => handleChange("endDate", e.target.value)}
+              onChange={e => handleChange('endDate', e.target.value)}
             />
           </div>
 
@@ -154,28 +157,35 @@ const CreateTellers = () => {
               selectLabel="Status*"
               selectPlaceholder="Select Status"
               selectValue={formData.status}
-              selectOnChange={(val) => handleChange("status", val)}
+              selectOnChange={val => handleChange('status', val)}
               selectClassname="w-full space-y-2"
               selectOptions={[
-                { id: "true", name: "Active" },
-                { id: "false", name: "Inactive" },
+                { id: 'true', name: 'Active' },
+                { id: 'false', name: 'Inactive' },
               ]}
             />
           </div>
 
           {/* Buttons */}
           <div className="flex justify-center gap-4 pt-6">
-            <Button type="button" variant="outline" onClick={() => navigate("/organization/tellers")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate('/organization/tellers')}
+            >
               Cancel
             </Button>
-            <Button type="submit" className="bg-[#1074b9] hover:bg-[#1074c9] text-white">
+            <Button
+              type="submit"
+              className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+            >
               Submit
             </Button>
           </div>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateTellers;
+export default CreateTellers

@@ -5,8 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
 
 import {
   Table,
@@ -15,81 +15,95 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
-type ShareAccount = any;
+interface ShareAccount {
+  timeline?: Record<string, unknown>
+  currency?: { name?: string; code?: string }
+  summary?: Record<string, unknown>
+  externalId?: string
+  savingsAccountId?: number
+  savingsAccountNumber?: number
+  [key: string]: unknown
+}
 
-const fmtDate = (d: any) => {
-  if (!d) return "Not Activated";
+const fmtDate = (d: unknown) => {
+  if (!d) return 'Not Activated'
   if (Array.isArray(d) && d.length >= 3) {
-    const [y, m, day] = d;
+    const [y, m, day] = d
     return new Date(y, (m ?? 1) - 1, day ?? 1).toLocaleDateString(undefined, {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    })
   }
-  const dt = new Date(d);
+  const dt = new Date(d as string | number)
   return isNaN(+dt)
-    ? "Not Activated"
+    ? 'Not Activated'
     : dt.toLocaleDateString(undefined, {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      });
-};
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+}
 
 // helper: format number to 2 decimals
-const to2 = (n: any) =>
+const to2 = (n: unknown) =>
   new Intl.NumberFormat(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(Number(n ?? 0));
+  }).format(Number(n ?? 0))
 
 const SharesAccountGeneralTab = () => {
-  const { clientId, sharesAccountId } = useParams();
-  const [data, setData] = useState<ShareAccount | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { clientId, sharesAccountId } = useParams()
+  const [data, setData] = useState<ShareAccount | null>(null)
+  const [loading, setLoading] = useState(true)
 
   // fetch share account details on mount
   useEffect(() => {
-    if (!sharesAccountId) return;
-    (async () => {
+    if (!sharesAccountId) return
+    ;(async () => {
       try {
-        const res = await fetch(`/api/v1/accounts/share/${sharesAccountId}?template=false`);
-        const json = await res.json();
-        setData(json || null);
+        const res = await fetch(
+          `/api/v1/accounts/share/${sharesAccountId}?template=false`
+        )
+        const json = await res.json()
+        setData(json || null)
       } catch (e) {
-        console.error("Failed to load shares account", e);
-        setData(null);
+        console.error('Failed to load shares account', e)
+        setData(null)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, [sharesAccountId]);
+    })()
+  }, [sharesAccountId])
 
   if (loading) {
-    return <div className="text-sm text-zinc-600 dark:text-zinc-300">Loading…</div>;
+    return (
+      <div className="text-sm text-zinc-600 dark:text-zinc-300">Loading…</div>
+    )
   }
-  if (!data) return null;
+  if (!data) return null
 
-  const tl = (data as any).timeline || {};
-  const cur = (data as any).currency || {};
-  const summary = (data as any).summary || {};
-  const activatedOn = tl.activatedOnDate ?? tl.activatedDate ?? null;
+  const tl = data.timeline || {}
+  const cur = data.currency || {}
+  const summary = data.summary || {}
+  const activatedOn = tl.activatedOnDate ?? tl.activatedDate ?? null
 
-  const currencyLabel = [cur.name, cur.code ? `[${cur.code}]` : ""].filter(Boolean).join(" ");
+  const currencyLabel = [cur.name, cur.code ? `[${cur.code}]` : '']
+    .filter(Boolean)
+    .join(' ')
 
   // linked savings account for dividend posting
-  const savingsAccountId = (data as any).savingsAccountId;
+  const savingsAccountId = data.savingsAccountId
   const savingsAccountNo =
-    (data as any).savingsAccountNumber != null
-      ? String((data as any).savingsAccountNumber).padStart(9, "0")
-      : "—";
+    data.savingsAccountNumber != null
+      ? String(data.savingsAccountNumber).padStart(9, '0')
+      : '—'
   const savingsLink =
     clientId && savingsAccountId
       ? `/clients/${clientId}/savings-accounts/${savingsAccountId}/general`
-      : "#";
+      : '#'
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
@@ -104,11 +118,11 @@ const SharesAccountGeneralTab = () => {
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">Currency</TableCell>
-              <TableCell>{currencyLabel || "—"}</TableCell>
+              <TableCell>{currencyLabel || '—'}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">External Id</TableCell>
-              <TableCell>{(data as any).externalId || "Unassigned"}</TableCell>
+              <TableCell>{data.externalId || 'Unassigned'}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">
@@ -120,7 +134,7 @@ const SharesAccountGeneralTab = () => {
                     {savingsAccountNo}
                   </Link>
                 ) : (
-                  "—"
+                  '—'
                 )}
               </TableCell>
             </TableRow>
@@ -140,22 +154,24 @@ const SharesAccountGeneralTab = () => {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell className="bg-zinc-100">Pending for Approval Shares</TableCell>
+              <TableCell className="bg-zinc-100">
+                Pending for Approval Shares
+              </TableCell>
               <TableCell className="text-right">
-                {to2((summary as any).totalPendingForApprovalShares)}
+                {to2(summary.totalPendingForApprovalShares)}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">Approved Shares</TableCell>
               <TableCell className="text-right">
-                {to2((summary as any).totalApprovedShares)}
+                {to2(summary.totalApprovedShares)}
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SharesAccountGeneralTab;
+export default SharesAccountGeneralTab

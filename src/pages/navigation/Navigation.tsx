@@ -5,146 +5,176 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import fineract from "@/lib/axios";
+import { useEffect, useState } from 'react'
+import fineract from '@/lib/axios'
 
-import OfficeNavigation from "./office-navigation/OfficeNavigation";
-import StaffNavigation from "./staff-navigation/StaffNavigation";
-import CenterNavigation from "./center-navigation/CenterNavigation";
-import GroupNavigation from "./group-navigation/GroupNavigation";
-import ClientNavigation from "./client-navigation/ClientNavigation";
+import OfficeNavigation from './office-navigation/OfficeNavigation'
+import StaffNavigation from './staff-navigation/StaffNavigation'
+import CenterNavigation from './center-navigation/CenterNavigation'
+import GroupNavigation from './group-navigation/GroupNavigation'
+import ClientNavigation from './client-navigation/ClientNavigation'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import AppSelect from "@/components/custom/select/AppSelect";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import AppSelect from '@/components/custom/select/AppSelect'
+import { useTranslation } from 'react-i18next'
 
 interface OfficeDetails {
-  id: number;
-  name: string;
-  externalId: number;
-  openingDate: string;
+  id: number
+  name: string
+  externalId: number
+  openingDate: string
 }
-interface BasicItem { id: number; name: string; }
+interface BasicItem {
+  id: number
+  name: string
+}
 
 const Navigation = () => {
-  const [offices, setOffices] = useState<OfficeDetails[]>([]);
-  const [selectedOfficeId, setSelectedOfficeId] = useState<string>("");
+  const [offices, setOffices] = useState<OfficeDetails[]>([])
+  const [selectedOfficeId, setSelectedOfficeId] = useState<string>('')
 
-  const [officers, setOfficers] = useState<BasicItem[]>([]);
-  const [selectedOfficerId, setSelectedOfficerId] = useState<string>("");
+  const [officers, setOfficers] = useState<BasicItem[]>([])
+  const [selectedOfficerId, setSelectedOfficerId] = useState<string>('')
 
-  const [centers, setCenters] = useState<BasicItem[]>([]);
-  const [selectedCenterId, setSelectedCenterId] = useState<string>("");
+  const [centers, setCenters] = useState<BasicItem[]>([])
+  const [selectedCenterId, setSelectedCenterId] = useState<string>('')
 
-  const [groups, setGroups] = useState<BasicItem[]>([]);
-  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
+  const [groups, setGroups] = useState<BasicItem[]>([])
+  const [selectedGroupId, setSelectedGroupId] = useState<string>('')
 
-  const [clients, setClients] = useState<BasicItem[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState<string>("");
+  const [clients, setClients] = useState<BasicItem[]>([])
+  const [selectedClientId, setSelectedClientId] = useState<string>('')
+
+  const { t } = useTranslation('common')
 
   // Offices
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
-        const res = await fineract.get("/offices");
-        setOffices(res.data ?? []);
+        const res = await fineract.get('/offices')
+        setOffices(res.data ?? [])
       } catch (err) {
-        console.error("Failed to fetch offices", err);
+        console.error('Failed to fetch offices', err)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   // Officers by office
   useEffect(() => {
     if (!selectedOfficeId) {
-      setOfficers([]);
-      setSelectedOfficerId("");
-      return;
+      setOfficers([])
+      setSelectedOfficerId('')
+      return
     }
-    (async () => {
+    ;(async () => {
       try {
-        const res = await fineract.get("/staff", { params: { officeId: Number(selectedOfficeId) } });
-        const list = res.data?.pageItems ?? res.data ?? [];
+        const res = await fineract.get('/staff', {
+          params: { officeId: Number(selectedOfficeId) },
+        })
+        const list = res.data?.pageItems ?? res.data ?? []
         setOfficers(
-          (list as any[]).map((s) => ({ id: s.id, name: s.displayName })).filter((x) => x.id != null)
-        );
+          (list as Record<string, unknown>[])
+            .map(s => ({ id: s.id as number, name: s.displayName as string }))
+            .filter(x => x.id != null)
+        )
       } catch (err) {
-        console.error("Failed to fetch officers", err);
-        setOfficers([]);
+        console.error('Failed to fetch officers', err)
+        setOfficers([])
       }
-    })();
-  }, [selectedOfficeId]);
+    })()
+  }, [selectedOfficeId])
 
-  // Centers by officer 
+  // Centers by officer
   useEffect(() => {
     if (!selectedOfficerId) {
-      setCenters([]);
-      setSelectedCenterId("");
-      return;
+      setCenters([])
+      setSelectedCenterId('')
+      return
     }
-    (async () => {
+    ;(async () => {
       try {
-        const res = await fineract.get("/runreports/GroupNamesByStaff", {
-          params: { R_staffId: Number(selectedOfficerId), genericResultSet: false },
-        });
+        const res = await fineract.get('/runreports/GroupNamesByStaff', {
+          params: {
+            R_staffId: Number(selectedOfficerId),
+            genericResultSet: false,
+          },
+        })
         // Normalize report rows
-        const rows = res.data?.data ?? res.data ?? [];
-        const normalized: BasicItem[] = (rows as any[]).map((r: any) => {
-          const id = r.id ?? r.row?.[0] ?? r[0];
-          const name = r.name ?? r.row?.[1] ?? r[1];
-          return { id: Number(id), name: String(name) };
-        }).filter((x) => x.id != null && !Number.isNaN(x.id));
-        setCenters(normalized);
+        const rows = res.data?.data ?? res.data ?? []
+        const normalized: BasicItem[] = (rows as Record<string, unknown>[])
+          .map((r: Record<string, unknown>) => {
+            const row = r.row as unknown[] | undefined
+            const id = r.id ?? row?.[0] ?? (r as Record<number, unknown>)[0]
+            const name = r.name ?? row?.[1] ?? (r as Record<number, unknown>)[1]
+            return { id: Number(id), name: String(name) }
+          })
+          .filter(x => x.id != null && !Number.isNaN(x.id))
+        setCenters(normalized)
       } catch (err) {
-        console.error("Failed to fetch centers", err);
-        setCenters([]);
+        console.error('Failed to fetch centers', err)
+        setCenters([])
       }
-    })();
-  }, [selectedOfficerId]);
+    })()
+  }, [selectedOfficerId])
 
-  // Groups by center 
+  // Groups by center
   useEffect(() => {
     if (!selectedCenterId) {
-      setGroups([]);
-      setSelectedGroupId("");
-      return;
+      setGroups([])
+      setSelectedGroupId('')
+      return
     }
-    (async () => {
+    ;(async () => {
       try {
-        const res = await fineract.get("/groups", { params: { centerId: Number(selectedCenterId) } });
-        const list = res.data?.pageItems ?? [];
-        setGroups(list.map((g: any) => ({ id: g.id, name: g.name })));
+        const res = await fineract.get('/groups', {
+          params: { centerId: Number(selectedCenterId) },
+        })
+        const list = res.data?.pageItems ?? []
+        setGroups(
+          list.map((g: Record<string, unknown>) => ({
+            id: g.id as number,
+            name: g.name as string,
+          }))
+        )
       } catch (err) {
-        console.error("Failed to fetch groups", err);
-        setGroups([]);
+        console.error('Failed to fetch groups', err)
+        setGroups([])
       }
-    })();
-  }, [selectedCenterId]);
+    })()
+  }, [selectedCenterId])
 
-  // Clients by group 
+  // Clients by group
   useEffect(() => {
     if (!selectedGroupId) {
-      setClients([]);
-      setSelectedClientId("");
-      return;
+      setClients([])
+      setSelectedClientId('')
+      return
     }
-    (async () => {
+    ;(async () => {
       try {
-        const res = await fineract.get("/clients", { params: { groupId: Number(selectedGroupId) } });
-        const list = res.data?.pageItems ?? [];
-        setClients(list.map((c: any) => ({ id: c.id, name: c.displayName })));
+        const res = await fineract.get('/clients', {
+          params: { groupId: Number(selectedGroupId) },
+        })
+        const list = res.data?.pageItems ?? []
+        setClients(
+          list.map((c: Record<string, unknown>) => ({
+            id: c.id as number,
+            name: c.displayName as string,
+          }))
+        )
       } catch (err) {
-        console.error("Failed to fetch clients", err);
-        setClients([]);
+        console.error('Failed to fetch clients', err)
+        setClients([])
       }
-    })();
-  }, [selectedGroupId]);
+    })()
+  }, [selectedGroupId])
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Navigation", current: true },
+          { label: t('nav.home'), href: '/home' },
+          { label: t('nav.navigation'), current: true },
         ]}
       />
 
@@ -154,19 +184,19 @@ const Navigation = () => {
           {/* Office */}
           <div className="w-full space-y-2">
             <AppSelect
-              selectLabel="Office"
+              selectLabel={t('fields.office')}
               selectValue={selectedOfficeId}
-              selectOnChange={(value) => {
-                setSelectedOfficeId(value);
-                setSelectedOfficerId("");
-                setSelectedCenterId("");
-                setSelectedGroupId("");
-                setSelectedClientId("");
+              selectOnChange={value => {
+                setSelectedOfficeId(value)
+                setSelectedOfficerId('')
+                setSelectedCenterId('')
+                setSelectedGroupId('')
+                setSelectedClientId('')
               }}
-              selectPlaceholder="Select Office"
+              selectPlaceholder={t('ui.selectOffice')}
               selectOptions={(offices ?? [])
-                .filter((o) => o?.id !== undefined)
-                .map((o) => ({ id: o.id!, name: o.name! }))}
+                .filter(o => o?.id !== undefined)
+                .map(o => ({ id: o.id!, name: o.name! }))}
               selectClassname="w-full space-y-2"
             />
           </div>
@@ -175,16 +205,24 @@ const Navigation = () => {
           {selectedOfficeId && (
             <div className="w-full space-y-2">
               <AppSelect
-                selectLabel={officers.length ? "Associated Officers" : "No Associated Officers"}
+                selectLabel={
+                  officers.length
+                    ? t('navigation.associatedOfficers')
+                    : t('navigation.noAssociatedOfficers')
+                }
                 selectValue={selectedOfficerId}
-                selectOnChange={(value) => {
-                  setSelectedOfficerId(value);
-                  setSelectedCenterId("");
-                  setSelectedGroupId("");
-                  setSelectedClientId("");
+                selectOnChange={value => {
+                  setSelectedOfficerId(value)
+                  setSelectedCenterId('')
+                  setSelectedGroupId('')
+                  setSelectedClientId('')
                 }}
-                selectPlaceholder={officers.length ? "Select Officer" : "No Associated Officers"}
-                selectOptions={officers.map((s) => ({ id: s.id, name: s.name }))}
+                selectPlaceholder={
+                  officers.length
+                    ? t('navigation.selectOfficer')
+                    : t('navigation.noAssociatedOfficers')
+                }
+                selectOptions={officers.map(s => ({ id: s.id, name: s.name }))}
                 selectClassname="w-full space-y-2"
               />
             </div>
@@ -194,15 +232,23 @@ const Navigation = () => {
           {selectedOfficerId && (
             <div className="w-full space-y-2">
               <AppSelect
-                selectLabel={centers.length ? "Select Center" : "No Associated Centers"}
+                selectLabel={
+                  centers.length
+                    ? t('navigation.selectCenter')
+                    : t('navigation.noAssociatedCenters')
+                }
                 selectValue={selectedCenterId}
-                selectOnChange={(value) => {
-                  setSelectedCenterId(value);
-                  setSelectedGroupId("");
-                  setSelectedClientId("");
+                selectOnChange={value => {
+                  setSelectedCenterId(value)
+                  setSelectedGroupId('')
+                  setSelectedClientId('')
                 }}
-                selectPlaceholder={centers.length ? "Select Center" : "No Associated Centers"}
-                selectOptions={centers.map((c) => ({ id: c.id, name: c.name }))}
+                selectPlaceholder={
+                  centers.length
+                    ? t('navigation.selectCenter')
+                    : t('navigation.noAssociatedCenters')
+                }
+                selectOptions={centers.map(c => ({ id: c.id, name: c.name }))}
                 selectClassname="w-full space-y-2"
               />
             </div>
@@ -212,14 +258,22 @@ const Navigation = () => {
           {selectedCenterId && (
             <div className="w-full space-y-2">
               <AppSelect
-                selectLabel={groups.length ? "Select Group" : "No Associated Groups"}
+                selectLabel={
+                  groups.length
+                    ? t('navigation.selectGroup')
+                    : t('navigation.noAssociatedGroups')
+                }
                 selectValue={selectedGroupId}
-                selectOnChange={(value) => {
-                  setSelectedGroupId(value);
-                  setSelectedClientId("");
+                selectOnChange={value => {
+                  setSelectedGroupId(value)
+                  setSelectedClientId('')
                 }}
-                selectPlaceholder={groups.length ? "Select Group" : "No Associated Groups"}
-                selectOptions={groups.map((g) => ({ id: g.id, name: g.name }))}
+                selectPlaceholder={
+                  groups.length
+                    ? t('navigation.selectGroup')
+                    : t('navigation.noAssociatedGroups')
+                }
+                selectOptions={groups.map(g => ({ id: g.id, name: g.name }))}
                 selectClassname="w-full space-y-2"
               />
             </div>
@@ -229,11 +283,19 @@ const Navigation = () => {
           {selectedGroupId && (
             <div className="w-full space-y-2">
               <AppSelect
-                selectLabel={clients.length ? "Select Client" : "No Associated Clients"}
+                selectLabel={
+                  clients.length
+                    ? t('navigation.selectClient')
+                    : t('navigation.noAssociatedClients')
+                }
                 selectValue={selectedClientId}
-                selectOnChange={(value) => setSelectedClientId(value)}
-                selectPlaceholder={clients.length ? "Select Client" : "No Associated Clients"}
-                selectOptions={clients.map((c) => ({ id: c.id, name: c.name }))}
+                selectOnChange={value => setSelectedClientId(value)}
+                selectPlaceholder={
+                  clients.length
+                    ? t('navigation.selectClient')
+                    : t('navigation.noAssociatedClients')
+                }
+                selectOptions={clients.map(c => ({ id: c.id, name: c.name }))}
                 selectClassname="w-full space-y-2"
               />
             </div>
@@ -253,12 +315,12 @@ const Navigation = () => {
           ) : selectedOfficeId ? (
             <OfficeNavigation officeId={parseInt(selectedOfficeId)} />
           ) : (
-            <p>Please select an Office</p>
+            <p>{t('navigation.pleaseSelectOffice')}</p>
           )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation

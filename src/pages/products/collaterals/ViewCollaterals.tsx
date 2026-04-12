@@ -5,10 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,61 +19,61 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
+} from '@/components/ui/alert-dialog'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 import {
   CollateralManagementApi,
   type CollateralManagementData,
-} from "@/fineract-api";
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 // API instance for Collateral Management
-const collateralApi = new CollateralManagementApi(getConfiguration());
+const collateralApi = new CollateralManagementApi(getConfiguration())
 
 const ViewCollaterals = () => {
-  const navigate = useNavigate();
-  // Get :id from route 
-  const { id } = useParams();
+  const navigate = useNavigate()
+  // Get :id from route
+  const { id } = useParams()
   // Holds the fetched collateral details
-  const [collateral, setCollateral] = useState<CollateralManagementData>();
+  const [collateral, setCollateral] = useState<CollateralManagementData>()
 
   useEffect(() => {
     // Fetch a single collateral by id on mount / id change
     const fetchCollateral = async () => {
       try {
-        const res = await collateralApi.getCollateral(Number(id));
-        setCollateral(res.data);
+        const res = await collateralApi.getCollateral(Number(id))
+        setCollateral(res.data)
       } catch (err) {
-        console.error("Failed to fetch collateral", err);
+        console.error('Failed to fetch collateral', err)
       }
-    };
-    fetchCollateral();
-  }, [id]);
+    }
+    fetchCollateral()
+  }, [id])
 
   // Delete handler confirms in dialog, then calls API and navigates back to list
   const handleDelete = async () => {
     try {
-      await collateralApi.deleteCollateral2(Number(id));
-      navigate("/products/collaterals");
+      await collateralApi.deleteCollateral2(Number(id))
+      navigate('/products/collaterals')
     } catch (err) {
-      console.error("Failed to delete collateral", err);
+      console.error('Failed to delete collateral', err)
     }
-  };
+  }
 
   // Very simple loading guard while data is being fetched
-  if (!collateral) return <div className="p-10 text-center">Loading...</div>;
+  if (!collateral) return <div className="p-10 text-center">Loading...</div>
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* Breadcrumbs for navigation context */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Products", href: "/products" },
-          { label: "Collaterals", href: "/products/collaterals" },
+          { label: 'Home', href: '/home' },
+          { label: 'Products', href: '/products' },
+          { label: 'Collaterals', href: '/products/collaterals' },
           { label: `${collateral.id}`, current: true },
         ]}
       />
@@ -84,7 +84,9 @@ const ViewCollaterals = () => {
         <div className="flex mb-6 gap-4">
           <Button
             className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer"
-            onClick={() => navigate(`/products/collaterals/${collateral.id}/edit`)}
+            onClick={() =>
+              navigate(`/products/collaterals/${collateral.id}/edit`)
+            }
           >
             <FontAwesomeIcon icon={faPenToSquare} />
             Edit
@@ -127,22 +129,34 @@ const ViewCollaterals = () => {
         {/* Key/value layout for collateral fields */}
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Collateral Name</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{collateral.name}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {collateral.name}
+          </div>
 
           <div className="font-medium">Type/Quality</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{collateral.quality}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {collateral.quality}
+          </div>
 
           <div className="font-medium">Base Price</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{collateral.basePrice}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {collateral.basePrice}
+          </div>
 
           <div className="font-medium">Base Percentage</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{collateral.pctToBase}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {collateral.pctToBase}
+          </div>
 
           <div className="font-medium">Unit Type</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{collateral.unitType}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {collateral.unitType}
+          </div>
 
           <div className="font-medium">Currency</div>
-          <div className="text-zinc-600 dark:text-zinc-400">{collateral.currency}</div>
+          <div className="text-zinc-600 dark:text-zinc-400">
+            {collateral.currency}
+          </div>
         </div>
 
         {/* Back to list */}
@@ -150,14 +164,14 @@ const ViewCollaterals = () => {
           <Button
             variant="outline"
             className="w-28"
-            onClick={() => navigate("/products/collaterals")}
+            onClick={() => navigate('/products/collaterals')}
           >
             Back
           </Button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewCollaterals;
+export default ViewCollaterals

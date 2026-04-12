@@ -5,12 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -19,72 +19,72 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { getConfiguration } from "@/lib/fineract-openapi";
-import { ReportsApi, type GetReportsResponse } from "@/fineract-api";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { ReportsApi, type GetReportsResponse } from '@/fineract-api'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 
 // API instance
-const reportsApi = new ReportsApi(getConfiguration());
+const reportsApi = new ReportsApi(getConfiguration())
 
 const ManageReports = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // State
-  const [reports, setReports] = useState<GetReportsResponse[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [reports, setReports] = useState<GetReportsResponse[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   // Fetch reports on mount
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await reportsApi.retrieveReportList();
-        setReports(response.data || []);
+        const response = await reportsApi.retrieveReportList()
+        setReports(response.data || [])
       } catch (err) {
-        console.error("Failed to fetch reports", err);
+        console.error('Failed to fetch reports', err)
       }
-    };
-    fetchReports();
-  }, []);
+    }
+    fetchReports()
+  }, [])
 
   // Search filter
-  const filtered = reports.filter((report) =>
+  const filtered = reports.filter(report =>
     report.reportName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
   const paginated = filtered.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
-  );
+  )
 
   const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(parseInt(value));
-    setPage(1);
-  };
+    setItemsPerPage(parseInt(value))
+    setPage(1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "System", href: "/system" },
-          { label: "Manage Reports", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'System', href: '/system' },
+          { label: 'Manage Reports', current: true },
         ]}
       />
 
@@ -92,7 +92,7 @@ const ManageReports = () => {
       <div className="flex justify-between items-center mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate("/system/reports/create")}
+          onClick={() => navigate('/system/reports/create')}
         >
           <Plus className="mr-2" /> Create Report
         </Button>
@@ -104,9 +104,9 @@ const ManageReports = () => {
         <Input
           placeholder="Filter"
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
           }}
           className="max-w-sm h-11 text-base"
         />
@@ -152,7 +152,8 @@ const ManageReports = () => {
         <Table>
           {/* Table caption */}
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page} of {totalPages}
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
           </TableCaption>
 
           {/* Table header */}
@@ -169,26 +170,36 @@ const ManageReports = () => {
 
           {/* Table body */}
           <TableBody>
-            {paginated.map((report) => (
+            {paginated.map(report => (
               <TableRow
                 key={report.reportName}
                 className="text-base hover:bg-muted cursor-pointer"
                 onClick={() => navigate(`/system/reports/${report.reportName}`)}
               >
                 <TableCell className="px-6 py-4">{report.reportName}</TableCell>
-                <TableCell className="px-6 py-4">{report.reportType || "—"}</TableCell>
-                <TableCell className="px-6 py-4">{report.reportSubType || "undefined"}</TableCell>
-                <TableCell className="px-6 py-4">{report.reportCategory || "—"}</TableCell>
+                <TableCell className="px-6 py-4">
+                  {report.reportType || '—'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {report.reportSubType || 'undefined'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {report.reportCategory || '—'}
+                </TableCell>
                 <TableCell className="px-6 py-4">
                   <FontAwesomeIcon
                     icon={report.coreReport ? faCircleCheck : faCircleXmark}
-                    className={report.coreReport ? "text-green-500" : "text-red-500"}
+                    className={
+                      report.coreReport ? 'text-green-500' : 'text-red-500'
+                    }
                   />
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <FontAwesomeIcon
                     icon={report.useReport ? faCircleCheck : faCircleXmark}
-                    className={report.useReport ? "text-green-500" : "text-red-500"}
+                    className={
+                      report.useReport ? 'text-green-500' : 'text-red-500'
+                    }
                   />
                 </TableCell>
               </TableRow>
@@ -197,7 +208,7 @@ const ManageReports = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ManageReports;
+export default ManageReports

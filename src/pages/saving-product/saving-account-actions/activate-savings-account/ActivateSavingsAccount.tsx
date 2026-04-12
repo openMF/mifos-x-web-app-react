@@ -5,41 +5,40 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { AppBreadCrumbs } from "@/components/custom/breadcrumbs/AppBreadCrumbs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const ActivateSavingsAccount = () => {
-  const { groupId, accountId } = useParams();
-  const navigate = useNavigate();
+  const { groupId, accountId } = useParams()
+  const navigate = useNavigate()
 
-  const [activatedOnDate, setActivatedOnDate] = useState<string>("");
+  const [activatedOnDate, setActivatedOnDate] = useState<string>('')
 
   const backToAccount = () => {
     if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`);
+      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
     } else {
-      navigate(-1);
+      navigate(-1)
     }
-  };
+  }
 
   const onSubmit = () => {
-    console.log("Activated On Date:", activatedOnDate);
-    backToAccount();
-  };
+    backToAccount()
+  }
 
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: "Home", href: "/home" },
-          { label: "Groups", href: "/groups" },
-          { label: "Activate", current: true },
+          { label: 'Home', href: '/home' },
+          { label: 'Groups', href: '/groups' },
+          { label: 'Activate', current: true },
         ]}
       />
 
@@ -50,13 +49,11 @@ const ActivateSavingsAccount = () => {
 
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Activated On Date*
-              </Label>
+              <Label className="text-sm font-medium">Activated On Date*</Label>
               <Input
                 type="date"
                 value={activatedOnDate}
-                onChange={(e) => setActivatedOnDate(e.target.value)}
+                onChange={e => setActivatedOnDate(e.target.value)}
               />
             </div>
 
@@ -64,7 +61,11 @@ const ActivateSavingsAccount = () => {
               <Button variant="outline" onClick={backToAccount}>
                 Cancel
               </Button>
-              <Button className="bg-[#0e77b7] hover:bg-[#0662a3]" onClick={onSubmit} disabled={!activatedOnDate}>
+              <Button
+                className="bg-[#0e77b7] hover:bg-[#0662a3]"
+                onClick={onSubmit}
+                disabled={!activatedOnDate}
+              >
                 Confirm
               </Button>
             </div>
@@ -72,7 +73,7 @@ const ActivateSavingsAccount = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ActivateSavingsAccount;
+export default ActivateSavingsAccount
