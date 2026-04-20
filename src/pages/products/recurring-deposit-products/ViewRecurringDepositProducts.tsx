@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import {  useParams } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 import { getConfiguration } from '@/lib/fineract-openapi'

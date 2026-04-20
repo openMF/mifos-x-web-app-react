@@ -13,8 +13,6 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import { HolidaysApi, type PutHolidaysHolidayIdResponse } from '@/fineract-api'
-import { getConfiguration } from '@/lib/fineract-openapi'
 
 const _holidayApi = new HolidaysApi(getConfiguration()) // Reserved for future use
 
