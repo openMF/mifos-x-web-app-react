@@ -32,11 +32,11 @@ import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-import { ClientSearchV2Api, type PageClientSearchData } from '@/fineract-api'
+import { ClientApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useTranslation } from 'react-i18next'
 
-const clientSearchApi = new ClientSearchV2Api(getConfiguration())
+const clientApi = new ClientApi(getConfiguration())
 
 /** Row shape returned by the search endpoint at runtime */
 interface ClientRow {
@@ -69,15 +69,21 @@ const Clients = () => {
 
     ;(async () => {
       try {
-        const res = await clientSearchApi.searchByText({
-          request: { text: searchTerm || undefined },
-          page: Math.max(0, page - 1),
-          size: itemsPerPage,
-        })
-
-        const data: PageClientSearchData = res.data || {}
-        const content = (data.content ?? []) as unknown as ClientRow[]
-        const totalElements: number = data.totalElements ?? content.length
+        const res = await clientApi.retrieveAll21(
+          undefined,
+          undefined,
+          searchTerm || undefined,
+          undefined,
+          undefined,
+          includePending ? undefined : 'active',
+          undefined,
+          Math.max(0, page - 1) * itemsPerPage,
+          itemsPerPage
+        )
+        const data = res.data as any
+        const content = (data.pageItems ?? []) as unknown as ClientRow[]
+        const totalElements: number =
+          data.totalFilteredRecords ?? content.length
 
         if (!cancelled) {
           setRows(content)
@@ -95,15 +101,7 @@ const Clients = () => {
     return () => {
       cancelled = true
     }
-  }, [searchTerm, page, itemsPerPage])
-
-  // toggle pending/active filter
-  const filtered = rows.filter((c: ClientRow) => {
-    const statusId = c?.status?.id ?? 0
-    return includePending
-      ? statusId === 300 || statusId === 100
-      : statusId === 300
-  })
+  }, [searchTerm, page, itemsPerPage, includePending])
 
   const totalPages = Math.max(1, Math.ceil(total / itemsPerPage))
 
@@ -182,7 +180,10 @@ const Clients = () => {
         <Checkbox
           id="pending-clients"
           checked={includePending}
-          onCheckedChange={v => setIncludePending(!!v)}
+          onCheckedChange={v => {
+            setIncludePending(!!v)
+            setPage(1)
+          }}
         />
         <label htmlFor="pending-clients" className="text-base dark:text-white">
           {t('pending.showPendingClients')}
@@ -194,7 +195,7 @@ const Clients = () => {
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
             {tc('pagination.showing', {
-              current: filtered.length,
+              current: rows.length,
               total,
               page,
               pages: totalPages,
@@ -218,7 +219,7 @@ const Clients = () => {
           </TableHeader>
 
           <TableBody>
-            {filtered.map((c: ClientRow) => (
+            {rows.map((c: ClientRow) => (
               <TableRow
                 key={c.id}
                 onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
