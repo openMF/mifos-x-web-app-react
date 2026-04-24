@@ -43,7 +43,7 @@ const EditHolidays = () => {
   //     if (id) fetchHoliday();
   // }, [id]);
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -68,7 +68,7 @@ const EditHolidays = () => {
             <Label>Name*</Label>
             <Input
               value={formData.name}
-              onChange={e => handleChange('officeName', e.target.value)}
+              onChange={e => handleChange('name', e.target.value)}
               required
             />
           </div>
@@ -78,7 +78,7 @@ const EditHolidays = () => {
             <Label>Description</Label>
             <Input
               value={formData.description}
-              onChange={e => handleChange('officeName', e.target.value)}
+              onChange={e => handleChange('description', e.target.value)}
               required
             />
           </div>
