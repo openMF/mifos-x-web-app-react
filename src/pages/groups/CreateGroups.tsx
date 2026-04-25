@@ -23,6 +23,8 @@ import {
   type StaffData,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { inputToFineractDate } from '@/lib/date-utils'
+import type { ExtendedPostGroupsRequest } from '@/pages/groups/types'
 import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
@@ -79,15 +81,17 @@ const CreateGroups = () => {
       await groupsApi.create8({
         name: formData.name,
         officeId: Number(formData.officeId),
-        // staffId: formData.staffId,
         active: formData.active,
-        // externalId: formData.externalId || undefined,
-        // submittedOnDate: formData.submittedOnDate || undefined,
-        // activationDate:
-        //   formData.active && formData.activationDate
-        //     ? formData.activationDate
-        //     : undefined,
-      })
+        staffId: formData.staffId ? Number(formData.staffId) : undefined,
+        externalId: formData.externalId || undefined,
+        submittedOnDate: inputToFineractDate(formData.submittedOnDate),
+        activationDate:
+          formData.active && formData.activationDate
+            ? inputToFineractDate(formData.activationDate)
+            : undefined,
+        dateFormat: 'dd MMMM yyyy',
+        locale: 'en',
+      } as ExtendedPostGroupsRequest)
       navigate('/groups')
     } catch (e) {
       console.error('Failed to create group', e)

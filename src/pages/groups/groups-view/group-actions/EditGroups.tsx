@@ -15,7 +15,10 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 import { GroupsApi } from '@/fineract-api'
-import type { ExtendedGroupResponse } from '@/pages/groups/types'
+import type {
+  ExtendedGroupResponse,
+  ExtendedPutGroupsRequest,
+} from '@/pages/groups/types'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { dateArrayToInputValue, inputToFineractDate } from '@/lib/date-utils'
 import { useTranslation } from 'react-i18next'
@@ -91,7 +94,7 @@ const EditGroups = () => {
       if (act) payload.activationDate = act
       if (externalId.trim()) payload.externalId = externalId.trim()
 
-      await groupsApi.update13(Number(id), { name: payload.name as string })
+      await groupsApi.update13(Number(id), payload as ExtendedPutGroupsRequest)
       navigate(`/groups/${id}/general`)
     } catch (err) {
       console.error('Failed to update group', err)
