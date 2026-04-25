@@ -109,7 +109,9 @@ const CreateClient = () => {
           : { fullname: formData.fullname }),
         mobileNo: formData.mobileNo || undefined,
         emailAddress: formData.emailAddress || undefined,
-        dateOfBirth: formData.dateOfBirth || undefined,
+        dateOfBirth: formData.dateOfBirth
+          ? inputToFineractDate(formData.dateOfBirth)
+          : undefined,
         externalId: formData.externalId || undefined,
         active: formData.active,
         activationDate:
@@ -118,7 +120,6 @@ const CreateClient = () => {
             : undefined,
         dateFormat: 'dd MMMM yyyy',
         locale: 'en',
-      })
       navigate('/clients')
     } catch (e) {
       console.error('Failed to create client', e)
