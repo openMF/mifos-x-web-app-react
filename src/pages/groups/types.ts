@@ -57,11 +57,11 @@ export interface ClientMember {
 }
 
 /**
- * The generated PostGroupsRequest is missing fields that the real Fineract
- * API accepts. This interface extends it with the undeclared fields so that
- * CreateGroups.tsx can pass a complete payload without TypeScript errors.
+ * Fields missing from both PostGroupsRequest and PutGroupsGroupIdRequest in
+ * the generated OpenAPI types. Extracted here so both extended interfaces stay
+ * in sync if more fields are discovered later.
  */
-export interface ExtendedPostGroupsRequest extends PostGroupsRequest {
+interface GroupRequestExtras {
   staffId?: number
   externalId?: string
   submittedOnDate?: string
@@ -70,16 +70,8 @@ export interface ExtendedPostGroupsRequest extends PostGroupsRequest {
   locale?: string
 }
 
-/**
- * The generated PutGroupsGroupIdRequest only declares name. This interface
- * extends it with the remaining fields the API accepts so that EditGroups.tsx
- * can pass the full payload it already constructs.
- */
-export interface ExtendedPutGroupsRequest extends PutGroupsGroupIdRequest {
-  staffId?: number
-  externalId?: string
-  submittedOnDate?: string
-  activationDate?: string
-  dateFormat?: string
-  locale?: string
-}
+export interface ExtendedPostGroupsRequest
+  extends PostGroupsRequest, GroupRequestExtras {}
+
+export interface ExtendedPutGroupsRequest
+  extends PutGroupsGroupIdRequest, GroupRequestExtras {}

@@ -83,7 +83,7 @@ const CreateGroups = () => {
         officeId: Number(formData.officeId),
         active: formData.active,
         staffId: formData.staffId ? Number(formData.staffId) : undefined,
-        externalId: formData.externalId || undefined,
+        externalId: formData.externalId.trim() || undefined,
         submittedOnDate: inputToFineractDate(formData.submittedOnDate),
         activationDate:
           formData.active && formData.activationDate
