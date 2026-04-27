@@ -44636,6 +44636,8 @@ components:
           example: demomfi@mifos.org
         firstname:
           type: string
+        isSelfServiceUser:
+          type: boolean
           example: App
         id:
           type: integer
@@ -44693,6 +44695,8 @@ components:
         firstname:
           type: string
           example: App
+        isSelfServiceUser:
+          type: boolean
         id:
           type: integer
           format: int64
