@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import type { AxiosError } from 'axios'
 
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -22,11 +23,40 @@ import {
   type GetUsersResponse,
   type GetUsersTemplateResponse,
   type StaffData,
+  type PutUsersUserIdRequest,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 const userApi = new UsersApi(getConfiguration())
 const staffApi = new StaffApi(getConfiguration())
+
+type UserApiErrorResponse = {
+  defaultUserMessage?: string
+  developerMessage?: string
+  errors?: Array<{
+    defaultUserMessage?: string
+    developerMessage?: string
+  }>
+}
+
+const parseId = (value: string) => {
+  const parsed = parseInt(value, 10)
+  return Number.isNaN(parsed) ? undefined : parsed
+}
+
+const getUserErrorMessage = (error: unknown) => {
+  const axiosError = error as AxiosError<UserApiErrorResponse>
+  const responseData = axiosError.response?.data
+
+  return (
+    responseData?.errors?.[0]?.defaultUserMessage ||
+    responseData?.errors?.[0]?.developerMessage ||
+    responseData?.defaultUserMessage ||
+    responseData?.developerMessage ||
+    axiosError.message ||
+    'Failed to update user'
+  )
+}
 
 const EditUsers = () => {
   const [users, setUsers] = useState<GetUsersTemplateResponse>()
@@ -64,6 +94,10 @@ const EditUsers = () => {
       .catch(console.error)
   }, [formData.office])
 
+  const staffOptions = (staff || []).filter(
+    option => option.officeId?.toString() === formData.office
+  )
+
   // fetch user details for editing
   useEffect(() => {
     if (!id) return
@@ -79,6 +113,7 @@ const EditUsers = () => {
           firstName: data.firstname || '',
           lastName: data.lastname || '',
           office: data.officeId?.toString() || '',
+          staff: data.staff?.toString() || '',
           roles: data.selectedRoles?.[0]?.id?.toString() || '',
           passwordNeverExpiers: data.passwordNeverExpires || false,
         }))
@@ -89,29 +124,49 @@ const EditUsers = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (!id) return
+
+    const requiresStaff = staffOptions.length > 0
+
     // basic validation
     if (
-      !formData.username ||
-      !formData.email ||
-      !formData.firstName ||
-      !formData.lastName ||
-      formData.office ||
-      formData.roles
+      !formData.username.trim() ||
+      !formData.email.trim() ||
+      !formData.firstName.trim() ||
+      !formData.lastName.trim() ||
+      !formData.office ||
+      !formData.roles ||
+      (requiresStaff && !formData.staff)
     ) {
       alert('Please fill all required fields.')
       return
     }
 
-    const _payload = {
-      // Reserved for future use
-      username: formData.username,
-      email: formData.email,
-      firstname: formData.firstName,
-      lastname: formData.lastName,
-      passwordNeverExpiers: formData.passwordNeverExpiers,
-      office: formData.office,
-      staff: formData.staff,
-      roles: formData.roles,
+    const officeId = parseId(formData.office)
+    const roleId = parseId(formData.roles)
+    const staffId = formData.staff ? parseId(formData.staff) : undefined
+
+    if (!officeId || !roleId || (formData.staff && !staffId)) {
+      alert('Please select valid office, role, and staff values.')
+      return
+    }
+
+    const payload: PutUsersUserIdRequest = {
+      email: formData.email.trim(),
+      firstname: formData.firstName.trim(),
+      lastname: formData.lastName.trim(),
+      officeId,
+      roles: [roleId],
+      staffId,
+    }
+
+    try {
+      await userApi.update26(Number(id), payload)
+      alert('User updated successfully!')
+      navigate('/appusers')
+    } catch (err) {
+      console.error('Failed to update user', err)
+      alert(getUserErrorMessage(err))
     }
   }
 
@@ -135,6 +190,7 @@ const EditUsers = () => {
                 placeholder="Enter username"
                 className="w-full"
                 value={formData.username}
+                disabled
               />
             </div>
             <div className="w-full md:w-[48%] space-y-2">
@@ -143,6 +199,12 @@ const EditUsers = () => {
                 placeholder="Enter email"
                 className="w-full"
                 value={formData.email}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    email: e.target.value,
+                  }))
+                }
               />
             </div>
           </div>
@@ -154,6 +216,12 @@ const EditUsers = () => {
                 placeholder="Enter First Name"
                 className="w-full"
                 value={formData.firstName}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    firstName: e.target.value,
+                  }))
+                }
               />
             </div>
             <div className="w-full md:w-[48%] space-y-2">
@@ -162,6 +230,12 @@ const EditUsers = () => {
                 placeholder="Enter Last Name"
                 className="w-full"
                 value={formData.lastName}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    lastName: e.target.value,
+                  }))
+                }
               />
             </div>
           </div>
@@ -171,6 +245,7 @@ const EditUsers = () => {
               <Checkbox
                 id="manual-entries-1"
                 checked={formData.passwordNeverExpiers}
+                disabled
               />
               <Label htmlFor="manual-entries-1">Password never expires</Label>
             </div>
@@ -181,7 +256,7 @@ const EditUsers = () => {
               selectLabel="Office *"
               selectValue={formData.office}
               selectOnChange={value =>
-                setFormData(prev => ({ ...prev, office: value }))
+                setFormData(prev => ({ ...prev, office: value, staff: '' }))
               }
               selectPlaceholder="Select office"
               selectOptions={(users?.allowedOffices || [])
@@ -199,14 +274,10 @@ const EditUsers = () => {
                 setFormData(prev => ({ ...prev, staff: value }))
               }
               selectPlaceholder="Select staff"
-              selectOptions={(staff || [])
-                .filter(
-                  option => option.officeId?.toString() === formData.office
-                )
-                .map(option => ({
-                  id: option.id!,
-                  name: option.displayName!,
-                }))}
+              selectOptions={staffOptions.map(option => ({
+                id: option.id!,
+                name: option.displayName!,
+              }))}
             />
           </div>
 

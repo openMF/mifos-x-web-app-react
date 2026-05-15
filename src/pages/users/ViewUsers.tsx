@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import type { AxiosError } from 'axios'
 
 import {
   AlertDialog,
@@ -39,6 +40,29 @@ import {
 
 const usersApi = new UsersApi(getConfiguration()) // API
 
+type UserApiErrorResponse = {
+  defaultUserMessage?: string
+  developerMessage?: string
+  errors?: Array<{
+    defaultUserMessage?: string
+    developerMessage?: string
+  }>
+}
+
+const getUserErrorMessage = (error: unknown) => {
+  const axiosError = error as AxiosError<UserApiErrorResponse>
+  const responseData = axiosError.response?.data
+
+  return (
+    responseData?.errors?.[0]?.defaultUserMessage ||
+    responseData?.errors?.[0]?.developerMessage ||
+    responseData?.defaultUserMessage ||
+    responseData?.developerMessage ||
+    axiosError.message ||
+    'Failed to delete user'
+  )
+}
+
 const ViewUsers = () => {
   const navigate = useNavigate()
   const { id } = useParams() // route param
@@ -57,6 +81,18 @@ const ViewUsers = () => {
     fetchViewUsers()
   }, [id])
 
+  const handleDelete = async () => {
+    if (!users?.id) return
+    try {
+      await usersApi.delete23(Number(users.id))
+      alert('User deleted successfully!')
+      navigate('/appusers')
+    } catch (err) {
+      console.error('Failed to delete user', err)
+      alert(getUserErrorMessage(err))
+    }
+  }
+
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
@@ -64,7 +100,7 @@ const ViewUsers = () => {
         items={[
           { label: 'Home', href: '/home' },
           { label: 'Accounting' },
-          { label: 'Users', href: '/users' },
+          { label: 'Users', href: '/appusers' },
           { label: `${users?.id}`, current: true },
         ]}
       />
@@ -102,7 +138,7 @@ const ViewUsers = () => {
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-                    // onClick={handleDelete}
+                    onClick={handleDelete}
                   >
                     Confirm
                   </AlertDialogAction>
