@@ -82,6 +82,12 @@ import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
+import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
+import PasswordPreferences from '@/pages/organization/password-preferences/PasswordPreferences'
+import SmsCampaigns from '@/pages/organization/sms-campaigns/SmsCampaigns'
+import LoanProvisioning from '@/pages/organization/loan-provisioning/LoanProvisioning'
+import DataChecks from '@/pages/organization/data-checks/DataChecks'
+import BulkImport from '@/pages/organization/bulk-import/BulkImport'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -477,6 +483,26 @@ const AppRoutes = () => {
 
           {/* Working Days */}
           <Route path="/organization/working-days" element={<WorkingDays />} />
+
+          {/* Organization Extras */}
+          <Route
+            path="/organization/instructions-history"
+            element={<InstructionsHistory />}
+          />
+          <Route
+            path="/organization/password-preferences"
+            element={<PasswordPreferences />}
+          />
+          <Route
+            path="/organization/sms-campaigns"
+            element={<SmsCampaigns />}
+          />
+          <Route
+            path="/organization/loan-provisioning"
+            element={<LoanProvisioning />}
+          />
+          <Route path="/organization/data-checks" element={<DataChecks />} />
+          <Route path="/organization/bulk-import" element={<BulkImport />} />
 
           {/* Products */}
           <Route path="/products" element={<Products />} />
