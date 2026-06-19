@@ -200,6 +200,7 @@ import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/Loans
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
+import CreateClient from '@/pages/clients/CreateClient'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
@@ -707,6 +708,7 @@ const AppRoutes = () => {
 
           {/* Clients */}
           <Route path="/clients" element={<Clients />} />
+          <Route path="/clients/create" element={<CreateClient />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="notes" element={<ClientNotesTab />} />
