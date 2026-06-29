@@ -227,6 +227,7 @@ import ViewTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax
 import CreateTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/CreateTaxGroups'
 import EditTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/EditTaxGroups'
 import CreateCharges from '@/pages/products/charges/CreateCharges'
+import EditPaymentTypes from '@/pages/organization/payment-types/EditPaymentTypes'
 
 const AppRoutes = () => {
   return (
@@ -452,6 +453,10 @@ const AppRoutes = () => {
           <Route
             path="/organization/payment-types/create"
             element={<CreatePaymentTypes />}
+          />
+          <Route
+            path="/organization/payment-types/:id/edit"
+            element={<EditPaymentTypes />}
           />
 
           {/* Adhoc Query */}

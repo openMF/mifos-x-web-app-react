@@ -45,8 +45,19 @@ const EditTellers = () => {
     description: '',
     startDate: '', // yyyy-MM-dd
     endDate: '', // yyyy-MM-dd
-    status: 'ACTIVE', // ACTIVE | INACTIVE
+    status: '300', // ACTIVE | INACTIVE
   })
+
+  const toFineractDate = (isoDate: string): string => {
+    const [year, month, day] = isoDate.split('-').map(Number)
+    const date = new Date(Date.UTC(year, month - 1, day))
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(date)
+  }
 
   // fetch offices + teller details
   useEffect(() => {
@@ -57,14 +68,14 @@ const EditTellers = () => {
 
         if (id) {
           const tRes = await tellersApi.findTeller(Number(id))
-          const t = tRes.data ?? {}
+          const t = (tRes.data ?? {}) as typeof tRes.data & { endDate?: string }
           setFormData({
             tellerName: t.name ?? '',
             officeId: (t.officeId ?? '').toString(),
             description: t.name ?? '',
             startDate: toInputDate(t.startDate),
-            endDate: toInputDate(t.name), // ⚠️ looks wrong, probably should be t.endDate
-            status: (t.status as 'ACTIVE' | 'INACTIVE') ?? 'ACTIVE',
+            endDate: toInputDate(t.endDate),
+            status: t.status != null ? String(t.status) : '300',
           })
         }
       } catch (err) {
@@ -84,12 +95,15 @@ const EditTellers = () => {
       await tellersApi.updateTeller(Number(id), {
         name: formData.tellerName,
         officeId: Number(formData.officeId),
-        description: formData.description || undefined,
-        startDate: formData.startDate || undefined,
-        endDate: formData.endDate || undefined,
-        status: formData.status as 'ACTIVE' | 'INACTIVE',
+        description: formData.description,
+        startDate: toFineractDate(formData.startDate),
+        endDate: formData.endDate ? toFineractDate(formData.endDate) : null,
+        status: Number(formData.status),
         locale: 'en',
-        dateFormat: 'yyyy-MM-dd',
+        dateFormat: 'dd MMMM yyyy',
+      } as Parameters<typeof tellersApi.updateTeller>[1] & {
+        status: number
+        endDate: string | null
       })
       alert('Teller updated successfully!')
       navigate('/organization/tellers')
@@ -178,8 +192,8 @@ const EditTellers = () => {
               selectOnChange={val => handleChange('status', val)}
               selectClassname="w-full space-y-2"
               selectOptions={[
-                { id: 'ACTIVE', name: 'Active' },
-                { id: 'INACTIVE', name: 'Inactive' },
+                { id: '300', name: 'Active' },
+                { id: '400', name: 'Inactive' },
               ]}
             />
           </div>

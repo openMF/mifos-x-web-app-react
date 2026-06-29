@@ -18,11 +18,23 @@ import {
   TellerCashManagementApi,
   OfficesApi,
   type GetOfficesResponse,
+  type PostTellersRequest,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const _tellersApi = new TellerCashManagementApi(getConfiguration()) // Reserved for future use
+const tellersApi = new TellerCashManagementApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
+
+const toFineractDate = (isoDate: string): string => {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  const date = new Date(Date.UTC(year, month - 1, day))
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date)
+}
 
 const CreateTellers = () => {
   const navigate = useNavigate()
@@ -35,7 +47,7 @@ const CreateTellers = () => {
     description: '',
     startDate: '',
     endDate: '',
-    status: '', // true = active, false = inactive
+    status: '',
   })
 
   useEffect(() => {
@@ -54,31 +66,30 @@ const CreateTellers = () => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = async (_e: React.FormEvent) => {
-    // Reserved for future use: _e
-    // e.preventDefault();
-    // const { tellerName, officeId, startDate } = formData;
-    // if (!tellerName || !officeId || !startDate) {
-    //   alert("Please fill all required fields.");
-    //   return;
-    // }
-    // try {
-    //   await tellersApi.createTeller({
-    //     name: formData.tellerName,
-    //     officeId: Number(formData.officeId),
-    //     description: formData.description,
-    //     startDate: formData.startDate,
-    //     endDate: formData.endDate || undefined,
-    //     status: formData.status as "ACTIVE" | "INACTIVE",
-    //     locale: "en",
-    //     dateFormat: "yyyy-MM-dd",
-    //   });
-    //   alert("Teller created successfully!");
-    //   navigate("/organization/tellers");
-    // } catch (err) {
-    //   console.error("Failed to create teller", err);
-    //   alert("Failed to create teller");
-    // }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const { tellerName, officeId, startDate, status } = formData
+    if (!tellerName || !officeId || !startDate || !status) {
+      alert('Please fill all required fields.')
+      return
+    }
+    try {
+      await tellersApi.createTeller({
+        name: tellerName,
+        officeId: Number(officeId),
+        description: formData.description,
+        startDate: toFineractDate(startDate),
+        endDate: formData.endDate ? toFineractDate(formData.endDate) : '',
+        status: Number(status),
+        locale: 'en',
+        dateFormat: 'dd MMMM yyyy',
+      } as PostTellersRequest & { status: number; endDate: string })
+      alert('Teller created successfully!')
+      navigate('/organization/tellers')
+    } catch (err) {
+      console.error('Failed to create teller', err)
+      alert('Failed to create teller')
+    }
   }
 
   return (
@@ -159,10 +170,7 @@ const CreateTellers = () => {
               selectValue={formData.status}
               selectOnChange={val => handleChange('status', val)}
               selectClassname="w-full space-y-2"
-              selectOptions={[
-                { id: 'true', name: 'Active' },
-                { id: 'false', name: 'Inactive' },
-              ]}
+              selectOptions={[{ id: '300', name: 'Active' }]}
             />
           </div>
 
