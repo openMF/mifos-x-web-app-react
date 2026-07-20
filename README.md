@@ -106,13 +106,13 @@ Open the URL shown in the terminal (e.g. `http://localhost:5173`).
 
 ## 🔧 Common Issues & Fixes
 
-| Problem | Cause | Fix |
-|---------|-------|-----|
-| Login fails silently after `git pull` | `.env.development.local` is missing (gitignored) | Re-create the file using Step 2 above |
-| Login page shows no server dropdown | `VITE_FINERACT_API_URL` is empty (Docker proxy mode) | Add the env file from Step 2 |
-| `npm run dev` throws errors | Dependencies out of sync after pull | Run `npm install` again |
-| CORS or TLS error in browser console | Browser blocking self-signed cert on localhost | Use `https://demo.mifos.community` as the server |
-| Stuck on login even with correct password | Stale auth token in browser storage | Open DevTools → Application → Local Storage → delete `mifosToken`, `mifosServer`, `mifosTenant` |
+| Problem                                   | Cause                                                | Fix                                                                                             |
+| ----------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Login fails silently after `git pull`     | `.env.development.local` is missing (gitignored)     | Re-create the file using Step 2 above                                                           |
+| Login page shows no server dropdown       | `VITE_FINERACT_API_URL` is empty (Docker proxy mode) | Add the env file from Step 2                                                                    |
+| `npm run dev` throws errors               | Dependencies out of sync after pull                  | Run `npm install` again                                                                         |
+| CORS or TLS error in browser console      | Browser blocking self-signed cert on localhost       | Use `https://demo.mifos.community` as the server                                                |
+| Stuck on login even with correct password | Stale auth token in browser storage                  | Open DevTools → Application → Local Storage → delete `mifosToken`, `mifosServer`, `mifosTenant` |
 
 ---
 
