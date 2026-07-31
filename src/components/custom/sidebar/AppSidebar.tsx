@@ -158,7 +158,7 @@ export const AppSidebar = () => {
                 <SidebarMenuButton asChild>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                    className="w-full justify-start gap-3 text-sm font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                     onClick={() => handleClick(route)}
                   >
                     {icon}
@@ -172,7 +172,7 @@ export const AppSidebar = () => {
               <SidebarMenuButton asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  className="w-full justify-start gap-3 text-sm font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                 >
                   <Keyboard />
                   <p>{t('nav.keyboardShortcuts')}</p>
@@ -184,7 +184,7 @@ export const AppSidebar = () => {
               <SidebarMenuButton asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  className="w-full justify-start gap-3 text-sm font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                 >
                   <CircleHelp />
                   <p>
