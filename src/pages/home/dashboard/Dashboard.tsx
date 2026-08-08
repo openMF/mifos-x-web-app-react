@@ -5,14 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
 import ClientTrendsBar from './client-trends-bar/ClientTrendsBar'
 import AmountDisbursedPie from './amount-disbursed-pie/AmountDisbursedPie'
 import AmountCollectedPie from './amount-collected-pie/AmountCollectedPie'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useTranslation } from 'react-i18next'
+import DashboardSearch from './dashboard-search/DashboardSearch'
 
 const Dashboard = () => {
   const { t } = useTranslation('common')
@@ -27,12 +26,8 @@ const Dashboard = () => {
 
       <Card className="p-6 space-y-8">
         {/* Search Activity */}
-        <CardContent className="p-0">
-          <div className="w-full max-w-md flex flex-col gap-1 flex-1">
-            <Label htmlFor="search">{t('ui.searchActivity')}</Label>
-            <Input id="search" placeholder={t('ui.searchActivity')} />
-            {/* Optionally add autocomplete logic here */}
-          </div>
+        <CardContent className="p-0 flex z-50 overflow-visible relative">
+          <DashboardSearch />
         </CardContent>
 
         {/* Client Trends */}
