@@ -38,7 +38,6 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
-import { envConfig } from '@/lib/env-config'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -55,9 +54,7 @@ const Login = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth)
 
   const [form, setForm] = useState({ username: '', password: '' })
-  const isDockerProxy = !envConfig.apiUrl
   const [server, setServer] = useState(() => {
-    if (isDockerProxy) return ''
     return localStorage.getItem('mifosServer') || 'https://localhost:8443'
   })
   const [tenant, setTenant] = useState(() => {
@@ -71,9 +68,7 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isDockerProxy) {
-      localStorage.setItem('mifosServer', server)
-    }
+    localStorage.setItem('mifosServer', server)
     localStorage.setItem('mifosTenant', tenant)
     dispatch(loginUser(form))
   }
@@ -139,32 +134,30 @@ const Login = () => {
 
       <div className="flex flex-col w-full min-h-screen lg:w-[30%] bg-white dark:bg-zinc-900 px-4 py-6 sm:px-10 justify-between">
         <div className="lg:h-[10%] flex flex-wrap gap-2 text-center justify-center">
-          {!isDockerProxy && (
-            <Select value={server} onValueChange={handleServerChange}>
-              <SelectTrigger className="w-[160px]">
-                <Label className=" text-zinc-900 dark:text-white">
-                  {t('auth:login.server')}
-                </Label>
-                <SelectValue placeholder="https://localhost:8443" />
-              </SelectTrigger>
-              <SelectContent className="dark:bg-zinc-800 dark:text-white">
-                <SelectGroup>
-                  <SelectItem value="https://sandbox.mifos.community">
-                    https://sandbox.mifos.community
-                  </SelectItem>
-                  <SelectItem value="https://demo.mifos.community">
-                    https://demo.mifos.community
-                  </SelectItem>
-                  <SelectItem value="https://localhost:8443">
-                    https://localhost:8443
-                  </SelectItem>
-                  <SelectItem value="http://localhost:4200">
-                    http://localhost:4200
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          )}
+          <Select value={server} onValueChange={handleServerChange}>
+            <SelectTrigger className="w-[160px]">
+              <Label className=" text-zinc-900 dark:text-white">
+                {t('auth:login.server')}
+              </Label>
+              <SelectValue placeholder="https://localhost:8443" />
+            </SelectTrigger>
+            <SelectContent className="dark:bg-zinc-800 dark:text-white">
+              <SelectGroup>
+                <SelectItem value="https://sandbox.mifos.community">
+                  https://sandbox.mifos.community
+                </SelectItem>
+                <SelectItem value="https://demo.mifos.community">
+                  https://demo.mifos.community
+                </SelectItem>
+                <SelectItem value="https://localhost:8443">
+                  https://localhost:8443
+                </SelectItem>
+                <SelectItem value="http://localhost:4200">
+                  http://localhost:4200
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
           <LanguageSwitcher className="w-[140px] dark:bg-zinc-800 dark:text-white" />
 
@@ -211,37 +204,34 @@ const Login = () => {
               className="dark:bg-zinc-800 dark:text-white mb-4"
             />
 
-            <div className="relative w-full mb-4">
+            <div className="relative w-full max-w-xs mb-4">
               <Input
                 name="password"
                 value={form.password}
                 onChange={handleChange}
                 type={showPassword ? 'text' : 'password'}
-                placeholder={t('auth:login.password')}
+                placeholder="Password"
                 className="dark:bg-zinc-800 dark:text-white pr-10"
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
-                onMouseDown={e => e.preventDefault()}
-                aria-label={
-                  showPassword
-                    ? t('auth:login.hidePassword')
-                    : t('auth:login.showPassword')
-                }
+                // CodeRabbit Fix: Adding accessibility labels
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-zinc-500" />
+                  <EyeOff className="h-4 w-4" />
                 ) : (
-                  <Eye className="h-4 w-4 text-zinc-500" />
+                  <Eye className="h-4 w-4" />
                 )}
               </Button>
             </div>
 
-            <div className="flex items-center space-x-2 mb-4">
+            <div className="items-center flex space-x-2 mb-4">
               <Checkbox id="terms" />
               <label htmlFor="terms" className="text-base dark:text-white">
                 {t('auth:login.rememberMe')}
@@ -304,17 +294,17 @@ const Login = () => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://groups.google.com/g/mifosusers">
-                      {t('common:nav.userGroup')}
+                      User Group
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://groups.google.com/g/mifosdeveloper">
-                      {t('common:nav.developerGroup')}
+                      Developer Group
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://mifos.org/resources/community/communications/#mifos-irc">
-                      {t('common:nav.irc')}
+                      IRC
                     </a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -331,17 +321,17 @@ const Login = () => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://mifosforge.jira.com/wiki/spaces/MDZ/pages/92012624/Key+Design+Principles">
-                      {t('common:nav.keyDesignPrinciples')}
+                      Key Design Principles
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://sourceforge.net/projects/mifos/">
-                      {t('common:nav.workingWithCode')}
+                      Working with code
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <a href="https://mifos.org/take-action/donate-now/">
-                      {t('common:nav.donate')}
+                      Donate
                     </a>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
