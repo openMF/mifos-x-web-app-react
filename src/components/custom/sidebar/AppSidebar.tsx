@@ -8,7 +8,7 @@
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { useAppDispatch } from '@/app/hook'
+import { useAppDispatch, useAppSelector } from '@/app/hook'
 import { logout } from '@/pages/login/loginSlice'
 import { useTranslation } from 'react-i18next'
 import {
@@ -40,6 +40,10 @@ export const AppSidebar = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { t } = useTranslation('common')
+  
+  // WEB-812: Fetch user permissions from Redux state
+  const { user } = useAppSelector((state) => state.login)
+  const permissions = user?.permissions || []
 
   const handleHome = () => {
     navigate('/home')
@@ -72,7 +76,7 @@ export const AppSidebar = () => {
             <User className="w-6 h-6 text-gray-500 dark:text-gray-300" />
           </div>
           <p className="text-base text-gray-500 dark:text-gray-400">
-            default / mifos
+            {user?.username || 'default'} / {user?.officeName || 'mifos'}
           </p>
 
           <div className="flex space-x-4 mt-2">
@@ -110,6 +114,9 @@ export const AppSidebar = () => {
           </SidebarGroupLabel>
           <SidebarMenu>
             {[
+              dev
+              { icon: <Gauge />, label: t('nav.dashboard'), route: 'dashboard', permission: 'ALL_FUNCTIONS' },
+              { icon: <Send />, label: t('nav.navigation'), route: 'navigation', permission: 'ALL_FUNCTIONS' },
               {
                 icon: <Gauge />,
                 label: t('nav.dashboard'),
@@ -119,54 +126,67 @@ export const AppSidebar = () => {
                 icon: <Send />,
                 label: t('nav.navigation'),
                 route: 'navigation',
-              },
+              }
+            
               {
                 icon: <Check />,
                 label: t('nav.checkerInboxAndTasks'),
                 route: 'checker-inbox-and-tasks/checker-inbox',
+                permission: 'READ_CHECKERINBOX'
               },
               {
                 icon: <Layers2 />,
                 label: t('nav.individualCollectionSheet'),
                 route: 'individual-collection-sheet',
+                permission: 'READ_COLLECTIONSHEET'
               },
               {
                 icon: <Bell />,
                 label: t('nav.notifications'),
                 route: 'notifications',
+                permission: 'ALL_FUNCTIONS'
               },
               {
                 icon: <RefreshCcw />,
                 label: t('nav.frequentPostings'),
                 route: 'accounting/journal-entries/frequent-postings',
+                permission: 'READ_JOURNALENTRY'
               },
               {
                 icon: <Plus />,
                 label: t('nav.createJournalEntry'),
                 route: 'accounting/journal-entries/create',
+                permission: 'CREATE_JOURNALENTRY'
               },
               {
                 icon: <Network />,
                 label: t('nav.chartOfAccounts'),
                 route: 'accounting/chart-of-accounts',
+                permission: 'READ_GLACCOUNT'
               },
-            ].map(({ icon, label, route }) => (
-              <SidebarMenuItem
-                key={label}
-                className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <SidebarMenuButton asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                    onClick={() => handleClick(route)}
-                  >
-                    {icon}
-                    <p>{label}</p>
-                  </Button>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            ]
+              .filter((item) => 
+                !item.permission || 
+                permissions.includes(item.permission) || 
+                permissions.includes("ALL_FUNCTIONS")
+              )
+              .map(({ icon, label, route }) => (
+                <SidebarMenuItem
+                  key={label}
+                  className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <SidebarMenuButton asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                      onClick={() => handleClick(route)}
+                    >
+                      {icon}
+                      <p>{label}</p>
+                    </Button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
 
             <SidebarMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
               <SidebarMenuButton asChild>

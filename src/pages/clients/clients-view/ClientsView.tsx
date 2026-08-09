@@ -19,6 +19,9 @@ import Dropdown from '@/components/custom/navbar/Dropdown'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from '@/lib/date-utils'
 
+// WEB-812: Import useAppSelector to check permissions
+import { useAppSelector } from '@/app/hook'
+
 const clientsApi = new ClientApi(getConfiguration())
 
 const ClientsView = () => {
@@ -26,6 +29,11 @@ const ClientsView = () => {
   const [client, setClient] = useState<GetClientsClientIdResponse>()
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+
+  // WEB-812: Fetch user permissions from Redux
+  const { user } = useAppSelector((state) => state.login)
+  const permissions = user?.permissions || []
+  const hasAllFunctions = permissions.includes('ALL_FUNCTIONS')
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -38,6 +46,55 @@ const ClientsView = () => {
     }
     fetchClient()
   }, [id])
+
+  // WEB-812: Define dropdown options with permission requirements
+  const dropdownOptions = [
+    { 
+      label: 'Edit', 
+      path: `clients/${client?.id}/edit`, 
+      requiredPermission: 'UPDATE_CLIENT' 
+    },
+    {
+      label: 'Applications',
+      children: [
+        { label: 'New Loan Account', path: 'signature', disabled: true, requiredPermission: 'CREATE_LOAN' },
+        { label: 'New Savings Account', path: 'signature', disabled: true, requiredPermission: 'CREATE_SAVINGSACCOUNT' },
+        { label: 'New Share Account', path: 'signature', disabled: true },
+        { label: 'New Recurring Deposit Account', path: 'signature', disabled: true },
+        { label: 'New Fixed Deposit Account', path: 'signature', disabled: true },
+      ],
+    },
+    {
+      label: 'Actions',
+      children: [
+        { label: 'Close', path: 'signature', disabled: true, requiredPermission: 'CLOSE_CLIENT' },
+        { label: 'Transfer Clients', path: 'signature', disabled: true, requiredPermission: 'TRANSFERCLIENT_CLIENT' },
+      ],
+    },
+    { 
+      label: 'Unassign Staff', 
+      path: `clients/${client?.id}/edit`, 
+      requiredPermission: 'UNASSIGNSTAFF_CLIENT' 
+    },
+    {
+      label: 'More',
+      children: [
+        { label: 'Add Charge', path: 'signature', disabled: true, requiredPermission: 'CREATE_CLIENTCHARGE' },
+        { label: 'Create Collateral', path: 'signature', disabled: true },
+        { label: 'Survey', path: 'signature', disabled: true },
+        { label: 'Upload Default Savings', path: 'signature', disabled: true },
+        { label: 'Upload Signature', path: 'signature', disabled: true, requiredPermission: 'CREATE_CLIENTIMAGE' },
+        { label: 'Delete Signature', path: 'signature', disabled: true, requiredPermission: 'DELETE_CLIENTIMAGE' },
+        { label: 'Client Screen Reports', path: 'signature', disabled: true },
+        { label: 'Create Standing Instructions', path: 'signature', disabled: true, requiredPermission: 'CREATE_STANDINGINSTRUCTION' },
+        { label: 'View Standing Instructions', path: 'signature', disabled: true, requiredPermission: 'READ_STANDINGINSTRUCTION' },
+      ],
+    },
+  ].filter(option => 
+    !option.requiredPermission || 
+    permissions.includes(option.requiredPermission) || 
+    hasAllFunctions
+  )
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -105,12 +162,16 @@ const ClientsView = () => {
 
         <div className="flex flex-col h-full">
           <div className="flex justify-end">
+            {/* WEB-812: Pass filtered options to Dropdown */}
             <Dropdown
               name={
                 <span className="flex items-center gap-2">
                   <Menu />
                 </span>
               }
+ 
+              options={dropdownOptions}
+
               options={[
                 {
                   label: t('view.menu.edit'),
@@ -214,6 +275,7 @@ const ClientsView = () => {
                   ],
                 },
               ]}
+
             />
           </div>
 
