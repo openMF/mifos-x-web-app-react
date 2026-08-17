@@ -7,201 +7,121 @@
  */
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { useAppDispatch } from '@/app/hook'
+import { useAppDispatch, useAppSelector } from '@/app/hook'
 import { logout } from '@/pages/login/loginSlice'
 import { useTranslation } from 'react-i18next'
 import {
-  Gauge,
-  Send,
-  Check,
-  Layers2,
-  Bell,
-  RefreshCcw,
-  Plus,
+  Home,
   Network,
-  Keyboard,
-  CircleHelp,
   LogOut,
   Cog,
   User,
+  HandCoins,
+  Wallet,
+  BarChart3,
 } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarGroupLabel,
 } from '@/components/ui/sidebar'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { t } = useTranslation('common')
 
-  const handleHome = () => {
-    navigate('/home')
-  }
-
-  const handleClick = (page: string) => {
-    navigate(`/${page}`)
-  }
-
+  const { user } = useAppSelector((state) => state.auth)
+  const permissions = user?.permissions || []
   const handleLogout = () => {
     dispatch(logout())
-    navigate('/login', { replace: true })
+    navigate('/login')
   }
+  
+  const menuItems = [
+    { icon: <Home size={24}  />, label: 'Home', route: 'dashboard', requiredPermission: null}, //This will be always visible
+    { icon: <User size={24} />, label: 'Clients', route: 'clients', requiredPermission: 'READ_CLIENT'},
+    { icon: <HandCoins size={24} />, label: 'Loans', route: 'navigation', requiredPermission: 'READ_LOAN'},
+    { icon: <Wallet size={24} />, label: 'Savings', route: 'individual-collection-sheet', requiredPermission: 'READ_SAVINGSACCOUNT'},
+    { icon: <BarChart3 size={24} />, label: 'Reports', route: 'reports', requiredPermission: 'READ_REPORT'},
+    { icon: <Network size={24} />, label: 'Accounting', route: 'accounting', requiredPermission: 'READ_ACCOUNT'}
+  ]
 
   return (
-    <Sidebar className="w-64 h-screen flex flex-col border-r bg-white dark:bg-gray-900 dark:border-gray-800">
-      <SidebarContent className="flex-1 overflow-y-auto">
-        <div className="flex flex-col items-center space-y-3 pt-5">
-          <img
-            src={MifosLogo}
-            alt="Mifos X"
-            className="h-20 cursor-pointer transition-all duration-200 hover:scale-105"
-            onClick={handleHome}
-          />
-          <h1 className="text-3xl font-bold text-gray-700 dark:text-gray-200">
-            Mifos X
-          </h1>
-
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center shadow">
-            <User className="w-6 h-6 text-gray-500 dark:text-gray-300" />
+    <Sidebar className="w-20 bg-white border-r flex flex-col items-center py-6 shadow-md">
+          <div className="mb-10 px-4">
+             <img
+                src={MifosLogo}
+                alt="Mifos X"
+                className="h-10 cursor-pointer transition-all duration-200 hover:scale-105"
+                onClick={() => navigate('/dashboard')}
+              />
           </div>
-          <p className="text-base text-gray-500 dark:text-gray-400">
-            default / mifos
-          </p>
-
-          <div className="flex space-x-4 mt-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-transparent"
-              onClick={() => handleClick('settings')}
-              aria-label={t('tooltips.settings')}
-            >
-              <Cog className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
-              onClick={handleLogout}
-              aria-label={t('tooltips.signOut')}
-            >
-              <LogOut className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-6 pt-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-            {t('nav.frequentlyAccessed')}
-          </SidebarGroupLabel>
-          <SidebarMenu></SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-6 pt-4 pb-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-            {t('nav.mainItems')}
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {[
-              {
-                icon: <Gauge />,
-                label: t('nav.dashboard'),
-                route: 'dashboard',
-              },
-              {
-                icon: <Send />,
-                label: t('nav.navigation'),
-                route: 'navigation',
-              },
-              {
-                icon: <Check />,
-                label: t('nav.checkerInboxAndTasks'),
-                route: 'checker-inbox-and-tasks/checker-inbox',
-              },
-              {
-                icon: <Layers2 />,
-                label: t('nav.individualCollectionSheet'),
-                route: 'individual-collection-sheet',
-              },
-              {
-                icon: <Bell />,
-                label: t('nav.notifications'),
-                route: 'notifications',
-              },
-              {
-                icon: <RefreshCcw />,
-                label: t('nav.frequentPostings'),
-                route: 'accounting/journal-entries/frequent-postings',
-              },
-              {
-                icon: <Plus />,
-                label: t('nav.createJournalEntry'),
-                route: 'accounting/journal-entries/create',
-              },
-              {
-                icon: <Network />,
-                label: t('nav.chartOfAccounts'),
-                route: 'accounting/chart-of-accounts',
-              },
-            ].map(({ icon, label, route }) => (
-              <SidebarMenuItem
-                key={label}
-                className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <SidebarMenuButton asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                    onClick={() => handleClick(route)}
-                  >
-                    {icon}
-                    <p>{label}</p>
-                  </Button>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-
-            <SidebarMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-              <SidebarMenuButton asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                >
-                  <Keyboard />
-                  <p>{t('nav.keyboardShortcuts')}</p>
-                </Button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-
-            <SidebarMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-              <SidebarMenuButton asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                >
-                  <CircleHelp />
-                  <p>
-                    <a
-                      href="https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manual"
-                      target="_blank"
-                      rel="noopener noreferrer"
+          <TooltipProvider>
+        <SidebarContent className="w-full flex flex-col items-center gap-6">
+          <SidebarMenu className="flex flex-col items-center gap-4 w-full">
+            {/*Dynamic Rendering with .filter() and .map()*/}
+            {menuItems
+              .filter(item => 
+                // The filter function that decides who sees what.
+                // An item is kept if it requires no permission OR the user's permissions list and that includes the required one.
+                !item.requiredPermission || permissions.includes(item.requiredPermission) || permissions.includes('ALL_FUNCTIONS')
+              )
+              .map((item) => (
+                // The map function takes the filtered data and transforms it into the UI components.
+                <SidebarMenuItem key={item.route} className="flex justify-center w-full">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SidebarMenuButton 
+                        className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-all"
+                        onClick={() => navigate(`/${item.route}`)}
+                        aria-label={item.label}
+                      >
+                        {item.icon}
+                      </SidebarMenuButton>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>{item.label}</p></TooltipContent>
+                  </Tooltip>
+                </SidebarMenuItem>
+              ))}
+            <div className="mt-auto pt-10 flex flex-col items-center gap-4 w-full">
+              {permissions.includes('ALL_FUNCTIONS') && ( // Conditional rendering with '&&'
+                <SidebarMenuItem className="flex justify-center w-full">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SidebarMenuButton className="w-12 h-12 flex items-center justify-center rounded-xl" onClick={() => navigate('/settings')}>
+                        <Cog size={24} />
+                      </SidebarMenuButton>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"><p>Settings</p></TooltipContent>
+                  </Tooltip>
+                </SidebarMenuItem>
+              )}
+              <SidebarMenuItem className="flex justify-center w-full">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton 
+                      className="w-12 h-12 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
+                      onClick={handleLogout}
                     >
-                      {t('nav.help')}
-                    </a>
-                  </p>
-                </Button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+                      <LogOut size={24} />
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  <TooltipContent side="right"><p>Logout</p></TooltipContent>
+                </Tooltip>
+              </SidebarMenuItem>
+            </div>
           </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
+        </SidebarContent>
+      </TooltipProvider>
     </Sidebar>
   )
 }
