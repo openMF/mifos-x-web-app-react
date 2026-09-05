@@ -9,7 +9,7 @@ import MfNavbar from '@/components/custom/navbar/MfNavbar'
 import { AppSidebar } from '@/components/custom/sidebar/AppSidebar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Outlet } from 'react-router-dom'
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, type CSSProperties } from 'react'
 
 const Layout = () => {
   useLayoutEffect(() => {
@@ -21,7 +21,7 @@ const Layout = () => {
     }
   }, [])
   return (
-    <SidebarProvider>
+    <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-col flex-1 w-full">
