@@ -55,7 +55,7 @@ export const AppSidebar = () => {
   }
 
   return (
-    <Sidebar className="w-64 h-screen flex flex-col border-r bg-white dark:bg-gray-900 dark:border-gray-800">
+    <Sidebar className="h-screen flex flex-col border-r bg-white dark:bg-gray-900 dark:border-gray-800">
       <SidebarContent className="flex-1 overflow-y-auto">
         <div className="flex flex-col items-center space-y-3 pt-5">
           <img
@@ -158,11 +158,13 @@ export const AppSidebar = () => {
                 <SidebarMenuButton asChild>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                    className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                     onClick={() => handleClick(route)}
                   >
                     {icon}
-                    <p>{label}</p>
+                    <span className="min-w-0 whitespace-normal! text-left">
+                      {label}
+                    </span>
                   </Button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -172,10 +174,12 @@ export const AppSidebar = () => {
               <SidebarMenuButton asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                 >
                   <Keyboard />
-                  <p>{t('nav.keyboardShortcuts')}</p>
+                  <span className="min-w-0 whitespace-normal! text-left">
+                    {t('nav.keyboardShortcuts')}
+                  </span>
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -184,10 +188,10 @@ export const AppSidebar = () => {
               <SidebarMenuButton asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                 >
                   <CircleHelp />
-                  <p>
+                  <span className="min-w-0 whitespace-normal! text-left">
                     <a
                       href="https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manual"
                       target="_blank"
@@ -195,7 +199,7 @@ export const AppSidebar = () => {
                     >
                       {t('nav.help')}
                     </a>
-                  </p>
+                  </span>
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
