@@ -1,0 +1,19 @@
+# Sample pg_hba.conf for production deployments.
+#
+# Copy this file into the directory referenced by POSTGRES_TLS_DIR (alongside
+# ca.crt, server.crt and server.key) and it will be mounted at
+# /etc/postgres-tls/pg_hba.conf by docker-compose.prod.yml.
+#
+# Any TCP connection that is not TLS is refused, so a misconfigured client
+# fails loudly instead of silently falling back to plaintext.
+
+# Local unix socket, used by the container healthcheck.
+local   all             all                                     trust
+
+# Encrypted TCP connections.
+hostssl all             all             0.0.0.0/0               scram-sha-256
+hostssl all             all             ::/0                    scram-sha-256
+
+# Reject anything else.
+host    all             all             0.0.0.0/0               reject
+host    all             all             ::/0                    reject
