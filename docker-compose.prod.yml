@@ -10,6 +10,7 @@
 #   - Read-only root filesystems
 #   - Tighter resource limits
 #   - HSTS enabled
+#   - TLS required on both database connections (sslmode=verify-full)
 #   - No exposed DB/backend ports (only web-app)
 # =============================================================================
 
@@ -30,8 +31,29 @@ services:
         reservations:
           memory: 64M
 
-  fineractmysql:
+  fineractpostgres:
     restart: unless-stopped
+    # TLS is required in production. Supply the certificates yourself and point
+    # POSTGRES_TLS_DIR at the directory holding them. server.crt must be issued
+    # by ca.crt and carry a subject alternative name of "fineractpostgres",
+    # otherwise the sslmode=verify-full connections below will be rejected.
+    # server.key must be owned by uid 999 (the postgres user) with mode 0600.
+    # See fineract-db/tls/pg_hba.conf.sample for an hba file that refuses any
+    # non-TLS connection.
+    volumes:
+      - ${POSTGRES_TLS_DIR:-./certs/postgres}:/etc/postgres-tls:ro
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_cert_file=/etc/postgres-tls/server.crt
+      - -c
+      - ssl_key_file=/etc/postgres-tls/server.key
+      - -c
+      - ssl_ca_file=/etc/postgres-tls/ca.crt
+      - -c
+      - hba_file=/etc/postgres-tls/pg_hba.conf
     deploy:
       resources:
         limits:
@@ -45,8 +67,15 @@ services:
     # image: openmf/fineract:1.9.0
     restart: unless-stopped
     ports: [] # Don't expose Fineract directly in production
+    # The CA that issued the PostgreSQL server certificate, so Fineract can
+    # verify the database it connects to.
+    volumes:
+      - ${FINERACT_TLS_DIR:-./certs/fineract}:/etc/fineract-tls:ro
     environment:
       - FINERACT_SECURITY_HSTS_ENABLED=true
+      # Encrypt and authenticate both database connections.
+      - 'FINERACT_HIKARI_JDBC_URL=jdbc:postgresql://fineractpostgres:5432/fineract_tenants?sslmode=verify-full&sslrootcert=/etc/fineract-tls/ca.crt'
+      - 'FINERACT_DEFAULT_TENANTDB_CONN_PARAMS=sslmode=verify-full&sslrootcert=/etc/fineract-tls/ca.crt'
     deploy:
       resources:
         limits:

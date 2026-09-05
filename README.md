@@ -107,6 +107,14 @@ For production with security hardening and resource limits:
 docker compose -f docker-compose-zitadel.yml -f docker-compose.prod.yml up -d
 ```
 
+The production overlay requires TLS on both database connections
+(`sslmode=verify-full`). Before starting it, place `ca.crt`, `server.crt`,
+`server.key` and a `pg_hba.conf` in the directory given by `POSTGRES_TLS_DIR`,
+and the same `ca.crt` in `FINERACT_TLS_DIR`. The server certificate must carry a
+subject alternative name of `fineractpostgres`. A starting point for the hba
+file is provided at `fineract-db/tls/pg_hba.conf.sample`, which refuses any
+connection that is not encrypted.
+
 ### Using Pre-built Docker Image
 
 Pull and run the latest image from Docker Hub:
@@ -147,10 +155,16 @@ The application uses environment variables for configuration. Copy `.env.sample`
 
 | Variable                                   | Description                                               | Default                  |
 | ------------------------------------------ | --------------------------------------------------------- | ------------------------ |
-| `VITE_FINERACT_API_URL`                    | Base URL for the Fineract server (protocol + host + port) | `https://localhost:8443` |
+| `VITE_FINERACT_API_URL`                    | Base URL for the Fineract server (protocol + host + port) | `https://localhost:3000` |
 | `VITE_FINERACT_API_PROVIDER`               | API path prefix                                           | `/fineract-provider`     |
 | `VITE_FINERACT_API_VERSION`                | API version path                                          | `/api`                   |
 | `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments            | `default`                |
+
+> **Note:** In development, `.env.development` intentionally leaves
+> `VITE_FINERACT_API_URL` empty so requests use relative URLs and go through the
+> Vite dev proxy, which forwards `/fineract-provider/*` to the value above (see
+> `vite.config.ts`). `3000` is the host port the Docker Compose stack publishes
+> for Fineract. Only override this if you run Fineract yourself on another port.
 
 ### Manual Fineract Setup (Without Docker)
 
