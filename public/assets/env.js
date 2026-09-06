@@ -19,9 +19,9 @@
 
   // OAuth / OIDC (disabled by default for local dev)
   window.__env.MIFOS_OAUTH_SERVER_ENABLED = 'false'
-  window.__env.FINERACT_PLUGIN_OIDC_ENABLED = 'false'
-  window.__env.FINERACT_PLUGIN_OIDC_BASE_URL = ''
-  window.__env.FINERACT_PLUGIN_OIDC_CLIENT_ID = ''
-  window.__env.FINERACT_PLUGIN_OIDC_API_URL = ''
-  window.__env.FINERACT_PLUGIN_OIDC_FRONTEND_URL = ''
+  // The FINERACT_PLUGIN_OIDC_* keys are intentionally left unset here.
+  // env() prefers window.__env over import.meta.env, so defining them would
+  // pin OIDC off and make the VITE_FINERACT_PLUGIN_OIDC_* build variables
+  // unusable outside Docker. Unset, they fall through to those and then to
+  // the disabled defaults. Docker still injects them via env.template.js.
 })(this)

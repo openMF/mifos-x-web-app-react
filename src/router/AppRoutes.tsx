@@ -8,6 +8,7 @@
 import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
+import Callback from '@/pages/login/Callback'
 import { Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
@@ -240,6 +241,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/callback" element={<Callback />} />
 
       <Route element={<ProtectedRoutes />}>
         {/* Login Route */}
