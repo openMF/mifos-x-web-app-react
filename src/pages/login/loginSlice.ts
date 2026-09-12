@@ -7,6 +7,7 @@
  */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { loginFineract } from '@/pages/login/loginApi'
+import { clearOidcToken, hasSession } from '@/lib/http-client'
 
 interface AuthState {
   loading: boolean
@@ -19,7 +20,7 @@ const initialState: AuthState = {
   loading: false,
   user: null,
   error: null,
-  isAuthenticated: localStorage.getItem('mifosToken') ? true : false,
+  isAuthenticated: hasSession(),
 }
 
 export const loginUser = createAsyncThunk(
@@ -32,6 +33,10 @@ export const loginUser = createAsyncThunk(
       const data = await loginFineract(username, password)
       const encoded = btoa(`${username}:${password}`)
       localStorage.setItem('mifosToken', encoded)
+      // Password sign-in replaces any OIDC session: getAuthHeaders prefers the
+      // OIDC token, so leaving it behind would keep calling Fineract as the
+      // previously signed-in user.
+      clearOidcToken()
 
       return data
     } catch (_err: unknown) {
@@ -49,6 +54,7 @@ const authSlice = createSlice({
       state.user = null
       state.isAuthenticated = false
       localStorage.removeItem('mifosToken')
+      clearOidcToken()
     },
   },
   extraReducers: builder => {
