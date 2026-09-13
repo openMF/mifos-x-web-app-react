@@ -5,19 +5,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { WebStorageStateStore } from 'oidc-client-ts'
+import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
+import type { UserManagerSettings } from 'oidc-client-ts'
 import type { AuthProviderProps } from 'react-oidc-context'
 
 import { envConfig } from '@/lib/env-config'
 import { isSecureUrl } from '@/lib/secure-url'
 
 /**
- * Scopes requested from the provider. offline_access is deliberately absent:
- * it yields a refresh token, a long-lived credential this client has no way
- * to use yet (no silent renew, no 401 renewal) and would only persist. It
- * belongs with the renewal work, not before it.
+ * Scopes requested from the provider. offline_access yields the refresh token
+ * that automaticSilentRenew and the 401 recovery path both consume; without
+ * it oidc-client-ts falls back to renewing through a hidden iframe, which is
+ * unreliable wherever third-party cookies are restricted.
  */
-const OIDC_SCOPE = 'openid profile email'
+const OIDC_SCOPE = 'openid profile email offline_access'
 
 /**
  * Base URL the provider redirects back to. Falls back to the current origin
@@ -74,10 +75,10 @@ export const isOidcUsable = (): boolean => {
 }
 
 /**
- * Builds the OIDC client configuration from the runtime environment.
+ * Builds the OIDC client settings from the runtime environment.
  * Mirrors the Angular web app's getOIDCConfig().
  */
-export const getOidcConfig = (): AuthProviderProps => {
+const getOidcSettings = (): UserManagerSettings => {
   const frontendUrl = getFrontendUrl()
 
   return {
@@ -87,13 +88,66 @@ export const getOidcConfig = (): AuthProviderProps => {
     post_logout_redirect_uri: `${frontendUrl}/login`,
     response_type: 'code',
     scope: OIDC_SCOPE,
-    // Silent renew is off, matching the Angular client. Note that no renewal
-    // path exists yet either: once the access token expires, calls fail until
-    // the user signs in again. Renewal follows in the child issues.
-    automaticSilentRenew: false,
+    // Renew in the background shortly before expiry so a working session is
+    // never interrupted. The 401 handler in lib/axios covers the cases this
+    // cannot catch: a token revoked or invalidated server-side.
+    automaticSilentRenew: true,
     // Persist the session across reloads, matching how the Basic-auth token
     // is stored today.
     userStore: new WebStorageStateStore({ store: window.localStorage }),
+  }
+}
+
+/**
+ * The single UserManager for the application.
+ *
+ * Held here rather than left to AuthProvider to construct internally, because
+ * renewal is driven from lib/axios — a plain module with no access to React
+ * context. Both sides must operate on the same instance, or a token renewed
+ * by one would be invisible to the other.
+ *
+ * Null whenever OIDC is unusable, so callers outside the provider tree can
+ * branch on it without having to re-check the configuration themselves.
+ */
+let userManager: UserManager | null = null
+let userManagerResolved = false
+
+export const getOidcUserManager = (): UserManager | null => {
+  if (userManagerResolved) return userManager
+
+  userManagerResolved = true
+  userManager = isOidcUsable() ? new UserManager(getOidcSettings()) : null
+
+  return userManager
+}
+
+/**
+ * True when this document is the hidden iframe oidc-client-ts opens to renew
+ * a session without a refresh token. silent_redirect_uri defaults to
+ * redirect_uri, so that iframe loads /callback; it must complete the silent
+ * handshake rather than run the interactive callback, which would leave the
+ * parent window waiting for a message that never arrives.
+ */
+export const isSilentRenewFrame = (): boolean => {
+  try {
+    return window.self !== window.top
+  } catch {
+    // Cross-origin framing throws on access; treat it as framed.
+    return true
+  }
+}
+
+/**
+ * Props for react-oidc-context's AuthProvider, bound to the shared
+ * UserManager above.
+ */
+export const getOidcProviderProps = (): AuthProviderProps => {
+  return {
+    userManager: getOidcUserManager() ?? undefined,
+    // Inside the silent-renew iframe the code and state belong to the silent
+    // handshake, which Callback completes itself; letting the provider
+    // consume them first would race it for a single-use authorization code.
+    skipSigninCallback: isSilentRenewFrame(),
     // Strip the authorization code from the URL once the exchange completes.
     onSigninCallback: () => {
       window.history.replaceState({}, document.title, window.location.pathname)
