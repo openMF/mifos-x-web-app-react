@@ -49,19 +49,39 @@ export const envConfig = {
 
   /** Whether OIDC authentication is enabled */
   oidcEnabled:
-    env('FINERACT_PLUGIN_OIDC_ENABLED', '', 'false').toLowerCase() === 'true',
+    env(
+      'FINERACT_PLUGIN_OIDC_ENABLED',
+      'VITE_FINERACT_PLUGIN_OIDC_ENABLED',
+      'false'
+    ).toLowerCase() === 'true',
 
   /** OIDC provider base URL */
-  oidcBaseUrl: env('FINERACT_PLUGIN_OIDC_BASE_URL', '', ''),
+  oidcBaseUrl: env(
+    'FINERACT_PLUGIN_OIDC_BASE_URL',
+    'VITE_FINERACT_PLUGIN_OIDC_BASE_URL',
+    ''
+  ),
 
   /** OIDC client ID */
-  oidcClientId: env('FINERACT_PLUGIN_OIDC_CLIENT_ID', '', ''),
+  oidcClientId: env(
+    'FINERACT_PLUGIN_OIDC_CLIENT_ID',
+    'VITE_FINERACT_PLUGIN_OIDC_CLIENT_ID',
+    ''
+  ),
 
   /** OIDC API URL */
-  oidcApiUrl: env('FINERACT_PLUGIN_OIDC_API_URL', '', ''),
+  oidcApiUrl: env(
+    'FINERACT_PLUGIN_OIDC_API_URL',
+    'VITE_FINERACT_PLUGIN_OIDC_API_URL',
+    ''
+  ),
 
   /** OIDC frontend URL */
-  oidcFrontendUrl: env('FINERACT_PLUGIN_OIDC_FRONTEND_URL', '', ''),
+  oidcFrontendUrl: env(
+    'FINERACT_PLUGIN_OIDC_FRONTEND_URL',
+    'VITE_FINERACT_PLUGIN_OIDC_FRONTEND_URL',
+    ''
+  ),
 
   /** Default UI language */
   defaultLanguage: env('MIFOS_DEFAULT_LANGUAGE', '', 'en-US'),

@@ -7,15 +7,25 @@
  */
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import { AuthProvider } from 'react-oidc-context'
 import { store } from '@/app/store'
+import { getOidcConfig, isOidcUsable } from '@/lib/oidc-config'
 import AppRoutes from './router/AppRoutes'
 
 const App = () => {
+  const routes = (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  )
+
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      {isOidcUsable() ? (
+        <AuthProvider {...getOidcConfig()}>{routes}</AuthProvider>
+      ) : (
+        routes
+      )}
     </Provider>
   )
 }

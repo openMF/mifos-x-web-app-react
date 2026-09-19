@@ -8,6 +8,7 @@
 import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
+import Callback from '@/pages/login/Callback'
 import { Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
@@ -220,6 +221,7 @@ import ApplyShares from '@/pages/shares/shares-account-actions/apply-shares/Appl
 import RedeemShares from '@/pages/shares/shares-account-actions/redeem-shares/RedeemShares'
 import CloseSharesAccount from '@/pages/shares/shares-account-actions/close-shares-account/CloseSharesAccount'
 import ViewTemplates from '@/pages/templates/ViewTemplates'
+import CreateEditTemplate from '@/pages/templates/CreateEditTemplate'
 import CreateTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/CreateTaxComponents'
 import ViewTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ViewTaxComponents'
 import EditTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/EditTaxComponenets'
@@ -240,6 +242,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/callback" element={<Callback />} />
 
       <Route element={<ProtectedRoutes />}>
         {/* Login Route */}
@@ -391,7 +394,9 @@ const AppRoutes = () => {
 
           {/* Templates */}
           <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/create" element={<CreateEditTemplate />} />
           <Route path="/templates/:id" element={<ViewTemplates />} />
+          <Route path="/templates/:id/edit" element={<CreateEditTemplate />} />
 
           {/* Organization */}
           <Route path="/organization" element={<Organization />} />
