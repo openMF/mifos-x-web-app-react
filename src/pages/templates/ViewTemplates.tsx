@@ -13,10 +13,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { sanitizeHtml } from '@/lib/sanitize-html'
 import {
   UserGeneratedDocumentsApi,
   type GetTemplatesTemplateIdResponse,
 } from '@/fineract-api'
+
+import { detectTemplateTextFormat } from './templateText'
+import { templateHtmlClasses } from './templateHtmlStyles'
 
 //templates API
 const templatesApi = new UserGeneratedDocumentsApi(getConfiguration())
@@ -110,11 +114,26 @@ const ViewTemplates = () => {
           <div className="text-zinc-600 dark:text-zinc-400">
             {template?.type}
           </div>
+        </div>
 
-          <div className="font-medium">Text</div>
-          <div className="text-zinc-600 dark:text-zinc-400">
-            {template?.text}
-          </div>
+        {/* The body is rendered in the format it was authored in: markup as
+            markup, and plain text with its line breaks intact — showing either
+            one as a raw string is what made a saved template look mangled. */}
+        <div className="mt-5 text-sm text-zinc-700 dark:text-zinc-200">
+          <div className="font-medium mb-2">Text</div>
+          {detectTemplateTextFormat(template?.text) === 'html' ? (
+            <div
+              className={`text-zinc-600 dark:text-zinc-400 ${templateHtmlClasses}`}
+              // Sanitised above: template bodies are stored by other users.
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(template?.text ?? ''),
+              }}
+            />
+          ) : (
+            <div className="whitespace-pre-wrap text-zinc-600 dark:text-zinc-400">
+              {template?.text}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-center mt-8">

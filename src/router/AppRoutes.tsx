@@ -221,6 +221,7 @@ import ApplyShares from '@/pages/shares/shares-account-actions/apply-shares/Appl
 import RedeemShares from '@/pages/shares/shares-account-actions/redeem-shares/RedeemShares'
 import CloseSharesAccount from '@/pages/shares/shares-account-actions/close-shares-account/CloseSharesAccount'
 import ViewTemplates from '@/pages/templates/ViewTemplates'
+import CreateEditTemplate from '@/pages/templates/CreateEditTemplate'
 import CreateTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/CreateTaxComponents'
 import ViewTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ViewTaxComponents'
 import EditTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/EditTaxComponenets'
@@ -393,7 +394,9 @@ const AppRoutes = () => {
 
           {/* Templates */}
           <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/create" element={<CreateEditTemplate />} />
           <Route path="/templates/:id" element={<ViewTemplates />} />
+          <Route path="/templates/:id/edit" element={<CreateEditTemplate />} />
 
           {/* Organization */}
           <Route path="/organization" element={<Organization />} />

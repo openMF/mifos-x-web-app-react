@@ -8,8 +8,7 @@
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { useAppDispatch } from '@/app/hook'
-import { logout } from '@/pages/login/loginSlice'
+import { useLogout } from '@/hooks/use-logout'
 import { useTranslation } from 'react-i18next'
 import {
   Gauge,
@@ -38,7 +37,7 @@ import {
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const handleLogout = useLogout()
   const { t } = useTranslation('common')
 
   const handleHome = () => {
@@ -47,11 +46,6 @@ export const AppSidebar = () => {
 
   const handleClick = (page: string) => {
     navigate(`/${page}`)
-  }
-
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate('/login', { replace: true })
   }
 
   return (
@@ -89,7 +83,7 @@ export const AppSidebar = () => {
               variant="ghost"
               size="icon"
               className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
-              onClick={handleLogout}
+              onClick={() => void handleLogout()}
               aria-label={t('tooltips.signOut')}
             >
               <LogOut className="w-5 h-5" />
