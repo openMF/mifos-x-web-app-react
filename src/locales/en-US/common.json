@@ -459,5 +459,31 @@
     "savingsAccounts": "Savings Accounts",
     "shareAccounts": "Share Accounts",
     "groupMemberships": "Group Memberships"
+  },
+  "documents": {
+    "heading": "Documents",
+    "add": "Add",
+    "name": "Name",
+    "namePlaceholder": "Document name",
+    "description": "Description",
+    "optional": "Optional",
+    "file": "File",
+    "fileName": "File Name",
+    "actions": "Actions",
+    "upload": "Upload",
+    "uploading": "Uploading...",
+    "cancel": "Cancel",
+    "download": "Download",
+    "delete": "Delete",
+    "confirmDelete": "Delete this document?",
+    "loading": "Loading...",
+    "empty": "No documents",
+    "preview": "Preview",
+    "previewFailed": "This document could not be previewed.",
+    "openInNewTab": "Open in new tab",
+    "close": "Close",
+    "identifier": "Identifier",
+    "noIdentifiers": "No identifiers",
+    "identifiersLoadFailed": "Could not load identifiers. Please try again."
   }
 }
