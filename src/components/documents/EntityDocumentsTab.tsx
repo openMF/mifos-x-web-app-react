@@ -60,8 +60,14 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
   const [file, setFile] = useState<File | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  /** Identifies the newest list request, so stale responses can be discarded. */
+  const loadIdRef = useRef(0)
 
   const load = useCallback(async () => {
+    // These routes keep the component mounted while entityId changes, so a slower
+    // response for the previous entity must not overwrite the current one's rows --
+    // the action buttons would then send that entity's document ids to this entity.
+    const requestId = ++loadIdRef.current
     if (!entityId) {
       setDocs([])
       setLoading(false)
@@ -70,12 +76,14 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
     setLoading(true)
     try {
       const res = await docsApi().retrieveAllDocuments(entityType, entityId)
+      if (requestId !== loadIdRef.current) return
       setDocs((res?.data as EntityDocument[]) ?? [])
     } catch (e) {
+      if (requestId !== loadIdRef.current) return
       console.error('Failed to load documents', e)
       setDocs([])
     } finally {
-      setLoading(false)
+      if (requestId === loadIdRef.current) setLoading(false)
     }
   }, [entityType, entityId])
 
@@ -148,8 +156,14 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
       const anchor = document.createElement('a')
       anchor.href = url
       anchor.download = doc.fileName || doc.name || 'document'
+      // Firefox only acts on a programmatic click for an anchor in the document, and
+      // both Firefox and WebKit start the download asynchronously, so revoking the URL
+      // in this task can cancel it before it begins.
+      anchor.style.display = 'none'
+      document.body.appendChild(anchor)
       anchor.click()
-      URL.revokeObjectURL(url)
+      document.body.removeChild(anchor)
+      setTimeout(() => URL.revokeObjectURL(url), 60_000)
     } catch (e) {
       console.error('Download failed', e)
     }

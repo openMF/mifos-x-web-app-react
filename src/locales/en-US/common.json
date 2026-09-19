@@ -483,6 +483,7 @@
     "openInNewTab": "Open in new tab",
     "close": "Close",
     "identifier": "Identifier",
-    "noIdentifiers": "No identifiers"
+    "noIdentifiers": "No identifiers",
+    "identifiersLoadFailed": "Could not load identifiers. Please try again."
   }
 }
