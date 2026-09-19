@@ -2,6 +2,15 @@
 
 This document tracks missing or incorrect fields in the OpenAPI-generated interfaces used in the React migration of the Mifos X Web App. Do modify this based if you notice any additions/deletions need to be made to this list
 
+> **Validated against Fineract (1.16.0-SNAPSHOT) on [19/9/2026], diffed against the
+> 1.12.0-SNAPSHOT spec this app was originally generated from. (Current yaml file)**
+>
+> **Legend:**
+>
+> - `[TO BE REMOVED]` - Fineract removed this field/feature, this entries can be deleted.
+> - `[TO BE FIXED]` - Fineract has fixed these fields/endpoints correctly; the OpenAPI gap
+>   is resolved, but the corresponding React page still needs to be updated.
+
 ---
 
 ## Admin Users
@@ -10,13 +19,13 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 **Missing in `GetUsersResponse`:**
 
-- `isSelfServiceUser`
+- `isSelfServiceUser` [TO BE REMOVED]
 
 ### `/users/{id}`
 
 **Missing in `GetUsersUserIdResponse`:**
 
-- `isSelfServiceUser`
+- `isSelfServiceUser` [TO BE REMOVED]
 
 ---
 
@@ -61,30 +70,30 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 **Missing in `PostSavingsProductsRequest`:**
 
-- `minRequiredOpeningBalance`
+- `minRequiredOpeningBalance` [TO BE FIXED]
 - `lockinPeriodFrequency`
 - `lockinPeriodFrequencyType`
-- `withdrawalFeeForTransfers`
+- `withdrawalFeeForTransfers` [TO BE FIXED]
 - `minBalanceForInterestCalculation`
-- `enforceMinRequiredBalance`
+- `enforceMinRequiredBalance` [TO BE FIXED]
 - `minRequiredBalance`
-- `withHoldTax`
-- `allowOverdraft`
-- `isDormancyTrackingActive`
+- `withHoldTax` [TO BE FIXED]
+- `allowOverdraft` [TO BE FIXED]
+- `isDormancyTrackingActive` [TO BE FIXED]
 
 ### `/products/share`
 
 - Not present in OpenAPI
 
-### `/products/products-mix`
+### `/products/products-mix` [TO BE FIXED] (Schema didn't exist before)
 
 - `loanproducts?associations=productMixes`
 - `GetLoanProductsResponse` does not include product mix data
 
 ### `/charges`
 
-- `taxGroupId` missing from `ChargeRequest`
-- `taxGroupOptions` typed as `TaxGroupData`, but that type is missing `id` and `name`
+- `taxGroupId` missing from `ChargeRequest` [TO BE FIXED]
+- `taxGroupOptions` typed as `TaxGroupData`, but that type is missing `id` and `name` [TO BE FIXED]
 
 ### `/fixeddepositproducts`
 
@@ -96,12 +105,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/taxes/component`
 
-**Missing in `PostTaxesComponentsRequest`:**
+**Missing in `PostTaxesComponentsRequest`:** [TO BE FIXED]
 
 - `debitAccountType`
 - `debitAccountId`
 
-**Misspelled in `PostTaxesComponentsRequest`:**
+**Misspelled in `PostTaxesComponentsRequest`:** [TO BE FIXED]
 
 - `creditAccountId` is spelled as `creditAcountId` (missing 'c')
 - `debitAccountId` is spelled as `debitAcountId` (missing 'c')
@@ -152,7 +161,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/organization/holidays/{id}/edit`
 
-- `GetHolidayResponse` missing `description` → cannot fetch previous value for edit
+- `GetHolidaysResponse` missing `description` → cannot fetch previous value for edit
 
 ### `/organization/employees/{id}/edit`
 
@@ -168,7 +177,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/system/data-tables`
 
-- `GetDataTablesResponse` missing `entitySubType`
+- `GetDataTablesResponse` missing `entitySubType` [TO BE FIXED]
 - Page works, but causes many TypeScript errors
 
 ### `/system/roles-and-permissions`
@@ -196,13 +205,13 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetCentersResponse` → references `GetCentersPageItems`
 - `GetCentersPageItems` missing:
   - `accountNo`
-  - `externalId`
+  - `externalId` [TO BE FIXED]
 
 ### `/centers/{id}/general`
 
 - `GetCentersCenterIdResponse` missing:
   - `accountNo`
-  - `externalId`
+  - `externalId` [TO BE FIXED]
   - `activationDate`
 - Causes TypeScript errors
 
@@ -212,7 +221,8 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
   - `name`
   - `officeId`
   - `active`
-- Other required fields missing
+- Other required fields missing [TO BE FIXED]
+  - `submittedOnDate` (Still missing)
 
 ### `/centers/{id}/notes`
 
@@ -224,8 +234,8 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/centers/{id}` (PUT)
 
-- `PutCentersCenterIdRequest` incomplete `staffId`, `externalId` missing from both
-  - `name`
+- `PutCentersCenterIdRequest` incomplete `staffId`, `externalId` missing from both [TO BE FIXED]
+  - `name` [TO BE FIXED]
 - `PutGroupsGroupIdRequest` (the endpoint the Angular web-app actually PUTs to for center edits, `/v1/groups/{id}`, not `/v1/centers/{id}`) incomplete `staffId`, `externalId` missing from both
 
 ---
@@ -237,7 +247,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetGroupsResponse` → references `GetGroupsPageItems`
 - `GetGroupsPageItems` missing:
   - `accountNo`
-  - `externalId`
+  - `externalId` [TO BE FIXED]
 
 ### `/groups` (POST)
 
@@ -262,15 +272,17 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/clients`
 
-- `PostClientsRequest` missing `staffId`, `isStaff`, `submittedOnDate`
+- `PostClientsRequest` missing `staffId`, `isStaff`
+- `submittedOnDate` [TO BE FIXED]
 
 ### `/clients/{id}` (GET)
 
-- `GetClientsClientIdResponse` missing `legalFormId`, `middlename`, `dateOfBirth`, `genderId`, `staffId`, `mobileNo`, `clientTypeId`, `clientClassificationId`, `submittedOnDate`
+- `GetClientsClientIdResponse` missing `legalFormId`, `middlename`, `dateOfBirth`, `genderId`, `mobileNo`, `clientTypeId`, `clientClassificationId`, `submittedOnDate`
+- `staffId` [TO BE FIXED]
 
 ### `/clients/{id}` (PUT)
 
-- `PutClientsClientIdRequest` only has `externalId`, `resourceExternalId`
+- `PutClientsClientIdRequest` only has `externalId`, `resourceExternalId` [TO BE FIXED] (firstname, lastname added)
 
 ### `/savingsaccounts/template`
 
