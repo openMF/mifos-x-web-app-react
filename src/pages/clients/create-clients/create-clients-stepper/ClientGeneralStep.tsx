@@ -14,6 +14,10 @@ import type {
   PostClientsRequest,
 } from '@/fineract-api'
 
+/** Fineract legal form ids, from the clientLegalFormOptions template */
+const LEGAL_FORM_PERSON = 1
+const LEGAL_FORM_ENTITY = 2
+
 interface ClientGeneralStepProps {
   formData: PostClientsRequest
   onChange: (data: PostClientsRequest) => void
@@ -31,6 +35,16 @@ const ClientGeneralStep = ({
   ) => {
     onChange({ ...formData, [field]: value })
   }
+
+  const handleActiveChange = (active: boolean) => {
+    onChange({
+      ...formData,
+      active,
+      activationDate: active ? formData.activationDate : undefined,
+    })
+  }
+
+  const isEntity = formData.legalFormId === LEGAL_FORM_ENTITY
 
   return (
     <div className="flex flex-col gap-8">
@@ -54,8 +68,8 @@ const ClientGeneralStep = ({
           selectOnChange={v => handleChange('legalFormId', Number(v))}
           selectPlaceholder="Select Legal Form"
           selectOptions={[
-            { id: 1, name: 'Person' },
-            { id: 2, name: 'Entity' },
+            { id: LEGAL_FORM_PERSON, name: 'Person' },
+            { id: LEGAL_FORM_ENTITY, name: 'Entity' },
           ]}
         />
 
@@ -72,8 +86,9 @@ const ClientGeneralStep = ({
         </div>
       </div>
 
-      {/* input first name */}
+      {/* name fields; an entity has no middle name, its name is one fullname */}
       <div className="flex flex-wrap gap-6">
+        {/* input first name */}
         <div className="w-full md:w-[48%] space-y-2">
           <Label htmlFor="firstname">First Name*</Label>
           <Input
@@ -86,16 +101,18 @@ const ClientGeneralStep = ({
         </div>
 
         {/* input middle name */}
-        <div className="w-full md:w-[48%] space-y-2">
-          <Label htmlFor="middlename">Middle Name</Label>
-          <Input
-            id="middlename"
-            value={formData.middlename ?? ''}
-            onChange={e =>
-              handleChange('middlename', e.target.value || undefined)
-            }
-          />
-        </div>
+        {!isEntity && (
+          <div className="w-full md:w-[48%] space-y-2">
+            <Label htmlFor="middlename">Middle Name</Label>
+            <Input
+              id="middlename"
+              value={formData.middlename ?? ''}
+              onChange={e =>
+                handleChange('middlename', e.target.value || undefined)
+              }
+            />
+          </div>
+        )}
 
         {/* input last name */}
         <div className="w-full md:w-[48%] space-y-2">
@@ -209,15 +226,30 @@ const ClientGeneralStep = ({
           <Checkbox
             id="active"
             checked={!!formData.active}
-            onCheckedChange={checked =>
-              handleChange('active', checked === true)
-            }
+            onCheckedChange={checked => handleActiveChange(checked === true)}
           />
           <Label htmlFor="active" className="cursor-pointer font-normal">
             Active?
           </Label>
         </div>
       </div>
+
+      {/* Fineract requires an activation date for a client created as active */}
+      {formData.active && (
+        <div className="flex flex-wrap gap-6">
+          <div className="w-full md:w-[48%] space-y-2">
+            <Label htmlFor="activationDate">Activation Date*</Label>
+            <Input
+              id="activationDate"
+              type="date"
+              value={formData.activationDate ?? ''}
+              onChange={e =>
+                handleChange('activationDate', e.target.value || undefined)
+              }
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -148,6 +148,12 @@ export function MultiStepForm({
     setSubmitting(true)
     try {
       await onSubmit()
+      setStepError(null)
+    } catch (error) {
+      // Without this a rejected submit leaves the form looking untouched
+      setStepError(
+        error instanceof Error ? error.message : 'Something went wrong'
+      )
     } finally {
       setSubmitting(false)
     }
