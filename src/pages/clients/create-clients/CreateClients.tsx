@@ -16,11 +16,14 @@ import {
 import { useEffect, useState } from 'react'
 import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
 
 const clientApi = new ClientApi(getConfiguration())
 
 const CreateClients = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('clients')
   const [clientTemplate, setClientTemplate] =
     useState<GetClientsTemplateResponse>()
 
@@ -39,8 +42,14 @@ const CreateClients = () => {
 
   const handleSubmit = async () => {
     try {
-      await clientApi.create6(formData)
-      navigate(`/clients`)
+      const response = await clientApi.create6(formData)
+      // Land on the new client rather than the list, which hides a pending
+      // client, and carry a message so the create is confirmed either way
+      const clientId = response.data?.clientId ?? response.data?.resourceId
+      const state: RouteSuccessState = {
+        successMessage: t('success.clientCreated'),
+      }
+      navigate(clientId ? `/clients/${clientId}` : '/clients', { state })
     } catch (error) {
       console.error('Error while submitting', error)
     }
