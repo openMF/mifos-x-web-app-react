@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -116,6 +117,8 @@ const Clients = () => {
           { label: t('title'), current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       {/* add client button */}
       <div className="mb-6">

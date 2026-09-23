@@ -31,6 +31,7 @@
   "searchByName": "Buscar por nombre, Id. externo...",
   "searchByNameOrExternalId": "Buscar por nombre o Id. externo...",
   "success": {
+    "clientCreated": "Cliente creado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente."
   },
   "title": "Clientes",
