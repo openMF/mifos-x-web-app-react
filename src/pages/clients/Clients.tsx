@@ -32,14 +32,48 @@ import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-import { ClientSearchV2Api, type PageClientSearchData } from '@/fineract-api'
+import {
+  ClientApi,
+  ClientSearchV2Api,
+  type GetClientsResponse,
+  type PageClientSearchData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useTranslation } from 'react-i18next'
 
+const clientApi = new ClientApi(getConfiguration())
 const clientSearchApi = new ClientSearchV2Api(getConfiguration())
 
-/** Row shape returned by the search endpoint at runtime */
+/** Client status ids Fineract reports for the states this list distinguishes */
+const STATUS_PENDING = 100
+const STATUS_ACTIVE = 300
+
+/** Row shape the table renders, normalised from either endpoint */
 interface ClientRow {
+  id?: number
+  displayName?: string
+  accountNo?: string
+  externalId?: string
+  officeName?: string
+  status?: { id?: number; value?: string }
+}
+
+/**
+ * Shape the list endpoint returns at runtime. The generated type declares
+ * neither the external id nor the readable status value, so it is described
+ * here rather than extended.
+ */
+interface ClientsListItem {
+  id?: number
+  displayName?: string
+  accountNo?: string
+  externalId?: string
+  officeName?: string
+  status?: { id?: number; value?: string }
+}
+
+/** Shape the text search endpoint returns at runtime */
+interface ClientsSearchItem {
   id?: number
   displayName?: string
   accountNumber?: string
@@ -62,50 +96,103 @@ const Clients = () => {
   // API state
   const [rows, setRows] = useState<ClientRow[]>([])
   const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  // fetch clients on mount & whenever query/pagination changes
+  // Fetch one page of clients whenever the query, the filter or the paging
+  // changes. Both branches return the rows to render together with the count
+  // those rows were drawn from, so the table and its caption always agree.
   useEffect(() => {
     let cancelled = false
 
+    setLoading(true)
+    setError(false)
     ;(async () => {
       try {
-        const res = await clientSearchApi.searchByText({
-          request: { text: searchTerm || undefined },
-          page: Math.max(0, page - 1),
-          size: itemsPerPage,
-        })
+        let content: ClientRow[]
+        let totalRecords: number
 
-        const data: PageClientSearchData = res.data || {}
-        const content = (data.content ?? []) as unknown as ClientRow[]
-        const totalElements: number = data.totalElements ?? content.length
+        if (searchTerm) {
+          // Only the search endpoint matches a single term against the name,
+          // the account number and the external id. It carries no status
+          // filter, so a search deliberately spans every status.
+          const res = await clientSearchApi.searchByText({
+            request: { text: searchTerm },
+            page: Math.max(0, page - 1),
+            size: itemsPerPage,
+          })
+
+          const data: PageClientSearchData = res.data || {}
+          const items = (data.content ?? []) as unknown as ClientsSearchItem[]
+
+          content = items.map(c => ({
+            id: c.id,
+            displayName: c.displayName,
+            accountNo: c.accountNumber,
+            externalId: c.externalId,
+            officeName: c.officeName,
+            status: c.status,
+          }))
+          totalRecords = data.totalElements ?? content.length
+        } else {
+          // Fineract's status parameter takes a single value and rejects both
+          // "all" and a list, so including pending clients means asking for
+          // every status rather than for two of them.
+          const res = await clientApi.retrieveAll21(
+            undefined, // officeId
+            undefined, // externalId
+            undefined, // displayName
+            undefined, // firstName
+            undefined, // lastName
+            includePending ? undefined : 'active',
+            undefined, // underHierarchy
+            (page - 1) * itemsPerPage,
+            itemsPerPage
+          )
+
+          const data: GetClientsResponse = res.data || {}
+          const items = (data.pageItems ?? []) as unknown as ClientsListItem[]
+
+          content = items.map(c => ({
+            id: c.id,
+            displayName: c.displayName,
+            accountNo: c.accountNo,
+            externalId: c.externalId,
+            officeName: c.officeName,
+            status: c.status,
+          }))
+          totalRecords = data.totalFilteredRecords ?? content.length
+        }
 
         if (!cancelled) {
           setRows(content)
-          setTotal(totalElements)
+          setTotal(totalRecords)
         }
       } catch (e) {
-        console.error('Failed to search clients', e)
+        console.error('Failed to load clients', e)
         if (!cancelled) {
           setRows([])
           setTotal(0)
+          setError(true)
         }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     })()
 
     return () => {
       cancelled = true
     }
-  }, [searchTerm, page, itemsPerPage])
-
-  // toggle pending/active filter
-  const filtered = rows.filter((c: ClientRow) => {
-    const statusId = c?.status?.id ?? 0
-    return includePending
-      ? statusId === 300 || statusId === 100
-      : statusId === 300
-  })
+  }, [searchTerm, page, itemsPerPage, includePending])
 
   const totalPages = Math.max(1, Math.ceil(total / itemsPerPage))
+
+  /** Green for active, amber for pending, neutral for every other state */
+  const statusColour = (statusId?: number) => {
+    if (statusId === STATUS_ACTIVE) return 'text-green-500'
+    if (statusId === STATUS_PENDING) return 'text-yellow-500'
+    return 'text-zinc-400'
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
@@ -177,84 +264,112 @@ const Clients = () => {
         </div>
       </div>
 
-      {/* show pending checkbox */}
+      {/* show pending checkbox, which a search overrides because the search
+          endpoint cannot filter by status */}
       <div className="flex items-center space-x-2 mb-4">
         <Checkbox
           id="pending-clients"
           checked={includePending}
-          onCheckedChange={v => setIncludePending(!!v)}
+          disabled={!!searchTerm}
+          onCheckedChange={v => {
+            setIncludePending(!!v)
+            setPage(1)
+          }}
         />
-        <label htmlFor="pending-clients" className="text-base dark:text-white">
+        <label
+          htmlFor="pending-clients"
+          className={`text-base dark:text-white ${
+            searchTerm ? 'text-zinc-400 dark:text-zinc-500' : ''
+          }`}
+        >
           {t('pending.showPendingClients')}
         </label>
       </div>
 
+      {loading && (
+        <p className="text-center py-8 text-zinc-500">
+          {tc('actions.loading')}
+        </p>
+      )}
+
+      {error && (
+        <p className="text-center py-8 text-red-500">
+          {t('errors.failedLoadClients')}
+        </p>
+      )}
+
       {/* results table */}
-      <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Table>
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            {tc('pagination.showing', {
-              current: filtered.length,
-              total,
-              page,
-              pages: totalPages,
-            })}
-          </TableCaption>
+      {!loading && !error && (
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <Table>
+            <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+              {tc('pagination.showing', {
+                current: rows.length,
+                total,
+                page,
+                pages: totalPages,
+              })}
+            </TableCaption>
 
-          <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
-              <TableHead className="px-6 py-4">
-                {t('table.accountNo')}
-              </TableHead>
-              <TableHead className="px-6 py-4">
-                {t('table.externalId')}
-              </TableHead>
-              <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
-              <TableHead className="px-6 py-4">
-                {t('table.officeName')}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {filtered.map((c: ClientRow) => (
-              <TableRow
-                key={c.id}
-                onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {c.displayName ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.accountNumber ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.externalId ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c?.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-green-500"
-                    />
-                  )}
-                  {c?.status?.id === 200 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-yellow-500"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.officeName ?? '—'}
-                </TableCell>
+            <TableHeader>
+              <TableRow className="text-base">
+                <TableHead className="px-6 py-4">{t('table.name')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.accountNo')}
+                </TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.externalId')}
+                </TableHead>
+                <TableHead className="px-6 py-4">{t('table.status')}</TableHead>
+                <TableHead className="px-6 py-4">
+                  {t('table.officeName')}
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+
+            <TableBody>
+              {rows.map((c: ClientRow) => (
+                <TableRow
+                  key={c.id}
+                  onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                >
+                  <TableCell className="px-6 py-4 font-medium">
+                    {c.displayName ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.accountNo ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.externalId ?? '—'}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <FontAwesomeIcon
+                      icon={faCircle}
+                      title={c.status?.value}
+                      className={`w-4 h-4 ${statusColour(c.status?.id)}`}
+                    />
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {c.officeName ?? '—'}
+                  </TableCell>
+                </TableRow>
+              ))}
+
+              {rows.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="px-6 py-6 text-center text-zinc-500"
+                  >
+                    {tc('status.noResults')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }

@@ -12,6 +12,7 @@
   "errors": {
     "failedApproveClients": "Impossibile approvare uno o più clienti.",
     "failedLoadCenters": "Impossibile caricare i centri. Riprova.",
+    "failedLoadClients": "Impossibile caricare i clienti. Riprova.",
     "failedLoadGroups": "Impossibile caricare i gruppi. Riprova.",
     "noClientsSelected": "Nessun cliente selezionato per l'approvazione."
   },
