@@ -15,6 +15,7 @@ import { ClientApi, type GetClientsClientIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from '@/lib/date-utils'
@@ -26,6 +27,7 @@ const ClientsView = () => {
   const [client, setClient] = useState<GetClientsClientIdResponse>()
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+  const datatables = useEntityDatatables('m_client')
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -249,6 +251,10 @@ const ClientsView = () => {
             href: `clients/${client?.id}/documents`,
           },
           { label: t('view.tabs.notes'), href: `clients/${client?.id}/notes` },
+          ...datatables.map(datatable => ({
+            label: datatable.label,
+            href: `clients/${client?.id}/datatables/${encodeURIComponent(datatable.name)}`,
+          })),
         ]}
       />
 

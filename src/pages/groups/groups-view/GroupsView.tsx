@@ -8,6 +8,7 @@
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
 import { GroupsApi } from '@/fineract-api'
 import type { ExtendedGroupResponse } from '@/pages/groups/types'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -54,6 +55,7 @@ const GroupsView = () => {
   const { t, i18n } = useTranslation('groups')
   const { t: tc } = useTranslation('common')
   const [group, setGroup] = useState<ExtendedGroupResponse>()
+  const datatables = useEntityDatatables('m_group')
 
   useEffect(() => {
     ;(async () => {
@@ -278,6 +280,10 @@ const GroupsView = () => {
             label: t('view.tabs.committee'),
             href: `groups/${group?.id}/committee`,
           },
+          ...datatables.map(datatable => ({
+            label: datatable.label,
+            href: `groups/${group?.id}/datatables/${encodeURIComponent(datatable.name)}`,
+          })),
         ]}
       />
 
