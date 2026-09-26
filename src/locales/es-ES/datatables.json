@@ -1,0 +1,50 @@
+{
+  "columnTypes": {
+    "boolean": "Booleano",
+    "date": "Fecha",
+    "datetime": "Fecha y hora",
+    "decimal": "Decimal",
+    "dropdown": "Lista desplegable",
+    "json": "JSON",
+    "number": "Número",
+    "string": "Cadena",
+    "text": "Texto"
+  },
+  "entry": {
+    "add": "Añadir registro",
+    "cancel": "Cancelar",
+    "delete": "Eliminar registro",
+    "deleteConfirm": "¿Eliminar este registro? Esta acción no se puede deshacer.",
+    "edit": "Editar registro",
+    "empty": "Sin registros.",
+    "loadFailed": "No se pudo cargar esta tabla de datos.",
+    "none": "Aún no hay ningún registro.",
+    "save": "Guardar",
+    "saveFailed": "No se pudo guardar el registro.",
+    "saving": "Guardando…"
+  },
+  "json": {
+    "collapseAll": "Contraer todo",
+    "copied": "Copiado",
+    "copy": "Copiar JSON",
+    "empty": "Sin valor",
+    "errorAt": "Línea {{line}}, columna {{column}}",
+    "expandAll": "Expandir todo",
+    "format": "Formatear",
+    "invalid": "Este valor no es JSON válido.",
+    "items_one": "{{count}} elemento",
+    "items_other": "{{count}} elementos",
+    "keys_one": "{{count}} clave",
+    "keys_other": "{{count}} claves",
+    "mode": {
+      "raw": "Texto",
+      "tree": "Árbol"
+    },
+    "preview": "Vista previa",
+    "required": "Este campo es obligatorio.",
+    "showAnyway": "Mostrar de todos modos",
+    "tooLarge": "Este documento es demasiado grande para mostrarse como árbol ({{size}} caracteres)."
+  },
+  "loading": "Cargando…",
+  "title": "Tablas de datos"
+}

@@ -1,0 +1,50 @@
+{
+  "columnTypes": {
+    "boolean": "Booléen",
+    "date": "Date",
+    "datetime": "Date et heure",
+    "decimal": "Décimal",
+    "dropdown": "Liste déroulante",
+    "json": "JSON",
+    "number": "Nombre",
+    "string": "Chaîne",
+    "text": "Texte"
+  },
+  "entry": {
+    "add": "Ajouter une entrée",
+    "cancel": "Annuler",
+    "delete": "Supprimer l'entrée",
+    "deleteConfirm": "Supprimer cette entrée ? Cette action est irréversible.",
+    "edit": "Modifier l'entrée",
+    "empty": "Aucune entrée.",
+    "loadFailed": "Impossible de charger cette table de données.",
+    "none": "Aucune entrée pour le moment.",
+    "save": "Enregistrer",
+    "saveFailed": "L'entrée n'a pas pu être enregistrée.",
+    "saving": "Enregistrement…"
+  },
+  "json": {
+    "collapseAll": "Tout réduire",
+    "copied": "Copié",
+    "copy": "Copier le JSON",
+    "empty": "Aucune valeur",
+    "errorAt": "Ligne {{line}}, colonne {{column}}",
+    "expandAll": "Tout développer",
+    "format": "Formater",
+    "invalid": "Cette valeur n'est pas un JSON valide.",
+    "items_one": "{{count}} élément",
+    "items_other": "{{count}} éléments",
+    "keys_one": "{{count}} clé",
+    "keys_other": "{{count}} clés",
+    "mode": {
+      "raw": "Texte brut",
+      "tree": "Arborescence"
+    },
+    "preview": "Aperçu",
+    "required": "Ce champ est obligatoire.",
+    "showAnyway": "Afficher quand même",
+    "tooLarge": "Ce document est trop volumineux pour être affiché sous forme d'arborescence ({{size}} caractères)."
+  },
+  "loading": "Chargement…",
+  "title": "Tables de données"
+}
