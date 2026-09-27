@@ -27,10 +27,12 @@ export const getAuthToken = (): string | null => {
 /**
  * The stored OIDC access token, or null once it has expired.
  *
- * There is no renewal path yet, so an expired token would otherwise sit in
- * storage and keep both the route guard and the request interceptor believing
- * the session is live, turning every screen into a wall of 401s. Dropping it
- * here sends the user back to sign-in instead.
+ * Renewal normally replaces the token before this matters. This remains the
+ * backstop for when it does not — a renewal that failed, or a tab restored
+ * long after the session lapsed — because an expired token left in storage
+ * would keep both the route guard and the request interceptor believing the
+ * session is live, turning every screen into a wall of 401s. Dropping it here
+ * sends the user back to sign-in instead.
  */
 export const getOidcToken = (): string | null => {
   const token = localStorage.getItem(OIDC_TOKEN_KEY)

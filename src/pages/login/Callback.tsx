@@ -10,8 +10,13 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from 'react-oidc-context'
 import { useTranslation } from 'react-i18next'
 
-import { isOidcUsable } from '@/lib/oidc-config'
+import {
+  getOidcUserManager,
+  isOidcUsable,
+  isSilentRenewFrame,
+} from '@/lib/oidc-config'
 import { clearAuthToken, clearOidcToken, setOidcToken } from '@/lib/http-client'
+import { markOidcSessionEstablished } from '@/lib/oidc-session'
 import fineract from '@/lib/axios'
 
 /**
@@ -57,6 +62,8 @@ const CallbackHandler = () => {
         })
         if (cancelled) return
         setOidcToken(accessToken, expiresAt)
+        // Only now may background renewals write to the token store.
+        markOidcSessionEstablished()
         // The OIDC session replaces any password session, so the two
         // credentials never coexist.
         clearAuthToken()
@@ -90,9 +97,34 @@ const CallbackHandler = () => {
   )
 }
 
+/**
+ * Completes a renewal started by oidc-client-ts in a hidden iframe.
+ *
+ * silent_redirect_uri defaults to redirect_uri, so that iframe loads this
+ * route. It has to post the result back to the parent window rather than run
+ * the interactive flow, which would navigate inside the frame and leave the
+ * renewal waiting until it timed out.
+ */
+const SilentRenewHandler = () => {
+  useEffect(() => {
+    const manager = getOidcUserManager()
+    if (!manager) return
+
+    manager.signinSilentCallback().catch(error => {
+      console.error('OIDC silent renewal callback failed', error)
+    })
+  }, [])
+
+  return null
+}
+
 const Callback = () => {
   if (!isOidcUsable()) {
     return <Navigate to="/login" replace />
+  }
+
+  if (isSilentRenewFrame()) {
+    return <SilentRenewHandler />
   }
 
   return <CallbackHandler />

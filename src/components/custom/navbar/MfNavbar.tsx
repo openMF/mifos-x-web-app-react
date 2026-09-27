@@ -24,14 +24,13 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { useAppDispatch } from '@/app/hook'
-import { logout } from '@/pages/login/loginSlice'
+import { useLogout } from '@/hooks/use-logout'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
 
 const MfNavbar = () => {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const handleLogout = useLogout()
   const { t } = useTranslation([
     'common',
     'accounting',
@@ -44,8 +43,7 @@ const MfNavbar = () => {
   const handleNavigate = (path?: string) => {
     if (!path || path.trim() === '') return
     else if (path === 'signout') {
-      dispatch(logout())
-      navigate('/login', { replace: true })
+      void handleLogout()
     } else if (path.startsWith('http')) {
       window.open(path, '_blank')
     } else {

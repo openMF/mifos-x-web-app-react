@@ -178,9 +178,9 @@ const Navigation = () => {
         ]}
       />
 
-      <div className="flex gap-10 py-4">
+      <div className="flex flex-wrap gap-10 py-4">
         {/* LEFT Select  */}
-        <div className="bg-white p-8 w-[36rem] dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col gap-6">
+        <div className="bg-white p-8 grow basis-[22rem] min-w-0 max-w-[36rem] dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col gap-6">
           {/* Office */}
           <div className="w-full space-y-2">
             <AppSelect
@@ -303,7 +303,7 @@ const Navigation = () => {
         </div>
 
         {/* RIGHT Details */}
-        <div className="bg-white h-full p-8 w-[36rem] dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col">
+        <div className="bg-white h-full p-8 grow basis-[22rem] min-w-0 max-w-[36rem] dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col">
           {selectedClientId ? (
             <ClientNavigation clientId={parseInt(selectedClientId)} />
           ) : selectedGroupId ? (
