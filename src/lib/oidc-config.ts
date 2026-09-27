@@ -53,6 +53,16 @@ export const isOidcUsable = (): boolean => {
     return false
   }
 
+  // Fineract only accepts the provider's tokens through the Mifos security
+  // plugin, and users are managed through it too, so an OIDC deployment
+  // without the plugin's URL is misconfigured rather than partly usable.
+  if (!envConfig.oidcApiUrl) {
+    console.error(
+      'OIDC is enabled but the security plugin URL (FINERACT_PLUGIN_OIDC_API_URL) is missing; falling back to password sign-in.'
+    )
+    return false
+  }
+
   const redirectUri = `${getFrontendUrl()}/callback`
   if (!isSecureUrl(envConfig.oidcBaseUrl) || !isSecureUrl(redirectUri)) {
     console.error(
@@ -61,12 +71,12 @@ export const isOidcUsable = (): boolean => {
     return false
   }
 
-  // The access token is sent to Fineract as a bearer credential, so the API
-  // destination has to be as protected as the provider itself.
-  const apiUrl = envConfig.oidcApiUrl || envConfig.apiUrl
-  if (!isSecureUrl(apiUrl)) {
+  // The access token is sent as a bearer credential both to Fineract and to
+  // the security plugin, so both destinations have to be as protected as the
+  // provider itself.
+  if (!isSecureUrl(envConfig.apiUrl) || !isSecureUrl(envConfig.oidcApiUrl)) {
     console.error(
-      'OIDC requires an https Fineract API URL outside local development; falling back to password sign-in.'
+      'OIDC requires https Fineract API and security plugin URLs outside local development; falling back to password sign-in.'
     )
     return false
   }
