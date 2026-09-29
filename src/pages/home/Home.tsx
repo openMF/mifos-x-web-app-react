@@ -7,10 +7,10 @@
  */
 import mifosLogo from '@/assets/images/image-removebg-preview-transparent.png'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Gauge } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import ActivitySearch from './ActivitySearch'
 
 const Home = () => {
   const { t } = useTranslation('common')
@@ -29,11 +29,7 @@ const Home = () => {
       />
 
       <div className="w-full max-w-xl px-2">
-        <Input
-          type="text"
-          placeholder={t('ui.searchActivityPlaceholder')}
-          className="w-full px-4 sm:px-6 py-3 border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-gray-100 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm sm:text-base placeholder:text-gray-500 dark:placeholder:text-gray-400"
-        />
+        <ActivitySearch />
       </div>
 
       <Button
