@@ -103,7 +103,10 @@ const CreateSharesAccount = () => {
           items={[
             { label: 'Home', href: '/home' },
             { label: 'Clients', href: '/clients' },
-            { label: 'Client', href: `/clients/${id}/general` },
+            {
+              label: template?.clientName || 'Client',
+              href: `/clients/${id}/general`,
+            },
             { label: 'Create Shares Account', current: true },
           ]}
         />

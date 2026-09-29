@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -48,6 +49,7 @@ const toFineractDate = (iso: string) => {
 type PaymentType = { id: number; name: string }
 
 const MakeRepayment = () => {
+  const breadcrumbs = useAccountBreadcrumbs()
   const navigate = useNavigate()
   const { groupId, loanId } = useParams()
 
@@ -157,13 +159,7 @@ const MakeRepayment = () => {
 
   return (
     <div className="min-h-screen px-6 py-10">
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Make Repayment', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-3xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">Make Repayment</h2>

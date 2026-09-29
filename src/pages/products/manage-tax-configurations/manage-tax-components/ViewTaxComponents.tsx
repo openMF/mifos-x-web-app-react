@@ -63,6 +63,10 @@ const ViewTaxComponents = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
+            label: 'Manage Tax Configurations',
+            href: '/products/tax-configurations',
+          },
+          {
             label: 'Tax Components',
             href: '/products/tax-configurations/tax-components',
           },

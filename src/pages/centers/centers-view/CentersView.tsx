@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -43,6 +43,7 @@ const CentersView = () => {
   const { id } = useParams()
   const { t, i18n } = useTranslation('centers')
   const { t: tc } = useTranslation('common')
+  const { pathname } = useLocation()
 
   // State to hold center details
   const [center, setCenter] = useState<ExtendedCenterResponse>()
@@ -92,6 +93,15 @@ const CentersView = () => {
   const isClosed = statusVal === 'Closed'
   const hasCal = !!center?.collectionMeetingCalendar // calendar check
   const hasStaff = !!center?.staffId // staff check
+
+  // Derive the active tab from the URL segment after /centers/:id
+  const tabSegment = pathname.split(`/centers/${id}/`)[1]?.split('/')[0] ?? ''
+  const activeTabLabel = (
+    {
+      general: t('view.tabs.general'),
+      notes: t('view.tabs.notes'),
+    } as Record<string, string>
+  )[tabSegment]
 
   // Dropdown menu options
   const menuOptions = [
@@ -173,8 +183,8 @@ const CentersView = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/centers' },
-          { label: String(center.name), href: `/centers/${id}` },
-          { label: t('view.tabs.general'), current: true },
+          { label: String(center.name), href: `/centers/${id}/general` },
+          ...(activeTabLabel ? [{ label: activeTabLabel }] : []),
         ]}
       />
 

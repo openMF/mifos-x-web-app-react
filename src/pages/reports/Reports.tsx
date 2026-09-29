@@ -35,6 +35,9 @@ const reportsApi = new ReportsApi(getConfiguration())
 const Reports = () => {
   const { category } = useParams()
   const navigate = useNavigate()
+  const categoryLabel = category
+    ? category.charAt(0).toUpperCase() + category.slice(1)
+    : undefined
 
   const [reports, setReports] = useState<GetReportsResponse[]>([])
   const [search, setSearch] = useState('')
@@ -53,9 +56,7 @@ const Reports = () => {
           setReports(details)
         } else {
           const filtered = details.filter(
-            e =>
-              e.reportCategory ===
-              category.charAt(0).toUpperCase() + category.slice(1)
+            e => e.reportCategory === categoryLabel
           )
           setReports(filtered)
         }
@@ -66,7 +67,7 @@ const Reports = () => {
       }
     }
     fetchReports()
-  }, [category])
+  }, [category, categoryLabel])
 
   const filtered = reports.filter(report =>
     report.reportName?.toLowerCase().includes(search.toLowerCase())
@@ -88,7 +89,8 @@ const Reports = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Reports', current: true },
+          { label: 'Reports', href: '/reports' },
+          ...(categoryLabel ? [{ label: categoryLabel }] : []),
         ]}
       />
 

@@ -11,9 +11,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Label } from '@/components/ui/label'
 
 const ApproveSavingAccount = () => {
+  const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Approve' })
   const { groupId, accountId } = useParams()
   const navigate = useNavigate()
 
@@ -35,13 +37,7 @@ const ApproveSavingAccount = () => {
   return (
     <div className="min-h-screen px-6 py-10">
       {/* breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Approve', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* centered card */}
       <div className="max-w-3xl mx-auto">
