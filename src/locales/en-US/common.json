@@ -33,7 +33,10 @@
     "notifications": "Notifications",
     "switchToDarkTheme": "Switch to dark theme",
     "switchToLightTheme": "Switch to light theme",
-    "userMenu": "User menu"
+    "userMenu": "User menu",
+    "openSearch": "Open search",
+    "closeSearch": "Close search",
+    "searchQuery": "Search clients, groups and accounts"
   },
   "countries": {
     "AD": "Andorra",
@@ -551,5 +554,22 @@
     "identifier": "Identifier",
     "noIdentifiers": "No identifiers",
     "identifiersLoadFailed": "Could not load identifiers. Please try again."
+  },
+  "search": {
+    "enterQuery": "Enter a search term in the navbar to find clients, groups, centers and accounts.",
+    "noResultsHint": "Search by name, account number or external ID. Names may need to match the capital letters used when they were saved, for example \"Ada\" instead of \"ada\".",
+    "parent": "Parent",
+    "placeholder": "Search...",
+    "resultsFor": "Search results for \"{{query}}\"",
+    "title": "Search",
+    "types": {
+      "center": "Center",
+      "client": "Client",
+      "clientIdentifier": "Client Identifier",
+      "group": "Group",
+      "loan": "Loan",
+      "saving": "Savings",
+      "share": "Shares"
+    }
   }
 }

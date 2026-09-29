@@ -25,10 +25,18 @@ import {
   User,
   Sun,
   Menu,
+  X,
 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { type ReactNode, useEffect, useState } from 'react'
+import {
+  type FormEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import {
   Tooltip,
@@ -132,8 +140,25 @@ const MfNavbar = () => {
   const isReportsActive = belongsTo(reportOptions)
   const isAdminActive = belongsTo(adminOptions)
 
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchButtonRef = useRef<HTMLButtonElement>(null)
+
+  const closeSearch = () => {
+    setSearchOpen(false)
+    setSearchQuery('')
+  }
+
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const query = searchQuery.trim()
+    if (!query) return
+    navigate(`/search?query=${encodeURIComponent(query)}`)
+    closeSearch()
+  }
+
   return (
-    <div className="flex justify-between items-center h-auto bg-[#1074b9] px-4 py-2 shadow-3xl text-base text-white">
+    <div className="relative flex justify-between items-center h-auto bg-[#1074b9] px-4 py-2 shadow-3xl text-base text-white">
       {/* Left Menu & Sections */}
       <div className="flex items-center gap-2 lg:gap-3 min-w-0">
         <NavTooltip label={t('common:accessibility.toggleSidebar')}>
@@ -218,11 +243,59 @@ const MfNavbar = () => {
 
       {/* Right Icons */}
       <div className="flex items-center gap-2 lg:gap-4 flex-shrink-0">
-        <NavTooltip label={t('common:actions.search')}>
-          <span className="hover:text-gray-200 transition-colors hidden md:block">
-            <Search className="w-5 h-5" aria-hidden="true" />
-          </span>
-        </NavTooltip>
+        {/* The input opens below the icon so the navbar row never widens.
+            On small screens it spans the navbar width instead. */}
+        <div className="md:relative">
+          <NavTooltip
+            label={
+              searchOpen
+                ? t('common:accessibility.closeSearch')
+                : t('common:accessibility.openSearch')
+            }
+          >
+            <Button
+              ref={searchButtonRef}
+              variant="ghost"
+              className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer p-2"
+              onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+              aria-label={
+                searchOpen
+                  ? t('common:accessibility.closeSearch')
+                  : t('common:accessibility.openSearch')
+              }
+              aria-expanded={searchOpen}
+            >
+              {searchOpen ? (
+                <X className="w-5 h-5" aria-hidden="true" />
+              ) : (
+                <Search className="w-5 h-5" aria-hidden="true" />
+              )}
+            </Button>
+          </NavTooltip>
+          {searchOpen && (
+            <form
+              role="search"
+              onSubmit={handleSearch}
+              className="absolute inset-x-4 top-full mt-2 z-50 md:inset-x-auto md:right-0 rounded-md bg-[#1074b9] p-2 shadow-lg"
+            >
+              <Input
+                type="search"
+                autoFocus
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Escape') {
+                    closeSearch()
+                    searchButtonRef.current?.focus()
+                  }
+                }}
+                placeholder={t('common:search.placeholder')}
+                aria-label={t('common:accessibility.searchQuery')}
+                className="h-9 w-full md:w-72 bg-white text-zinc-900 placeholder:text-zinc-500 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400"
+              />
+            </form>
+          )}
+        </div>
         <LanguageSwitcher className="w-[130px] bg-[#1074b9] border-white text-white hover:bg-[#0e6aa5]" />
         <NavTooltip label={t('common:accessibility.notifications')}>
           <Button

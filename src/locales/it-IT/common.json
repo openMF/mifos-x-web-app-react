@@ -33,7 +33,10 @@
     "notifications": "Notifiche",
     "switchToDarkTheme": "Passa al tema scuro",
     "switchToLightTheme": "Passa al tema chiaro",
-    "userMenu": "Menu utente"
+    "userMenu": "Menu utente",
+    "openSearch": "Apri ricerca",
+    "closeSearch": "Chiudi ricerca",
+    "searchQuery": "Cerca clienti, gruppi e conti"
   },
   "countries": {
     "AD": "Andorra",
@@ -525,5 +528,22 @@
     "savingsAccounts": "Conti risparmio",
     "shareAccounts": "Conti azioni",
     "groupMemberships": "Adesioni ai gruppi"
+  },
+  "search": {
+    "enterQuery": "Inserisci un termine di ricerca nella barra di navigazione per trovare clienti, gruppi, centri e conti.",
+    "noResultsHint": "Cerca per nome, numero di conto o ID esterno. Potrebbe essere necessario rispettare le maiuscole usate al salvataggio del nome, ad esempio \"Ada\" invece di \"ada\".",
+    "parent": "Superiore",
+    "placeholder": "Cerca...",
+    "resultsFor": "Risultati di ricerca per \"{{query}}\"",
+    "title": "Ricerca",
+    "types": {
+      "center": "Centro",
+      "client": "Cliente",
+      "clientIdentifier": "Documento del cliente",
+      "group": "Gruppo",
+      "loan": "Prestito",
+      "saving": "Risparmi",
+      "share": "Azioni"
+    }
   }
 }
