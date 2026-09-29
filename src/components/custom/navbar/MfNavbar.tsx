@@ -27,12 +27,35 @@ import {
   Menu,
 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { useLogout } from '@/hooks/use-logout'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
+
+// Icon-only controls get a visible hover/focus label next to their aria-label.
+// The label already names the control, so the trigger skips Radix's
+// aria-describedby to keep screen readers from announcing it twice.
+const NavTooltip = ({
+  label,
+  children,
+}: {
+  label: string
+  children: ReactNode
+}) => (
+  <Tooltip>
+    <TooltipTrigger asChild aria-describedby={undefined}>
+      {children}
+    </TooltipTrigger>
+    <TooltipContent>{label}</TooltipContent>
+  </Tooltip>
+)
 
 const MfNavbar = () => {
   const navigate = useNavigate()
@@ -110,7 +133,11 @@ const MfNavbar = () => {
     <div className="flex justify-between items-center h-auto bg-[#1074b9] px-4 py-2 shadow-3xl text-base text-white">
       {/* Left Menu & Sections */}
       <div className="flex items-center gap-2 lg:gap-3 min-w-0">
-        <SidebarTrigger />
+        <NavTooltip label={t('common:accessibility.toggleSidebar')}>
+          <SidebarTrigger
+            aria-label={t('common:accessibility.toggleSidebar')}
+          />
+        </NavTooltip>
 
         {/* Compact Menu for small screens */}
         <div className="lg:hidden">
@@ -123,6 +150,7 @@ const MfNavbar = () => {
                 </span>
               </span>
             }
+            tooltip={t('common:accessibility.openNavigationMenu')}
             options={[
               {
                 label: t('common:nav.institution'),
@@ -187,34 +215,46 @@ const MfNavbar = () => {
 
       {/* Right Icons */}
       <div className="flex items-center gap-2 lg:gap-4 flex-shrink-0">
-        <span className="hover:text-gray-200 transition-colors hidden md:block">
-          <Search className="w-5 h-5" aria-hidden="true" />
-        </span>
+        <NavTooltip label={t('common:actions.search')}>
+          <span className="hover:text-gray-200 transition-colors hidden md:block">
+            <Search className="w-5 h-5" aria-hidden="true" />
+          </span>
+        </NavTooltip>
         <LanguageSwitcher className="w-[130px] bg-[#1074b9] border-white text-white hover:bg-[#0e6aa5]" />
-        <Button
-          variant="ghost"
-          className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer p-2"
-          aria-label={t('common:accessibility.notifications')}
-        >
-          <Bell className="w-5 h-5" />
-        </Button>
-        <Button
-          variant="ghost"
-          className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer p-2"
-          onClick={toggleTheme}
-          aria-label={
+        <NavTooltip label={t('common:accessibility.notifications')}>
+          <Button
+            variant="ghost"
+            className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer p-2"
+            aria-label={t('common:accessibility.notifications')}
+          >
+            <Bell className="w-5 h-5" />
+          </Button>
+        </NavTooltip>
+        <NavTooltip
+          label={
             theme === 'light'
               ? t('common:accessibility.switchToDarkTheme')
               : t('common:accessibility.switchToLightTheme')
           }
-          aria-pressed={theme !== 'light'}
         >
-          {theme === 'light' ? (
-            <Moon className="w-5 h-5" />
-          ) : (
-            <Sun className="w-5 h-5" />
-          )}
-        </Button>
+          <Button
+            variant="ghost"
+            className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer p-2"
+            onClick={toggleTheme}
+            aria-label={
+              theme === 'light'
+                ? t('common:accessibility.switchToDarkTheme')
+                : t('common:accessibility.switchToLightTheme')
+            }
+            aria-pressed={theme !== 'light'}
+          >
+            {theme === 'light' ? (
+              <Moon className="w-5 h-5" />
+            ) : (
+              <Sun className="w-5 h-5" />
+            )}
+          </Button>
+        </NavTooltip>
         <DropDown
           name={
             <span className="flex items-center gap-2">
@@ -234,6 +274,7 @@ const MfNavbar = () => {
             { label: t('common:actions.signOut'), path: 'signout' },
           ]}
           onSelect={handleNavigate}
+          tooltip={t('common:accessibility.userMenu')}
         />
       </div>
     </div>
