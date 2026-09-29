@@ -18,8 +18,51 @@ import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
+import type { AxiosError } from 'axios'
 
 const clientApi = new ClientApi(getConfiguration())
+
+/** Fineract legal form ids, from the clientLegalFormOptions template */
+const LEGAL_FORM_ENTITY = 2
+
+type ClientApiErrorResponse = {
+  defaultUserMessage?: string
+  errors?: Array<{
+    defaultUserMessage?: string
+  }>
+}
+
+const getClientErrorMessage = (error: unknown) => {
+  const axiosError = error as AxiosError<ClientApiErrorResponse>
+  const responseData = axiosError.response?.data
+
+  return (
+    responseData?.errors?.[0]?.defaultUserMessage ||
+    responseData?.defaultUserMessage ||
+    'Failed to create client'
+  )
+}
+
+/**
+ * Fineract stores an entity's name in fullname and a person's in
+ * firstname/middlename/lastname, and rejects a request that carries both. The
+ * form collects a first and last name either way, so join them for an entity.
+ */
+const buildClientRequest = (
+  formData: PostClientsRequest
+): PostClientsRequest => {
+  if (formData.legalFormId !== LEGAL_FORM_ENTITY) {
+    return formData
+  }
+
+  const { firstname, middlename: _middlename, lastname, ...rest } = formData
+  return {
+    ...rest,
+    fullname:
+      [firstname?.trim(), lastname?.trim()].filter(Boolean).join(' ') ||
+      undefined,
+  }
+}
 
 const CreateClients = () => {
   const navigate = useNavigate()
@@ -42,7 +85,7 @@ const CreateClients = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await clientApi.create6(formData)
+      const response = await clientApi.create6(buildClientRequest(formData))
       // Land on the new client rather than the list, which hides a pending
       // client, and carry a message so the create is confirmed either way
       const clientId = response.data?.clientId ?? response.data?.resourceId
@@ -51,8 +94,31 @@ const CreateClients = () => {
       }
       navigate(clientId ? `/clients/${clientId}` : '/clients', { state })
     } catch (error) {
-      console.error('Error while submitting', error)
+      // Surfaced by the stepper, which shows the message above the buttons
+      throw new Error(getClientErrorMessage(error))
     }
+  }
+
+  // Fineract rejects these outright, so catch them before the request goes out
+  const validateGeneral = (): string | null => {
+    if (!formData.officeId) {
+      return 'Please select an office.'
+    }
+    // Fineract treats a name of only spaces as blank
+    const firstname = formData.firstname?.trim()
+    const lastname = formData.lastname?.trim()
+    // An entity's name is one fullname, so either field is enough
+    if (formData.legalFormId === LEGAL_FORM_ENTITY) {
+      if (!firstname && !lastname) {
+        return 'Please enter an entity name.'
+      }
+    } else if (!firstname || !lastname) {
+      return 'Please enter a first name and a last name.'
+    }
+    if (formData.active && !formData.activationDate) {
+      return 'Please enter an activation date, or uncheck Active.'
+    }
+    return null
   }
 
   const [formData, setFormData] = useState<PostClientsRequest>({
@@ -70,6 +136,7 @@ const CreateClients = () => {
   const steps = [
     {
       title: 'GENERAL',
+      validate: validateGeneral,
       component: (
         <ClientGeneralStep
           formData={formData}
