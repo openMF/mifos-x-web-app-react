@@ -15,7 +15,10 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 import { GroupsApi } from '@/fineract-api'
-import type { ExtendedGroupResponse } from '@/pages/groups/types'
+import type {
+  ExtendedGroupResponse,
+  ExtendedPutGroupsRequest,
+} from '@/pages/groups/types'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { dateArrayToInputValue, inputToFineractDate } from '@/lib/date-utils'
 import { useTranslation } from 'react-i18next'
@@ -60,7 +63,7 @@ const EditGroups = () => {
             groupData?.timeline?.activatedOnDate as number[] | null
           )
         )
-        // externalId left blank on purpose, user must fill if needed
+        setExternalId(groupData.externalId ?? '')
       } catch (err) {
         console.error("Can't fetch group", err)
       }
@@ -78,7 +81,7 @@ const EditGroups = () => {
     if (!id) return
     setSaving(true)
     try {
-      const payload: Record<string, unknown> = {
+      const payload: ExtendedPutGroupsRequest = {
         name: name.trim(),
         locale: 'en',
         dateFormat: 'dd MMMM yyyy',
@@ -89,9 +92,9 @@ const EditGroups = () => {
       if (sub) payload.submittedOnDate = sub
       const act = inputToFineractDate(activationOn)
       if (act) payload.activationDate = act
-      if (externalId.trim()) payload.externalId = externalId.trim()
+      payload.externalId = externalId.trim() || undefined
 
-      await groupsApi.update13(Number(id), { name: payload.name as string })
+      await groupsApi.update13(Number(id), payload)
       navigate(`/groups/${id}/general`)
     } catch (err) {
       console.error('Failed to update group', err)
