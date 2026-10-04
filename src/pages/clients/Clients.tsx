@@ -218,40 +218,109 @@ const Clients = () => {
           </TableHeader>
 
           <TableBody>
-            {filtered.map((c: ClientRow) => (
-              <TableRow
-                key={c.id}
-                onClick={() => c.id && navigate(`/clients/${c.id}/general`)}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              >
-                <TableCell className="px-6 py-4 font-medium">
-                  {c.displayName ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.accountNumber ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.externalId ?? '—'}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c?.status?.id === 300 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-green-500"
-                    />
-                  )}
-                  {c?.status?.id === 200 && (
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className="w-4 h-4 text-yellow-500"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  {c.officeName ?? '—'}
-                </TableCell>
-              </TableRow>
-            ))}
+            {(() => {
+              const hasSearch = searchTerm.trim() !== ''
+
+              return rows.length === 0 && !hasSearch ? (
+                <TableRow
+                  tabIndex={!hasSearch ? 0 : undefined}
+                  role={!hasSearch ? 'button' : undefined}
+                  onClick={
+                    !hasSearch ? () => navigate('/clients/create') : undefined
+                  }
+                  onKeyDown={e => {
+                    if (hasSearch) return
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      navigate('/clients/create')
+                    }
+                  }}
+                >
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-6 text-gray-500"
+                  >
+                    {t('empty.noClients', 'No clients available')}
+                  </TableCell>
+                </TableRow>
+              ) : rows.length === 0 && hasSearch ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-6 text-gray-500"
+                  >
+                    {t('empty.noResults', 'No matching clients found')}
+                  </TableCell>
+                </TableRow>
+              ) : filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-6 text-gray-500"
+                  >
+                    {t('empty.noResults', 'No matching clients found')}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filtered.map((c: ClientRow) => {
+                  const canNavigate = typeof c.id === 'number'
+
+                  return (
+                    <TableRow
+                      key={c.id}
+                      tabIndex={canNavigate ? 0 : -1}
+                      role={canNavigate ? 'link' : undefined}
+                      aria-disabled={canNavigate ? undefined : true}
+                      onClick={
+                        canNavigate
+                          ? () => navigate(`/clients/${c.id}/general`)
+                          : undefined
+                      }
+                      onKeyDown={e => {
+                        if (!canNavigate) return
+
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          navigate(`/clients/${c.id}/general`)
+                        }
+                      }}
+                      className={`${
+                        canNavigate
+                          ? 'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700'
+                          : ''
+                      } transition-colors text-base`}
+                    >
+                      <TableCell className="px-6 py-4 font-medium">
+                        {c.displayName ?? '—'}
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        {c.accountNumber ?? '—'}
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        {c.externalId ?? '—'}
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        {c?.status?.id === 300 && (
+                          <FontAwesomeIcon
+                            icon={faCircle}
+                            className="w-4 h-4 text-green-500"
+                          />
+                        )}
+                        {c?.status?.id === 200 && (
+                          <FontAwesomeIcon
+                            icon={faCircle}
+                            className="w-4 h-4 text-yellow-500"
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        {c.officeName ?? '—'}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              )
+            })()}
           </TableBody>
         </Table>
       </div>
