@@ -415,7 +415,16 @@
     "selectOfficeToView": "Select an office to view the chart",
     "value": "Value",
     "noPendingDisbursed": "No pending or disbursed amounts found (all values are 0).",
-    "noCollectedAmounts": "No collected amounts found (all values are 0)."
+    "noCollectedAmounts": "No collected amounts found (all values are 0).",
+    "search": {
+      "label": "Search Clients",
+      "placeholder": "Search by name, ID or mobile...",
+      "searching": "Searching...",
+      "error": "Failed to fetch clients. Please try again.",
+      "resultsLabel": "Client Search Results",
+      "unnamedClient": "Unnamed Client",
+      "noResults": "No clients found matching \"{{query}}\""
+    }
   },
   "navigation": {
     "associatedOfficers": "Associated Officers",
