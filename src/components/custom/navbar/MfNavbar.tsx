@@ -8,6 +8,11 @@
 import { SidebarTrigger } from '@/components/ui/sidebar'
 
 import DropDown from '@/components/custom/navbar/Dropdown'
+import {
+  findActivePath,
+  isPathActive,
+  navActiveClassName,
+} from '@/components/custom/navbar/nav-active'
 
 import {
   Landmark,
@@ -21,15 +26,17 @@ import {
   Sun,
   Menu,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { useLogout } from '@/hooks/use-logout'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
 
 const MfNavbar = () => {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const handleLogout = useLogout()
   const { t } = useTranslation([
     'common',
@@ -61,6 +68,44 @@ const MfNavbar = () => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
+  const institutionOptions = [
+    { label: t('clients:title'), path: 'clients' },
+    { label: t('clients:groups'), path: 'groups' },
+    { label: t('clients:centers'), path: 'centers' },
+    { label: t('accounting:title'), path: 'accounting' },
+  ]
+  const reportOptions = [
+    { label: t('common:actions.all'), path: 'reports' },
+    { label: t('clients:title'), path: 'reports/client' },
+    { label: t('loans:title'), path: 'reports/loan' },
+    { label: t('loans:savings'), path: 'reports/savings' },
+    { label: t('organization:nav.funds'), path: 'reports/fund' },
+    { label: t('accounting:title'), path: 'reports/accounting' },
+  ]
+  const adminOptions = [
+    { label: t('common:nav.users'), path: 'appusers' },
+    { label: t('organization:title'), path: 'organization' },
+    { label: t('common:nav.system'), path: 'system' },
+    { label: t('products:title'), path: 'products' },
+    { label: t('common:nav.templates'), path: 'templates' },
+  ]
+
+  const activePath = findActivePath(
+    pathname,
+    [...institutionOptions, ...reportOptions, ...adminOptions].map(
+      option => option.path
+    )
+  )
+  const belongsTo = (options: { path: string }[]) =>
+    options.some(option => option.path === activePath)
+  // Accounting is also listed under Institution, but the top-level Accounting
+  // button owns /accounting so that only one section is highlighted at a time
+  const isAccountingActive = isPathActive(pathname, 'accounting')
+  const isInstitutionActive =
+    !isAccountingActive && belongsTo(institutionOptions)
+  const isReportsActive = belongsTo(reportOptions)
+  const isAdminActive = belongsTo(adminOptions)
+
   return (
     <div className="flex justify-between items-center h-auto bg-[#1074b9] px-4 py-2 shadow-3xl text-base text-white">
       {/* Left Menu & Sections */}
@@ -81,37 +126,14 @@ const MfNavbar = () => {
             options={[
               {
                 label: t('common:nav.institution'),
-                children: [
-                  { label: t('clients:title'), path: 'clients' },
-                  { label: t('clients:groups'), path: 'groups' },
-                  { label: t('clients:centers'), path: 'centers' },
-                  { label: t('accounting:title'), path: 'accounting' },
-                ],
+                children: institutionOptions,
               },
               { label: t('accounting:title'), path: 'accounting' },
-              {
-                label: t('common:nav.reports'),
-                children: [
-                  { label: t('common:actions.all'), path: 'reports' },
-                  { label: t('clients:title'), path: 'reports/client' },
-                  { label: t('loans:title'), path: 'reports/loan' },
-                  { label: t('loans:savings'), path: 'reports/savings' },
-                  { label: t('organization:nav.funds'), path: 'reports/fund' },
-                  { label: t('accounting:title'), path: 'reports/accounting' },
-                ],
-              },
-              {
-                label: t('common:nav.admin'),
-                children: [
-                  { label: t('common:nav.users'), path: 'appusers' },
-                  { label: t('organization:title'), path: 'organization' },
-                  { label: t('common:nav.system'), path: 'system' },
-                  { label: t('products:title'), path: 'products' },
-                  { label: t('common:nav.templates'), path: 'templates' },
-                ],
-              },
+              { label: t('common:nav.reports'), children: reportOptions },
+              { label: t('common:nav.admin'), children: adminOptions },
             ]}
             onSelect={handleNavigate}
+            activePath={activePath}
           />
         </div>
 
@@ -123,17 +145,18 @@ const MfNavbar = () => {
                 <Landmark /> {t('common:nav.institution')}
               </span>
             }
-            options={[
-              { label: t('clients:title'), path: 'clients' },
-              { label: t('clients:groups'), path: 'groups' },
-              { label: t('clients:centers'), path: 'centers' },
-              { label: t('accounting:title'), path: 'accounting' },
-            ]}
+            options={institutionOptions}
             onSelect={handleNavigate}
+            active={isInstitutionActive}
+            activePath={activePath}
           />
           <Button
-            className="flex items-center gap-2 shadow-none bg-transparent hover:bg-[#0e6aa5] hover:text-white dark:text-white"
+            className={cn(
+              'flex items-center gap-2 shadow-none bg-transparent hover:bg-[#0e6aa5] hover:text-white dark:text-white',
+              isAccountingActive && navActiveClassName
+            )}
             onClick={() => navigate('/accounting')}
+            aria-current={isAccountingActive ? 'page' : undefined}
           >
             <Banknote /> {t('accounting:title')}
           </Button>
@@ -143,15 +166,10 @@ const MfNavbar = () => {
                 <ChartBar /> {t('common:nav.reports')}
               </span>
             }
-            options={[
-              { label: t('common:actions.all'), path: 'reports' },
-              { label: t('clients:title'), path: 'reports/client' },
-              { label: t('loans:title'), path: 'reports/loan' },
-              { label: t('loans:savings'), path: 'reports/savings' },
-              { label: t('organization:nav.funds'), path: 'reports/fund' },
-              { label: t('accounting:title'), path: 'reports/accounting' },
-            ]}
+            options={reportOptions}
             onSelect={handleNavigate}
+            active={isReportsActive}
+            activePath={activePath}
           />
           <DropDown
             name={
@@ -159,14 +177,10 @@ const MfNavbar = () => {
                 <Shield /> {t('common:nav.admin')}
               </span>
             }
-            options={[
-              { label: t('common:nav.users'), path: 'appusers' },
-              { label: t('organization:title'), path: 'organization' },
-              { label: t('common:nav.system'), path: 'system' },
-              { label: t('products:title'), path: 'products' },
-              { label: t('common:nav.templates'), path: 'templates' },
-            ]}
+            options={adminOptions}
             onSelect={handleNavigate}
+            active={isAdminActive}
+            activePath={activePath}
           />
         </div>
       </div>
