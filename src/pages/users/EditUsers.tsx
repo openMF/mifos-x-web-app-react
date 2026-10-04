@@ -176,6 +176,7 @@ const EditUsers = () => {
         items={[
           { label: 'Home', href: '/home' },
           { label: 'Users', href: '/appusers' },
+          { label: `${id}`, href: `/appusers/${id}` },
           { label: 'Edit User', current: true },
         ]}
       />

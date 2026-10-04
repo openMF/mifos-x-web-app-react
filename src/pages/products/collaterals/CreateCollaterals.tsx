@@ -87,7 +87,7 @@ const CreateCollaterals = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Products' },
+          { label: 'Products', href: '/products' },
           { label: 'Collaterals', href: '/products/collaterals' },
           { label: 'Create Collateral', current: true },
         ]}

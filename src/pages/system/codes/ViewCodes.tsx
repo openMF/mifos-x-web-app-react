@@ -40,7 +40,8 @@ const ViewCodes = () => {
         items={[
           { label: 'Home', href: '/home' },
           { label: 'System', href: '/system' },
-          { label: 'Codes', current: true },
+          { label: 'Codes', href: '/system/codes' },
+          { label: `${codes?.name ?? id}`, current: true },
         ]}
       />
 

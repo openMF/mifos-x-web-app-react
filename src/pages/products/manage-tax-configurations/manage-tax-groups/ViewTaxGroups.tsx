@@ -54,6 +54,10 @@ const ViewTaxGroups = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
+            label: 'Manage Tax Configurations',
+            href: '/products/tax-configurations',
+          },
+          {
             label: 'Tax Groups',
             href: '/products/tax-configurations/tax-groups',
           },

@@ -5,10 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 const CheckerInBoxAndTasks = () => {
+  const { pathname } = useLocation()
   const tabItems = [
     {
       label: 'Checker Inbox',
@@ -32,12 +33,18 @@ const CheckerInBoxAndTasks = () => {
     },
   ]
 
+  // Same prefix match NavLink uses to highlight the active tab
+  const activeTab = tabItems.find(
+    tab => pathname === tab.path || pathname.startsWith(`${tab.path}/`)
+  )
+
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Checker Inbox & Tasks', current: true },
+          { label: 'Checker Inbox & Tasks', href: '/checker-inbox-and-tasks' },
+          ...(activeTab ? [{ label: activeTab.label }] : []),
         ]}
       />
 

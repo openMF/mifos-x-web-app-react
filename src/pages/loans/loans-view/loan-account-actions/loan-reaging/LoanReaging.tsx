@@ -8,12 +8,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 const LoanReaging = () => {
+  const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Re-Age' })
   const navigate = useNavigate()
 
   // form state
@@ -39,13 +41,7 @@ const LoanReaging = () => {
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Re-Age', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* form card */}
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">

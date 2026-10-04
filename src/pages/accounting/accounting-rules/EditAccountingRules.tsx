@@ -90,7 +90,7 @@ const EditAccountingRules = () => {
           { label: 'Accounting Rules', href: '/accounting/accounting-rules' },
           {
             label: rule.name ?? '',
-            href: `/accounting/accounting-rules/${id}`,
+            href: `/accounting/accounting-rules/view/${id}`,
           },
           { label: 'Edit', current: true },
         ]}

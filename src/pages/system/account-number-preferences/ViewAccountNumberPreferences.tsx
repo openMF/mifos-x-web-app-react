@@ -59,10 +59,10 @@ const ViewAccountNumberPreferences = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'System' },
+          { label: 'System', href: '/system' },
           {
             label: 'Account Number Preferences',
-            href: '/system/account-number-preferences/',
+            href: '/system/account-number-preferences',
           },
           { label: `${accountPref?.id}`, current: true },
         ]}

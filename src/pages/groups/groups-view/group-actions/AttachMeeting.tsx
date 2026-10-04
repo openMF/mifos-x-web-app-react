@@ -43,6 +43,10 @@ const AttachMeeting = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/groups' },
+          {
+            label: t('addRole.breadcrumbGroup'),
+            href: `/groups/${id}/general`,
+          },
           { label: t('attachMeeting.breadcrumb'), current: true },
         ]}
       />
