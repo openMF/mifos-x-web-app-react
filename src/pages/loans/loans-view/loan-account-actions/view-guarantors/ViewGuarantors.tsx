@@ -6,9 +6,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
 const ViewGuarantors = () => {
+  const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'View Guarantors' })
   // placeholder values
   const leftRows = [
     { label: 'Disbursement Date', value: '' },
@@ -27,13 +29,7 @@ const ViewGuarantors = () => {
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'View Guarantors', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* main card */}
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-6 max-w-5xl mx-auto">

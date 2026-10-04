@@ -82,6 +82,7 @@ const EditClosure = () => {
           { label: 'Home', href: '/home' },
           { label: 'Accounting', href: '/accounting' },
           { label: 'Closing Entries', href: '/accounting/closing-entries' },
+          { label: `${id}`, href: `/accounting/closing-entries/view/${id}` },
           { label: 'Edit', current: true },
         ]}
       />

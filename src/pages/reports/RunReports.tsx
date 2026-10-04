@@ -16,6 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -43,6 +44,7 @@ interface BasicReport {
   id: number
   reportName?: string
   name?: string
+  reportCategory?: string
 }
 
 const RunReports: React.FC = () => {
@@ -52,6 +54,7 @@ const RunReports: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, string>>({})
+  const [reportCategory, setReportCategory] = useState<string | undefined>()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,6 +98,7 @@ const RunReports: React.FC = () => {
           officesApi.retrieveOffices(undefined, undefined, undefined, {}),
         ])
 
+        setReportCategory(matchedReport.reportCategory)
         setReportData(reportRes.data as ReportMetadata)
         setOffices(officeRes.data as Office[])
       } catch (_err) {
@@ -184,6 +188,21 @@ const RunReports: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      <AppBreadCrumbs
+        items={[
+          { label: 'Home', href: '/home' },
+          { label: 'Reports', href: '/reports' },
+          ...(reportCategory
+            ? [
+                {
+                  label: reportCategory,
+                  href: `/reports/${reportCategory.toLowerCase()}`,
+                },
+              ]
+            : []),
+          { label: reportName?.replace(/-/g, ' ') ?? '' },
+        ]}
+      />
       <Link
         to="/reports"
         className="flex items-center text-zinc-500 mb-4 hover:text-black"

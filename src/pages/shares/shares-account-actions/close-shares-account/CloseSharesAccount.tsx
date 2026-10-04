@@ -9,11 +9,13 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 const CloseSharesAccount = () => {
+  const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Close' })
   const { clientId, sharesAccountId } = useParams()
   const navigate = useNavigate()
 
@@ -37,17 +39,7 @@ const CloseSharesAccount = () => {
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Clients', href: '/clients' },
-          {
-            label: 'Shares',
-            href: clientId ? `/clients/${clientId}/shares` : '/clients',
-          },
-          { label: 'Close', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* Card */}
       <div className="max-w-3xl mx-auto">
