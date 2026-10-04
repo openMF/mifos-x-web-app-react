@@ -48,7 +48,7 @@ const ViewReports = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'System' },
+          { label: 'System', href: '/system' },
           { label: 'Manage Reports', href: '/system/reports' },
           { label: `${report?.id}`, current: true },
         ]}

@@ -111,6 +111,7 @@ const EditAdhocQuery = () => {
           { label: 'Home', href: '/home' },
           { label: 'Organization', href: '/organization' },
           { label: 'Adhoc Query', href: '/organization/adhoc-query' },
+          { label: `${id}`, href: `/organization/adhoc-query/${id}` },
           { label: 'Edit', current: true },
         ]}
       />

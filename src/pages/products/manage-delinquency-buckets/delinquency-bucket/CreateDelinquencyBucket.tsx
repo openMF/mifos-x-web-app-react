@@ -107,6 +107,10 @@ const CreateDelinquencyBucket = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
+            label: 'Manage Delinquency Bucket Configurations',
+            href: '/products/delinquency-bucket-configurations',
+          },
+          {
             label: 'Delinquency Buckets',
             href: '/products/delinquency-bucket-configurations/buckets',
           },

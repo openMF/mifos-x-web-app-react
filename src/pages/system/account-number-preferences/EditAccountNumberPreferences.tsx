@@ -99,6 +99,10 @@ const EditAccountNumberPreferences = () => {
             label: 'Account Number Preferences',
             href: '/system/account-number-preferences',
           },
+          {
+            label: `${id}`,
+            href: `/system/account-number-preferences/${id}`,
+          },
           { label: 'Edit', current: true },
         ]}
       />

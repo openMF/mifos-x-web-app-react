@@ -21,8 +21,12 @@ const CreateTaxComponents = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
+            label: 'Manage Tax Configurations',
+            href: '/products/tax-configurations',
+          },
+          {
             label: 'Tax Components',
-            href: '/products/tax-configurations/tax-components/',
+            href: '/products/tax-configurations/tax-components',
           },
           { label: 'Create', current: true },
         ]}

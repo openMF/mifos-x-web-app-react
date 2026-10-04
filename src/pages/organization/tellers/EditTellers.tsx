@@ -120,6 +120,7 @@ const EditTellers = () => {
           { label: 'Home', href: '/home' },
           { label: 'Organization', href: '/organization' },
           { label: 'Tellers', href: '/organization/tellers' },
+          { label: `${id}`, href: `/organization/tellers/${id}` },
           { label: 'Edit', current: true },
         ]}
       />
