@@ -170,7 +170,7 @@ const ManageDataTables = () => {
                   {table.applicationTableName || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {'Missing in OpenAPI'}
+                  {(table as any).entitySubType ?? '—'}
                 </TableCell>
               </TableRow>
             ))}
