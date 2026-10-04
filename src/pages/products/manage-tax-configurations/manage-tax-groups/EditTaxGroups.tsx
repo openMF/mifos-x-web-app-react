@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -13,6 +13,7 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 const EditTaxGroups = () => {
   const navigate = useNavigate()
+  const { id } = useParams()
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
@@ -21,8 +22,16 @@ const EditTaxGroups = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
+            label: 'Manage Tax Configurations',
+            href: '/products/tax-configurations',
+          },
+          {
             label: 'Tax Groups',
             href: '/products/tax-configurations/tax-groups',
+          },
+          {
+            label: `${id}`,
+            href: `/products/tax-configurations/tax-groups/${id}`,
           },
           { label: 'Edit', current: true },
         ]}

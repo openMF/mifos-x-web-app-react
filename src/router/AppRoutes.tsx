@@ -9,7 +9,7 @@ import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
 import Callback from '@/pages/login/Callback'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
 import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
@@ -372,6 +372,7 @@ const AppRoutes = () => {
             path="/checker-inbox-and-tasks"
             element={<CheckerInBoxAndTasks />}
           >
+            <Route index element={<Navigate to="checker-inbox" replace />} />
             <Route path="checker-inbox" element={<CheckerInboxContent />} />
             <Route path="client-approval" element={<ClientApproval />} />
             <Route path="loan-approval" element={<LoanApproval />} />
@@ -703,7 +704,7 @@ const AppRoutes = () => {
             element={<AccountNumberPreferences />}
           />
           <Route
-            path="//system/account-number-preferences/create"
+            path="/system/account-number-preferences/create"
             element={<CreateAccountNumberPreferences />}
           />
           <Route

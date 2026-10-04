@@ -54,8 +54,8 @@ const ViewAccountingRules = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Accounting' },
-          { label: 'Closing Entries', href: '/accounting/closing-entries' },
+          { label: 'Accounting', href: '/accounting' },
+          { label: 'Accounting Rules', href: '/accounting/accounting-rules' },
           { label: `${accountingRule?.id}`, current: true },
         ]}
       />

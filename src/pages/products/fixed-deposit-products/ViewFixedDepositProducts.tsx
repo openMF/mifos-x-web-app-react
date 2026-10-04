@@ -46,10 +46,10 @@ const ViewFixedDepositProducts = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
-            label: ' Fixed Deposit Products',
+            label: 'Fixed Deposit Products',
             href: '/products/fixed-deposit-products',
           },
-          { label: fdProducts?.name ?? 'Loan', current: true },
+          { label: fdProducts?.name ?? 'View', current: true },
         ]}
       />
 

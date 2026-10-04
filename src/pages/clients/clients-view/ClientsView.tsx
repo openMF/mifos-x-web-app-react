@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { Building2, Menu } from 'lucide-react'
@@ -26,6 +26,21 @@ const ClientsView = () => {
   const [client, setClient] = useState<GetClientsClientIdResponse>()
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+  const { pathname } = useLocation()
+
+  // Derive the active tab from the URL segment after /clients/:id
+  const [tabSegment, subSegment] = pathname
+    .split(`/clients/${id}/`)[1]
+    ?.split('/') ?? ['', '']
+  const tabLabels: Record<string, string> = {
+    general: t('view.tabs.general'),
+    address: t('view.tabs.address'),
+    'family-members': t('view.tabs.familyMembers'),
+    identities: t('view.tabs.identities'),
+    documents: t('view.tabs.documents'),
+    notes: t('view.tabs.notes'),
+  }
+  const activeTabLabel = tabLabels[tabSegment ?? '']
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -46,8 +61,21 @@ const ClientsView = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/clients' },
-          { label: String(client?.displayName), href: `/clients/${id}` },
-          { label: t('view.tabs.general'), current: true },
+          {
+            label: client?.displayName ?? '',
+            href: `/clients/${id}/general`,
+          },
+          ...(activeTabLabel
+            ? [
+                {
+                  label: activeTabLabel,
+                  href: `/clients/${id}/${tabSegment}`,
+                },
+              ]
+            : []),
+          ...(tabSegment === 'family-members' && subSegment === 'add'
+            ? [{ label: t('familyMembers.addButton') }]
+            : []),
         ]}
       />
 
