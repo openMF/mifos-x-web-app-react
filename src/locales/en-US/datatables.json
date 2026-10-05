@@ -1,0 +1,50 @@
+{
+  "columnTypes": {
+    "boolean": "Boolean",
+    "date": "Date",
+    "datetime": "Date and Time",
+    "decimal": "Decimal",
+    "dropdown": "Dropdown",
+    "json": "JSON",
+    "number": "Number",
+    "string": "String",
+    "text": "Text"
+  },
+  "entry": {
+    "add": "Add entry",
+    "cancel": "Cancel",
+    "delete": "Delete entry",
+    "deleteConfirm": "Delete this entry? This cannot be undone.",
+    "edit": "Edit entry",
+    "empty": "No entries.",
+    "loadFailed": "Could not load this data table.",
+    "none": "No entry yet.",
+    "save": "Save",
+    "saveFailed": "The entry could not be saved.",
+    "saving": "Saving…"
+  },
+  "json": {
+    "collapseAll": "Collapse all",
+    "copied": "Copied",
+    "copy": "Copy JSON",
+    "empty": "No value",
+    "errorAt": "Line {{line}}, column {{column}}",
+    "expandAll": "Expand all",
+    "format": "Format",
+    "invalid": "This value is not valid JSON.",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
+    "keys_one": "{{count}} key",
+    "keys_other": "{{count}} keys",
+    "mode": {
+      "raw": "Raw",
+      "tree": "Tree"
+    },
+    "preview": "Preview",
+    "required": "This field is required.",
+    "showAnyway": "Show anyway",
+    "tooLarge": "This document is too large to display as a tree ({{size}} characters)."
+  },
+  "loading": "Loading…",
+  "title": "Data tables"
+}

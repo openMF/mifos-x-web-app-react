@@ -15,17 +15,51 @@ import { ClientApi, type GetClientsClientIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import {
+  useEntityDatatables,
+  type EntityDatatable,
+} from '@/components/datatables/useEntityDatatables'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from '@/lib/date-utils'
 
 const clientsApi = new ClientApi(getConfiguration())
 
+/** Fineract sends the client's legal form; the generated type leaves it out. */
+type ClientWithLegalForm = GetClientsClientIdResponse & {
+  legalForm?: { id?: number } | null
+}
+
+/** Fineract's legal form id for a person; any other legal form is an entity. */
+const LEGAL_FORM_PERSON = 1
+
+/**
+ * The data tables that apply to this client. A client data table can be
+ * limited to persons or to entities, and is then hidden for the other kind, as
+ * in the Angular web app. Until the client has loaded only the unrestricted
+ * tables are listed, so a tab cannot appear and then vanish.
+ */
+const datatablesForClient = (
+  datatables: EntityDatatable[],
+  client?: ClientWithLegalForm
+): EntityDatatable[] => {
+  if (!client) return datatables.filter(table => !table.entitySubType)
+  const legalFormId = client.legalForm?.id
+  // A client without a legal form sees every table, as in the Angular app.
+  if (!legalFormId) return datatables
+  const subtype = legalFormId === LEGAL_FORM_PERSON ? 'person' : 'entity'
+  return datatables.filter(
+    table =>
+      !table.entitySubType || table.entitySubType.toLowerCase() === subtype
+  )
+}
+
 const ClientsView = () => {
   const { id } = useParams()
-  const [client, setClient] = useState<GetClientsClientIdResponse>()
+  const [client, setClient] = useState<ClientWithLegalForm>()
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+  const datatables = useEntityDatatables('m_client')
   const { pathname } = useLocation()
 
   // Derive the active tab from the URL segment after /clients/:id
@@ -277,6 +311,12 @@ const ClientsView = () => {
             href: `clients/${client?.id}/documents`,
           },
           { label: t('view.tabs.notes'), href: `clients/${client?.id}/notes` },
+          // Built from the route id: the registrations can arrive before the
+          // client does, and `client?.id` would put `undefined` in the link.
+          ...datatablesForClient(datatables, client).map(datatable => ({
+            label: datatable.label,
+            href: `clients/${id}/datatables/${encodeURIComponent(datatable.name)}`,
+          })),
         ]}
       />
 
