@@ -207,6 +207,7 @@ import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesT
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
 import ClientsDocumentsTab from '@/pages/clients/clients-view/documents-tab/ClientsDocumentsTab'
 import ClientsIdentitiesTab from '@/pages/clients/clients-view/Identities-tab/ClientsidentitiesTab'
+import ClientsGeneralDataTab from '@/pages/clients/clients-view/general-data-tab/ClientsGeneralDataTab'
 import ClientsAddressTab from '@/pages/clients/clients-view/address-tab/ClientsAddressTab'
 import UndoApprovalSharesAccount from '@/pages/shares/shares-account-actions/undo-approval-shares-account/UndoApprovalSharesAccount'
 import SharesAccountView from '@/pages/shares/shares-account-view/SharesAccountView'
@@ -740,6 +741,7 @@ const AppRoutes = () => {
           <Route path="/clients/create" element={<CreateClients />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
+            <Route path="general-data" element={<ClientsGeneralDataTab />} />
             <Route path="notes" element={<ClientNotesTab />} />
             <Route path="address" element={<ClientsAddressTab />} />
             <Route
