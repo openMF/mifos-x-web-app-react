@@ -241,7 +241,7 @@
       "nameOrCorporateName": "Nome o ragione sociale",
       "taxId": "Codice fiscale",
       "digitalId": "ID digitale",
-      "deedNumber": "Número de escritura",
+      "deedNumber": "Numero dell'atto",
       "dateOfDeed": "Data dell'atto",
       "notaryOffice": "Studio notarile",
       "notaryName": "Nome del notaio",

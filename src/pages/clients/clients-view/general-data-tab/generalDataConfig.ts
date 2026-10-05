@@ -68,7 +68,7 @@ const personNameFields: RecordFieldConfig[] = [
   { label: 'lastName', patterns: ['last name', 'last name s', 'lastname'] },
   {
     label: 'names',
-    patterns: ['name s', 'names', 'first name', 'firstname', 'name'],
+    patterns: ['first name', 'firstname', 'names', 'name s', 'name'],
   },
   { label: 'taxId', patterns: ['tax id', 'tax number', 'rfc'] },
 ]

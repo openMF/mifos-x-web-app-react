@@ -48,12 +48,17 @@ const YesNoIndicator = ({
 }) => {
   const { t } = useTranslation('clients')
   const answer = normalizeYesNoValue(value)
+  // The pills are read-only, so the answer goes in the group's name rather
+  // than in a toggle state.
   return (
-    <span role="group" aria-label={label} className="mt-1 flex gap-2">
+    <span
+      role="group"
+      aria-label={answer ? `${label}: ${t(`generalData.${answer}`)}` : label}
+      className="mt-1 flex gap-2"
+    >
       {(['yes', 'no'] as const).map(option => (
         <span
           key={option}
-          aria-pressed={answer === option}
           className={cn(
             'inline-flex h-7 min-w-14 items-center justify-center rounded-md border px-3 text-xs',
             answer === option

@@ -63,7 +63,9 @@ export const readObjectValue = (source: unknown, fields: string[]): unknown => {
 /**
  * The value of the first field whose label matches one of `patterns`. An
  * exact match wins over a partial one, so `% Shares` is not read from a
- * `No. of Shares` column that merely contains it.
+ * `No. of Shares` column that merely contains it. Partial matches are tried
+ * in pattern order, so a generic pattern listed last, like `name`, cannot
+ * pick a `Middle Name` column that comes before `First Names`.
  */
 export const readRecordValue = (
   fields: RecordField[],
@@ -76,9 +78,9 @@ export const readRecordValue = (
   }))
   const match =
     labelled.find(({ label }) => normalizedPatterns.includes(label)) ??
-    labelled.find(({ label }) =>
-      normalizedPatterns.some(pattern => label.includes(pattern))
-    )
+    normalizedPatterns
+      .map(pattern => labelled.find(({ label }) => label.includes(pattern)))
+      .find(Boolean)
   const value = match?.field.value
   return hasValue(value) ? readOptionValue(value) : ''
 }
