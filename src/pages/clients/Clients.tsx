@@ -237,12 +237,14 @@ const Clients = () => {
                   {c?.status?.id === 300 && (
                     <FontAwesomeIcon
                       icon={faCircle}
+                      title={c.status.value}
                       className="w-4 h-4 text-green-500"
                     />
                   )}
-                  {c?.status?.id === 200 && (
+                  {c?.status?.id === 100 && (
                     <FontAwesomeIcon
                       icon={faCircle}
+                      title={c.status.value}
                       className="w-4 h-4 text-yellow-500"
                     />
                   )}
