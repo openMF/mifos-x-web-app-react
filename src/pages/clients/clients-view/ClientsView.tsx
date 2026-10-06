@@ -22,6 +22,7 @@ import {
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from '@/lib/date-utils'
+import { isLegalEntity } from './general-data-tab/generalDataUtils'
 
 const clientsApi = new ClientApi(getConfiguration())
 
@@ -68,6 +69,7 @@ const ClientsView = () => {
     ?.split('/') ?? ['', '']
   const tabLabels: Record<string, string> = {
     general: t('view.tabs.general'),
+    'general-data': t('view.tabs.generalData'),
     address: t('view.tabs.address'),
     'family-members': t('view.tabs.familyMembers'),
     identities: t('view.tabs.identities'),
@@ -294,6 +296,15 @@ const ClientsView = () => {
             label: t('view.tabs.general'),
             href: `clients/${client?.id}/general`,
           },
+          // Only legal entities have the KYC data this tab shows.
+          ...(isLegalEntity(client)
+            ? [
+                {
+                  label: t('view.tabs.generalData'),
+                  href: `clients/${client?.id}/general-data`,
+                },
+              ]
+            : []),
           {
             label: t('view.tabs.address'),
             href: `clients/${client?.id}/address`,
