@@ -206,7 +206,11 @@ import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsG
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
 import ClientsDocumentsTab from '@/pages/clients/clients-view/documents-tab/ClientsDocumentsTab'
+import ClientDatatableTab from '@/pages/clients/clients-view/datatables-tab/ClientDatatableTab'
+import LoanDatatableTab from '@/pages/loans/loans-view/datatables-tab/LoanDatatableTab'
+import GroupDatatableTab from '@/pages/groups/groups-view/datatables-tab/GroupDatatableTab'
 import ClientsIdentitiesTab from '@/pages/clients/clients-view/Identities-tab/ClientsidentitiesTab'
+import ClientsGeneralDataTab from '@/pages/clients/clients-view/general-data-tab/ClientsGeneralDataTab'
 import ClientsAddressTab from '@/pages/clients/clients-view/address-tab/ClientsAddressTab'
 import UndoApprovalSharesAccount from '@/pages/shares/shares-account-actions/undo-approval-shares-account/UndoApprovalSharesAccount'
 import SharesAccountView from '@/pages/shares/shares-account-view/SharesAccountView'
@@ -740,6 +744,7 @@ const AppRoutes = () => {
           <Route path="/clients/create" element={<CreateClients />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
+            <Route path="general-data" element={<ClientsGeneralDataTab />} />
             <Route path="notes" element={<ClientNotesTab />} />
             <Route path="address" element={<ClientsAddressTab />} />
             <Route
@@ -749,6 +754,10 @@ const AppRoutes = () => {
               <Route path="add" element={<ClientsFamilyMembersAddTab />} />
             </Route>
             <Route path="documents" element={<ClientsDocumentsTab />} />
+            <Route
+              path="datatables/:datatableName"
+              element={<ClientDatatableTab />}
+            />
             <Route path="identities" element={<ClientsIdentitiesTab />} />
           </Route>
           <Route path="/clients/:id/edit" element={<EditClients />} />
@@ -974,6 +983,10 @@ const AppRoutes = () => {
             <Route path="general" element={<GroupsGeneralTab />} />
             <Route path="notes" element={<GroupsNotesTab />} />
             <Route path="committee" element={<GroupsCommitteeTab />}></Route>
+            <Route
+              path="datatables/:datatableName"
+              element={<GroupDatatableTab />}
+            />
           </Route>
           <Route
             path="/groups/:id/committee/add-role"
@@ -1233,6 +1246,10 @@ const AppRoutes = () => {
             />
             <Route path="loan-documents" element={<LoansDocumentsTab />} />
             <Route path="notes" element={<LoansNotesTab />} />
+            <Route
+              path="datatables/:datatableName"
+              element={<LoanDatatableTab />}
+            />
           </Route>
         </Route>
       </Route>

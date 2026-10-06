@@ -7,12 +7,8 @@
  */
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import {
-  ReportsApi,
-  OfficesApi,
-  RunReportsApi,
-  Configuration,
-} from '@/fineract-api'
+import { ReportsApi, OfficesApi, RunReportsApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
@@ -62,13 +58,7 @@ const RunReports: React.FC = () => {
       try {
         setLoading(true)
 
-        const config = new Configuration({
-          accessToken: sessionStorage.getItem('mifosToken') || undefined,
-          basePath:
-            import.meta.env.VITE_FINERACT_API_URL || '/fineract-provider/api',
-          apiKey: 'default', // Required Fineract-Platform-TenantId header
-        })
-
+        const config = getConfiguration()
         const reportsApi = new ReportsApi(config)
         const officesApi = new OfficesApi(config)
 
@@ -117,21 +107,7 @@ const RunReports: React.FC = () => {
   const handleRunReport = async () => {
     try {
       setError(null)
-      const token = sessionStorage.getItem('mifosToken')
-
-      // Configuration must include explicit headers to satisfy Fineract security
-      const config = new Configuration({
-        basePath:
-          import.meta.env.VITE_FINERACT_API_URL || '/fineract-provider/api',
-        baseOptions: {
-          headers: {
-            'Fineract-Platform-TenantId': 'default', // Mandatory Header
-            Authorization: token ? `Basic ${token}` : undefined,
-          },
-        },
-      })
-
-      const runReportsApi = new RunReportsApi(config)
+      const runReportsApi = new RunReportsApi(getConfiguration())
       const exactReportName = reportName!.replace(/-/g, ' ')
 
       await runReportsApi.runReport(exactReportName, false, {
