@@ -15,6 +15,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { navActiveClassName } from '@/components/custom/navbar/nav-active'
@@ -35,6 +40,7 @@ interface DropdownProps {
   active?: boolean
   // Path of the option that matches the current page
   activePath?: string
+  tooltip?: string
 }
 
 const itemClassName =
@@ -47,6 +53,7 @@ const Dropdown = ({
   onSelect,
   active = false,
   activePath,
+  tooltip,
 }: DropdownProps) => {
   const navigate = useNavigate()
 
@@ -58,19 +65,32 @@ const Dropdown = ({
     }
   }
 
+  const trigger = (
+    <DropdownMenuTrigger asChild>
+      <Button
+        className={cn(
+          'flex items-center gap-2 px-4 py-2 text-base font-medium text-white bg-[#1074b9] hover:bg-[#0e6aa5] hover:text-white rounded-md transition duration-150',
+          active && navActiveClassName
+        )}
+        variant="ghost"
+      >
+        {name}
+      </Button>
+    </DropdownMenuTrigger>
+  )
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          className={cn(
-            'flex items-center gap-2 px-4 py-2 text-base font-medium text-white bg-[#1074b9] hover:bg-[#0e6aa5] hover:text-white rounded-md transition duration-150',
-            active && navActiveClassName
-          )}
-          variant="ghost"
-        >
-          {name}
-        </Button>
-      </DropdownMenuTrigger>
+      {tooltip ? (
+        <Tooltip>
+          <TooltipTrigger asChild aria-describedby={undefined}>
+            {trigger}
+          </TooltipTrigger>
+          <TooltipContent>{tooltip}</TooltipContent>
+        </Tooltip>
+      ) : (
+        trigger
+      )}
 
       <DropdownMenuContent
         className="w-44 mt-2 rounded-md border border-gray-200 bg-white"
