@@ -32,11 +32,16 @@ import { Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
-import { ClientSearchV2Api, type PageClientSearchData } from '@/fineract-api'
+import {
+  ClientApi,
+  ClientSearchV2Api,
+  type PageClientSearchData,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useTranslation } from 'react-i18next'
 
 const clientSearchApi = new ClientSearchV2Api(getConfiguration())
+const clientApi = new ClientApi(getConfiguration())
 
 /** Row shape returned by the search endpoint at runtime */
 interface ClientRow {
@@ -47,6 +52,38 @@ interface ClientRow {
   officeName?: string
   status?: { id?: number; value?: string }
 }
+
+/** Name fields returned by the client detail endpoint at runtime */
+interface ClientNameParts {
+  fullname?: string
+  firstname?: string
+  middlename?: string
+  lastname?: string
+}
+
+// Fineract leaves displayName empty when an entity client has no fullname,
+// so build the name from whichever name fields the client does have
+const buildName = (parts: ClientNameParts) =>
+  parts.fullname?.trim() ||
+  [parts.firstname, parts.middlename, parts.lastname]
+    .map(n => n?.trim())
+    .filter(Boolean)
+    .join(' ')
+
+// Fill in names for rows the search endpoint returned without one
+const fillMissingNames = (rows: ClientRow[]) =>
+  Promise.all(
+    rows.map(async row => {
+      if (row.displayName?.trim() || !row.id) return row
+      try {
+        const res = await clientApi.retrieveOne11(row.id)
+        const name = buildName(res.data as ClientNameParts)
+        return name ? { ...row, displayName: name } : row
+      } catch {
+        return row
+      }
+    })
+  )
 
 const Clients = () => {
   const navigate = useNavigate()
@@ -76,7 +113,9 @@ const Clients = () => {
         })
 
         const data: PageClientSearchData = res.data || {}
-        const content = (data.content ?? []) as unknown as ClientRow[]
+        const content = await fillMissingNames(
+          (data.content ?? []) as unknown as ClientRow[]
+        )
         const totalElements: number = data.totalElements ?? content.length
 
         if (!cancelled) {
@@ -225,13 +264,13 @@ const Clients = () => {
                 className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
               >
                 <TableCell className="px-6 py-4 font-medium">
-                  {c.displayName ?? '—'}
+                  {c.displayName?.trim() || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {c.accountNumber ?? '—'}
+                  {c.accountNumber?.trim() || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {c.externalId ?? '—'}
+                  {c.externalId?.trim() || '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {c?.status?.id === 300 && (
@@ -248,7 +287,7 @@ const Clients = () => {
                   )}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {c.officeName ?? '—'}
+                  {c.officeName?.trim() || '—'}
                 </TableCell>
               </TableRow>
             ))}
