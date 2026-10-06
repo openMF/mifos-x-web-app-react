@@ -14,6 +14,7 @@ import { Building2, Menu } from 'lucide-react'
 import { ClientApi, type GetClientsClientIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import {
   useEntityDatatables,
@@ -114,6 +115,8 @@ const ClientsView = () => {
             : []),
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       {/* Header */}
       <div className="bg-[#0e77b7] text-white p-6 mt-6 rounded-t-lg flex justify-between items-start relative">
