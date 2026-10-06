@@ -6,15 +6,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 const Foreclosure = () => {
+  const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Foreclosure' })
   const navigate = useNavigate()
-  const { groupId } = useParams()
 
   // form state
   const [transactionDate, setTransactionDate] = useState('')
@@ -42,14 +43,7 @@ const Foreclosure = () => {
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'GroupTest', href: `/groups/${groupId ?? ''}/general` },
-          { label: 'Foreclosure', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* form card */}
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">

@@ -101,7 +101,7 @@ const CreateSavingsAccount = () => {
               href: isGroup ? '/groups' : '/clients',
             },
             {
-              label: isGroup ? 'Group' : 'Client',
+              label: isGroup ? 'Group' : template?.clientName || 'Client',
               href: isGroup
                 ? `/groups/${id}/general`
                 : `/clients/${id}/general`,

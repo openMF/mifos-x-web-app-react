@@ -15,7 +15,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { useNavigate } from 'react-router-dom'
+import { cn } from '@/lib/utils'
+import { navActiveClassName } from '@/components/custom/navbar/nav-active'
 
 interface DropdownOption {
   label: string
@@ -29,9 +36,25 @@ interface DropdownProps {
   name: React.ReactNode
   options: DropdownOption[]
   onSelect?: (path?: string) => void
+  // Highlights the trigger, e.g. when the current page belongs to this menu
+  active?: boolean
+  // Path of the option that matches the current page
+  activePath?: string
+  tooltip?: string
 }
 
-const Dropdown = ({ name, options, onSelect }: DropdownProps) => {
+const itemClassName =
+  'cursor-pointer px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100'
+const activeItemClassName = 'bg-gray-100 text-[#1074b9]'
+
+const Dropdown = ({
+  name,
+  options,
+  onSelect,
+  active = false,
+  activePath,
+  tooltip,
+}: DropdownProps) => {
   const navigate = useNavigate()
 
   const handleSelect = (path?: string) => {
@@ -42,16 +65,32 @@ const Dropdown = ({ name, options, onSelect }: DropdownProps) => {
     }
   }
 
+  const trigger = (
+    <DropdownMenuTrigger asChild>
+      <Button
+        className={cn(
+          'flex items-center gap-2 px-4 py-2 text-base font-medium text-white bg-[#1074b9] hover:bg-[#0e6aa5] hover:text-white rounded-md transition duration-150',
+          active && navActiveClassName
+        )}
+        variant="ghost"
+      >
+        {name}
+      </Button>
+    </DropdownMenuTrigger>
+  )
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          className="flex items-center gap-2 px-4 py-2 text-base font-medium text-white bg-[#1074b9] hover:bg-[#0e6aa5] hover:text-white rounded-md transition duration-150"
-          variant="ghost"
-        >
-          {name}
-        </Button>
-      </DropdownMenuTrigger>
+      {tooltip ? (
+        <Tooltip>
+          <TooltipTrigger asChild aria-describedby={undefined}>
+            {trigger}
+          </TooltipTrigger>
+          <TooltipContent>{tooltip}</TooltipContent>
+        </Tooltip>
+      ) : (
+        trigger
+      )}
 
       <DropdownMenuContent
         className="w-44 mt-2 rounded-md border border-gray-200 bg-white"
@@ -69,7 +108,17 @@ const Dropdown = ({ name, options, onSelect }: DropdownProps) => {
                     key={i}
                     onClick={() => handleSelect(child.path)}
                     disabled={child.disabled}
-                    className="cursor-pointer px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100"
+                    aria-current={
+                      child.path && child.path === activePath
+                        ? 'page'
+                        : undefined
+                    }
+                    className={cn(
+                      itemClassName,
+                      child.path &&
+                        child.path === activePath &&
+                        activeItemClassName
+                    )}
                   >
                     {child.label}
                   </DropdownMenuItem>
@@ -81,7 +130,13 @@ const Dropdown = ({ name, options, onSelect }: DropdownProps) => {
               key={index}
               onClick={() => handleSelect(option.path)}
               disabled={option.disabled}
-              className="cursor-pointer px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100"
+              aria-current={
+                option.path && option.path === activePath ? 'page' : undefined
+              }
+              className={cn(
+                itemClassName,
+                option.path && option.path === activePath && activeItemClassName
+              )}
             >
               {option.label}
             </DropdownMenuItem>

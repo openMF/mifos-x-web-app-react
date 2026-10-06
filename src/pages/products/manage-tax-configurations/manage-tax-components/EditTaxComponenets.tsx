@@ -89,8 +89,16 @@ const EditTaxComponents = () => {
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
           {
+            label: 'Manage Tax Configurations',
+            href: '/products/tax-configurations',
+          },
+          {
             label: 'Tax Components',
             href: '/products/tax-configurations/tax-components',
+          },
+          {
+            label: taxComponent?.name || `${id}`,
+            href: `/products/tax-configurations/tax-components/${id}`,
           },
           { label: 'Edit', current: true },
         ]}

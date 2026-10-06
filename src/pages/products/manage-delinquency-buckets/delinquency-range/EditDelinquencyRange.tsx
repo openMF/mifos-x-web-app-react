@@ -30,6 +30,7 @@ const EditDelinquencyRange = () => {
     daysFrom: '',
     daysTo: '',
   })
+  const [rangeName, setRangeName] = useState('') // saved name for breadcrumb
 
   useEffect(() => {
     // Fetch existing delinquency range details for pre-filling form
@@ -41,6 +42,7 @@ const EditDelinquencyRange = () => {
           daysFrom: String(res.data.minimumAgeDays ?? ''),
           daysTo: String(res.data.maximumAgeDays ?? ''),
         })
+        setRangeName(res.data.classification ?? '')
       } catch (err) {
         console.error('Failed to fetch delinquency range', err)
       }
@@ -90,6 +92,10 @@ const EditDelinquencyRange = () => {
           {
             label: 'Delinquency Ranges',
             href: '/products/delinquency-bucket-configurations/ranges',
+          },
+          {
+            label: rangeName || `${id}`,
+            href: `/products/delinquency-bucket-configurations/ranges/${id}`,
           },
           { label: 'Edit', current: true },
         ]}

@@ -7,15 +7,12 @@
  */
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import {
-  ReportsApi,
-  OfficesApi,
-  RunReportsApi,
-  Configuration,
-} from '@/fineract-api'
+import { ReportsApi, OfficesApi, RunReportsApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -43,6 +40,7 @@ interface BasicReport {
   id: number
   reportName?: string
   name?: string
+  reportCategory?: string
 }
 
 const RunReports: React.FC = () => {
@@ -52,6 +50,7 @@ const RunReports: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, string>>({})
+  const [reportCategory, setReportCategory] = useState<string | undefined>()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,13 +58,7 @@ const RunReports: React.FC = () => {
       try {
         setLoading(true)
 
-        const config = new Configuration({
-          accessToken: sessionStorage.getItem('mifosToken') || undefined,
-          basePath:
-            import.meta.env.VITE_FINERACT_API_URL || '/fineract-provider/api',
-          apiKey: 'default', // Required Fineract-Platform-TenantId header
-        })
-
+        const config = getConfiguration()
         const reportsApi = new ReportsApi(config)
         const officesApi = new OfficesApi(config)
 
@@ -95,6 +88,7 @@ const RunReports: React.FC = () => {
           officesApi.retrieveOffices(undefined, undefined, undefined, {}),
         ])
 
+        setReportCategory(matchedReport.reportCategory)
         setReportData(reportRes.data as ReportMetadata)
         setOffices(officeRes.data as Office[])
       } catch (_err) {
@@ -113,21 +107,7 @@ const RunReports: React.FC = () => {
   const handleRunReport = async () => {
     try {
       setError(null)
-      const token = sessionStorage.getItem('mifosToken')
-
-      // Configuration must include explicit headers to satisfy Fineract security
-      const config = new Configuration({
-        basePath:
-          import.meta.env.VITE_FINERACT_API_URL || '/fineract-provider/api',
-        baseOptions: {
-          headers: {
-            'Fineract-Platform-TenantId': 'default', // Mandatory Header
-            Authorization: token ? `Basic ${token}` : undefined,
-          },
-        },
-      })
-
-      const runReportsApi = new RunReportsApi(config)
+      const runReportsApi = new RunReportsApi(getConfiguration())
       const exactReportName = reportName!.replace(/-/g, ' ')
 
       await runReportsApi.runReport(exactReportName, false, {
@@ -184,6 +164,21 @@ const RunReports: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      <AppBreadCrumbs
+        items={[
+          { label: 'Home', href: '/home' },
+          { label: 'Reports', href: '/reports' },
+          ...(reportCategory
+            ? [
+                {
+                  label: reportCategory,
+                  href: `/reports/${reportCategory.toLowerCase()}`,
+                },
+              ]
+            : []),
+          { label: reportName?.replace(/-/g, ' ') ?? '' },
+        ]}
+      />
       <Link
         to="/reports"
         className="flex items-center text-zinc-500 mb-4 hover:text-black"

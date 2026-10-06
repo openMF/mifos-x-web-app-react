@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { Building2, Menu } from 'lucide-react'
@@ -15,17 +15,68 @@ import { ClientApi, type GetClientsClientIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import {
+  useEntityDatatables,
+  type EntityDatatable,
+} from '@/components/datatables/useEntityDatatables'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from '@/lib/date-utils'
+import { isLegalEntity } from './general-data-tab/generalDataUtils'
 
 const clientsApi = new ClientApi(getConfiguration())
 
+/** Fineract sends the client's legal form; the generated type leaves it out. */
+type ClientWithLegalForm = GetClientsClientIdResponse & {
+  legalForm?: { id?: number } | null
+}
+
+/** Fineract's legal form id for a person; any other legal form is an entity. */
+const LEGAL_FORM_PERSON = 1
+
+/**
+ * The data tables that apply to this client. A client data table can be
+ * limited to persons or to entities, and is then hidden for the other kind, as
+ * in the Angular web app. Until the client has loaded only the unrestricted
+ * tables are listed, so a tab cannot appear and then vanish.
+ */
+const datatablesForClient = (
+  datatables: EntityDatatable[],
+  client?: ClientWithLegalForm
+): EntityDatatable[] => {
+  if (!client) return datatables.filter(table => !table.entitySubType)
+  const legalFormId = client.legalForm?.id
+  // A client without a legal form sees every table, as in the Angular app.
+  if (!legalFormId) return datatables
+  const subtype = legalFormId === LEGAL_FORM_PERSON ? 'person' : 'entity'
+  return datatables.filter(
+    table =>
+      !table.entitySubType || table.entitySubType.toLowerCase() === subtype
+  )
+}
+
 const ClientsView = () => {
   const { id } = useParams()
-  const [client, setClient] = useState<GetClientsClientIdResponse>()
+  const [client, setClient] = useState<ClientWithLegalForm>()
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+  const datatables = useEntityDatatables('m_client')
+  const { pathname } = useLocation()
+
+  // Derive the active tab from the URL segment after /clients/:id
+  const [tabSegment, subSegment] = pathname
+    .split(`/clients/${id}/`)[1]
+    ?.split('/') ?? ['', '']
+  const tabLabels: Record<string, string> = {
+    general: t('view.tabs.general'),
+    'general-data': t('view.tabs.generalData'),
+    address: t('view.tabs.address'),
+    'family-members': t('view.tabs.familyMembers'),
+    identities: t('view.tabs.identities'),
+    documents: t('view.tabs.documents'),
+    notes: t('view.tabs.notes'),
+  }
+  const activeTabLabel = tabLabels[tabSegment ?? '']
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -46,8 +97,21 @@ const ClientsView = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/clients' },
-          { label: String(client?.displayName), href: `/clients/${id}` },
-          { label: t('view.tabs.general'), current: true },
+          {
+            label: client?.displayName ?? '',
+            href: `/clients/${id}/general`,
+          },
+          ...(activeTabLabel
+            ? [
+                {
+                  label: activeTabLabel,
+                  href: `/clients/${id}/${tabSegment}`,
+                },
+              ]
+            : []),
+          ...(tabSegment === 'family-members' && subSegment === 'add'
+            ? [{ label: t('familyMembers.addButton') }]
+            : []),
         ]}
       />
 
@@ -232,6 +296,15 @@ const ClientsView = () => {
             label: t('view.tabs.general'),
             href: `clients/${client?.id}/general`,
           },
+          // Only legal entities have the KYC data this tab shows.
+          ...(isLegalEntity(client)
+            ? [
+                {
+                  label: t('view.tabs.generalData'),
+                  href: `clients/${client?.id}/general-data`,
+                },
+              ]
+            : []),
           {
             label: t('view.tabs.address'),
             href: `clients/${client?.id}/address`,
@@ -249,6 +322,12 @@ const ClientsView = () => {
             href: `clients/${client?.id}/documents`,
           },
           { label: t('view.tabs.notes'), href: `clients/${client?.id}/notes` },
+          // Built from the route id: the registrations can arrive before the
+          // client does, and `client?.id` would put `undefined` in the link.
+          ...datatablesForClient(datatables, client).map(datatable => ({
+            label: datatable.label,
+            href: `clients/${id}/datatables/${encodeURIComponent(datatable.name)}`,
+          })),
         ]}
       />
 

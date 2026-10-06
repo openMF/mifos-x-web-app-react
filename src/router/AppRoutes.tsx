@@ -9,7 +9,7 @@ import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
 import Callback from '@/pages/login/Callback'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
 import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
@@ -211,7 +211,11 @@ import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsG
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
 import ClientsDocumentsTab from '@/pages/clients/clients-view/documents-tab/ClientsDocumentsTab'
+import ClientDatatableTab from '@/pages/clients/clients-view/datatables-tab/ClientDatatableTab'
+import LoanDatatableTab from '@/pages/loans/loans-view/datatables-tab/LoanDatatableTab'
+import GroupDatatableTab from '@/pages/groups/groups-view/datatables-tab/GroupDatatableTab'
 import ClientsIdentitiesTab from '@/pages/clients/clients-view/Identities-tab/ClientsidentitiesTab'
+import ClientsGeneralDataTab from '@/pages/clients/clients-view/general-data-tab/ClientsGeneralDataTab'
 import ClientsAddressTab from '@/pages/clients/clients-view/address-tab/ClientsAddressTab'
 import UndoApprovalSharesAccount from '@/pages/shares/shares-account-actions/undo-approval-shares-account/UndoApprovalSharesAccount'
 import SharesAccountView from '@/pages/shares/shares-account-view/SharesAccountView'
@@ -377,6 +381,7 @@ const AppRoutes = () => {
             path="/checker-inbox-and-tasks"
             element={<CheckerInBoxAndTasks />}
           >
+            <Route index element={<Navigate to="checker-inbox" replace />} />
             <Route path="checker-inbox" element={<CheckerInboxContent />} />
             <Route path="client-approval" element={<ClientApproval />} />
             <Route path="loan-approval" element={<LoanApproval />} />
@@ -722,7 +727,7 @@ const AppRoutes = () => {
             element={<AccountNumberPreferences />}
           />
           <Route
-            path="//system/account-number-preferences/create"
+            path="/system/account-number-preferences/create"
             element={<CreateAccountNumberPreferences />}
           />
           <Route
@@ -758,6 +763,7 @@ const AppRoutes = () => {
           <Route path="/clients/create" element={<CreateClients />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
+            <Route path="general-data" element={<ClientsGeneralDataTab />} />
             <Route path="notes" element={<ClientNotesTab />} />
             <Route path="address" element={<ClientsAddressTab />} />
             <Route
@@ -767,6 +773,10 @@ const AppRoutes = () => {
               <Route path="add" element={<ClientsFamilyMembersAddTab />} />
             </Route>
             <Route path="documents" element={<ClientsDocumentsTab />} />
+            <Route
+              path="datatables/:datatableName"
+              element={<ClientDatatableTab />}
+            />
             <Route path="identities" element={<ClientsIdentitiesTab />} />
           </Route>
           <Route path="/clients/:id/edit" element={<EditClients />} />
@@ -992,6 +1002,10 @@ const AppRoutes = () => {
             <Route path="general" element={<GroupsGeneralTab />} />
             <Route path="notes" element={<GroupsNotesTab />} />
             <Route path="committee" element={<GroupsCommitteeTab />}></Route>
+            <Route
+              path="datatables/:datatableName"
+              element={<GroupDatatableTab />}
+            />
           </Route>
           <Route
             path="/groups/:id/committee/add-role"
@@ -1251,6 +1265,10 @@ const AppRoutes = () => {
             />
             <Route path="loan-documents" element={<LoansDocumentsTab />} />
             <Route path="notes" element={<LoansNotesTab />} />
+            <Route
+              path="datatables/:datatableName"
+              element={<LoanDatatableTab />}
+            />
           </Route>
         </Route>
       </Route>

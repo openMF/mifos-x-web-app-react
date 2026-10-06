@@ -96,7 +96,7 @@ const ChartOfAccounts = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Accounting' },
+          { label: 'Accounting', href: '/accounting' },
           { label: 'Chart of Accounts', current: true },
         ]}
       />

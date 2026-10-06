@@ -29,12 +29,29 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { ReportsApi, type GetReportsResponse } from '@/fineract-api'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const reportsApi = new ReportsApi(getConfiguration())
 
 const Reports = () => {
   const { category } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation([
+    'common',
+    'clients',
+    'loans',
+    'organization',
+    'accounting',
+  ])
+
+  const categoryLabels: Record<string, string> = {
+    client: t('clients:title'),
+    loan: t('loans:title'),
+    savings: t('loans:savings'),
+    fund: t('organization:nav.funds'),
+    accounting: t('accounting:title'),
+  }
+  const categoryLabel = category ? categoryLabels[category] : undefined
 
   const [reports, setReports] = useState<GetReportsResponse[]>([])
   const [search, setSearch] = useState('')
@@ -87,12 +104,15 @@ const Reports = () => {
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Reports', current: true },
+          { label: t('common:nav.home'), href: '/home' },
+          { label: t('common:nav.reports'), href: '/reports' },
+          ...(categoryLabel ? [{ label: categoryLabel }] : []),
         ]}
       />
 
-      <h2 className="text-2xl font-semibold mb-6">Reports</h2>
+      <h2 className="text-2xl font-semibold mb-6">
+        {categoryLabel ?? t('common:nav.reports')}
+      </h2>
 
       {/* Search + Pagination Controls */}
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">

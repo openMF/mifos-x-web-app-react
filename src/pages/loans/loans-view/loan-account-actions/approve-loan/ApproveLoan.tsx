@@ -8,11 +8,13 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 const ApproveLoan = () => {
+  const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Approve' })
   const navigate = useNavigate()
   const { loanId } = useParams()
 
@@ -49,14 +51,7 @@ const ApproveLoan = () => {
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       {/* breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Clients', href: '/clients' },
-          { label: 'NewTest test', href: `/clients/${loanId}/general` },
-          { label: 'Approve', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* form card */}
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto mt-6">

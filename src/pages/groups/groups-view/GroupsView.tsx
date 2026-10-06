@@ -8,6 +8,7 @@
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
 import { GroupsApi } from '@/fineract-api'
 import type { ExtendedGroupResponse } from '@/pages/groups/types'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -16,7 +17,7 @@ import { faCircle, faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
@@ -53,7 +54,9 @@ const GroupsView = () => {
   const { id } = useParams()
   const { t, i18n } = useTranslation('groups')
   const { t: tc } = useTranslation('common')
+  const { pathname } = useLocation()
   const [group, setGroup] = useState<ExtendedGroupResponse>()
+  const datatables = useEntityDatatables('m_group')
 
   useEffect(() => {
     ;(async () => {
@@ -203,6 +206,16 @@ const GroupsView = () => {
   // status value for tooltip + color
   const statusVal = group?.status?.value
 
+  // Derive the active tab from the URL segment after /groups/:id
+  const tabSegment = pathname.split(`/groups/${id}/`)[1]?.split('/')[0] ?? ''
+  const activeTabLabel = (
+    {
+      general: t('view.tabs.general'),
+      notes: t('view.tabs.notes'),
+      committee: t('view.tabs.committee'),
+    } as Record<string, string>
+  )[tabSegment]
+
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <AppBreadCrumbs
@@ -211,9 +224,9 @@ const GroupsView = () => {
           { label: t('title'), href: '/groups' },
           {
             label: `${group?.name ?? ''}`,
-            href: `/groups/${group?.id}/general`,
+            href: `/groups/${id}/general`,
           },
-          { label: t('view.tabs.general'), current: true },
+          ...(activeTabLabel ? [{ label: activeTabLabel }] : []),
         ]}
       />
 
@@ -278,6 +291,12 @@ const GroupsView = () => {
             label: t('view.tabs.committee'),
             href: `groups/${group?.id}/committee`,
           },
+          // Built from the route id: the registrations can arrive before the
+          // group does, and `group?.id` would put `undefined` in the link.
+          ...datatables.map(datatable => ({
+            label: datatable.label,
+            href: `groups/${id}/datatables/${encodeURIComponent(datatable.name)}`,
+          })),
         ]}
       />
 
