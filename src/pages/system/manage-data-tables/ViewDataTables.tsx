@@ -35,6 +35,7 @@ import {
   type ResultsetColumnHeaderData,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { isJsonColumn } from '@/lib/datatable-json'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
@@ -187,7 +188,17 @@ const ViewDataTables = () => {
                   {c.columnName ?? ''}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(c.columnType ?? '').toUpperCase()}
+                  {isJsonColumn(c) ? (
+                    // A JSON column is reported with a TEXT display type, so
+                    // the raw type is the only thing that names it. Calling it
+                    // out here saves reading the schema to find out which text
+                    // columns hold documents.
+                    <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                      JSON
+                    </span>
+                  ) : (
+                    String(c.columnType ?? '').toUpperCase()
+                  )}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {c.columnLength ?? 0}

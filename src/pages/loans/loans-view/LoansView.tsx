@@ -12,6 +12,7 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
 
 import type {
   GetLoansLoanIdResponse,
@@ -409,6 +410,8 @@ const LoansView = () => {
     accountLabel: loan?.accountNo,
   })
 
+  const datatables = useEntityDatatables('m_loan')
+
   // build actions + tabs
   const actions = loan ? buildLoanMenu(loan, groupId, loanId) : []
   const base = `groups/${groupId}/loans-accounts/${loanId}`
@@ -421,6 +424,10 @@ const LoansView = () => {
     { label: 'Term Variations', href: `${base}/term-variations` },
     { label: 'Loan Documents', href: `${base}/loan-documents` },
     { label: 'Notes', href: `${base}/notes` },
+    ...datatables.map(datatable => ({
+      label: datatable.label,
+      href: `${base}/datatables/${encodeURIComponent(datatable.name)}`,
+    })),
   ]
 
   return (
