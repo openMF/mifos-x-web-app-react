@@ -28,6 +28,7 @@
     "no": "No"
   },
   "accessibility": {
+    "toggleSidebar": "Toggle sidebar",
     "openNavigationMenu": "Open navigation menu",
     "notifications": "Notifications",
     "switchToDarkTheme": "Switch to dark theme",

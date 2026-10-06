@@ -16,12 +16,16 @@ import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { format } from 'date-fns'
 
+import EntityDatatableTab from '@/components/datatables/EntityDatatableTab'
+import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
+
 const officesApi = new OfficesApi(getConfiguration())
 
 const ViewOffices = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [office, setOffice] = useState<GetOfficesResponse>()
+  const datatables = useEntityDatatables('m_office')
 
   // fetch office details
   useEffect(() => {
@@ -90,6 +94,24 @@ const ViewOffices = () => {
           <div className="font-medium">External Id</div>
           <div>{office.externalId || '—'}</div>
         </div>
+
+        {/*
+          Rendered inline rather than as a tab: this page has no tab bar or
+          outlet of its own, and giving it one to hang the data tables off
+          would rework the office view for no gain here.
+        */}
+        {datatables.length > 0 && (
+          <div className="mt-10 flex flex-col gap-8 border-t border-zinc-200 dark:border-zinc-700 pt-8">
+            {datatables.map(datatable => (
+              <EntityDatatableTab
+                key={datatable.name}
+                entityId={office.id}
+                datatableName={datatable.name}
+                heading={datatable.label}
+              />
+            ))}
+          </div>
+        )}
 
         {/* back button */}
         <div className="flex justify-center mt-8">
