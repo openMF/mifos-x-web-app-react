@@ -33,7 +33,10 @@
     "notifications": "Notifications",
     "switchToDarkTheme": "Passer au thème sombre",
     "switchToLightTheme": "Passer au thème clair",
-    "userMenu": "Menu utilisateur"
+    "userMenu": "Menu utilisateur",
+    "openSearch": "Ouvrir la recherche",
+    "closeSearch": "Fermer la recherche",
+    "searchQuery": "Rechercher des clients, des groupes et des comptes"
   },
   "countries": {
     "AD": "Andorre",
@@ -529,5 +532,22 @@
     "savingsAccounts": "Comptes d'épargne",
     "shareAccounts": "Comptes de parts",
     "groupMemberships": "Adhésions aux groupes"
+  },
+  "search": {
+    "enterQuery": "Saisissez un terme dans la barre de navigation pour trouver des clients, des groupes, des centres et des comptes.",
+    "noResultsHint": "Recherchez par nom, numéro de compte ou identifiant externe. Les noms doivent parfois respecter les majuscules utilisées lors de leur enregistrement, par exemple « Ada » au lieu de « ada ».",
+    "parent": "Parent",
+    "placeholder": "Rechercher...",
+    "resultsFor": "Résultats de recherche pour « {{query}} »",
+    "title": "Recherche",
+    "types": {
+      "center": "Centre",
+      "client": "Client",
+      "clientIdentifier": "Pièce d’identité du client",
+      "group": "Groupe",
+      "loan": "Prêt",
+      "saving": "Épargne",
+      "share": "Parts sociales"
+    }
   }
 }
