@@ -33,7 +33,10 @@
     "notifications": "Notifications",
     "switchToDarkTheme": "Passer au thème sombre",
     "switchToLightTheme": "Passer au thème clair",
-    "userMenu": "Menu utilisateur"
+    "userMenu": "Menu utilisateur",
+    "openSearch": "Ouvrir la recherche",
+    "closeSearch": "Fermer la recherche",
+    "searchQuery": "Rechercher des clients, des groupes et des comptes"
   },
   "countries": {
     "AD": "Andorre",
@@ -402,7 +405,11 @@
     "selectFormat": "Sélectionner le format",
     "selectDecimals": "Sélectionner les décimales",
     "chooseFont": "Choisir une police",
-    "noActivitiesFound": "Aucune activité correspondante"
+    "noActivitiesFound": "Aucune activité correspondante",
+    "noOptions": "Aucune option disponible",
+    "noStaffForOffice": "Aucun employé trouvé pour cette agence",
+    "selectOfficeFirst": "Sélectionnez d'abord une agence",
+    "staffLoadFailed": "Impossible de charger les employés de cette agence"
   },
   "activities": {
     "dashboard": "Tableau de bord",
@@ -525,5 +532,22 @@
     "savingsAccounts": "Comptes d'épargne",
     "shareAccounts": "Comptes de parts",
     "groupMemberships": "Adhésions aux groupes"
+  },
+  "search": {
+    "enterQuery": "Saisissez un terme dans la barre de navigation pour trouver des clients, des groupes, des centres et des comptes.",
+    "noResultsHint": "Recherchez par nom, numéro de compte ou identifiant externe. Les noms doivent parfois respecter les majuscules utilisées lors de leur enregistrement, par exemple « Ada » au lieu de « ada ».",
+    "parent": "Parent",
+    "placeholder": "Rechercher...",
+    "resultsFor": "Résultats de recherche pour « {{query}} »",
+    "title": "Recherche",
+    "types": {
+      "center": "Centre",
+      "client": "Client",
+      "clientIdentifier": "Pièce d’identité du client",
+      "group": "Groupe",
+      "loan": "Prêt",
+      "saving": "Épargne",
+      "share": "Parts sociales"
+    }
   }
 }
