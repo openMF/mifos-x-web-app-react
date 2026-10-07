@@ -402,7 +402,11 @@
     "selectFormat": "Select format",
     "selectDecimals": "Select decimals",
     "chooseFont": "Choose font",
-    "noActivitiesFound": "No matching activities"
+    "noActivitiesFound": "No matching activities",
+    "noOptions": "No options available",
+    "noStaffForOffice": "No staff found for this office",
+    "selectOfficeFirst": "Select an office first",
+    "staffLoadFailed": "Could not load staff for this office"
   },
   "activities": {
     "dashboard": "Dashboard",
