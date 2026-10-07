@@ -5,6 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { useTranslation } from 'react-i18next'
+
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -22,6 +24,7 @@ interface SelectProps {
   selectPlaceholder: string
   selectOptions: { id: number | string; name: string }[]
   selectClassname?: string
+  selectEmptyMessage?: string
 }
 
 const AppSelect = ({
@@ -31,7 +34,10 @@ const AppSelect = ({
   selectPlaceholder,
   selectOptions,
   selectClassname = 'w-full md:w-[48%] space-y-2',
+  selectEmptyMessage,
 }: SelectProps) => {
+  const { t } = useTranslation('common')
+
   return (
     <div className={`${selectClassname}`}>
       <Label>{selectLabel}</Label>
@@ -40,13 +46,19 @@ const AppSelect = ({
           <SelectValue placeholder={selectPlaceholder} />
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
-            {selectOptions.map(opt => (
-              <SelectItem key={opt.id} value={opt.id.toString()}>
-                {opt.name}
-              </SelectItem>
-            ))}
-          </SelectGroup>
+          {selectOptions.length === 0 ? (
+            <p className="text-muted-foreground px-2 py-1.5 text-sm">
+              {selectEmptyMessage ?? t('ui.noOptions')}
+            </p>
+          ) : (
+            <SelectGroup>
+              {selectOptions.map(opt => (
+                <SelectItem key={opt.id} value={opt.id.toString()}>
+                  {opt.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          )}
         </SelectContent>
       </Select>
     </div>

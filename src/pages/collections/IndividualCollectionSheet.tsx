@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -34,9 +35,13 @@ const collectionSheetApi = new CollectionSheetApi(getConfiguration())
 
 const IndividualCollectionSheet = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('common')
 
   const [offices, setOffices] = useState<GetOfficesResponse[] | null>(null)
   const [staff, setStaff] = useState<StaffData[] | null>(null)
+  const [staffStatus, setStaffStatus] = useState<
+    'idle' | 'loading' | 'loaded' | 'error'
+  >('idle')
   const [_collectionSheet, setCollectionSheet] =
     useState<PostCollectionSheetResponse | null>(null) // Reserved for future use
 
@@ -60,13 +65,24 @@ const IndividualCollectionSheet = () => {
   }, [])
 
   const fetchStaff = async (officeId: string) => {
+    setStaff(null)
+    setStaffStatus('loading')
     try {
       const res = await staffApi.retrieveAll16(Number(officeId))
       setStaff(res.data)
+      setStaffStatus('loaded')
     } catch (err) {
       console.error('Failed to fetch staff', err)
+      setStaffStatus('error')
     }
   }
+
+  const staffEmptyMessage = {
+    idle: t('ui.selectOfficeFirst'),
+    loading: t('ui.loading'),
+    loaded: t('ui.noStaffForOffice'),
+    error: t('ui.staffLoadFailed'),
+  }[staffStatus]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -153,6 +169,7 @@ const IndividualCollectionSheet = () => {
                   setFormData(prev => ({ ...prev, staff: value }))
                 }
                 selectPlaceholder="Select Staff"
+                selectEmptyMessage={staffEmptyMessage}
                 selectOptions={(staff || [])
                   .filter(option => option.id !== undefined)
                   .map(option => ({

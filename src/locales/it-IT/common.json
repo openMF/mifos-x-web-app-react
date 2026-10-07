@@ -402,7 +402,11 @@
     "selectFormat": "Seleziona formato",
     "selectDecimals": "Seleziona decimali",
     "chooseFont": "Scegli carattere",
-    "noActivitiesFound": "Nessuna attività corrispondente"
+    "noActivitiesFound": "Nessuna attività corrispondente",
+    "noOptions": "Nessuna opzione disponibile",
+    "noStaffForOffice": "Nessun dipendente trovato per questo ufficio",
+    "selectOfficeFirst": "Seleziona prima un ufficio",
+    "staffLoadFailed": "Impossibile caricare i dipendenti di questo ufficio"
   },
   "activities": {
     "dashboard": "Cruscotto",
