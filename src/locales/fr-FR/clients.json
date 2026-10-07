@@ -12,6 +12,7 @@
   "errors": {
     "failedApproveClients": "Échec de l'approbation d'un ou plusieurs clients.",
     "failedLoadCenters": "Échec du chargement des centres. Veuillez réessayer.",
+    "failedLoadClients": "Échec du chargement des clients. Veuillez réessayer.",
     "failedLoadGroups": "Échec du chargement des groupes. Veuillez réessayer.",
     "noClientsSelected": "Aucun client sélectionné pour approbation."
   },
