@@ -405,7 +405,11 @@
     "selectFormat": "Sélectionner le format",
     "selectDecimals": "Sélectionner les décimales",
     "chooseFont": "Choisir une police",
-    "noActivitiesFound": "Aucune activité correspondante"
+    "noActivitiesFound": "Aucune activité correspondante",
+    "noOptions": "Aucune option disponible",
+    "noStaffForOffice": "Aucun employé trouvé pour cette agence",
+    "selectOfficeFirst": "Sélectionnez d'abord une agence",
+    "staffLoadFailed": "Impossible de charger les employés de cette agence"
   },
   "activities": {
     "dashboard": "Tableau de bord",

@@ -405,7 +405,11 @@
     "selectFormat": "Seleccionar formato",
     "selectDecimals": "Seleccionar decimales",
     "chooseFont": "Elegir fuente",
-    "noActivitiesFound": "No hay actividades coincidentes"
+    "noActivitiesFound": "No hay actividades coincidentes",
+    "noOptions": "No hay opciones disponibles",
+    "noStaffForOffice": "No se encontró personal para esta oficina",
+    "selectOfficeFirst": "Seleccione primero una oficina",
+    "staffLoadFailed": "No se pudo cargar el personal de esta oficina"
   },
   "activities": {
     "dashboard": "Panel",
