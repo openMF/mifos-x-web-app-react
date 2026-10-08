@@ -29,6 +29,7 @@ import LoanDisbursal from '@/pages/tasks/checker-inbox-and-tasks-tabs/loan-disbu
 import RescheduleLoan from '@/pages/tasks/checker-inbox-and-tasks-tabs/reschedule-loan/RescheduleLoan'
 import Profile from '@/pages/profile/Profile'
 import NotFound from '@/pages/not-found/NotFound'
+import SearchResults from '@/pages/search/SearchResults'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
 import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
@@ -259,6 +260,9 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           {/* Home Route */}
           <Route path="/home" element={<Home />} />
+
+          {/* Search Route */}
+          <Route path="/search" element={<SearchResults />} />
 
           {/* Accounting */}
           <Route path="/accounting" element={<Accounting />} />
