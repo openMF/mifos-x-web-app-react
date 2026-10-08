@@ -51,6 +51,11 @@ import Users from '@/pages/users/Users'
 import ViewUsers from '@/pages/users/ViewUsers'
 import CreateUsers from '@/pages/users/CreateUsers'
 import EditUsers from '@/pages/users/EditUsers'
+import OidcUsers from '@/pages/users/oidc/OidcUsers'
+import OidcViewUser from '@/pages/users/oidc/OidcViewUser'
+import OidcCreateUser from '@/pages/users/oidc/OidcCreateUser'
+import OidcEditUser from '@/pages/users/oidc/OidcEditUser'
+import { isOidcUsable } from '@/lib/oidc-config'
 import Templates from '@/pages/templates/Templates'
 import Organization from '@/pages/organization/Organization'
 import Offices from '@/pages/organization/offices/Offices'
@@ -396,10 +401,24 @@ const AppRoutes = () => {
           {/* Admin Routes */}
 
           {/* User */}
-          <Route path="/appusers" element={<Users />} />
-          <Route path="/appusers/:id" element={<ViewUsers />} />
-          <Route path="/appusers/create" element={<CreateUsers />} />
-          <Route path="/appusers/:id/edit" element={<EditUsers />} />
+          {/* With OIDC the identity provider owns users, so the whole set of
+              user pages is swapped for ones that go through the security
+              plugin, as the Angular client does. */}
+          {isOidcUsable() ? (
+            <>
+              <Route path="/appusers" element={<OidcUsers />} />
+              <Route path="/appusers/:id" element={<OidcViewUser />} />
+              <Route path="/appusers/create" element={<OidcCreateUser />} />
+              <Route path="/appusers/:id/edit" element={<OidcEditUser />} />
+            </>
+          ) : (
+            <>
+              <Route path="/appusers" element={<Users />} />
+              <Route path="/appusers/:id" element={<ViewUsers />} />
+              <Route path="/appusers/create" element={<CreateUsers />} />
+              <Route path="/appusers/:id/edit" element={<EditUsers />} />
+            </>
+          )}
 
           {/* Templates */}
           <Route path="/templates" element={<Templates />} />
