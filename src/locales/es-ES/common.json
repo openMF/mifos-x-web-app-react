@@ -475,8 +475,10 @@
     "externalEvents": "Eventos externos"
   },
   "dashboard": {
+    "overviewDescription": "Consulta la actividad de la cartera y los cobros por oficina.",
+    "charts": "Gráficos de cartera",
     "clientTrends": "Tendencias de clientes",
-    "trackClientOnboarding": "Seguimiento de incorporación de clientes",
+    "clientTrendsDescription": "Compara las nuevas incorporaciones de clientes y los desembolsos de préstamos a lo largo del tiempo.",
     "timescale": "Escala de tiempo",
     "day": "Día",
     "week": "Semana",
@@ -484,11 +486,25 @@
     "newClients": "Nuevos clientes",
     "loansDisbursed": "Préstamos desembolsados",
     "amountPendingDisbursed": "Monto pendiente / desembolsado",
+    "awaitingDisbursement": "Pendiente de desembolso",
+    "disbursed": "Desembolsado",
+    "amountPendingDescription": "Consulta los montos pendientes de desembolso y los ya desembolsados.",
     "amountCollected": "Monto cobrado",
+    "amountDue": "Monto adeudado",
+    "amountPaid": "Monto cobrado",
+    "amountCollectedDescription": "Compara la demanda con los cobros de la oficina seleccionada.",
     "selectOfficeToView": "Seleccione una oficina para ver el gráfico",
     "value": "Valor",
     "noPendingDisbursed": "No se encontraron montos pendientes o desembolsados (todos los valores son 0).",
-    "noCollectedAmounts": "No se encontraron montos cobrados (todos los valores son 0)."
+    "noCollectedAmounts": "No se encontraron montos cobrados (todos los valores son 0).",
+    "disbursements": "Desembolsos",
+    "collections": "Cobros",
+    "reportAmounts": "Montos del informe",
+    "loading": "Cargando informe",
+    "loadError": "No se pudo cargar este informe.",
+    "retry": "Reintentar",
+    "noReportData": "No hay datos para esta oficina.",
+    "periodNote": "Número de clientes y préstamos en los 12 períodos mostrados."
   },
   "navigation": {
     "associatedOfficers": "Oficiales asociados",

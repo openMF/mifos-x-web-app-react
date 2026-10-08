@@ -475,8 +475,10 @@
     "externalEvents": "External Events"
   },
   "dashboard": {
+    "overviewDescription": "Review portfolio activity and collections by office.",
+    "charts": "Portfolio charts",
     "clientTrends": "Client Trends",
-    "trackClientOnboarding": "Track client onboarding",
+    "clientTrendsDescription": "Compare new client onboarding and loan disbursements over time.",
     "timescale": "Timescale",
     "day": "Day",
     "week": "Week",
@@ -484,11 +486,25 @@
     "newClients": "New Clients",
     "loansDisbursed": "Loans Disbursed",
     "amountPendingDisbursed": "Amount Pending / Disbursed",
+    "awaitingDisbursement": "Awaiting disbursement",
+    "disbursed": "Disbursed",
+    "amountPendingDescription": "See how much is awaiting disbursement and how much has been disbursed.",
     "amountCollected": "Amount Collected",
+    "amountDue": "Amount due",
+    "amountPaid": "Amount collected",
+    "amountCollectedDescription": "Compare demand with collections for the selected office.",
     "selectOfficeToView": "Select an office to view the chart",
     "value": "Value",
     "noPendingDisbursed": "No pending or disbursed amounts found (all values are 0).",
-    "noCollectedAmounts": "No collected amounts found (all values are 0)."
+    "noCollectedAmounts": "No collected amounts found (all values are 0).",
+    "disbursements": "Disbursements",
+    "collections": "Collections",
+    "reportAmounts": "Report amounts",
+    "loading": "Loading report",
+    "loadError": "This report could not be loaded.",
+    "retry": "Try again",
+    "noReportData": "No report data for this office.",
+    "periodNote": "Client and loan counts across the 12 displayed periods."
   },
   "navigation": {
     "associatedOfficers": "Associated Officers",

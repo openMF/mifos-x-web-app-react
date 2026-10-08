@@ -475,8 +475,10 @@
     "externalEvents": "Événements externes"
   },
   "dashboard": {
+    "overviewDescription": "Consultez l’activité du portefeuille et les encaissements par agence.",
+    "charts": "Graphiques du portefeuille",
     "clientTrends": "Tendances des clients",
-    "trackClientOnboarding": "Suivre l'intégration des clients",
+    "clientTrendsDescription": "Comparez les nouveaux clients et les prêts décaissés au fil du temps.",
     "timescale": "Échelle de temps",
     "day": "Jour",
     "week": "Semaine",
@@ -484,11 +486,25 @@
     "newClients": "Nouveaux clients",
     "loansDisbursed": "Prêts décaissés",
     "amountPendingDisbursed": "Montant en attente / décaissé",
+    "awaitingDisbursement": "En attente de décaissement",
+    "disbursed": "Décaissé",
+    "amountPendingDescription": "Consultez les montants en attente de décaissement et ceux déjà décaissés.",
     "amountCollected": "Montant collecté",
+    "amountDue": "Montant dû",
+    "amountPaid": "Montant collecté",
+    "amountCollectedDescription": "Comparez la demande et les encaissements de l’agence sélectionnée.",
     "selectOfficeToView": "Sélectionnez une agence pour afficher le graphique",
     "value": "Valeur",
     "noPendingDisbursed": "Aucun montant en attente ou décaissé trouvé (toutes les valeurs sont à 0).",
-    "noCollectedAmounts": "Aucun montant collecté trouvé (toutes les valeurs sont à 0)."
+    "noCollectedAmounts": "Aucun montant collecté trouvé (toutes les valeurs sont à 0).",
+    "disbursements": "Décaissements",
+    "collections": "Encaissements",
+    "reportAmounts": "Montants du rapport",
+    "loading": "Chargement du rapport",
+    "loadError": "Impossible de charger ce rapport.",
+    "retry": "Réessayer",
+    "noReportData": "Aucune donnée pour cette agence.",
+    "periodNote": "Nombre de clients et de prêts sur les 12 périodes affichées."
   },
   "navigation": {
     "associatedOfficers": "Agents associés",

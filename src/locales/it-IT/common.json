@@ -475,8 +475,10 @@
     "externalEvents": "Eventi esterni"
   },
   "dashboard": {
+    "overviewDescription": "Consulta l’attività del portafoglio e gli incassi per ufficio.",
+    "charts": "Grafici del portafoglio",
     "clientTrends": "Tendenze clienti",
-    "trackClientOnboarding": "Monitoraggio inserimento clienti",
+    "clientTrendsDescription": "Confronta nel tempo i nuovi clienti e i prestiti erogati.",
     "timescale": "Scala temporale",
     "day": "Giorno",
     "week": "Settimana",
@@ -484,11 +486,25 @@
     "newClients": "Nuovi clienti",
     "loansDisbursed": "Prestiti erogati",
     "amountPendingDisbursed": "Importo in attesa / erogato",
+    "awaitingDisbursement": "In attesa di erogazione",
+    "disbursed": "Erogato",
+    "amountPendingDescription": "Consulta gli importi in attesa di erogazione e quelli già erogati.",
     "amountCollected": "Importo raccolto",
+    "amountDue": "Importo dovuto",
+    "amountPaid": "Importo raccolto",
+    "amountCollectedDescription": "Confronta la domanda e gli incassi dell’ufficio selezionato.",
     "selectOfficeToView": "Seleziona un ufficio per visualizzare il grafico",
     "value": "Valore",
     "noPendingDisbursed": "Nessun importo in attesa o erogato trovato (tutti i valori sono 0).",
-    "noCollectedAmounts": "Nessun importo raccolto trovato (tutti i valori sono 0)."
+    "noCollectedAmounts": "Nessun importo raccolto trovato (tutti i valori sono 0).",
+    "disbursements": "Erogazioni",
+    "collections": "Incassi",
+    "reportAmounts": "Importi del report",
+    "loading": "Caricamento del report",
+    "loadError": "Impossibile caricare questo report.",
+    "retry": "Riprova",
+    "noReportData": "Nessun dato per questo ufficio.",
+    "periodNote": "Numero di clienti e prestiti nei 12 periodi visualizzati."
   },
   "navigation": {
     "associatedOfficers": "Funzionari associati",
