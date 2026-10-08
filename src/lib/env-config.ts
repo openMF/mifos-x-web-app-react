@@ -69,7 +69,7 @@ export const envConfig = {
     ''
   ),
 
-  /** OIDC API URL */
+  /** Base URL of the Mifos security plugin's /authentication endpoints */
   oidcApiUrl: env(
     'FINERACT_PLUGIN_OIDC_API_URL',
     'VITE_FINERACT_PLUGIN_OIDC_API_URL',

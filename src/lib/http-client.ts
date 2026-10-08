@@ -116,24 +116,30 @@ export const getAllHeaders = (): Record<string, string> => {
 }
 
 /**
- * Base URL for OIDC-authenticated requests, when the deployment points the
- * OIDC flow at a different Fineract than the password flow
- * (FINERACT_PLUGIN_OIDC_API_URL). Null when no distinct URL is configured.
+ * Base URL of the Mifos security plugin's /authentication endpoints
+ * (FINERACT_PLUGIN_OIDC_API_URL), with a trailing slash. Null when OIDC is off
+ * or no plugin URL is configured.
+ *
+ * This is only for the plugin's user administration calls. Fineract's own REST
+ * API keeps its normal base URL in OIDC mode and just carries the bearer
+ * token, which is how the Angular client uses the same setting.
  */
-export const getOidcApiBaseUrl = (): string | null => {
+export const getOidcPluginBaseUrl = (): string | null => {
   if (!envConfig.oidcEnabled || !envConfig.oidcApiUrl) return null
 
-  const base = envConfig.oidcApiUrl.replace(/\/$/, '')
-  return `${base}${envConfig.apiProvider}${envConfig.apiVersion}`
+  // Resolved to an absolute URL because Axios joins any non-absolute request
+  // URL onto the Fineract baseURL, even one starting with "/". A same-origin
+  // value such as "/fineract-provider/" would otherwise be requested under
+  // "/fineract-provider/api/".
+  try {
+    const resolved = new URL(envConfig.oidcApiUrl, window.location.origin).href
+    return `${resolved.replace(/\/+$/, '')}/`
+  } catch {
+    return null
+  }
 }
 
 export const getApiBaseUrl = (): string => {
-  // An active OIDC session may target a different Fineract than the password
-  // flow. Resolved here so the generated clients, which build their basePath
-  // from this function, follow the same routing as the Axios instance.
-  const oidcBaseUrl = getOidcApiBaseUrl()
-  if (oidcBaseUrl && getOidcToken()) return oidcBaseUrl
-
   const url = envConfig.apiUrl
   const provider = envConfig.apiProvider
   const version = envConfig.apiVersion
