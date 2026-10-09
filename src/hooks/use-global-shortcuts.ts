@@ -134,20 +134,31 @@ const isTypingTarget = (target: EventTarget | null) => {
   )
 }
 
+const hasExactModifiers = (
+  event: KeyboardEvent,
+  modifier: string | undefined
+) => {
+  if (modifier === 'Ctrl') {
+    return event.ctrlKey !== event.metaKey && !event.altKey && !event.shiftKey
+  }
+
+  if (modifier === 'Alt') {
+    return !event.ctrlKey && !event.metaKey && event.altKey && !event.shiftKey
+  }
+
+  return !event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey
+}
+
 const getShortcut = (event: KeyboardEvent) => {
-  const key = event.key.toLowerCase()
-  const modifier = event.ctrlKey || event.metaKey ? 'Ctrl' : null
-  const alternate = event.altKey ? 'Alt' : null
-  const prefix = modifier ?? alternate
+  return GLOBAL_SHORTCUTS.find(shortcut => {
+    if (shortcut.keys.length !== 2) return false
 
-  if (!prefix) return undefined
-
-  return GLOBAL_SHORTCUTS.find(
-    shortcut =>
-      shortcut.keys.length === 2 &&
-      shortcut.keys[0] === prefix &&
-      shortcut.keys[1].toLowerCase() === key
-  )
+    const [modifier, key] = shortcut.keys
+    return (
+      hasExactModifiers(event, modifier) &&
+      event.code === `Key${key.toUpperCase()}`
+    )
+  })
 }
 
 const submitActiveForm = (target: EventTarget | null) => {

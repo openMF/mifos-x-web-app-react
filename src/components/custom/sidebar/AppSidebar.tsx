@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import MifosLogo from '@/assets/images/MifosX_logo.png'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -47,7 +47,7 @@ import {
   GLOBAL_SHORTCUTS,
   type GlobalShortcut,
 } from '@/hooks/use-global-shortcuts'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type SidebarItem = {
   icon: LucideIcon
@@ -90,9 +90,14 @@ const MAIN_ROUTES = MAIN_ITEMS.map(item => item.route)
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const handleLogout = useLogout()
   const { t } = useTranslation('common')
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+
+  useEffect(() => {
+    setShortcutsOpen(false)
+  }, [pathname])
 
   const handleHome = () => {
     navigate('/home')
