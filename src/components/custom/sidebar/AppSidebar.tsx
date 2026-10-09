@@ -7,7 +7,15 @@
  */
 import MifosLogo from '@/assets/images/MifosX_logo.png'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { useLogout } from '@/hooks/use-logout'
 import { useFrequentlyAccessed } from '@/hooks/use-frequently-accessed'
 import type { ParseKeys } from 'i18next'
@@ -81,6 +89,7 @@ export const AppSidebar = () => {
   const navigate = useNavigate()
   const handleLogout = useLogout()
   const { t } = useTranslation('common')
+  const [shortcutsOpen, setShortcutsOpen] = useState(false)
 
   const handleHome = () => {
     navigate('/home')
@@ -185,6 +194,8 @@ export const AppSidebar = () => {
                 <Button
                   variant="ghost"
                   className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  onClick={() => setShortcutsOpen(true)}
+                  aria-label={t('tooltips.keyboardShortcuts')}
                 >
                   <Keyboard />
                   <span className="min-w-0 whitespace-normal! text-left">
@@ -216,6 +227,22 @@ export const AppSidebar = () => {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <Dialog open={shortcutsOpen} onOpenChange={setShortcutsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('nav.keyboardShortcuts')}</DialogTitle>
+            <DialogDescription>
+              {t('tooltips.keyboardShortcuts')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center justify-between rounded-md border p-3 text-sm">
+            <span>{t('accessibility.toggleSidebar')}</span>
+            <kbd className="rounded border bg-muted px-2 py-1 font-mono text-xs">
+              Ctrl/Cmd + B
+            </kbd>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   )
 }
