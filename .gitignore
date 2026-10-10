@@ -37,5 +37,6 @@ data/
 
 # Playwright artifacts
 playwright-report/
+playwright/.auth/
 test-results/
 blob-report/
