@@ -147,7 +147,18 @@
     "placeholder": "Écrire une note ....",
     "addButton": "+ Ajouter",
     "createdBy": "Créé Par : {{name}}",
-    "date": "Date : {{date}}"
+    "date": "Date : {{date}}",
+    "editButton": "Modifier",
+    "saveButton": "Enregistrer",
+    "cancelButton": "Annuler",
+    "deleteButton": "Supprimer",
+    "confirmDelete": "Supprimer cette note ?",
+    "loading": "Chargement des notes...",
+    "empty": "Aucune note n’a été ajoutée pour ce client.",
+    "loadFailed": "Impossible de charger les notes de ce client.",
+    "addFailed": "Impossible d’ajouter la note. Veuillez réessayer.",
+    "updateFailed": "Impossible de modifier la note. Veuillez réessayer.",
+    "deleteFailed": "Impossible de supprimer la note. Veuillez réessayer."
   },
   "address": {
     "heading": "Détails d'Adresse du Client",
