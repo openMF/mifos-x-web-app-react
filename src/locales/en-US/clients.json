@@ -147,7 +147,18 @@
     "placeholder": "Write a note ....",
     "addButton": "+ Add",
     "createdBy": "Created By: {{name}}",
-    "date": "Date: {{date}}"
+    "date": "Date: {{date}}",
+    "editButton": "Edit",
+    "saveButton": "Save",
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete",
+    "confirmDelete": "Delete this note?",
+    "loading": "Loading notes...",
+    "empty": "No notes have been added for this client.",
+    "loadFailed": "Could not load the notes for this client.",
+    "addFailed": "Could not add the note. Please try again.",
+    "updateFailed": "Could not update the note. Please try again.",
+    "deleteFailed": "Could not delete the note. Please try again."
   },
   "address": {
     "heading": "Client Address Details",

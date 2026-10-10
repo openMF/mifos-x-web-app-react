@@ -147,7 +147,18 @@
     "placeholder": "Escribir una nota ....",
     "addButton": "+ Agregar",
     "createdBy": "Creado Por: {{name}}",
-    "date": "Fecha: {{date}}"
+    "date": "Fecha: {{date}}",
+    "editButton": "Editar",
+    "saveButton": "Guardar",
+    "cancelButton": "Cancelar",
+    "deleteButton": "Eliminar",
+    "confirmDelete": "¿Eliminar esta nota?",
+    "loading": "Cargando notas...",
+    "empty": "No se han agregado notas para este cliente.",
+    "loadFailed": "No se pudieron cargar las notas de este cliente.",
+    "addFailed": "No se pudo agregar la nota. Inténtelo de nuevo.",
+    "updateFailed": "No se pudo actualizar la nota. Inténtelo de nuevo.",
+    "deleteFailed": "No se pudo eliminar la nota. Inténtelo de nuevo."
   },
   "address": {
     "heading": "Detalles de Dirección del Cliente",
