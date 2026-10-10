@@ -45,5 +45,36 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // Playwright code runs in Node, not the browser.
+    files: ['playwright/**/*.ts', 'playwright.config.ts'],
+    languageOptions: {
+      globals: globals.node,
+    },
+    rules: {
+      // Playwright fixtures receive a callback named `use`, which this
+      // rule mistakes for React's `use()` hook. No React runs here.
+      'react-hooks/rules-of-hooks': 'off',
+      // Playwright requires a fixture's first parameter to be an object
+      // pattern, so a fixture with no dependencies is written `({}, use)`.
+      'no-empty-pattern': ['error', { allowObjectPatternsAsParameters: true }],
+    },
+  },
+  {
+    // The test data layer is shared verbatim with the openMF/web-app
+    // Playwright suite, which does not enable this rule. Its Fineract
+    // REST payloads are typed `any`; typing them belongs upstream, so
+    // both copies stay identical. React-specific Playwright code keeps
+    // the rule.
+    files: [
+      'playwright/fixtures/**/*.ts',
+      'playwright/factories/**/*.ts',
+      'playwright/utils/**/*.ts',
+      'playwright/types/**/*.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
   prettierConfig
 )

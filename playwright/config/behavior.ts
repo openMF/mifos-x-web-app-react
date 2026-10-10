@@ -55,6 +55,17 @@ export const BEHAVIOR = {
   authStorageKey: 'mifosToken',
 
   /**
+   * Where the app keeps the credentials stored under `authStorageKey`.
+   * React keeps them in localStorage, which Playwright's `storageState`
+   * restores on its own, so `fixtures/auth-session.ts` adds nothing
+   * here. The Angular counterpart is `'session'`.
+   *
+   * Typed as the union, not the literal, so the shared check
+   * `BEHAVIOR.authStorage === 'session'` type-checks in both repos.
+   */
+  authStorage: 'local' as 'session' | 'local',
+
+  /**
    * The `localStorage` key where the resolved Fineract server URL
    * is persisted at runtime. Exercised today by the
    * `should persist server and tenant values on submit` spec.
