@@ -14,8 +14,13 @@ import { Label } from '@/components/ui/label'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 
-import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
+import {
+  OfficesApi,
+  type GetOfficesResponse,
+  type PutOfficesOfficeIdRequest,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { dateArrayToInputValue } from '@/lib/date-utils'
 
 const officesApi = new OfficesApi(getConfiguration())
 
@@ -30,6 +35,9 @@ const EditOffices = () => {
     openedOn: '',
     externalId: '',
   })
+  // The head office has no parent and Fineract rejects giving it one, so the
+  // Parent Office field is only shown for an office that has a parent
+  const [hasParent, setHasParent] = useState(false)
 
   // fetch office list + details of office being edited
   useEffect(() => {
@@ -40,10 +48,17 @@ const EditOffices = () => {
 
         if (id) {
           const officeRes = await officesApi.retrieveOffice(Number(id))
+          // The generated type lacks parentId; the API returns it (ISSUES.md)
+          const parentId = (officeRes.data as { parentId?: number | null })
+            .parentId
+          setHasParent(Boolean(parentId))
           setFormData({
             officeName: officeRes.data.name ?? '',
-            parentOffice: officeRes.data.allowedParents?.toString() ?? '',
-            openedOn: officeRes.data.openingDate ?? '',
+            parentOffice: parentId ? String(parentId) : '',
+            // openingDate arrives as [year, month, day]; the date input needs yyyy-MM-dd
+            openedOn: dateArrayToInputValue(
+              officeRes.data.openingDate as unknown as number[] | undefined
+            ),
             externalId: officeRes.data.externalId ?? '',
           })
         }
@@ -72,13 +87,19 @@ const EditOffices = () => {
     )
 
     try {
-      await officesApi.updateOffice(Number(id), {
+      // PUT /offices/{id} accepts parentId; the generated type leaves it out
+      const request: PutOfficesOfficeIdRequest & { parentId?: number } = {
         name: formData.officeName,
+        parentId:
+          hasParent && formData.parentOffice
+            ? Number(formData.parentOffice)
+            : undefined,
         openingDate: formattedDate,
         externalId: formData.externalId,
         locale: 'en',
         dateFormat: 'dd MMMM yyyy',
-      })
+      }
+      await officesApi.updateOffice(Number(id), request)
 
       alert('Office updated successfully!')
       navigate('/organization/offices')
@@ -114,20 +135,25 @@ const EditOffices = () => {
             />
           </div>
 
-          {/* Parent Office */}
-          <div className="w-full space-y-2">
-            <AppSelect
-              selectLabel="Parent Office*"
-              selectPlaceholder="Select Parent Office"
-              selectValue={formData.parentOffice}
-              selectOnChange={val => handleChange('parentOffice', val)}
-              selectClassname="w-full space-y-2"
-              selectOptions={offices.map(o => ({
-                id: o.id?.toString() || '',
-                name: o.name || '',
-              }))}
-            />
-          </div>
+          {/* Parent Office (not for the head office) */}
+          {hasParent && (
+            <div className="w-full space-y-2">
+              <AppSelect
+                selectLabel="Parent Office*"
+                selectPlaceholder="Select Parent Office"
+                selectValue={formData.parentOffice}
+                selectOnChange={val => handleChange('parentOffice', val)}
+                selectClassname="w-full space-y-2"
+                selectOptions={offices
+                  // an office cannot be its own parent
+                  .filter(o => o.id !== Number(id))
+                  .map(o => ({
+                    id: o.id?.toString() || '',
+                    name: o.name || '',
+                  }))}
+              />
+            </div>
+          )}
 
           {/* Opened On */}
           <div className="w-full space-y-2">
