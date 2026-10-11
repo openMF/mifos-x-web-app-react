@@ -15,9 +15,25 @@ import {
   isOidcUsable,
   isSilentRenewFrame,
 } from '@/lib/oidc-config'
-import { clearAuthToken, clearOidcToken, setOidcToken } from '@/lib/http-client'
+import { useAppDispatch } from '@/app/hook'
+import {
+  clearAuthToken,
+  clearOidcToken,
+  setOidcToken,
+  setOidcUserDetails,
+} from '@/lib/http-client'
 import { markOidcSessionEstablished } from '@/lib/oidc-session'
-import fineract from '@/lib/axios'
+import {
+  fetchSignedInUser,
+  SignInError,
+  type SignInFailure,
+} from '@/lib/oidc-users-api'
+import { oidcSignedIn } from '@/pages/login/loginSlice'
+
+/** Navigation state the login page reads to explain a failed SSO sign-in. */
+export interface OidcCallbackState {
+  oidcError: SignInFailure
+}
 
 /**
  * Waits for the provider to finish exchanging the authorization code, then
@@ -27,6 +43,7 @@ import fineract from '@/lib/axios'
 const CallbackHandler = () => {
   const auth = useAuth()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation('auth')
 
   useEffect(() => {
@@ -34,45 +51,50 @@ const CallbackHandler = () => {
 
     const accessToken = auth.user?.access_token
     const expiresAt = auth.user?.expires_at
+    const subject = auth.user?.profile.sub
+
+    const fail = (reason: SignInFailure) => {
+      clearOidcToken()
+      const state: OidcCallbackState = { oidcError: reason }
+      navigate('/login', { replace: true, state })
+    }
 
     // Either the exchange failed or the route was opened without a code.
-    if (!auth.isAuthenticated || !accessToken) {
+    if (!auth.isAuthenticated || !accessToken || !subject) {
       if (auth.error) {
         console.error('OIDC callback failed', auth.error)
       }
-      clearOidcToken()
-      navigate('/login', { replace: true, state: { oidcError: true } })
+      fail('failed')
       return
     }
 
     let cancelled = false
 
     // Signing in at the provider is not the same as being accepted by
-    // Fineract: the server only honours bearer tokens when its oauth profile
-    // is active. Confirm against /userdetails — as the Angular client does —
-    // before handing the user a session, so a rejected token surfaces here
-    // instead of as 401s on every screen of /home.
+    // Mifos: the user also needs a Fineract record, with an office and roles.
+    // The security plugin checks both and reports who the user is — as the
+    // Angular client does — before a session is handed out, so a rejected
+    // sign-in surfaces here instead of as errors on every screen of /home.
     const establishSession = async () => {
       try {
-        // Validate with a request-scoped header rather than storing the token
-        // first: if this component unmounts mid-request, nothing has been
-        // persisted, so an unvalidated token can never survive into a reload.
-        await fineract.get('v1/userdetails', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        // The token is passed to the request rather than stored first: if
+        // this component unmounts mid-request, nothing has been persisted, so
+        // an unaccepted token can never survive into a reload.
+        const details = await fetchSignedInUser(accessToken, subject)
         if (cancelled) return
         setOidcToken(accessToken, expiresAt)
+        setOidcUserDetails(details)
         // Only now may background renewals write to the token store.
         markOidcSessionEstablished()
         // The OIDC session replaces any password session, so the two
         // credentials never coexist.
         clearAuthToken()
+        dispatch(oidcSignedIn(details))
         navigate('/home', { replace: true })
       } catch (error) {
         if (cancelled) return
-        console.error('Fineract rejected the OIDC access token', error)
-        clearOidcToken()
-        navigate('/login', { replace: true, state: { oidcError: true } })
+        console.error('The OIDC sign-in was not accepted', error)
+        fail(error instanceof SignInError ? error.reason : 'failed')
       }
     }
 
@@ -87,6 +109,8 @@ const CallbackHandler = () => {
     auth.error,
     auth.user?.access_token,
     auth.user?.expires_at,
+    auth.user?.profile.sub,
+    dispatch,
     navigate,
   ])
 

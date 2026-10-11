@@ -9,11 +9,20 @@ import { useAuth } from 'react-oidc-context'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
+import type { SignInFailure } from '@/lib/oidc-users-api'
 
 interface OidcLoginButtonProps {
-  /** Set when the /callback route sent the user back after a failed exchange. */
-  callbackFailed?: boolean
+  /** Why the /callback route sent the user back, if it did. */
+  callbackError?: SignInFailure
 }
+
+const CALLBACK_MESSAGES = {
+  failed: 'login.ssoError',
+  rejected: 'login.ssoRejected',
+  notProvisioned: 'login.ssoNotProvisioned',
+  passwordExpired: 'login.ssoPasswordExpired',
+  twoFactor: 'login.ssoTwoFactor',
+} as const satisfies Record<SignInFailure, string>
 
 /**
  * Starts the OIDC authorization code flow.
@@ -21,20 +30,27 @@ interface OidcLoginButtonProps {
  * Rendered only when OIDC is enabled, since useAuth() requires the provider
  * from App.tsx to be mounted.
  */
-const OidcLoginButton = ({ callbackFailed }: OidcLoginButtonProps) => {
+const OidcLoginButton = ({ callbackError }: OidcLoginButtonProps) => {
   const auth = useAuth()
   const { t } = useTranslation('auth')
 
-  // Owns the whole SSO error surface so a failed callback, which sets both
-  // auth.error and the navigation flag, does not render the message twice.
-  const showError = !!auth.error || !!callbackFailed
+  // Owns the whole SSO error surface so a failed callback, which can set both
+  // auth.error and the navigation state, does not render the message twice.
+  // The callback's reason is the more specific of the two.
+  const errorKey = callbackError
+    ? CALLBACK_MESSAGES[callbackError]
+    : auth.error
+      ? CALLBACK_MESSAGES.failed
+      : null
 
   return (
     <>
       {/* react-oidc-context resolves signinRedirect() with null on failure and
           records the reason on auth.error, so it cannot be caught here. */}
-      {showError && (
-        <p className="text-red-500 text-sm mt-4">{t('login.ssoError')}</p>
+      {errorKey && (
+        <p role="alert" className="text-red-500 text-sm mt-4">
+          {t(errorKey)}
+        </p>
       )}
       <Button
         type="button"
