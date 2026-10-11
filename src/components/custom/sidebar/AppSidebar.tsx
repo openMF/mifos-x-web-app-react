@@ -6,8 +6,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import MifosLogo from '@/assets/images/MifosX_logo.png'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { useLogout } from '@/hooks/use-logout'
 import { useFrequentlyAccessed } from '@/hooks/use-frequently-accessed'
 import type { ParseKeys } from 'i18next'
@@ -37,6 +43,11 @@ import {
   SidebarMenuItem,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar'
+import {
+  GLOBAL_SHORTCUTS,
+  type GlobalShortcut,
+} from '@/hooks/use-global-shortcuts'
+import { useEffect, useState } from 'react'
 
 type SidebarItem = {
   icon: LucideIcon
@@ -79,8 +90,14 @@ const MAIN_ROUTES = MAIN_ITEMS.map(item => item.route)
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const handleLogout = useLogout()
   const { t } = useTranslation('common')
+  const [shortcutsOpen, setShortcutsOpen] = useState(false)
+
+  useEffect(() => {
+    setShortcutsOpen(false)
+  }, [pathname])
 
   const handleHome = () => {
     navigate('/home')
@@ -185,6 +202,7 @@ export const AppSidebar = () => {
                 <Button
                   variant="ghost"
                   className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  onClick={() => setShortcutsOpen(true)}
                 >
                   <Keyboard />
                   <span className="min-w-0 whitespace-normal! text-left">
@@ -216,6 +234,40 @@ export const AppSidebar = () => {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <Dialog open={shortcutsOpen} onOpenChange={setShortcutsOpen}>
+        <DialogContent
+          className="max-w-3xl"
+          closeButtonClassName="flex size-8 items-center justify-center [&_svg]:size-5"
+        >
+          <DialogHeader>
+            <DialogTitle>{t('nav.keyboardShortcuts')}</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[70vh] overflow-y-auto">
+            <div className="grid grid-cols-[minmax(145px,0.7fr)_1fr] border-b px-3 py-2 text-sm font-semibold text-muted-foreground">
+              <span>Shortcuts</span>
+              <span>Page or action</span>
+            </div>
+            {GLOBAL_SHORTCUTS.map((shortcut: GlobalShortcut) => (
+              <div
+                key={shortcut.id}
+                className="grid grid-cols-[minmax(145px,0.7fr)_1fr] items-center gap-4 border-b px-3 py-3 text-sm last:border-b-0"
+              >
+                <div className="flex items-center gap-1">
+                  {shortcut.keys.map((key, index) => (
+                    <span key={`${shortcut.id}-${key}`}>
+                      {index > 0 && <span className="mr-1">+</span>}
+                      <kbd className="rounded border bg-muted px-2 py-1 font-mono text-xs">
+                        {index === 0 ? key : key.toLowerCase()}
+                      </kbd>
+                    </span>
+                  ))}
+                </div>
+                <span>{shortcut.description}</span>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   )
 }
