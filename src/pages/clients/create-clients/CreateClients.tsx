@@ -8,11 +8,11 @@
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import ClientGeneralStep from './create-clients-stepper/ClientGeneralStep'
 import { getConfiguration } from '@/lib/fineract-openapi'
-import {
-  ClientApi,
-  type GetClientsTemplateResponse,
-  type PostClientsRequest,
-} from '@/fineract-api'
+import { ClientApi } from '@/fineract-api'
+import type {
+  ExtendedClientTemplate,
+  ExtendedPostClientsRequest,
+} from '@/pages/clients/types'
 import { useEffect, useState } from 'react'
 import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
 import { useNavigate } from 'react-router-dom'
@@ -49,8 +49,8 @@ const getClientErrorMessage = (error: unknown) => {
  * form collects a first and last name either way, so join them for an entity.
  */
 const buildClientRequest = (
-  formData: PostClientsRequest
-): PostClientsRequest => {
+  formData: ExtendedPostClientsRequest
+): ExtendedPostClientsRequest => {
   if (formData.legalFormId !== LEGAL_FORM_ENTITY) {
     return formData
   }
@@ -67,21 +67,44 @@ const buildClientRequest = (
 const CreateClients = () => {
   const navigate = useNavigate()
   const { t } = useTranslation('clients')
-  const [clientTemplate, setClientTemplate] =
-    useState<GetClientsTemplateResponse>()
+  const [clientTemplate, setClientTemplate] = useState<ExtendedClientTemplate>()
 
-  // fetch initial data
+  const [formData, setFormData] = useState<ExtendedPostClientsRequest>({
+    locale: 'en',
+    dateFormat: 'yyyy-MM-dd',
+    legalFormId: 1,
+    active: false,
+  })
+
+  // Fetch the template, and refetch it when the office changes so the Staff
+  // dropdown lists that office's staff (Fineract only returns staffOptions
+  // for a given officeId)
   useEffect(() => {
-    const fetchInitialData = async () => {
+    // Drop the previous office's staff while the new list loads, and ignore a
+    // late response for an office the user has already moved away from
+    let stale = false
+    setClientTemplate(prev =>
+      prev ? { ...prev, staffOptions: undefined } : prev
+    )
+    const fetchTemplate = async () => {
       try {
-        const response = await clientApi.retrieveTemplate5()
-        setClientTemplate(response.data)
+        const response = await clientApi.retrieveTemplate5(
+          formData.officeId,
+          undefined,
+          formData.officeId ? true : undefined
+        )
+        if (stale) return
+        // The generated type lacks the code value option lists the API returns
+        setClientTemplate(response.data as ExtendedClientTemplate)
       } catch (err) {
         console.log('Failed to fetch initial data: ', err)
       }
     }
-    fetchInitialData()
-  }, [])
+    fetchTemplate()
+    return () => {
+      stale = true
+    }
+  }, [formData.officeId])
 
   const handleSubmit = async () => {
     try {
@@ -120,13 +143,6 @@ const CreateClients = () => {
     }
     return null
   }
-
-  const [formData, setFormData] = useState<PostClientsRequest>({
-    locale: 'en',
-    dateFormat: 'yyyy-MM-dd',
-    legalFormId: 1,
-    active: false,
-  })
 
   if (!clientTemplate) {
     return <div className="text-center py-10">Loading client template...</div>
