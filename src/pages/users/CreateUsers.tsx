@@ -28,6 +28,7 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 
 const userApi = new UsersApi(getConfiguration())
 const staffApi = new StaffApi(getConfiguration())
+const emailPattern = /^[^\s@.]+(?:\.[^\s@.]+)*@(?:[^\s@.]+\.)+[^\s@.]+$/
 
 type UserApiErrorResponse = {
   defaultUserMessage?: string
@@ -60,6 +61,7 @@ const getUserErrorMessage = (error: unknown) => {
 const CreateUsers = () => {
   const [users, setUsers] = useState<GetUsersTemplateResponse>()
   const [staff, setStaff] = useState<StaffData[] | null>(null)
+  const [emailError, setEmailError] = useState('')
 
   const [formData, setFormData] = useState({
     username: '',
@@ -137,6 +139,11 @@ const CreateUsers = () => {
       return
     }
 
+    if (!emailPattern.test(formData.email.trim())) {
+      setEmailError('Please enter a valid email address.')
+      return
+    }
+
     if (showPassword) {
       if (!formData.password || !formData.repeatPassword) {
         alert('Please enter and confirm the password.')
@@ -192,7 +199,7 @@ const CreateUsers = () => {
 
       <div className="p-8 bg-white dark:bg-zinc-900 rounded-md shadow border max-w-5xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">Create User</h2>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" noValidate onSubmit={handleSubmit}>
           <div className="flex flex-wrap gap-6">
             <div className="w-full md:w-[48%] space-y-2">
               <Label>Username *</Label>
@@ -209,18 +216,28 @@ const CreateUsers = () => {
               />
             </div>
             <div className="w-full md:w-[48%] space-y-2">
-              <Label>Email *</Label>
+              <Label htmlFor="user-email">Email *</Label>
               <Input
+                id="user-email"
+                type="email"
                 placeholder="Enter email"
-                className="w-full"
+                aria-invalid={emailError ? true : undefined}
+                aria-describedby={emailError ? 'user-email-error' : undefined}
+                className={`w-full ${emailError ? 'border-red-500' : ''}`}
                 value={formData.email}
-                onChange={e =>
+                onChange={e => {
+                  setEmailError('')
                   setFormData(prev => ({
                     ...prev,
                     email: e.target.value,
                   }))
-                }
+                }}
               />
+              {emailError && (
+                <p id="user-email-error" className="text-sm text-red-500">
+                  {emailError}
+                </p>
+              )}
             </div>
           </div>
 
