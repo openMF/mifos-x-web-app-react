@@ -27,9 +27,15 @@ import { isLegalEntity } from './general-data-tab/generalDataUtils'
 
 const clientsApi = new ClientApi(getConfiguration())
 
-/** Fineract sends the client's legal form; the generated type leaves it out. */
+/**
+ * Fineract sends the client's legal form, staff name, mobile number and the
+ * groups it belongs to; the generated type leaves them out (see ISSUES.md).
+ */
 type ClientWithLegalForm = GetClientsClientIdResponse & {
   legalForm?: { id?: number } | null
+  staffName?: string | null
+  mobileNo?: string | null
+  groups?: Array<{ id?: number; name?: string }> | null
 }
 
 /** Fineract's legal form id for a person; any other legal form is an entity. */
@@ -78,6 +84,12 @@ const ClientsView = () => {
     notes: t('view.tabs.notes'),
   }
   const activeTabLabel = tabLabels[tabSegment ?? '']
+
+  /** The groups the client belongs to, as the Angular app's "Member Of" */
+  const memberOf = (client?.groups ?? [])
+    .map(group => group.name)
+    .filter(Boolean)
+    .join(', ')
 
   /** Fineract client status 100 = pending (300 = active) */
   const isPending = client?.status?.id === 100
@@ -142,7 +154,7 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.memberOf')}</div>
-              <div>{t('view.missingInOpenAPI')}</div>
+              <div>{memberOf || '—'}</div>
             </div>
             <div>
               <div className="font-semibold">{t('client')}</div>
@@ -150,7 +162,7 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.mobileNumber')}</div>
-              <div>{t('view.missingInOpenAPI')}</div>
+              <div>{client?.mobileNo || '—'}</div>
             </div>
             <div>
               <div className="font-semibold">{t('view.externalId')}</div>
@@ -168,7 +180,7 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.staff')}</div>
-              <div>{t('view.missingInOpenAPI')}</div>
+              <div>{client?.staffName || '—'}</div>
             </div>
           </div>
         </div>
