@@ -79,6 +79,9 @@ const ClientsView = () => {
   }
   const activeTabLabel = tabLabels[tabSegment ?? '']
 
+  /** Fineract client status 100 = pending (300 = active) */
+  const isPending = client?.status?.id === 100
+
   useEffect(() => {
     const fetchClient = async () => {
       try {
@@ -179,6 +182,15 @@ const ClientsView = () => {
                 </span>
               }
               options={[
+                // A pending client is activated from here, as in the Angular app
+                ...(isPending
+                  ? [
+                      {
+                        label: t('view.menu.activate'),
+                        path: `clients/${client?.id}/actions/activate`,
+                      },
+                    ]
+                  : []),
                 {
                   label: t('view.menu.edit'),
                   path: `clients/${client?.id}/edit`,

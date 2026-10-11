@@ -208,6 +208,7 @@ import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
+import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
@@ -765,6 +766,10 @@ const AppRoutes = () => {
           {/* Clients */}
           <Route path="/clients" element={<Clients />} />
           <Route path="/clients/create" element={<CreateClients />} />
+          <Route
+            path="/clients/:id/actions/activate"
+            element={<ActivateClient />}
+          />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="general-data" element={<ClientsGeneralDataTab />} />
