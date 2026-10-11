@@ -128,6 +128,7 @@ import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables
 import ViewDataTables from '@/pages/system/manage-data-tables/ViewDataTables'
 import Codes from '@/pages/system/codes/Codes'
 import ViewCodes from '@/pages/system/codes/ViewCodes'
+import CreateCode from '@/pages/system/codes/CreateCode'
 import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
@@ -710,6 +711,7 @@ const AppRoutes = () => {
 
           {/* Manage Codes*/}
           <Route path="/system/codes" element={<Codes />} />
+          <Route path="/system/codes/create" element={<CreateCode />} />
           <Route path="/system/codes/:id" element={<ViewCodes />} />
 
           {/* Manage Reports*/}
