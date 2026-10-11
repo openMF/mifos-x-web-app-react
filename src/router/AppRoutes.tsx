@@ -89,6 +89,7 @@ import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
+import PasswordPreferences from '@/pages/organization/password-preferences/PasswordPreferences'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -541,6 +542,12 @@ const AppRoutes = () => {
 
           {/* Working Days */}
           <Route path="/organization/working-days" element={<WorkingDays />} />
+
+          {/* Password Preferences */}
+          <Route
+            path="/organization/password-preferences"
+            element={<PasswordPreferences />}
+          />
 
           {/* Products */}
           <Route path="/products" element={<Products />} />
