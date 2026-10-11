@@ -5,7 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import type { GetGroupsGroupIdResponse } from '@/fineract-api'
+import type {
+  GetGroupsGroupIdResponse,
+  PostGroupsRequest,
+  PutGroupsGroupIdRequest,
+} from '@/fineract-api'
 
 /**
  * The generated `GetGroupsGroupIdResponse` is incomplete — the real API
@@ -51,3 +55,23 @@ export interface ClientMember {
   displayName?: string
   officeName?: string
 }
+
+/**
+ * Fields missing from both PostGroupsRequest and PutGroupsGroupIdRequest in
+ * the generated OpenAPI types. Extracted here so both extended interfaces stay
+ * in sync if more fields are discovered later.
+ */
+interface GroupRequestExtras {
+  staffId?: number
+  externalId?: string
+  submittedOnDate?: string
+  activationDate?: string
+  dateFormat?: string
+  locale?: string
+}
+
+export interface ExtendedPostGroupsRequest
+  extends PostGroupsRequest, GroupRequestExtras {}
+
+export interface ExtendedPutGroupsRequest
+  extends PutGroupsGroupIdRequest, GroupRequestExtras {}
