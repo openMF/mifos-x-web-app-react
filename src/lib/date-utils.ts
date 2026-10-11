@@ -54,6 +54,13 @@ export function formatDate(
 /**
  * Converts a date array [year, month, day] to an HTML date input value "YYYY-MM-DD".
  */
+/** Today as yyyy-MM-dd in local time, for a date input's value, min or max. */
+export function todayInputValue(): string {
+  const d = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
 export function dateArrayToInputValue(arr?: number[] | null): string {
   if (!arr || arr.length < 3) return ''
   const [y, m, d] = arr
