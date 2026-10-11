@@ -162,8 +162,7 @@ const ClientNotesTab = () => {
           disabled={!id || adding}
         />
         <Button
-          variant="outline"
-          className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
           onClick={addNote}
           disabled={!id || !newNote.trim() || adding}
         >
