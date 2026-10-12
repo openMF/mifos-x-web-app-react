@@ -918,6 +918,10 @@ const AppRoutes = () => {
               path="family-members/add"
               element={<ClientsFamilyMembersAddTab />}
             />
+            <Route
+              path="family-members/:familyMemberId/edit"
+              element={<ClientsFamilyMembersAddTab />}
+            />
             <Route path="documents" element={<ClientsDocumentsTab />} />
             <Route
               path="datatables/:datatableName"
