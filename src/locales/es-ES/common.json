@@ -363,7 +363,8 @@
     "pending": "Pendiente",
     "rejected": "Rechazado",
     "unknown": "Desconocido",
-    "withdrawn": "Retirado"
+    "withdrawn": "Retirado",
+    "inArrears": "En mora"
   },
   "tooltips": {
     "close": "Cerrar",
