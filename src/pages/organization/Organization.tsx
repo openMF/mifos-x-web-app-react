@@ -69,7 +69,7 @@ const organizationItems = [
   {
     icon: faMoneyBill,
     name: 'Fund Mapping',
-    path: '/organization/manage-funds',
+    path: '/organization/fund-mapping',
   },
   {
     icon: faDollarSign,
