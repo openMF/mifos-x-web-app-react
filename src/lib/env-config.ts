@@ -85,4 +85,27 @@ export const envConfig = {
 
   /** Default UI language */
   defaultLanguage: env('MIFOS_DEFAULT_LANGUAGE', '', 'en-US'),
+
+  /**
+   * Master switch for the Copilot AI assistant. Off by default, so a
+   * deployment opts in. Same variable name as the Angular web-app, so one
+   * deployment's configuration serves both.
+   */
+  copilotEnabled:
+    env(
+      'MIFOS_ENABLE_COPILOT',
+      'VITE_MIFOS_ENABLE_COPILOT',
+      'false'
+    ).toLowerCase() === 'true',
+
+  /**
+   * Base URL of the Copilot gateway (openMF/mcp-mifosx/gateway). The literal
+   * value 'mock', or an empty value, serves recorded responses so the
+   * assistant can be developed without a gateway.
+   */
+  copilotGatewayUrl: env(
+    'MIFOS_COPILOT_MCP_BASE_URL',
+    'VITE_MIFOS_COPILOT_MCP_BASE_URL',
+    'mock'
+  ),
 } as const
