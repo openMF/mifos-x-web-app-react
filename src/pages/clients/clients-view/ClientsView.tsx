@@ -131,6 +131,9 @@ const ClientsView = () => {
           ...(tabSegment === 'family-members' && subSegment === 'add'
             ? [{ label: t('familyMembers.addButton') }]
             : []),
+          ...(tabSegment === 'family-members' && pathname.endsWith('/edit')
+            ? [{ label: t('familyMembers.editButton') }]
+            : []),
         ]}
       />
 
