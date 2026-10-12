@@ -10,6 +10,7 @@
   "createCenter": "Créer un centre",
   "createGuarantor": "Créer un garant",
   "errors": {
+    "failedActivateClient": "Échec de l'activation du client.",
     "failedApproveClients": "Échec de l'approbation d'un ou plusieurs clients.",
     "failedLoadCenters": "Échec du chargement des centres. Veuillez réessayer.",
     "failedLoadClients": "Échec du chargement des clients. Veuillez réessayer.",
@@ -33,6 +34,7 @@
   "searchByNameOrExternalId": "Rechercher par nom ou identifiant externe...",
   "success": {
     "clientCreated": "Client créé avec succès.",
+    "clientActivated": "Client activé avec succès.",
     "clientsApproved": "Clients sélectionnés approuvés avec succès."
   },
   "title": "Clients",
@@ -45,6 +47,17 @@
     "externalId": "Id Externe",
     "status": "Statut",
     "officeName": "Nom du Bureau"
+  },
+  "activate": {
+    "title": "Activer le Client",
+    "labelActivationDate": "Date d'Activation*",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez saisir une date d'activation.",
+      "dateInFuture": "La date d'activation ne peut pas être dans le futur.",
+      "dateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission."
+    }
   },
   "view": {
     "status": "Statut:",
@@ -66,6 +79,7 @@
       "notes": "Notes"
     },
     "menu": {
+      "activate": "Activer",
       "edit": "Modifier",
       "applications": "Demandes",
       "newLoanAccount": "Nouveau Compte de Prêt",

@@ -9,19 +9,23 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { todayInputValue } from '@/lib/date-utils'
 import type {
-  GetClientsTemplateResponse,
-  PostClientsRequest,
-} from '@/fineract-api'
+  ExtendedClientTemplate,
+  ExtendedPostClientsRequest,
+} from '@/pages/clients/types'
 
 /** Fineract legal form ids, from the clientLegalFormOptions template */
 const LEGAL_FORM_PERSON = 1
 const LEGAL_FORM_ENTITY = 2
 
+/** Clears an optional select; Radix Select cannot select an empty value */
+const NONE_OPTION = { id: 'none', name: 'None' }
+
 interface ClientGeneralStepProps {
-  formData: PostClientsRequest
-  onChange: (data: PostClientsRequest) => void
-  template: GetClientsTemplateResponse
+  formData: ExtendedPostClientsRequest
+  onChange: (data: ExtendedPostClientsRequest) => void
+  template: ExtendedClientTemplate
 }
 
 const ClientGeneralStep = ({
@@ -30,11 +34,34 @@ const ClientGeneralStep = ({
   template,
 }: ClientGeneralStepProps) => {
   const handleChange = (
-    field: keyof PostClientsRequest,
+    field: keyof ExtendedPostClientsRequest,
     value: string | number | boolean | undefined
   ) => {
     onChange({ ...formData, [field]: value })
   }
+
+  /**
+   * Code values and staff come from the template (staff is generated as a
+   * Set). These fields are optional, so a None entry lets the user clear an
+   * accidental pick; a Radix select has no empty value of its own.
+   */
+  const toOptions = (
+    options: Iterable<{ id?: number; name?: string; displayName?: string }> = []
+  ) => [
+    NONE_OPTION,
+    ...Array.from(options).map(o => ({
+      id: o.id ?? 0,
+      name: o.name ?? o.displayName ?? '',
+    })),
+  ]
+
+  /** None (or no pick) sends nothing for the field */
+  const handleIdChange =
+    (field: keyof ExtendedPostClientsRequest) => (value: string) =>
+      handleChange(
+        field,
+        value && value !== NONE_OPTION.id ? Number(value) : undefined
+      )
 
   const handleActiveChange = (active: boolean) => {
     onChange({
@@ -45,6 +72,7 @@ const ClientGeneralStep = ({
   }
 
   const isEntity = formData.legalFormId === LEGAL_FORM_ENTITY
+  const today = todayInputValue()
 
   return (
     <div className="flex flex-col gap-8">
@@ -53,7 +81,10 @@ const ClientGeneralStep = ({
         <AppSelect
           selectLabel="Office*"
           selectValue={formData.officeId?.toString() ?? ''}
-          selectOnChange={v => handleChange('officeId', Number(v))}
+          selectOnChange={v =>
+            // staff belongs to an office, so a new office clears the pick
+            onChange({ ...formData, officeId: Number(v), staffId: undefined })
+          }
           selectPlaceholder="Select Office"
           selectOptions={Array.from(template.officeOptions ?? []).map(o => ({
             id: o.id ?? 0,
@@ -147,29 +178,37 @@ const ClientGeneralStep = ({
           />
         </div>
 
-        {/* Missing in OpenAPI */}
-        <div className="w-full md:w-[48%] space-y-2">
-          <Label>Gender</Label>
-          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
-            Missing in OpenAPI
-          </div>
-        </div>
+        {/* select gender (code values from Admin > System > Manage Codes) */}
+        <AppSelect
+          selectLabel="Gender"
+          selectValue={formData.genderId?.toString() ?? ''}
+          selectOnChange={handleIdChange('genderId')}
+          selectPlaceholder="Select Gender"
+          selectOptions={toOptions(template.genderOptions)}
+        />
       </div>
 
       <div className="flex flex-wrap gap-6 items-end">
-        {/* Missing in OpenAPI */}
-        <div className="w-full md:w-[48%] space-y-2">
-          <Label>Staff</Label>
-          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
-            Missing in OpenAPI
-          </div>
-        </div>
+        {/* select staff (the office's staff, from the template) */}
+        <AppSelect
+          selectLabel="Staff"
+          selectValue={formData.staffId?.toString() ?? ''}
+          selectOnChange={handleIdChange('staffId')}
+          selectPlaceholder="Select Staff"
+          selectOptions={toOptions(template.staffOptions)}
+        />
 
-        {/* Missing in OpenAPI */}
+        {/* is staff checkbox */}
         <div className="w-full md:w-[48%] flex items-center gap-2">
-          <Checkbox id="isStaff" disabled />
-          <Label htmlFor="isStaff" className="text-muted-foreground">
-            Is staff? — Missing in OpenAPI
+          <Checkbox
+            id="isStaff"
+            checked={!!formData.isStaff}
+            onCheckedChange={checked =>
+              handleChange('isStaff', checked === true)
+            }
+          />
+          <Label htmlFor="isStaff" className="cursor-pointer font-normal">
+            Is staff?
           </Label>
         </div>
       </div>
@@ -201,30 +240,39 @@ const ClientGeneralStep = ({
       </div>
 
       <div className="flex flex-wrap gap-6">
-        {/* Missing in OpenAPI */}
-        <div className="w-full md:w-[48%] space-y-2">
-          <Label>Client Type</Label>
-          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
-            Missing in OpenAPI
-          </div>
-        </div>
+        {/* select client type (code values) */}
+        <AppSelect
+          selectLabel="Client Type"
+          selectValue={formData.clientTypeId?.toString() ?? ''}
+          selectOnChange={handleIdChange('clientTypeId')}
+          selectPlaceholder="Select Client Type"
+          selectOptions={toOptions(template.clientTypeOptions)}
+        />
 
-        {/* Missing in OpenAPI */}
-        <div className="w-full md:w-[48%] space-y-2">
-          <Label>Client Classification</Label>
-          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
-            Missing in OpenAPI
-          </div>
-        </div>
+        {/* select client classification (code values) */}
+        <AppSelect
+          selectLabel="Client Classification"
+          selectValue={formData.clientClassificationId?.toString() ?? ''}
+          selectOnChange={handleIdChange('clientClassificationId')}
+          selectPlaceholder="Select Client Classification"
+          selectOptions={toOptions(template.clientClassificationOptions)}
+        />
       </div>
 
       <div className="flex flex-wrap gap-6 items-end">
-        {/* Missing in OpenAPI */}
+        {/* input submitted on date; required, and not in the future */}
         <div className="w-full md:w-[48%] space-y-2">
-          <Label>Submitted On*</Label>
-          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
-            Missing in OpenAPI
-          </div>
+          <Label htmlFor="submittedOnDate">Submitted On*</Label>
+          <Input
+            id="submittedOnDate"
+            type="date"
+            required
+            max={today}
+            value={formData.submittedOnDate ?? ''}
+            onChange={e =>
+              handleChange('submittedOnDate', e.target.value || undefined)
+            }
+          />
         </div>
 
         {/* active checkbox */}
@@ -248,6 +296,8 @@ const ClientGeneralStep = ({
             <Input
               id="activationDate"
               type="date"
+              min={formData.submittedOnDate}
+              max={today}
               value={formData.activationDate ?? ''}
               onChange={e =>
                 handleChange('activationDate', e.target.value || undefined)

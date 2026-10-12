@@ -10,6 +10,7 @@
   "createCenter": "Create Center",
   "createGuarantor": "Create Guarantor",
   "errors": {
+    "failedActivateClient": "Failed to activate client.",
     "failedApproveClients": "Failed to approve one or more clients.",
     "failedLoadCenters": "Failed to load centers. Please try again.",
     "failedLoadClients": "Failed to load clients. Please try again.",
@@ -33,6 +34,7 @@
   "searchByNameOrExternalId": "Search by Name or External ID...",
   "success": {
     "clientCreated": "Client created successfully.",
+    "clientActivated": "Client activated successfully.",
     "clientsApproved": "Selected clients approved successfully."
   },
   "title": "Clients",
@@ -45,6 +47,17 @@
     "externalId": "External Id",
     "status": "Status",
     "officeName": "Office Name"
+  },
+  "activate": {
+    "title": "Activate Client",
+    "labelActivationDate": "Activation Date*",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter an activation date.",
+      "dateInFuture": "The activation date cannot be in the future.",
+      "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
   },
   "view": {
     "status": "Status:",
@@ -66,6 +79,7 @@
       "notes": "Notes"
     },
     "menu": {
+      "activate": "Activate",
       "edit": "Edit",
       "applications": "Applications",
       "newLoanAccount": "New Loan Account",

@@ -10,6 +10,7 @@
   "createCenter": "Crear centro",
   "createGuarantor": "Crear garante",
   "errors": {
+    "failedActivateClient": "No se pudo activar el cliente.",
     "failedApproveClients": "Error al aprobar uno o más clientes.",
     "failedLoadCenters": "Error al cargar centros. Por favor, inténtelo de nuevo.",
     "failedLoadClients": "Error al cargar clientes. Por favor, inténtelo de nuevo.",
@@ -33,6 +34,7 @@
   "searchByNameOrExternalId": "Buscar por nombre o Id. externo...",
   "success": {
     "clientCreated": "Cliente creado exitosamente.",
+    "clientActivated": "Cliente activado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente."
   },
   "title": "Clientes",
@@ -45,6 +47,17 @@
     "externalId": "Id Externo",
     "status": "Estado",
     "officeName": "Nombre de Oficina"
+  },
+  "activate": {
+    "title": "Activar Cliente",
+    "labelActivationDate": "Fecha de Activación*",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de activación.",
+      "dateInFuture": "La fecha de activación no puede ser futura.",
+      "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
   },
   "view": {
     "status": "Estado:",
@@ -66,6 +79,7 @@
       "notes": "Notas"
     },
     "menu": {
+      "activate": "Activar",
       "edit": "Editar",
       "applications": "Solicitudes",
       "newLoanAccount": "Nueva Cuenta de Préstamo",
