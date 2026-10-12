@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { todayInputValue } from '@/lib/date-utils'
 import type {
   ExtendedClientTemplate,
   ExtendedPostClientsRequest,
@@ -71,6 +72,7 @@ const ClientGeneralStep = ({
   }
 
   const isEntity = formData.legalFormId === LEGAL_FORM_ENTITY
+  const today = todayInputValue()
 
   return (
     <div className="flex flex-col gap-8">
@@ -258,12 +260,19 @@ const ClientGeneralStep = ({
       </div>
 
       <div className="flex flex-wrap gap-6 items-end">
-        {/* Missing in OpenAPI */}
+        {/* input submitted on date; required, and not in the future */}
         <div className="w-full md:w-[48%] space-y-2">
-          <Label>Submitted On*</Label>
-          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
-            Missing in OpenAPI
-          </div>
+          <Label htmlFor="submittedOnDate">Submitted On*</Label>
+          <Input
+            id="submittedOnDate"
+            type="date"
+            required
+            max={today}
+            value={formData.submittedOnDate ?? ''}
+            onChange={e =>
+              handleChange('submittedOnDate', e.target.value || undefined)
+            }
+          />
         </div>
 
         {/* active checkbox */}
@@ -287,6 +296,8 @@ const ClientGeneralStep = ({
             <Input
               id="activationDate"
               type="date"
+              min={formData.submittedOnDate}
+              max={today}
               value={formData.activationDate ?? ''}
               onChange={e =>
                 handleChange('activationDate', e.target.value || undefined)

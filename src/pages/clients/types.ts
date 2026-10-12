@@ -33,6 +33,7 @@ export interface ExtendedClientTemplate extends GetClientsTemplateResponse {
  * `POST /clients` also accepts these fields, which the Angular web app sends.
  */
 export interface ExtendedPostClientsRequest extends PostClientsRequest {
+  submittedOnDate?: string
   genderId?: number
   clientTypeId?: number
   clientClassificationId?: number

@@ -7,6 +7,7 @@
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import ClientGeneralStep from './create-clients-stepper/ClientGeneralStep'
+import { todayInputValue } from '@/lib/date-utils'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { ClientApi } from '@/fineract-api'
 import type {
@@ -74,6 +75,8 @@ const CreateClients = () => {
     dateFormat: 'yyyy-MM-dd',
     legalFormId: 1,
     active: false,
+    // Fineract requires it and the Angular app defaults it to today
+    submittedOnDate: todayInputValue(),
   })
 
   // Fetch the template, and refetch it when the office changes so the Staff
@@ -138,8 +141,30 @@ const CreateClients = () => {
     } else if (!firstname || !lastname) {
       return 'Please enter a first name and a last name.'
     }
+    if (!formData.submittedOnDate) {
+      return 'Please enter a submitted on date.'
+    }
+    if (formData.submittedOnDate > todayInputValue()) {
+      return 'The submitted on date cannot be in the future.'
+    }
     if (formData.active && !formData.activationDate) {
       return 'Please enter an activation date, or uncheck Active.'
+    }
+    // The date input's max is not enforced: the stepper submits with a button
+    if (
+      formData.active &&
+      formData.activationDate &&
+      formData.activationDate > todayInputValue()
+    ) {
+      return 'The activation date cannot be in the future.'
+    }
+    // Fineract rejects an activation date before the submitted on date
+    if (
+      formData.active &&
+      formData.activationDate &&
+      formData.activationDate < formData.submittedOnDate
+    ) {
+      return 'The activation date cannot be before the submitted on date.'
     }
     return null
   }
