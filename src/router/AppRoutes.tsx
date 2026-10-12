@@ -140,6 +140,8 @@ import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/Entit
 import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
 import Configurations from '@/pages/system/configurations/Configurations'
+import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
+import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -762,6 +764,10 @@ const AppRoutes = () => {
 
           {/* Manage Hooks */}
           <Route path="/system/configurations" element={<Configurations />} />
+
+          {/* Audit Trails */}
+          <Route path="/system/audit-trails" element={<AuditTrails />} />
+          <Route path="/system/audit-trails/:id" element={<ViewAuditTrail />} />
 
           {/* Institution */}
 
