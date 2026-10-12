@@ -209,6 +209,7 @@ import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/Loans
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
+import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
@@ -771,6 +772,9 @@ const AppRoutes = () => {
           <Route path="/system/configurations" element={<Configurations />} />
 
           {/* Institution */}
+
+          {/* Loans list */}
+          <Route path="/loans" element={<Loans />} />
 
           {/* Clients */}
           <Route path="/clients" element={<Clients />} />
