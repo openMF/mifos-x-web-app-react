@@ -5,7 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import type { AxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,15 +22,29 @@ import {
 } from '@/components/ui/select'
 import { useTranslation } from 'react-i18next'
 
-const ClientsFamilyMembersAddTab = ({
-  clientId: _clientId, // Reserved for future use
-  onCancel,
-  onSubmitted,
-}: {
-  clientId?: string
-  onCancel?: () => void
-  onSubmitted?: () => void
-}) => {
+import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
+import {
+  ClientFamilyMemberApi,
+  type ClientFamilyMembersData,
+} from '@/fineract-api'
+import { todayInputValue } from '@/lib/date-utils'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+// Built per call so it picks up the current credentials; see EntityDocumentsTab.
+const familyMemberApi = () => new ClientFamilyMemberApi(getConfiguration())
+
+type ClientApiErrorResponse = {
+  defaultUserMessage?: string
+  errors?: Array<{ defaultUserMessage?: string }>
+}
+
+/** A select's value is a string; Fineract expects the code value id as a number. */
+const toId = (value: string) => (value ? Number(value) : undefined)
+
+const ClientsFamilyMembersAddTab = () => {
+  const { id } = useParams()
+  const navigate = useNavigate()
+
   // form state
   const [form, setForm] = useState({
     firstName: '',
@@ -43,8 +59,30 @@ const ClientsFamilyMembersAddTab = ({
     maritalStatus: '',
     dob: '',
   })
+  // The relationship, gender, profession and marital status options are code
+  // values configured in Fineract, so they come from the template.
+  const [template, setTemplate] = useState<ClientFamilyMembersData>({})
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+
+  useEffect(() => {
+    if (!id) return
+    let active = true
+    familyMemberApi()
+      .getTemplate2(Number(id))
+      .then(res => {
+        if (active) setTemplate(res.data ?? {})
+      })
+      .catch(e => {
+        console.error('Failed to load the family member template', e)
+        if (active) setError(t('familyMembers.templateFailed'))
+      })
+    return () => {
+      active = false
+    }
+  }, [id, t])
 
   // update helper
   const set = (k: keyof typeof form, v: string | boolean) =>
@@ -59,11 +97,42 @@ const ClientsFamilyMembersAddTab = ({
     form.gender &&
     form.dob
 
+  const backToList = (state?: RouteSuccessState) =>
+    navigate(`/clients/${id}/family-members`, { state })
+
   // handle submit
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isValid) return
-    onSubmitted?.()
+    if (!id || !isValid || submitting) return
+    setSubmitting(true)
+    setError('')
+    try {
+      await familyMemberApi().addClientFamilyMembers(Number(id), {
+        firstName: form.firstName.trim(),
+        middleName: form.middleName.trim(),
+        lastName: form.lastName.trim(),
+        qualification: form.qualification.trim(),
+        age: Number(form.age),
+        isDependent: form.isDependent,
+        relationshipId: toId(form.relationship),
+        genderId: toId(form.gender),
+        professionId: toId(form.profession),
+        maritalStatusId: toId(form.maritalStatus),
+        dateOfBirth: form.dob,
+        dateFormat: 'yyyy-MM-dd',
+        locale: 'en',
+      })
+      backToList({ successMessage: t('success.familyMemberAdded') })
+    } catch (err) {
+      const data = (err as AxiosError<ClientApiErrorResponse>).response?.data
+      setError(
+        data?.errors?.[0]?.defaultUserMessage ||
+          data?.defaultUserMessage ||
+          t('familyMembers.addFailed')
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -146,21 +215,11 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SPOUSE">
-                {t('familyMembers.relationshipSpouse')}
-              </SelectItem>
-              <SelectItem value="CHILD">
-                {t('familyMembers.relationshipChild')}
-              </SelectItem>
-              <SelectItem value="PARENT">
-                {t('familyMembers.relationshipParent')}
-              </SelectItem>
-              <SelectItem value="SIBLING">
-                {t('familyMembers.relationshipSibling')}
-              </SelectItem>
-              <SelectItem value="OTHER">
-                {t('familyMembers.relationshipOther')}
-              </SelectItem>
+              {template.relationshipIdOptions?.map(option => (
+                <SelectItem key={option.id} value={String(option.id)}>
+                  {option.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -174,15 +233,11 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MALE">
-                {t('familyMembers.genderMale')}
-              </SelectItem>
-              <SelectItem value="FEMALE">
-                {t('familyMembers.genderFemale')}
-              </SelectItem>
-              <SelectItem value="OTHER">
-                {t('familyMembers.genderOther')}
-              </SelectItem>
+              {template.genderIdOptions?.map(option => (
+                <SelectItem key={option.id} value={String(option.id)}>
+                  {option.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -198,21 +253,11 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="EMPLOYED">
-                {t('familyMembers.professionEmployed')}
-              </SelectItem>
-              <SelectItem value="SELF_EMPLOYED">
-                {t('familyMembers.professionSelfEmployed')}
-              </SelectItem>
-              <SelectItem value="STUDENT">
-                {t('familyMembers.professionStudent')}
-              </SelectItem>
-              <SelectItem value="UNEMPLOYED">
-                {t('familyMembers.professionUnemployed')}
-              </SelectItem>
-              <SelectItem value="OTHER">
-                {t('familyMembers.professionOther')}
-              </SelectItem>
+              {template.professionIdOptions?.map(option => (
+                <SelectItem key={option.id} value={String(option.id)}>
+                  {option.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -226,18 +271,11 @@ const ClientsFamilyMembersAddTab = ({
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SINGLE">
-                {t('familyMembers.maritalSingle')}
-              </SelectItem>
-              <SelectItem value="MARRIED">
-                {t('familyMembers.maritalMarried')}
-              </SelectItem>
-              <SelectItem value="DIVORCED">
-                {t('familyMembers.maritalDivorced')}
-              </SelectItem>
-              <SelectItem value="WIDOWED">
-                {t('familyMembers.maritalWidowed')}
-              </SelectItem>
+              {template.maritalStatusIdOptions?.map(option => (
+                <SelectItem key={option.id} value={String(option.id)}>
+                  {option.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -251,6 +289,7 @@ const ClientsFamilyMembersAddTab = ({
           <div className="relative">
             <Input
               type="date"
+              max={todayInputValue()}
               value={form.dob}
               onChange={e => set('dob', e.target.value)}
               className="w-full rounded-none border-0 border-b border-zinc-300 pr-10 focus-visible:ring-0"
@@ -260,14 +299,16 @@ const ClientsFamilyMembersAddTab = ({
         </div>
       </div>
 
+      {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
+
       {/* footer buttons */}
       <div className="flex items-center gap-4 justify-center mt-8">
-        <Button type="button" variant="outline" onClick={() => onCancel?.()}>
+        <Button type="button" variant="outline" onClick={() => backToList()}>
           {tc('actions.cancel')}
         </Button>
         <Button
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || submitting}
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white"
         >
           {tc('actions.submit')}

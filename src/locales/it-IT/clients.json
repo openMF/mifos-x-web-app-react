@@ -35,7 +35,8 @@
   "success": {
     "clientCreated": "Cliente creato con successo.",
     "clientActivated": "Cliente attivato con successo.",
-    "clientsApproved": "Clienti selezionati approvati con successo."
+    "clientsApproved": "Clienti selezionati approvati con successo.",
+    "familyMemberAdded": "Membro della famiglia aggiunto con successo."
   },
   "title": "Clienti",
   "unnamedClient": "Cliente senza nome",
@@ -233,23 +234,17 @@
     "labelMaritalStatus": "Stato Civile",
     "labelDateOfBirth": "Data di Nascita*",
     "selectPlaceholder": "Seleziona",
-    "relationshipSpouse": "Coniuge",
-    "relationshipChild": "Figlio/a",
-    "relationshipParent": "Genitore",
-    "relationshipSibling": "Fratello/Sorella",
-    "relationshipOther": "Altro",
-    "genderMale": "Maschio",
-    "genderFemale": "Femmina",
-    "genderOther": "Altro",
-    "professionEmployed": "Impiegato",
-    "professionSelfEmployed": "Autonomo",
-    "professionStudent": "Studente",
-    "professionUnemployed": "Disoccupato",
-    "professionOther": "Altro",
-    "maritalSingle": "Celibe/Nubile",
-    "maritalMarried": "Sposato/a",
-    "maritalDivorced": "Divorziato/a",
-    "maritalWidowed": "Vedovo/a"
+    "columnName": "Nome",
+    "columnRelationship": "Relazione",
+    "columnGender": "Genere",
+    "columnAge": "Età",
+    "columnDateOfBirth": "Data di Nascita",
+    "columnIsDependent": "A Carico",
+    "loading": "Caricamento dei membri della famiglia...",
+    "loadFailed": "Impossibile caricare i membri della famiglia.",
+    "empty": "Non sono ancora stati aggiunti membri della famiglia.",
+    "templateFailed": "Impossibile caricare le opzioni di questo modulo.",
+    "addFailed": "Impossibile aggiungere il membro della famiglia."
   },
   "generalData": {
     "headings": {

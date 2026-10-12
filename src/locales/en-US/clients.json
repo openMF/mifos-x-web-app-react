@@ -35,7 +35,8 @@
   "success": {
     "clientCreated": "Client created successfully.",
     "clientActivated": "Client activated successfully.",
-    "clientsApproved": "Selected clients approved successfully."
+    "clientsApproved": "Selected clients approved successfully.",
+    "familyMemberAdded": "Family member added successfully."
   },
   "title": "Clients",
   "unnamedClient": "Unnamed Client",
@@ -233,23 +234,17 @@
     "labelMaritalStatus": "Marital Status",
     "labelDateOfBirth": "Date Of Birth*",
     "selectPlaceholder": "Select",
-    "relationshipSpouse": "Spouse",
-    "relationshipChild": "Child",
-    "relationshipParent": "Parent",
-    "relationshipSibling": "Sibling",
-    "relationshipOther": "Other",
-    "genderMale": "Male",
-    "genderFemale": "Female",
-    "genderOther": "Other",
-    "professionEmployed": "Employed",
-    "professionSelfEmployed": "Self-Employed",
-    "professionStudent": "Student",
-    "professionUnemployed": "Unemployed",
-    "professionOther": "Other",
-    "maritalSingle": "Single",
-    "maritalMarried": "Married",
-    "maritalDivorced": "Divorced",
-    "maritalWidowed": "Widowed"
+    "columnName": "Name",
+    "columnRelationship": "Relationship",
+    "columnGender": "Gender",
+    "columnAge": "Age",
+    "columnDateOfBirth": "Date Of Birth",
+    "columnIsDependent": "Dependent",
+    "loading": "Loading family members...",
+    "loadFailed": "Could not load the family members.",
+    "empty": "No family members have been added yet.",
+    "templateFailed": "Could not load the options for this form.",
+    "addFailed": "Could not add the family member."
   },
   "generalData": {
     "headings": {

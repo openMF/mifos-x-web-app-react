@@ -5,258 +5,141 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { CalendarIcon } from 'lucide-react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Plus } from 'lucide-react'
 
-const ClientsFamilyMembersAddTab = ({
-  clientId: _clientId, // Reserved for future use
-  onCancel,
-  onSubmitted,
-}: {
-  clientId?: string
-  onCancel?: () => void
-  onSubmitted?: () => void
-}) => {
-  // form state for all input fields
-  const [form, setForm] = useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    qualification: '',
-    age: '',
-    isDependent: false,
-    relationship: '',
-    gender: '',
-    profession: '',
-    maritalStatus: '',
-    dob: '',
-  })
-  const { t } = useTranslation('clients')
+import {
+  ClientFamilyMemberApi,
+  type ClientFamilyMembersData,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { formatDate } from '@/lib/date-utils'
+
+import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
+// Built per call so it picks up the current credentials; see EntityDocumentsTab.
+const familyMemberApi = () => new ClientFamilyMemberApi(getConfiguration())
+
+/**
+ * Fineract sends the date of birth as "yyyy-MM-dd". It is split into parts so
+ * formatDate reads it as a local date: parsed as a string, it is UTC midnight
+ * and shows the previous day west of UTC.
+ */
+const dateOfBirthParts = (value?: string | number[]) =>
+  Array.isArray(value) ? value : value?.split('-').map(Number)
+
+const ClientsFamilyMembersTab = () => {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { t, i18n } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
 
-  // update helper for form fields
-  const set = (k: keyof typeof form, v: string | boolean) =>
-    setForm(f => ({ ...f, [k]: v }))
+  const [members, setMembers] = useState<ClientFamilyMembersData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [failed, setFailed] = useState(false)
+  /** Identifies the newest request, so a response for a previous client is discarded. */
+  const loadIdRef = useRef(0)
 
-  // basic validation check for required fields
-  const isValid =
-    form.firstName &&
-    form.lastName &&
-    form.age &&
-    form.relationship &&
-    form.gender &&
-    form.dob
+  const load = useCallback(async () => {
+    const requestId = ++loadIdRef.current
+    if (!id) {
+      setMembers([])
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    setFailed(false)
+    try {
+      const res = await familyMemberApi().getFamilyMembers(Number(id))
+      if (requestId !== loadIdRef.current) return
+      setMembers(res?.data ?? [])
+    } catch (e) {
+      if (requestId !== loadIdRef.current) return
+      console.error('Failed to load client family members', e)
+      setMembers([])
+      setFailed(true)
+    } finally {
+      if (requestId === loadIdRef.current) setLoading(false)
+    }
+  }, [id])
 
-  // handle submit
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!isValid) return
-    onSubmitted?.()
-  }
+  useEffect(() => {
+    load()
+  }, [load])
 
   return (
-    <form onSubmit={submit} className="p-0">
-      {/* grid layout for form inputs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
-        {/* Names */}
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelFirstName')}</Label>
-          <Input
-            value={form.firstName}
-            onChange={e => set('firstName', e.target.value)}
-            className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelMiddleName')}</Label>
-          <Input
-            value={form.middleName}
-            onChange={e => set('middleName', e.target.value)}
-            className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelLastName')}</Label>
-          <Input
-            value={form.lastName}
-            onChange={e => set('lastName', e.target.value)}
-            className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelQualification')}</Label>
-          <Input
-            value={form.qualification}
-            onChange={e => set('qualification', e.target.value)}
-            className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
-          />
-        </div>
-
-        {/* Age + Dependent checkbox */}
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelAge')}</Label>
-          <Input
-            type="number"
-            min={0}
-            value={form.age}
-            onChange={e => set('age', e.target.value)}
-            className="rounded-none border-0 border-b border-zinc-300 focus-visible:ring-0"
-          />
-        </div>
-        <div className="flex items-center gap-3 mt-6">
-          <Label className="m-0">{t('familyMembers.labelIsDependent')}</Label>
-          <Checkbox
-            checked={form.isDependent}
-            onCheckedChange={v => set('isDependent', !!v)}
-          />
-        </div>
-
-        {/* Relationship + Gender */}
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelRelationship')}</Label>
-          <Select
-            value={form.relationship}
-            onValueChange={v => set('relationship', v)}
-          >
-            <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="SPOUSE">
-                {t('familyMembers.relationshipSpouse')}
-              </SelectItem>
-              <SelectItem value="CHILD">
-                {t('familyMembers.relationshipChild')}
-              </SelectItem>
-              <SelectItem value="PARENT">
-                {t('familyMembers.relationshipParent')}
-              </SelectItem>
-              <SelectItem value="SIBLING">
-                {t('familyMembers.relationshipSibling')}
-              </SelectItem>
-              <SelectItem value="OTHER">
-                {t('familyMembers.relationshipOther')}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelGender')}</Label>
-          <Select value={form.gender} onValueChange={v => set('gender', v)}>
-            <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="MALE">
-                {t('familyMembers.genderMale')}
-              </SelectItem>
-              <SelectItem value="FEMALE">
-                {t('familyMembers.genderFemale')}
-              </SelectItem>
-              <SelectItem value="OTHER">
-                {t('familyMembers.genderOther')}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Profession + Marital Status */}
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelProfession')}</Label>
-          <Select
-            value={form.profession}
-            onValueChange={v => set('profession', v)}
-          >
-            <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="EMPLOYED">
-                {t('familyMembers.professionEmployed')}
-              </SelectItem>
-              <SelectItem value="SELF_EMPLOYED">
-                {t('familyMembers.professionSelfEmployed')}
-              </SelectItem>
-              <SelectItem value="STUDENT">
-                {t('familyMembers.professionStudent')}
-              </SelectItem>
-              <SelectItem value="UNEMPLOYED">
-                {t('familyMembers.professionUnemployed')}
-              </SelectItem>
-              <SelectItem value="OTHER">
-                {t('familyMembers.professionOther')}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelMaritalStatus')}</Label>
-          <Select
-            value={form.maritalStatus}
-            onValueChange={v => set('maritalStatus', v)}
-          >
-            <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
-              <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="SINGLE">
-                {t('familyMembers.maritalSingle')}
-              </SelectItem>
-              <SelectItem value="MARRIED">
-                {t('familyMembers.maritalMarried')}
-              </SelectItem>
-              <SelectItem value="DIVORCED">
-                {t('familyMembers.maritalDivorced')}
-              </SelectItem>
-              <SelectItem value="WIDOWED">
-                {t('familyMembers.maritalWidowed')}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Date of Birth */}
-        <div className="space-y-1">
-          <Label>{t('familyMembers.labelDateOfBirth')}</Label>
-          <div className="relative">
-            <Input
-              type="date"
-              value={form.dob}
-              onChange={e => set('dob', e.target.value)}
-              className="w-full rounded-none border-0 border-b border-zinc-300 pr-10 focus-visible:ring-0"
-            />
-            <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-          </div>
-        </div>
-      </div>
-
-      {/* Footer buttons */}
-      <div className="flex items-center gap-4 justify-center mt-8">
-        <Button type="button" variant="outline" onClick={() => onCancel?.()}>
-          {tc('actions.cancel')}
-        </Button>
+    <div className="bg-transparent space-y-6">
+      <div className="flex items-center justify-between p-4">
+        <h3 className="text-lg font-semibold text-black dark:text-white">
+          {t('familyMembers.heading')}
+        </h3>
         <Button
-          type="submit"
-          disabled={!isValid}
-          className="bg-[#0e77b7] hover:bg-[#0662a3] text-white"
+          className="bg-[#0e77b7] hover:bg-[#0662a3] text-white rounded-md border-0 shadow-none"
+          onClick={() => navigate(`/clients/${id}/family-members/add`)}
         >
-          {tc('actions.submit')}
+          <Plus /> {t('familyMembers.addButton')}
         </Button>
       </div>
-    </form>
+
+      {loading ? (
+        <p className="px-4 text-sm text-zinc-500">
+          {t('familyMembers.loading')}
+        </p>
+      ) : failed ? (
+        <p className="px-4 text-sm text-red-600">
+          {t('familyMembers.loadFailed')}
+        </p>
+      ) : members.length === 0 ? (
+        <p className="px-4 text-sm text-zinc-500">{t('familyMembers.empty')}</p>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('familyMembers.columnName')}</TableHead>
+              <TableHead>{t('familyMembers.columnRelationship')}</TableHead>
+              <TableHead>{t('familyMembers.columnGender')}</TableHead>
+              <TableHead>{t('familyMembers.columnAge')}</TableHead>
+              <TableHead>{t('familyMembers.columnDateOfBirth')}</TableHead>
+              <TableHead>{t('familyMembers.columnIsDependent')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {members.map(member => (
+              <TableRow key={member.id}>
+                <TableCell>
+                  {[member.firstName, member.middleName, member.lastName]
+                    .filter(Boolean)
+                    .join(' ')}
+                </TableCell>
+                <TableCell>{member.relationship || '—'}</TableCell>
+                <TableCell>{member.gender || '—'}</TableCell>
+                <TableCell>{member.age ?? '—'}</TableCell>
+                <TableCell>
+                  {formatDate(
+                    dateOfBirthParts(member.dateOfBirth),
+                    i18n.language
+                  )}
+                </TableCell>
+                <TableCell>
+                  {member.isDependent ? tc('actions.yes') : tc('actions.no')}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </div>
   )
 }
 
-export default ClientsFamilyMembersAddTab
+export default ClientsFamilyMembersTab
