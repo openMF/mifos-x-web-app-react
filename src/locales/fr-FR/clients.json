@@ -71,6 +71,7 @@
     "missingInOpenAPI": "Manquant dans OpenAPI",
     "tabs": {
       "general": "Général",
+      "personalData": "Données personnelles",
       "generalData": "Données générales",
       "address": "Adresse",
       "familyMembers": "Membres de la Famille",
@@ -338,5 +339,53 @@
     "loading": "Chargement…",
     "loadFailed": "Impossible de charger les données générales de ce client.",
     "entityOnly": "Les données générales ne sont disponibles que pour les clients personnes morales."
+  },
+  "personalData": {
+    "loading": "Chargement…",
+    "loadFailed": "Impossible de charger les données personnelles de ce client.",
+    "unassigned": "Non attribué",
+    "noClassification": "Aucune donnée de classification disponible",
+    "headings": {
+      "personalInformation": "Informations personnelles",
+      "accountInformation": "Informations sur le compte",
+      "entityDetails": "Détails de l'entité",
+      "contactInformation": "Coordonnées",
+      "classification": "Classification",
+      "groupMembership": "Adhésion au groupe",
+      "importantDates": "Dates importantes",
+      "status": "Statut"
+    },
+    "fields": {
+      "displayName": "Nom affiché",
+      "firstName": "Prénom",
+      "middleName": "Deuxième prénom",
+      "lastName": "Nom de famille",
+      "dateOfBirth": "Date de naissance",
+      "gender": "Genre",
+      "isStaff": "Membre du personnel",
+      "entityName": "Nom de l'entité",
+      "incorporationDate": "Date de constitution",
+      "legalForm": "Forme juridique",
+      "accountNo": "N° de compte",
+      "externalId": "Id Externe",
+      "office": "Bureau",
+      "staff": "Personnel",
+      "defaultSavingsAccount": "Compte d'épargne par défaut",
+      "constitution": "Constitution",
+      "mainBusinessLine": "Secteur d'activité principal",
+      "incorporationValidityTillDate": "Validité de la constitution jusqu'au",
+      "incorporationNumber": "Numéro de constitution",
+      "remarks": "Remarques",
+      "mobileNumber": "Numéro de Mobile",
+      "email": "E-mail",
+      "clientType": "Type de client",
+      "clientClassification": "Classification du client",
+      "group": "Groupe",
+      "submittedOn": "Soumis le",
+      "activationDate": "Date d'Activation",
+      "closedDate": "Date de fermeture",
+      "clientStatus": "Statut du client",
+      "subStatus": "Sous-statut"
+    }
   }
 }

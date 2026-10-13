@@ -76,6 +76,7 @@ const ClientsView = () => {
     ?.split('/') ?? ['', '']
   const tabLabels: Record<string, string> = {
     general: t('view.tabs.general'),
+    'personal-data': t('view.tabs.personalData'),
     'general-data': t('view.tabs.generalData'),
     address: t('view.tabs.address'),
     'family-members': t('view.tabs.familyMembers'),
@@ -322,6 +323,10 @@ const ClientsView = () => {
           {
             label: t('view.tabs.general'),
             href: `clients/${client?.id}/general`,
+          },
+          {
+            label: t('view.tabs.personalData'),
+            href: `clients/${client?.id}/personal-data`,
           },
           // Only legal entities have the KYC data this tab shows.
           ...(isLegalEntity(client)

@@ -223,6 +223,7 @@ import LoanDatatableTab from '@/pages/loans/loans-view/datatables-tab/LoanDatata
 import GroupDatatableTab from '@/pages/groups/groups-view/datatables-tab/GroupDatatableTab'
 import ClientsIdentitiesTab from '@/pages/clients/clients-view/Identities-tab/ClientsidentitiesTab'
 import ClientsGeneralDataTab from '@/pages/clients/clients-view/general-data-tab/ClientsGeneralDataTab'
+import ClientsPersonalDataTab from '@/pages/clients/clients-view/personal-data-tab/ClientsPersonalDataTab'
 import ClientsAddressTab from '@/pages/clients/clients-view/address-tab/ClientsAddressTab'
 import UndoApprovalSharesAccount from '@/pages/shares/shares-account-actions/undo-approval-shares-account/UndoApprovalSharesAccount'
 import SharesAccountView from '@/pages/shares/shares-account-view/SharesAccountView'
@@ -797,6 +798,7 @@ const AppRoutes = () => {
           />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
+            <Route path="personal-data" element={<ClientsPersonalDataTab />} />
             <Route path="general-data" element={<ClientsGeneralDataTab />} />
             <Route path="notes" element={<ClientNotesTab />} />
             <Route path="address" element={<ClientsAddressTab />} />
