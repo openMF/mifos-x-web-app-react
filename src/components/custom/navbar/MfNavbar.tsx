@@ -104,6 +104,7 @@ const MfNavbar = () => {
 
   const institutionOptions = [
     { label: t('clients:title'), path: 'clients' },
+    { label: t('loans:title'), path: 'loans' },
     { label: t('clients:groups'), path: 'groups' },
     { label: t('clients:centers'), path: 'centers' },
     { label: t('accounting:title'), path: 'accounting' },
