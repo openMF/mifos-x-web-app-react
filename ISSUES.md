@@ -184,6 +184,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `GetRolesResponse` missing `status`
 
+### `/system/audit-trails`
+
+- `retrieveAuditEntries` (GET `/audits`) typed as `string`; the paged response has `totalFilteredRecords` and `pageItems`
+- `retrieveAuditEntry` (GET `/audits/{id}`) typed as `AuditData`, which only has `createdBy`, `createdDate`, `lastModifiedBy`, `lastModifiedDate`; the entry has `actionName`, `entityName`, `resourceId`, `maker`, `madeOnDate`, `checker`, `checkedOnDate`, `processingResult`, `commandAsJson`, `officeName` and more
+- `AppUserData` (in `appUsers` of GET `/audits/searchtemplate`) missing `id`, `username`
+
 ---
 
 ## Admin Templates
