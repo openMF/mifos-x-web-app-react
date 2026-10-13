@@ -89,6 +89,7 @@ import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
+import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -481,6 +482,12 @@ const AppRoutes = () => {
           <Route
             path="/organization/bulkloan"
             element={<BulkLoanReassignment />}
+          />
+
+          {/* Standing Instructions History */}
+          <Route
+            path="/organization/instructions-history"
+            element={<InstructionsHistory />}
           />
 
           {/* Manage Funds */}
