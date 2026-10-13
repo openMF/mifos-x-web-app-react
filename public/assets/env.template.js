@@ -30,4 +30,7 @@
   // Copilot AI assistant (off unless MIFOS_ENABLE_COPILOT=true)
   window.__env.MIFOS_ENABLE_COPILOT = '${MIFOS_ENABLE_COPILOT}'
   window.__env.MIFOS_COPILOT_MCP_BASE_URL = '${MIFOS_COPILOT_MCP_BASE_URL}'
+
+  // Sign out after this many ms without activity (0 = off)
+  window.__env.MIFOS_SESSION_IDLE_TIMEOUT = '${MIFOS_SESSION_IDLE_TIMEOUT}'
 })(this)

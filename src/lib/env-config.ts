@@ -108,4 +108,18 @@ export const envConfig = {
     'VITE_MIFOS_COPILOT_MCP_BASE_URL',
     'mock'
   ),
+
+  /**
+   * Sign the user out after this many milliseconds without activity in any
+   * tab; 0 turns it off. Same variable and 5 minute default as the Angular
+   * web-app.
+   */
+  sessionIdleTimeout:
+    Number(
+      env(
+        'MIFOS_SESSION_IDLE_TIMEOUT',
+        'VITE_MIFOS_SESSION_IDLE_TIMEOUT',
+        '300000'
+      )
+    ) || 0,
 } as const
