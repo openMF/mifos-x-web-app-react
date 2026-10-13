@@ -316,3 +316,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/accountingrules/{id}` (GET)
 
 - `AccountingRuleData` missing `accountToDebit`,`accountToCredit`
+
+### `/loan-originators`
+
+- The generated client has no API class for `/loan-originators` (list, template, get, create, update, delete), so the Loan Originators pages call it through `@/lib/axios`
