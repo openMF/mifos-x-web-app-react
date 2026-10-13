@@ -288,6 +288,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/clients/{id}` (GET)
 
 - `GetClientsClientIdResponse` missing `legalFormId`, `middlename`, `dateOfBirth`, `genderId`, `mobileNo`, `clientTypeId`, `clientClassificationId`, `submittedOnDate`
+- `GetClientsClientIdResponse` also missing `fullname`, `legalForm`, `gender`, `isStaff`, `staffName`, `clientType`, `clientClassification`, `subStatus`, `savingsAccountId`, `clientNonPersonDetails` (the Personal Data tab reads the response as `ClientData`, which has them)
 - `staffId` [TO BE FIXED]
 
 ### `/clients/{id}` (PUT)

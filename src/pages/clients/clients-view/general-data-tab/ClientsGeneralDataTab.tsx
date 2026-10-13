@@ -10,6 +10,10 @@ import { useTranslation } from 'react-i18next'
 
 import { formatDate } from '@/lib/date-utils'
 import { cn } from '@/lib/utils'
+import {
+  DataFieldGrid,
+  DataSection as Section,
+} from '@/components/custom/data-field-grid/DataFieldGrid'
 
 import {
   DISPLAY_SECTIONS,
@@ -92,50 +96,24 @@ const FieldGrid = ({ fields }: { fields: DisplayField[] }) => {
   }
 
   return (
-    <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {fields.map(field => {
+    <DataFieldGrid
+      fields={fields.map(field => {
         const label = t(`generalData.fields.${field.label}`)
-        return (
-          <div
-            key={field.label}
-            className={cn(
-              'rounded-md border border-zinc-200 p-3 dark:border-zinc-700',
-              field.wide && 'lg:col-span-2'
-            )}
-          >
-            <dt className="text-xs font-medium uppercase tracking-wide text-[#0e77b7] dark:text-sky-400">
-              {label}
-            </dt>
-            <dd className="mt-1 text-sm break-words text-black dark:text-white">
-              {field.label === 'yesNo' ? (
-                <YesNoIndicator label={label} value={field.value} />
-              ) : (
-                display(field)
-              )}
-            </dd>
-          </div>
-        )
+        return {
+          key: field.label,
+          label,
+          wide: field.wide,
+          value:
+            field.label === 'yesNo' ? (
+              <YesNoIndicator label={label} value={field.value} />
+            ) : (
+              display(field)
+            ),
+        }
       })}
-    </dl>
+    />
   )
 }
-
-const Section = ({
-  title,
-  children,
-}: {
-  title?: string
-  children: React.ReactNode
-}) => (
-  <section className="space-y-3">
-    {title && (
-      <h3 className="border-b border-zinc-200 pb-2 text-lg font-semibold uppercase text-black dark:border-zinc-700 dark:text-white">
-        {title}
-      </h3>
-    )}
-    {children}
-  </section>
-)
 
 /** The fields of a group, read from each of its section's entries. */
 const groupRecords = (

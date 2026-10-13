@@ -71,6 +71,7 @@
     "missingInOpenAPI": "Missing in OpenAPI",
     "tabs": {
       "general": "General",
+      "personalData": "Personal Data",
       "generalData": "General Data",
       "address": "Address",
       "familyMembers": "Family Members",
@@ -338,5 +339,53 @@
     "loading": "Loading…",
     "loadFailed": "Could not load the general data for this client.",
     "entityOnly": "General data is available for legal entity clients only."
+  },
+  "personalData": {
+    "loading": "Loading…",
+    "loadFailed": "The personal data of this client could not be loaded.",
+    "unassigned": "Unassigned",
+    "noClassification": "No classification data available",
+    "headings": {
+      "personalInformation": "Personal Information",
+      "accountInformation": "Account Information",
+      "entityDetails": "Entity Details",
+      "contactInformation": "Contact Information",
+      "classification": "Classification",
+      "groupMembership": "Group Membership",
+      "importantDates": "Important Dates",
+      "status": "Status"
+    },
+    "fields": {
+      "displayName": "Display Name",
+      "firstName": "First Name",
+      "middleName": "Middle Name",
+      "lastName": "Last Name",
+      "dateOfBirth": "Date of Birth",
+      "gender": "Gender",
+      "isStaff": "Is Staff",
+      "entityName": "Entity Name",
+      "incorporationDate": "Incorporation Date",
+      "legalForm": "Legal Form",
+      "accountNo": "Account No.",
+      "externalId": "External Id",
+      "office": "Office",
+      "staff": "Staff",
+      "defaultSavingsAccount": "Default Savings Account",
+      "constitution": "Constitution",
+      "mainBusinessLine": "Main Business Line",
+      "incorporationValidityTillDate": "Incorporation Validity Till Date",
+      "incorporationNumber": "Incorporation No.",
+      "remarks": "Remarks",
+      "mobileNumber": "Mobile Number",
+      "email": "Email",
+      "clientType": "Client Type",
+      "clientClassification": "Client Classification",
+      "group": "Group",
+      "submittedOn": "Submitted On",
+      "activationDate": "Activation Date",
+      "closedDate": "Closed Date",
+      "clientStatus": "Client Status",
+      "subStatus": "Sub Status"
+    }
   }
 }
