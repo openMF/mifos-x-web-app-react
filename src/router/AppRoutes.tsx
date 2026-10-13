@@ -125,6 +125,7 @@ import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
+import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
 import ViewDataTables from '@/pages/system/manage-data-tables/ViewDataTables'
 import Codes from '@/pages/system/codes/Codes'
 import ViewCodes from '@/pages/system/codes/ViewCodes'
@@ -707,6 +708,10 @@ const AppRoutes = () => {
 
           {/* Manage Data Tables */}
           <Route path="/system/data-tables" element={<ManageDataTables />} />
+          <Route
+            path="/system/data-tables/create"
+            element={<CreateDataTable />}
+          />
           <Route path="/system/data-tables/:id" element={<ViewDataTables />} />
 
           {/* Manage Codes*/}
