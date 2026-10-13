@@ -159,6 +159,7 @@ The application uses environment variables for configuration. Copy `.env.sample`
 | `VITE_FINERACT_API_PROVIDER`               | API path prefix                                           | `/fineract-provider`     |
 | `VITE_FINERACT_API_VERSION`                | API version path                                          | `/api`                   |
 | `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments            | `default`                |
+| `VITE_MIFOS_SESSION_IDLE_TIMEOUT`          | Sign out after this many ms without activity (0 = off)    | `300000`                 |
 
 > **Note:** In development, `.env.development` intentionally leaves
 > `VITE_FINERACT_API_URL` empty so requests use relative URLs and go through the
