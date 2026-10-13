@@ -320,3 +320,15 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/loan-originators`
 
 - The generated client has no API class for `/loan-originators` (list, template, get, create, update, delete), so the Loan Originators pages call it through `@/lib/axios`
+
+---
+
+## System: Manage Data Tables
+
+### `/datatables/{datatableName}` (PUT)
+
+- `PutDataTablesRequestAddColumns` and `PutDataTablesRequestChangeColumns` are missing `length` (Fineract reads it for String columns)
+
+### `/datatables/{datatableName}` (GET)
+
+- `GetDataTablesResponse` is missing `entitySubType`
