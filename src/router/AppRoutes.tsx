@@ -77,6 +77,7 @@ import Funds from '@/pages/organization/manage-funds/ManageFunds'
 import CreateFunds from '@/pages/organization/manage-funds/CreateFunds'
 import ViewFunds from '@/pages/organization/manage-funds/ViewFunds'
 import EditFunds from '@/pages/organization/manage-funds/EditFunds'
+import FundMapping from '@/pages/organization/fund-mapping/FundMapping'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -510,6 +511,9 @@ const AppRoutes = () => {
             path="/organization/manage-funds/:id/edit"
             element={<EditFunds />}
           />
+
+          {/* Fund Mapping */}
+          <Route path="/organization/fund-mapping" element={<FundMapping />} />
 
           {/* Payment Types */}
           <Route path="/organization/payment-types" element={<Payment />} />
