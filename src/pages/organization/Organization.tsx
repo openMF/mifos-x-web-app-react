@@ -16,6 +16,7 @@ import {
   faCog,
   faDollarSign,
   faEnvelope,
+  faHandshake,
   faLock,
   faMoneyBill,
   faPeopleGroup,
@@ -43,6 +44,11 @@ const organizationItems = [
     icon: faMoneyBill,
     name: 'Manage Funds',
     path: '/organization/manage-funds',
+  },
+  {
+    icon: faHandshake,
+    name: 'Manage Loan Originators',
+    path: '/organization/loan-originators',
   },
   { icon: faUser, name: 'Manage Employees', path: '/organization/employees' },
   {

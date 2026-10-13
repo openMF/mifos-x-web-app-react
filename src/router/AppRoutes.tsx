@@ -78,6 +78,10 @@ import CreateFunds from '@/pages/organization/manage-funds/CreateFunds'
 import ViewFunds from '@/pages/organization/manage-funds/ViewFunds'
 import EditFunds from '@/pages/organization/manage-funds/EditFunds'
 import FundMapping from '@/pages/organization/fund-mapping/FundMapping'
+import LoanOriginators from '@/pages/organization/loan-originators/LoanOriginators'
+import CreateLoanOriginator from '@/pages/organization/loan-originators/CreateLoanOriginator'
+import ViewLoanOriginator from '@/pages/organization/loan-originators/ViewLoanOriginator'
+import EditLoanOriginator from '@/pages/organization/loan-originators/EditLoanOriginator'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -515,6 +519,24 @@ const AppRoutes = () => {
 
           {/* Fund Mapping */}
           <Route path="/organization/fund-mapping" element={<FundMapping />} />
+
+          {/* Loan Originators */}
+          <Route
+            path="/organization/loan-originators"
+            element={<LoanOriginators />}
+          />
+          <Route
+            path="/organization/loan-originators/create"
+            element={<CreateLoanOriginator />}
+          />
+          <Route
+            path="/organization/loan-originators/:id"
+            element={<ViewLoanOriginator />}
+          />
+          <Route
+            path="/organization/loan-originators/:id/edit"
+            element={<EditLoanOriginator />}
+          />
 
           {/* Payment Types */}
           <Route path="/organization/payment-types" element={<Payment />} />
