@@ -224,6 +224,7 @@ import ActivateClient from '@/pages/clients/clients-view/client-actions/Activate
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
+import ClientsFamilyMembersTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersTab'
 import ClientsDocumentsTab from '@/pages/clients/clients-view/documents-tab/ClientsDocumentsTab'
 import ClientDatatableTab from '@/pages/clients/clients-view/datatables-tab/ClientDatatableTab'
 import LoanDatatableTab from '@/pages/loans/loans-view/datatables-tab/LoanDatatableTab'
@@ -836,10 +837,12 @@ const AppRoutes = () => {
             <Route path="address" element={<ClientsAddressTab />} />
             <Route
               path="family-members"
+              element={<ClientsFamilyMembersTab />}
+            />
+            <Route
+              path="family-members/add"
               element={<ClientsFamilyMembersAddTab />}
-            >
-              <Route path="add" element={<ClientsFamilyMembersAddTab />} />
-            </Route>
+            />
             <Route path="documents" element={<ClientsDocumentsTab />} />
             <Route
               path="datatables/:datatableName"

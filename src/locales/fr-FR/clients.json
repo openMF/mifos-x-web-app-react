@@ -35,7 +35,8 @@
   "success": {
     "clientCreated": "Client créé avec succès.",
     "clientActivated": "Client activé avec succès.",
-    "clientsApproved": "Clients sélectionnés approuvés avec succès."
+    "clientsApproved": "Clients sélectionnés approuvés avec succès.",
+    "familyMemberAdded": "Membre de la famille ajouté avec succès."
   },
   "title": "Clients",
   "unnamedClient": "Client sans nom",
@@ -236,23 +237,17 @@
     "labelMaritalStatus": "Statut Matrimonial",
     "labelDateOfBirth": "Date de Naissance*",
     "selectPlaceholder": "S\u00e9lectionner",
-    "relationshipSpouse": "Conjoint(e)",
-    "relationshipChild": "Enfant",
-    "relationshipParent": "Parent",
-    "relationshipSibling": "Fr\u00e8re/S\u0153ur",
-    "relationshipOther": "Autre",
-    "genderMale": "Masculin",
-    "genderFemale": "F\u00e9minin",
-    "genderOther": "Autre",
-    "professionEmployed": "Employ\u00e9",
-    "professionSelfEmployed": "Ind\u00e9pendant",
-    "professionStudent": "\u00c9tudiant",
-    "professionUnemployed": "Sans Emploi",
-    "professionOther": "Autre",
-    "maritalSingle": "C\u00e9libataire",
-    "maritalMarried": "Mari\u00e9(e)",
-    "maritalDivorced": "Divorc\u00e9(e)",
-    "maritalWidowed": "Veuf/Veuve"
+    "columnName": "Nom",
+    "columnRelationship": "Relation",
+    "columnGender": "Genre",
+    "columnAge": "\u00c2ge",
+    "columnDateOfBirth": "Date de Naissance",
+    "columnIsDependent": "D\u00e9pendant",
+    "loading": "Chargement des membres de la famille...",
+    "loadFailed": "Impossible de charger les membres de la famille.",
+    "empty": "Aucun membre de la famille n'a encore \u00e9t\u00e9 ajout\u00e9.",
+    "templateFailed": "Impossible de charger les options de ce formulaire.",
+    "addFailed": "Impossible d'ajouter le membre de la famille."
   },
   "generalData": {
     "headings": {

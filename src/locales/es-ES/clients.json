@@ -35,7 +35,8 @@
   "success": {
     "clientCreated": "Cliente creado exitosamente.",
     "clientActivated": "Cliente activado exitosamente.",
-    "clientsApproved": "Clientes seleccionados aprobados exitosamente."
+    "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
+    "familyMemberAdded": "Miembro de familia agregado exitosamente."
   },
   "title": "Clientes",
   "unnamedClient": "Cliente sin nombre",
@@ -236,23 +237,17 @@
     "labelMaritalStatus": "Estado Civil",
     "labelDateOfBirth": "Fecha de Nacimiento*",
     "selectPlaceholder": "Seleccionar",
-    "relationshipSpouse": "C\u00f3nyuge",
-    "relationshipChild": "Hijo/a",
-    "relationshipParent": "Padre/Madre",
-    "relationshipSibling": "Hermano/a",
-    "relationshipOther": "Otro",
-    "genderMale": "Masculino",
-    "genderFemale": "Femenino",
-    "genderOther": "Otro",
-    "professionEmployed": "Empleado",
-    "professionSelfEmployed": "Aut\u00f3nomo",
-    "professionStudent": "Estudiante",
-    "professionUnemployed": "Desempleado",
-    "professionOther": "Otro",
-    "maritalSingle": "Soltero/a",
-    "maritalMarried": "Casado/a",
-    "maritalDivorced": "Divorciado/a",
-    "maritalWidowed": "Viudo/a"
+    "columnName": "Nombre",
+    "columnRelationship": "Relaci\u00f3n",
+    "columnGender": "G\u00e9nero",
+    "columnAge": "Edad",
+    "columnDateOfBirth": "Fecha de Nacimiento",
+    "columnIsDependent": "Dependiente",
+    "loading": "Cargando miembros de familia...",
+    "loadFailed": "No se pudieron cargar los miembros de familia.",
+    "empty": "A\u00fan no se han agregado miembros de familia.",
+    "templateFailed": "No se pudieron cargar las opciones de este formulario.",
+    "addFailed": "No se pudo agregar el miembro de familia."
   },
   "generalData": {
     "headings": {
