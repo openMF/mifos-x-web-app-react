@@ -21,10 +21,16 @@ import { useEntityDatatables } from '@/components/datatables/useEntityDatatables
 
 const officesApi = new OfficesApi(getConfiguration())
 
+/** Fineract sends the parent office; the generated type leaves it out (ISSUES.md) */
+type OfficeWithParent = GetOfficesResponse & {
+  parentId?: number | null
+  parentName?: string | null
+}
+
 const ViewOffices = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [office, setOffice] = useState<GetOfficesResponse>()
+  const [office, setOffice] = useState<OfficeWithParent>()
   const datatables = useEntityDatatables('m_office')
 
   // fetch office details
@@ -72,7 +78,7 @@ const ViewOffices = () => {
         {/* office details */}
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
           <div className="font-medium">Parent Office</div>
-          <div>{'missing in openapi'}</div>
+          <div>{office.parentName || '—'}</div>
 
           <div className="font-medium">Opened On</div>
           <div>

@@ -58,9 +58,8 @@ const ViewDataTables = () => {
       try {
         const res = await dataTablesApi.getDatatable(id)
         const data: GetDataTablesResponse = res?.data ?? {}
-        setAssocWith(
-          data.registeredTableName ?? data.applicationTableName ?? ''
-        )
+        // The entity the data table belongs to, e.g. m_client
+        setAssocWith(data.applicationTableName ?? '')
         setFields(
           Array.isArray(data.columnHeaderData) ? data.columnHeaderData : []
         )
@@ -207,14 +206,19 @@ const ViewDataTables = () => {
                   {c.columnCode ?? '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  <FontAwesomeIcon
-                    icon={c.mandatory ? faCircleCheck : faCircleXmark}
-                    className={
-                      c.mandatory
-                        ? 'w-4 h-4 text-green-500'
-                        : 'w-4 h-4 text-red-500'
-                    }
-                  />
+                  {/* GET /datatables/{name} sends isColumnNullable, not mandatory */}
+                  {c.isColumnNullable === undefined ? (
+                    '—'
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={c.isColumnNullable ? faCircleXmark : faCircleCheck}
+                      className={
+                        c.isColumnNullable
+                          ? 'w-4 h-4 text-red-500'
+                          : 'w-4 h-4 text-green-500'
+                      }
+                    />
+                  )}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <FontAwesomeIcon

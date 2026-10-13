@@ -89,6 +89,8 @@ import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
+import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
+import PasswordPreferences from '@/pages/organization/password-preferences/PasswordPreferences'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -125,6 +127,7 @@ import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
+import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
 import ViewDataTables from '@/pages/system/manage-data-tables/ViewDataTables'
 import Codes from '@/pages/system/codes/Codes'
 import ViewCodes from '@/pages/system/codes/ViewCodes'
@@ -210,6 +213,7 @@ import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/Loans
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
+import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
@@ -485,6 +489,12 @@ const AppRoutes = () => {
             element={<BulkLoanReassignment />}
           />
 
+          {/* Standing Instructions History */}
+          <Route
+            path="/organization/instructions-history"
+            element={<InstructionsHistory />}
+          />
+
           {/* Manage Funds */}
           <Route path="/organization/manage-funds" element={<Funds />} />
           <Route
@@ -543,6 +553,12 @@ const AppRoutes = () => {
 
           {/* Working Days */}
           <Route path="/organization/working-days" element={<WorkingDays />} />
+
+          {/* Password Preferences */}
+          <Route
+            path="/organization/password-preferences"
+            element={<PasswordPreferences />}
+          />
 
           {/* Products */}
           <Route path="/products" element={<Products />} />
@@ -709,6 +725,10 @@ const AppRoutes = () => {
 
           {/* Manage Data Tables */}
           <Route path="/system/data-tables" element={<ManageDataTables />} />
+          <Route
+            path="/system/data-tables/create"
+            element={<CreateDataTable />}
+          />
           <Route path="/system/data-tables/:id" element={<ViewDataTables />} />
 
           {/* Manage Codes*/}
@@ -770,6 +790,9 @@ const AppRoutes = () => {
           <Route path="/system/audit-trails/:id" element={<ViewAuditTrail />} />
 
           {/* Institution */}
+
+          {/* Loans list */}
+          <Route path="/loans" element={<Loans />} />
 
           {/* Clients */}
           <Route path="/clients" element={<Clients />} />
