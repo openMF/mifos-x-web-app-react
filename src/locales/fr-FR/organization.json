@@ -71,6 +71,57 @@
     "title": "Agences",
     "unnamedOffice": "Agence sans nom"
   },
+  "provisioningCriteria": {
+    "title": "Critères de provisionnement des prêts",
+    "create": "Créer des critères de provisionnement des prêts",
+    "createButton": "Créer des critères de provisionnement",
+    "edit": "Modifier les critères de provisionnement des prêts",
+    "fields": {
+      "criteriaName": "Nom des critères",
+      "criteriaNameRequired": "Nom des critères*",
+      "createdBy": "Créé par",
+      "loanProducts": "Produits de prêt",
+      "loanProductsRequired": "Produits de prêt*",
+      "selectLoanProducts": "Sélectionnez des produits de prêt",
+      "minAge": "Ancienneté min.",
+      "maxAge": "Ancienneté max.",
+      "percentage": "Pourcentage",
+      "minAgeDays": "Ancienneté min. (jours)",
+      "minAgeDaysRequired": "Ancienneté min. (jours)*",
+      "maxAgeDays": "Ancienneté max. (jours)",
+      "maxAgeDaysRequired": "Ancienneté max. (jours)*",
+      "percentageColumn": "Pourcentage (%)",
+      "percentageColumnRequired": "Pourcentage (%)*",
+      "liabilityAccount": "Compte de passif",
+      "liabilityAccountRequired": "Compte de passif*",
+      "expenseAccount": "Compte de charges",
+      "expenseAccountRequired": "Compte de charges*",
+      "selectAccount": "Sélectionnez un compte",
+      "noAccounts": "Aucun compte",
+      "fieldForCategory": "{{field}} pour {{category}}"
+    },
+    "validation": {
+      "nameRequired": "Veuillez saisir un nom pour les critères.",
+      "productRequired": "Sélectionnez au moins un produit de prêt.",
+      "fillEveryField": "Remplissez tous les champs pour {{category}}.",
+      "notNegative": "{{category}} : les anciennetés et le pourcentage doivent être supérieurs ou égaux à 0.",
+      "minAboveMax": "{{category}} : l'ancienneté min. ne peut pas dépasser l'ancienneté max.",
+      "percentageAbove100": "{{category}} : le pourcentage ne peut pas dépasser 100."
+    },
+    "messages": {
+      "loadListError": "Échec du chargement des critères de provisionnement.",
+      "loadError": "Échec du chargement des critères de provisionnement.",
+      "loadTemplateError": "Échec du chargement du modèle de critères.",
+      "createError": "Échec de la création des critères de provisionnement.",
+      "updateError": "Échec de la mise à jour des critères de provisionnement.",
+      "deleteError": "Échec de la suppression des critères de provisionnement."
+    },
+    "delete": {
+      "confirm": "Confirmer",
+      "deleting": "Suppression...",
+      "message": "Êtes-vous sûr de vouloir supprimer les critères de provisionnement « {{name}} » ?"
+    }
+  },
   "searchByMaker": "Rechercher par créateur",
   "searchEvents": "Rechercher des événements",
   "searchReports": "Rechercher des rapports",

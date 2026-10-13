@@ -82,6 +82,10 @@ import LoanOriginators from '@/pages/organization/loan-originators/LoanOriginato
 import CreateLoanOriginator from '@/pages/organization/loan-originators/CreateLoanOriginator'
 import ViewLoanOriginator from '@/pages/organization/loan-originators/ViewLoanOriginator'
 import EditLoanOriginator from '@/pages/organization/loan-originators/EditLoanOriginator'
+import LoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/LoanProvisioningCriteria'
+import CreateLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/CreateLoanProvisioningCriteria'
+import ViewLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/ViewLoanProvisioningCriteria'
+import EditLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/EditLoanProvisioningCriteria'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -537,6 +541,24 @@ const AppRoutes = () => {
           <Route
             path="/organization/loan-originators/:id/edit"
             element={<EditLoanOriginator />}
+          />
+
+          {/* Loan Provisioning Criteria */}
+          <Route
+            path="/organization/loan-provisioning"
+            element={<LoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/create"
+            element={<CreateLoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/:id"
+            element={<ViewLoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/:id/edit"
+            element={<EditLoanProvisioningCriteria />}
           />
 
           {/* Payment Types */}
