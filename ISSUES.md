@@ -171,6 +171,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `GetTellersResponse` missing `endDate` and `description` → edit blocked
 
+### `/organization/fund-mapping`
+
+- `PostAdhocQuerySearchRequest` (POST `/search/advance`) missing `entities`, `loanStatus`, `loanProducts`, `offices`, `minOutStandingAmountPercentage`, `maxOutStandingAmountPercentage`, `outstandingAmount`
+
 ---
 
 ## Admin System
