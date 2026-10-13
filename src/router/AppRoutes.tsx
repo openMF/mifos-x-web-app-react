@@ -86,6 +86,8 @@ import LoanProvisioningCriteria from '@/pages/organization/loan-provisioning-cri
 import CreateLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/CreateLoanProvisioningCriteria'
 import ViewLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/ViewLoanProvisioningCriteria'
 import EditLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/EditLoanProvisioningCriteria'
+import EntityDataTableChecks from '@/pages/organization/entity-data-table-checks/EntityDataTableChecks'
+import CreateEntityDataTableCheck from '@/pages/organization/entity-data-table-checks/CreateEntityDataTableCheck'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -559,6 +561,16 @@ const AppRoutes = () => {
           <Route
             path="/organization/loan-provisioning/:id/edit"
             element={<EditLoanProvisioningCriteria />}
+          />
+
+          {/* Entity Data Table Checks */}
+          <Route
+            path="/organization/data-checks"
+            element={<EntityDataTableChecks />}
+          />
+          <Route
+            path="/organization/data-checks/create"
+            element={<CreateEntityDataTableCheck />}
           />
 
           {/* Payment Types */}
