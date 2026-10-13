@@ -13,6 +13,7 @@ import { useLayoutEffect, type CSSProperties } from 'react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { useGlobalShortcuts } from '@/hooks/use-global-shortcuts'
 import { useLogout } from '@/hooks/use-logout'
+import SessionTimeout from '@/components/custom/session/SessionTimeout'
 
 const LayoutShortcuts = () => {
   const navigate = useNavigate()
@@ -40,6 +41,7 @@ const Layout = () => {
   return (
     <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
       <LayoutShortcuts />
+      <SessionTimeout />
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-col flex-1 w-full">
