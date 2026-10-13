@@ -154,7 +154,11 @@
     "collateralTableName": "Nombre",
     "collateralTableQuantity": "Cantidad",
     "collateralTableTotalValue": "Valor Total",
-    "collateralTableTotalCollateralValue": "Valor Total de Garantía"
+    "collateralTableTotalCollateralValue": "Valor Total de Garantía",
+    "fixedDepositAccounts": "Cuentas de depósito a plazo fijo",
+    "recurringDepositAccounts": "Cuentas de depósito recurrente",
+    "depositTableProduct": "Producto de depósito",
+    "noDepositAccounts": "No hay cuentas de depósito."
   },
   "notes": {
     "heading": "Notas",

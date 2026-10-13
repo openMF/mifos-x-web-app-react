@@ -22,7 +22,6 @@ import {
   ClientApi,
   ClientChargesApi,
   RunReportsApi,
-  type GetClientsClientIdAccountsResponse,
   type GetClientsChargesPageItems,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -56,13 +55,14 @@ interface AccountStatus {
 
 interface AccountTimeline {
   closedOnDate?: unknown
+  // share accounts name their close date differently
+  closedDate?: unknown
   activatedOnDate?: unknown
 }
 
-interface AccountSummary {
-  totalOutstanding?: number
-  totalPaid?: number
-  accountBalance?: number
+interface AccountCurrency {
+  code?: string
+  decimalPlaces?: number
 }
 
 interface AccountRecord {
@@ -70,13 +70,13 @@ interface AccountRecord {
   id?: number | string
   status?: AccountStatus
   timeline?: AccountTimeline
-  summary?: AccountSummary
+  currency?: AccountCurrency
   accountNo?: string
   productName?: string
-  loanProductName?: string
-  principal?: number
   loanBalance?: number
   originalLoan?: number
+  inArrears?: boolean
+  depositType?: { code?: string }
   loanType?: { code?: string }
   name?: string
   dueDate?: unknown
@@ -88,35 +88,136 @@ interface AccountRecord {
   totalPendingForApprovalShares?: number
   lastActiveTransactionDate?: unknown
   closedOnDate?: unknown
-  totalOutstanding?: number
-  totalPaid?: number
   code?: string
   accountBalance?: number
 }
+
+/**
+ * The /clients/{id}/accounts response. The generated type leaves out
+ * shareAccounts, which Fineract does send, so the response is read as this.
+ */
+interface ClientAccounts {
+  loanAccounts?: AccountRecord[]
+  savingsAccounts?: AccountRecord[]
+  shareAccounts?: AccountRecord[]
+}
+
+// Fineract returns fixed and recurring deposits inside savingsAccounts
+const FIXED_DEPOSIT = 'depositAccountType.fixedDeposit'
+const RECURRING_DEPOSIT = 'depositAccountType.recurringDeposit'
 
 // small dot for status
 const StatusDot = ({ acc }: { acc: AccountRecord }) => {
   const { t: tc } = useTranslation('common')
   const s: AccountStatus = acc?.status || {}
-  const cls = s.active
-    ? 'bg-green-500'
-    : s.submittedAndPendingApproval || s.pendingApproval
-      ? 'bg-yellow-500'
-      : s.closed
-        ? 'bg-zinc-400'
-        : 'bg-sky-500'
+  const cls = acc.inArrears
+    ? 'bg-red-500'
+    : s.active
+      ? 'bg-green-500'
+      : s.submittedAndPendingApproval || s.pendingApproval
+        ? 'bg-yellow-500'
+        : s.closed
+          ? 'bg-zinc-400'
+          : 'bg-sky-500'
   return (
     <span
       className={`inline-block w-3 h-3 rounded-full ${cls}`}
-      title={s?.value || tc('status.unknown')}
+      title={
+        acc.inArrears
+          ? tc('status.inArrears')
+          : s?.value || tc('status.unknown')
+      }
     />
+  )
+}
+
+/** A Fineract date, sent as [y, m, d] or as a string, for display. */
+const shownDate = (value: unknown) =>
+  Array.isArray(value) ? formatDate(value) : String(value ?? '—')
+
+/**
+ * The client's fixed or recurring deposit accounts. The rows do not link
+ * anywhere yet, as the app has no deposit account view.
+ */
+const DepositAccounts = ({
+  title,
+  accounts,
+  money,
+}: {
+  title: string
+  accounts: AccountRecord[]
+  money: (value: unknown, currency?: AccountCurrency) => string
+}) => {
+  const { t } = useTranslation('clients')
+  const [showClosed, setShowClosed] = useState(false)
+  const shown = accounts.filter(a => !!a.status?.closed === showClosed)
+
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">{title}</h2>
+        <Button
+          className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+          size="sm"
+          onClick={() => setShowClosed(!showClosed)}
+        >
+          {showClosed
+            ? t('general.viewActiveAccounts')
+            : t('general.viewClosedAccounts')}
+        </Button>
+      </div>
+
+      <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('general.savingTableAccountNo')}</TableHead>
+              <TableHead>{t('general.depositTableProduct')}</TableHead>
+              <TableHead>
+                {showClosed
+                  ? t('general.savingTableClosedDate')
+                  : t('general.savingTableBalance')}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {shown.map(acc => (
+              <TableRow key={String(acc.id ?? '')}>
+                <TableCell className="px-6 py-4 flex items-center gap-2">
+                  <StatusDot acc={acc} />
+                  <span>{acc.accountNo ?? '—'}</span>
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {acc.productName ?? '—'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {showClosed
+                    ? shownDate(acc.timeline?.closedOnDate)
+                    : money(acc.accountBalance, acc.currency)}
+                </TableCell>
+              </TableRow>
+            ))}
+            {shown.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  className="px-6 py-6 text-center text-zinc-500"
+                >
+                  {t('general.noDepositAccounts')}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   )
 }
 
 const ClientsGeneralTab = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { t } = useTranslation('clients')
+  const { t, i18n } = useTranslation('clients')
 
   // data
   const [loanAccounts, setLoanAccounts] = useState<AccountRecord[]>([])
@@ -145,16 +246,12 @@ const ClientsGeneralTab = () => {
       // accounts
       try {
         const res = await accountsApi.retrieveAssociatedAccounts(Number(id))
-        const d: GetClientsClientIdAccountsResponse = res.data ?? {}
-        setLoanAccounts(
-          d.loanAccounts ? (Array.from(d.loanAccounts) as AccountRecord[]) : []
-        )
+        const d = (res.data ?? {}) as ClientAccounts
+        setLoanAccounts(d.loanAccounts ? Array.from(d.loanAccounts) : [])
         setSavingsAccounts(
-          d.savingsAccounts
-            ? (Array.from(d.savingsAccounts) as AccountRecord[])
-            : []
+          d.savingsAccounts ? Array.from(d.savingsAccounts) : []
         )
-        setShareAccounts([])
+        setShareAccounts(d.shareAccounts ? Array.from(d.shareAccounts) : [])
       } catch {
         setLoanAccounts([])
         setSavingsAccounts([])
@@ -177,6 +274,7 @@ const ClientsGeneralTab = () => {
             amountPaid: ch.amountPaid,
             amountWaived: ch.amountWaived,
             amountOutstanding: ch.amountOutstanding,
+            currency: ch.currency,
           }))
         )
       } catch {
@@ -219,13 +317,45 @@ const ClientsGeneralTab = () => {
     })()
   }, [id])
 
+  const depositType = (a: AccountRecord) => a.depositType?.code
+  const plainSavings = savingsAccounts.filter(
+    a =>
+      depositType(a) !== FIXED_DEPOSIT && depositType(a) !== RECURRING_DEPOSIT
+  )
+  const fixedDeposits = savingsAccounts.filter(
+    a => depositType(a) === FIXED_DEPOSIT
+  )
+  const recurringDeposits = savingsAccounts.filter(
+    a => depositType(a) === RECURRING_DEPOSIT
+  )
+
   // open vs closed
   const openLoans = loanAccounts.filter(a => !a?.status?.closed)
   const closedLoans = loanAccounts.filter(a => a?.status?.closed)
-  const openSavings = savingsAccounts.filter(a => !a?.status?.closed)
-  const closedSavings = savingsAccounts.filter(a => a?.status?.closed)
+  const openSavings = plainSavings.filter(a => !a?.status?.closed)
+  const closedSavings = plainSavings.filter(a => a?.status?.closed)
   const openShares = shareAccounts.filter(a => !a?.status?.closed)
   const closedShares = shareAccounts.filter(a => a?.status?.closed)
+
+  /** An amount in its account's currency, e.g. ₹34,557.20, or "—". */
+  const money = (value: unknown, currency?: AccountCurrency) => {
+    if (typeof value !== 'number') return '—'
+    const digits = currency?.decimalPlaces ?? 2
+    const options = {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    }
+    try {
+      return new Intl.NumberFormat(i18n.language, {
+        ...options,
+        style: 'currency',
+        currency: currency?.code,
+      }).format(value)
+    } catch {
+      // no currency, or a code Intl does not know
+      return new Intl.NumberFormat(i18n.language, options).format(value)
+    }
+  }
 
   return (
     <div className="space-y-6 text-black dark:text-white">
@@ -308,18 +438,21 @@ const ClientsGeneralTab = () => {
                     : String(ch?.dueDate ?? '—')}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amount ?? '—')}
+                  {money(ch.amount, ch.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amountPaid ?? '—')}
+                  {money(ch.amountPaid, ch.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amountWaived ?? '—')}
+                  {money(ch.amountWaived, ch.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amountOutstanding ?? '—')}
+                  {money(ch.amountOutstanding, ch.currency)}
                 </TableCell>
-                <TableCell className="px-6 py-4 space-x-2">
+                <TableCell
+                  className="px-6 py-4 space-x-2"
+                  onClick={e => e.stopPropagation()}
+                >
                   <Button
                     size="icon"
                     className="bg-[#1074b9] hover:bg-[#0662a3]"
@@ -395,16 +528,16 @@ const ClientsGeneralTab = () => {
                   <span>{acc?.accountNo ?? '—'}</span>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.loanProductName ?? acc?.productName ?? '—'}
+                  {acc?.productName ?? '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.principal ?? acc?.originalLoan ?? '—'}
+                  {money(acc.originalLoan, acc.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.summary?.totalOutstanding ?? acc?.loanBalance ?? '—'}
+                  {money(acc.loanBalance, acc.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.summary?.totalPaid ?? '—'}
+                  {money(acc.amountPaid, acc.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {acc?.loanType?.code ?? '—'}
@@ -552,7 +685,7 @@ const ClientsGeneralTab = () => {
                 </TableCell>
                 {!showClosedSavings && (
                   <TableCell className="px-6 py-4">
-                    {acc?.summary?.accountBalance ?? acc?.accountBalance ?? '—'}
+                    {money(acc.accountBalance, acc.currency)}
                   </TableCell>
                 )}
                 <TableCell
@@ -631,7 +764,7 @@ const ClientsGeneralTab = () => {
             {(showClosedSavings ? closedSavings : openSavings).length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={showClosedSavings ? 5 : 6}
+                  colSpan={showClosedSavings ? 4 : 5}
                   className="px-6 py-6 text-center text-zinc-500"
                 >
                   {t('general.noSavingAccounts')}
@@ -641,6 +774,21 @@ const ClientsGeneralTab = () => {
           </TableBody>
         </Table>
       </div>
+
+      {fixedDeposits.length > 0 && (
+        <DepositAccounts
+          title={t('general.fixedDepositAccounts')}
+          accounts={fixedDeposits}
+          money={money}
+        />
+      )}
+      {recurringDeposits.length > 0 && (
+        <DepositAccounts
+          title={t('general.recurringDepositAccounts')}
+          accounts={recurringDeposits}
+          money={money}
+        />
+      )}
 
       {/* Shares Accounts */}
       <div className="flex items-center justify-between">
@@ -696,9 +844,9 @@ const ClientsGeneralTab = () => {
                 </TableCell>
                 {showClosedShares && (
                   <TableCell className="px-6 py-4">
-                    {Array.isArray(acc?.timeline?.closedOnDate)
-                      ? formatDate(acc.timeline!.closedOnDate as number[])
-                      : String(acc?.timeline?.closedOnDate ?? '—')}
+                    {shownDate(
+                      acc.timeline?.closedDate ?? acc.timeline?.closedOnDate
+                    )}
                   </TableCell>
                 )}
                 <TableCell
@@ -794,8 +942,8 @@ const ClientsGeneralTab = () => {
                       {String(c?.name ?? c?.collateralName ?? '—')}
                     </TableCell>
                     <TableCell>{qty}</TableCell>
-                    <TableCell>{total}</TableCell>
-                    <TableCell>{totalCollateral}</TableCell>
+                    <TableCell>{money(total)}</TableCell>
+                    <TableCell>{money(totalCollateral)}</TableCell>
                   </TableRow>
                 )
               })}

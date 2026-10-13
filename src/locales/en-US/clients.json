@@ -154,7 +154,11 @@
     "collateralTableName": "Name",
     "collateralTableQuantity": "Quantity",
     "collateralTableTotalValue": "Total Value",
-    "collateralTableTotalCollateralValue": "Total Collateral Value"
+    "collateralTableTotalCollateralValue": "Total Collateral Value",
+    "fixedDepositAccounts": "Fixed Deposit Accounts",
+    "recurringDepositAccounts": "Recurring Deposit Accounts",
+    "depositTableProduct": "Deposit Product",
+    "noDepositAccounts": "No deposit accounts."
   },
   "notes": {
     "heading": "Notes",
