@@ -332,3 +332,8 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/datatables/{datatableName}` (GET)
 
 - `GetDataTablesResponse` is missing `entitySubType`
+
+### `/provisioningcriteria/{criteriaId}` (GET)
+
+- `GetProvisioningCriteriaCriteriaIdResponse` has `provisioningcriteria`, but the response sends the categories as `definitions`
+- `retrieveProvisioningCriteria` has no `template` parameter; `?template=true` adds `selectedLoanProducts` and `glAccounts`, which the edit page needs

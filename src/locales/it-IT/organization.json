@@ -71,6 +71,57 @@
     "title": "Uffici",
     "unnamedOffice": "Ufficio senza nome"
   },
+  "provisioningCriteria": {
+    "title": "Criteri di accantonamento prestiti",
+    "create": "Crea criteri di accantonamento prestiti",
+    "createButton": "Crea criteri di accantonamento",
+    "edit": "Modifica criteri di accantonamento prestiti",
+    "fields": {
+      "criteriaName": "Nome dei criteri",
+      "criteriaNameRequired": "Nome dei criteri*",
+      "createdBy": "Creato da",
+      "loanProducts": "Prodotti di prestito",
+      "loanProductsRequired": "Prodotti di prestito*",
+      "selectLoanProducts": "Seleziona i prodotti di prestito",
+      "minAge": "Anzianità minima",
+      "maxAge": "Anzianità massima",
+      "percentage": "Percentuale",
+      "minAgeDays": "Anzianità minima (giorni)",
+      "minAgeDaysRequired": "Anzianità minima (giorni)*",
+      "maxAgeDays": "Anzianità massima (giorni)",
+      "maxAgeDaysRequired": "Anzianità massima (giorni)*",
+      "percentageColumn": "Percentuale (%)",
+      "percentageColumnRequired": "Percentuale (%)*",
+      "liabilityAccount": "Conto del passivo",
+      "liabilityAccountRequired": "Conto del passivo*",
+      "expenseAccount": "Conto di costo",
+      "expenseAccountRequired": "Conto di costo*",
+      "selectAccount": "Seleziona un conto",
+      "noAccounts": "Nessun conto",
+      "fieldForCategory": "{{field}} per {{category}}"
+    },
+    "validation": {
+      "nameRequired": "Inserisci un nome per i criteri.",
+      "productRequired": "Seleziona almeno un prodotto di prestito.",
+      "fillEveryField": "Compila tutti i campi per {{category}}.",
+      "notNegative": "{{category}}: le anzianità e la percentuale devono essere pari o superiori a 0.",
+      "minAboveMax": "{{category}}: l'anzianità minima non può superare l'anzianità massima.",
+      "percentageAbove100": "{{category}}: la percentuale non può superare 100."
+    },
+    "messages": {
+      "loadListError": "Impossibile caricare i criteri di accantonamento.",
+      "loadError": "Impossibile caricare i criteri di accantonamento.",
+      "loadTemplateError": "Impossibile caricare il modello dei criteri.",
+      "createError": "Impossibile creare i criteri di accantonamento.",
+      "updateError": "Impossibile aggiornare i criteri di accantonamento.",
+      "deleteError": "Impossibile eliminare i criteri di accantonamento."
+    },
+    "delete": {
+      "confirm": "Conferma",
+      "deleting": "Eliminazione...",
+      "message": "Sei sicuro di voler eliminare i criteri di accantonamento \"{{name}}\"?"
+    }
+  },
   "searchByMaker": "Cerca per creatore",
   "searchEvents": "Cerca eventi",
   "searchReports": "Cerca report",
