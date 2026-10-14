@@ -345,3 +345,11 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `GetProvisioningCriteriaCriteriaIdResponse` has `provisioningcriteria`, but the response sends the categories as `definitions`
 - `retrieveProvisioningCriteria` has no `template` parameter; `?template=true` adds `selectedLoanProducts` and `glAccounts`, which the edit page needs
+
+## Organization: SMS Campaigns
+
+### `/smscampaigns`, `/smscampaigns/template`, `/smscampaigns/{campaignId}`, `/smscampaigns/preview`
+
+- The endpoints are only generated on `DefaultApi` with generic method names, and there are no request types for the create/update bodies (`campaignName`, `triggerType`, `runReportId`, `isNotification`, `paramValue` as an object, `recurrenceStartDate`, `frequency`, `interval`, `repeatsOnDay`, `dateTimeFormat`), so the SMS Campaigns pages call them through `@/lib/axios`
+- `SmsCampaignData.recurrenceStartDate` is typed as a string, but the API returns epoch seconds as a number (e.g. `1792434600.0`)
+- The notification flag is sent as `isNotification` but returned as `notification`
