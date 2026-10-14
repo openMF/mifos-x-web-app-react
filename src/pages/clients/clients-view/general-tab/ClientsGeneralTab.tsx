@@ -663,7 +663,7 @@ const ClientsGeneralTab = () => {
                       className="bg-[#1074b9] hover:bg-[#0662a3]"
                       onClick={() =>
                         navigate(
-                          `/clients/${id}/loans-accounts/${acc.id}/actions/Make Repayment`
+                          `/clients/${id}/loans-accounts/${acc.id}/actions/MakeRepayment`
                         )
                       }
                     >
@@ -843,7 +843,7 @@ const ClientsGeneralTab = () => {
                           className="bg-[#1074b9] hover:bg-[#0662a3]"
                           onClick={() =>
                             navigate(
-                              `/clients/${id}/savings-accounts/${acc.id}/actions/Undo Approval`
+                              `/clients/${id}/savings-accounts/${acc.id}/actions/UndoApproval`
                             )
                           }
                         >
@@ -978,7 +978,7 @@ const ClientsGeneralTab = () => {
                           className="bg-[#1074b9] hover:bg-[#0662a3]"
                           onClick={() =>
                             navigate(
-                              `/clients/${id}/shares-accounts/${acc.id}/actions/Undo Approval`
+                              `/clients/${id}/shares-accounts/${acc.id}/actions/UndoApproval`
                             )
                           }
                         >
