@@ -6,7 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import type { AxiosError } from 'axios'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -27,6 +29,18 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 import {
@@ -38,12 +52,45 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import { isJsonColumn } from '@/lib/datatable-json'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCircleCheck,
+  faCircleXmark,
+  faPen,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
+
+import type { DataTablesApiErrorResponse } from './dataTableOptions'
 
 const dataTablesApi = new DataTablesApi(getConfiguration())
 
 const ViewDataTables = () => {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { t } = useTranslation(['datatables', 'common'])
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
+  const handleDelete = async () => {
+    if (!id || deleting) return
+    setDeleting(true)
+    setDeleteError(null)
+    try {
+      await dataTablesApi.deleteDatatable(id)
+      setConfirmOpen(false)
+      navigate('/system/data-tables')
+    } catch (err) {
+      const data = (err as AxiosError<DataTablesApiErrorResponse>).response
+        ?.data
+      setDeleteError(
+        data?.errors?.[0]?.defaultUserMessage ||
+          data?.defaultUserMessage ||
+          t('manage.errors.deleteFailed')
+      )
+      setDeleting(false)
+    }
+  }
 
   const [assocWith, setAssocWith] = useState('')
   const [fields, setFields] = useState<ResultsetColumnHeaderData[]>([])
@@ -63,6 +110,8 @@ const ViewDataTables = () => {
         setFields(
           Array.isArray(data.columnHeaderData) ? data.columnHeaderData : []
         )
+        // A missing table comes back as 204 with no body
+        setLoaded(Boolean(data.registeredTableName))
       } catch (err) {
         console.error('Failed to fetch datatable', err)
         setAssocWith('')
@@ -93,17 +142,84 @@ const ViewDataTables = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'System', href: '/system' },
-          { label: 'Manage Data Tables', href: '/system/data-tables' },
+          { label: t('common:nav.home'), href: '/home' },
+          { label: t('common:nav.system'), href: '/system' },
+          { label: t('manage.title'), href: '/system/data-tables' },
           { label: id ?? '—', current: true },
         ]}
       />
 
+      {/* Edit + Delete, as in the Angular web app, once the table has loaded */}
+      {loaded && (
+        <div className="flex flex-wrap gap-3 mb-6">
+          <Button
+            className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer text-white"
+            onClick={() =>
+              navigate(
+                `/system/data-tables/${encodeURIComponent(id ?? '')}/edit`
+              )
+            }
+          >
+            <FontAwesomeIcon icon={faPen} className="mr-2" />
+            {t('common:actions.edit')}
+          </Button>
+          <AlertDialog
+            open={confirmOpen}
+            onOpenChange={open => {
+              if (!deleting) {
+                setConfirmOpen(open)
+                setDeleteError(null)
+              }
+            }}
+          >
+            <AlertDialogTrigger asChild>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+                disabled={deleting}
+              >
+                <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                {deleting ? t('manage.deleting') : t('common:actions.delete')}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {t('common:actions.delete')}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t('manage.deleteConfirm', { name: id })}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              {deleteError && (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {deleteError}
+                </p>
+              )}
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={deleting}>
+                  {t('common:actions.cancel')}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  disabled={deleting}
+                  onClick={e => {
+                    // Keep the dialog open until the request finishes
+                    e.preventDefault()
+                    handleDelete()
+                  }}
+                >
+                  {deleting ? t('manage.deleting') : t('manage.confirm')}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
+
       {/* Search + pagination controls */}
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         <Input
-          placeholder="Search fields…"
+          placeholder={t('manage.searchFields')}
           value={searchTerm}
           onChange={e => {
             setSearchTerm(e.target.value)
@@ -118,7 +234,7 @@ const ViewDataTables = () => {
             onValueChange={handleItemsChange}
           >
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={t('common:pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -134,7 +250,7 @@ const ViewDataTables = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
-            Prev
+            {t('common:actions.prev')}
           </Button>
           <Button
             variant="outline"
@@ -142,7 +258,7 @@ const ViewDataTables = () => {
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {t('common:actions.next')}
           </Button>
         </div>
       </div>
@@ -150,7 +266,7 @@ const ViewDataTables = () => {
       {/* Associated With info */}
       <div className="mb-4 rounded-md border bg-white dark:bg-zinc-900">
         <div className="px-6 py-4 text-sm">
-          <span className="font-medium">Associated With</span>{' '}
+          <span className="font-medium">{t('manage.associatedWith')}</span>{' '}
           <span className="text-zinc-600 dark:text-zinc-300">
             {assocWith || '—'}
           </span>
@@ -161,19 +277,29 @@ const ViewDataTables = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
+            {t('common:pagination.showing', {
+              current: paginated.length,
+              total: filtered.length,
+              page,
+              pages: totalPages,
+            })}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Field Name</TableHead>
-              <TableHead className="px-6 py-4">Type</TableHead>
-              <TableHead className="px-6 py-4">Length</TableHead>
-              <TableHead className="px-6 py-4">Code</TableHead>
-              <TableHead className="px-6 py-4">Mandatory</TableHead>
-              <TableHead className="px-6 py-4">Unique</TableHead>
-              <TableHead className="px-6 py-4">Indexed</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('manage.fieldName')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('common:fields.type')}
+              </TableHead>
+              <TableHead className="px-6 py-4">{t('manage.length')}</TableHead>
+              <TableHead className="px-6 py-4">{t('manage.code')}</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('manage.mandatory')}
+              </TableHead>
+              <TableHead className="px-6 py-4">{t('manage.unique')}</TableHead>
+              <TableHead className="px-6 py-4">{t('manage.indexed')}</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -193,7 +319,7 @@ const ViewDataTables = () => {
                     // out here saves reading the schema to find out which text
                     // columns hold documents.
                     <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                      JSON
+                      {t('columnTypes.json')}
                     </span>
                   ) : (
                     String(c.columnType ?? '').toUpperCase()
@@ -249,7 +375,7 @@ const ViewDataTables = () => {
                   colSpan={7}
                   className="text-center text-gray-500 py-6"
                 >
-                  No fields found.
+                  {t('manage.noFields')}
                 </TableCell>
               </TableRow>
             )}
