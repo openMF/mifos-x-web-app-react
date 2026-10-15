@@ -198,7 +198,12 @@
     "selectTypePlaceholder": "Sélectionner le type",
     "typeHome": "Domicile",
     "typeWork": "Travail",
-    "typeOther": "Autre"
+    "typeOther": "Autre",
+    "loading": "Chargement des adresses...",
+    "empty": "Aucune adresse n'a encore été ajoutée.",
+    "loadFailed": "Impossible de charger les adresses de ce client.",
+    "statusActive": "Active",
+    "statusInactive": "Inactive"
   },
   "charge": {
     "breadcrumbLabel": "Frais",
