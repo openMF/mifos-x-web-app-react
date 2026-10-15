@@ -101,6 +101,40 @@
   },
   "delinquencyBucket": "Bucket di morosità",
   "fixedDepositProducts": "Prodotti deposito a termine",
+  "floatingRate": {
+    "created": "Tasso variabile creato correttamente.",
+    "createTitle": "Crea tasso variabile",
+    "errors": {
+      "createFailed": "Impossibile creare il tasso variabile."
+    },
+    "fields": {
+      "active": "Attivo",
+      "isBaseLendingRate": "È tasso base di prestito",
+      "nameRequired": "Nome del tasso variabile *"
+    },
+    "periods": {
+      "add": "Aggiungi periodo",
+      "baseRateNote": "I periodi di un tasso base di prestito non possono essere differenziali rispetto al tasso base di prestito.",
+      "empty": "Nessun periodo aggiunto. Aggiungi almeno un periodo.",
+      "fieldForRow": "{{field}} del periodo {{row}}",
+      "fromDate": "Data di inizio",
+      "fromDateRequired": "Data di inizio *",
+      "interestRate": "Tasso di interesse",
+      "interestRateRequired": "Tasso di interesse (%) *",
+      "isDifferential": "È differenziale",
+      "remove": "Rimuovi periodo {{row}}",
+      "title": "Periodi di tasso"
+    },
+    "validation": {
+      "duplicateFromDate": "Due periodi non possono avere la stessa data di inizio.",
+      "fillEveryField": "Inserisci la data di inizio e il tasso di interesse del periodo {{row}}.",
+      "fromDateInFuture": "La data di inizio del periodo {{row}} deve essere successiva alla data operativa.",
+      "nameRequired": "Il nome del tasso variabile è obbligatorio.",
+      "periodRequired": "Aggiungi almeno un periodo di tasso.",
+      "rateNegative": "Il tasso di interesse del periodo {{row}} non può essere negativo.",
+      "rateNotNumber": "Il tasso di interesse del periodo {{row}} deve essere un numero."
+    }
+  },
   "floatingRates": "Tassi variabili",
   "loanProduct": "Prodotto di prestito",
   "loanProducts": "Prodotti di prestito",
