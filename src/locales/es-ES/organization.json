@@ -6,6 +6,42 @@
   "configurations": "Configuraciones",
   "configureMakerCheckerTasks": "Configurar tareas de revisión",
   "currencyConfiguration": "Configuración de moneda",
+  "entityChecks": {
+    "actions": "Acciones",
+    "allProducts": "Todos los productos",
+    "confirm": "Confirmar",
+    "confirmDelete": "¿Está seguro de que desea eliminar la verificación de la tabla de datos \"{{name}}\"?",
+    "createTitle": "Crear verificación de tabla de datos de entidad",
+    "deleteCheck": "Eliminar la verificación de {{name}}",
+    "deleting": "Eliminando...",
+    "entities": {
+      "client": "Cliente",
+      "group": "Grupo",
+      "loan": "Préstamo",
+      "savingsAccount": "Cuenta de ahorros"
+    },
+    "errors": {
+      "createFailed": "No se pudo crear la verificación de tabla de datos de entidad.",
+      "deleteFailed": "No se pudo eliminar la verificación de tabla de datos de entidad.",
+      "loadFailed": "No se pudieron cargar las verificaciones de tabla de datos de entidades.",
+      "templateFailed": "No se pudo cargar la plantilla de verificación de tabla de datos de entidad."
+    },
+    "fields": {
+      "dataTable": "Tabla de datos",
+      "dataTableRequired": "Tabla de datos*",
+      "entityRequired": "Entidad*",
+      "product": "Producto",
+      "productName": "Nombre del producto",
+      "statusRequired": "Estado*",
+      "systemDefined": "Definido por el sistema"
+    },
+    "placeholders": {
+      "noDataTables": "No hay tablas de datos para esta entidad",
+      "selectDataTable": "Seleccione una tabla de datos",
+      "selectEntity": "Seleccione una entidad",
+      "selectStatus": "Seleccione un estado"
+    }
+  },
   "entityDataTableChecks": "Verificaciones de tabla de datos de entidades",
   "entityToEntityMapping": "Mapeo de entidad a entidad",
   "errors": {
