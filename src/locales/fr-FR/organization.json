@@ -77,6 +77,23 @@
   "manageHolidays": "Gérer les jours fériés",
   "manageHooks": "Gérer les hooks",
   "manageJobs": "Gérer les tâches",
+  "manageMakerChecker": {
+    "clearAll": "Tout décocher",
+    "errors": {
+      "loadFailed": "Échec du chargement des tâches de vérification.",
+      "saveFailed": "Échec de l'enregistrement des tâches de vérification."
+    },
+    "noTasksMatch": "Aucune tâche ne correspond.",
+    "saveWithCount": "Enregistrer ({{count}})",
+    "savedChanges_one": "{{count}} modification enregistrée.",
+    "savedChanges_other": "{{count}} modifications enregistrées.",
+    "searchPlaceholder": "Rechercher dans toutes les tâches",
+    "selectAll": "Tout sélectionner",
+    "statusOff": "Le contrôle créateur-vérificateur est <strong>désactivé</strong> : aucune des tâches ci-dessous ne nécessite encore d'approbation. Activez <code>maker-checker</code> dans <link>Configurations globales</link> pour qu'elles prennent effet.",
+    "statusOn": "Le contrôle créateur-vérificateur est <strong>activé</strong> : les tâches cochées ci-dessous attendent l'approbation d'un vérificateur.",
+    "taskGroups": "Groupes de tâches",
+    "tasksMatching": "Tâches correspondant à « {{term}} »"
+  },
   "manageReports": "Gérer les rapports",
   "manageRolesAndPermissions": "Gérer les rôles et permissions",
   "manageSurveys": "Gérer les enquêtes",

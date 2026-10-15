@@ -77,6 +77,23 @@
   "manageHolidays": "Gestionar festivos",
   "manageHooks": "Gestionar hooks",
   "manageJobs": "Gestionar trabajos",
+  "manageMakerChecker": {
+    "clearAll": "Desmarcar todo",
+    "errors": {
+      "loadFailed": "No se pudieron cargar las tareas de revisión.",
+      "saveFailed": "No se pudieron guardar las tareas de revisión."
+    },
+    "noTasksMatch": "Ninguna tarea coincide.",
+    "saveWithCount": "Guardar ({{count}})",
+    "savedChanges_one": "Se guardó {{count}} cambio.",
+    "savedChanges_other": "Se guardaron {{count}} cambios.",
+    "searchPlaceholder": "Buscar en todas las tareas",
+    "selectAll": "Seleccionar todo",
+    "statusOff": "El sistema creador-revisor está <strong>desactivado</strong>, así que ninguna de las tareas siguientes necesita aprobación todavía. Active <code>maker-checker</code> en <link>Configuraciones globales</link> para que surtan efecto.",
+    "statusOn": "El sistema creador-revisor está <strong>activado</strong>: las tareas marcadas a continuación esperan la aprobación de un revisor.",
+    "taskGroups": "Grupos de tareas",
+    "tasksMatching": "Tareas que coinciden con «{{term}}»"
+  },
   "manageReports": "Gestionar informes",
   "manageRolesAndPermissions": "Gestionar roles y permisos",
   "manageSurveys": "Gestionar encuestas",

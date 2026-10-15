@@ -158,6 +158,7 @@ import ViewAccountNumberPreferences from '@/pages/system/account-number-preferen
 import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/EntityToEntityMapping'
 import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
+import MakerChecker from '@/pages/system/maker-checker/MakerChecker'
 import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
@@ -869,6 +870,8 @@ const AppRoutes = () => {
           />
 
           {/* Configurations */}
+          {/* Maker Checker */}
+          <Route path="/system/maker-checker" element={<MakerChecker />} />
           <Route path="/system/hooks" element={<ManageHooks />} />
 
           {/* Manage Hooks */}

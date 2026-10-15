@@ -77,6 +77,23 @@
   "manageHolidays": "Manage Holidays",
   "manageHooks": "Manage Hooks",
   "manageJobs": "Manage Jobs",
+  "manageMakerChecker": {
+    "clearAll": "Clear all",
+    "errors": {
+      "loadFailed": "Failed to load the maker checker tasks.",
+      "saveFailed": "Failed to save the maker checker tasks."
+    },
+    "noTasksMatch": "No tasks match.",
+    "saveWithCount": "Save ({{count}})",
+    "savedChanges_one": "Saved {{count}} change.",
+    "savedChanges_other": "Saved {{count}} changes.",
+    "searchPlaceholder": "Search all tasks",
+    "selectAll": "Select all",
+    "statusOff": "Maker checker is <strong>off</strong>, so none of the tasks below need approval yet. Turn on <code>maker-checker</code> in <link>Global Configurations</link> for them to take effect.",
+    "statusOn": "Maker checker is <strong>on</strong>: the tasks ticked below wait for a checker's approval.",
+    "taskGroups": "Task groups",
+    "tasksMatching": "Tasks matching \"{{term}}\""
+  },
   "manageReports": "Manage Reports",
   "manageRolesAndPermissions": "Manage Roles and Permissions",
   "manageSurveys": "Manage Surveys",

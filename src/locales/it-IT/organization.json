@@ -77,6 +77,23 @@
   "manageHolidays": "Gestisci festivi",
   "manageHooks": "Gestisci hook",
   "manageJobs": "Gestisci lavori",
+  "manageMakerChecker": {
+    "clearAll": "Deseleziona tutto",
+    "errors": {
+      "loadFailed": "Impossibile caricare le attività di verifica.",
+      "saveFailed": "Impossibile salvare le attività di verifica."
+    },
+    "noTasksMatch": "Nessuna attività corrisponde.",
+    "saveWithCount": "Salva ({{count}})",
+    "savedChanges_one": "{{count}} modifica salvata.",
+    "savedChanges_other": "{{count}} modifiche salvate.",
+    "searchPlaceholder": "Cerca in tutte le attività",
+    "selectAll": "Seleziona tutto",
+    "statusOff": "Il controllo creatore-verificatore è <strong>disattivato</strong>, quindi nessuna delle attività seguenti richiede ancora l'approvazione. Attiva <code>maker-checker</code> in <link>Configurazioni globali</link> perché abbiano effetto.",
+    "statusOn": "Il controllo creatore-verificatore è <strong>attivo</strong>: le attività selezionate qui sotto attendono l'approvazione di un verificatore.",
+    "taskGroups": "Gruppi di attività",
+    "tasksMatching": "Attività corrispondenti a \"{{term}}\""
+  },
   "manageReports": "Gestisci report",
   "manageRolesAndPermissions": "Gestisci ruoli e autorizzazioni",
   "manageSurveys": "Gestisci sondaggi",

@@ -592,5 +592,10 @@
       "saving": "Savings",
       "share": "Shares"
     }
+  },
+  "reports": {
+    "allEngines": "All",
+    "filterByEngine": "Filter by engine",
+    "matchCount": "{{shown}} / {{total}}"
   }
 }

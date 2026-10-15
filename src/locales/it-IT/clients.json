@@ -198,7 +198,12 @@
     "selectTypePlaceholder": "Seleziona tipo",
     "typeHome": "Casa",
     "typeWork": "Lavoro",
-    "typeOther": "Altro"
+    "typeOther": "Altro",
+    "loading": "Caricamento indirizzi...",
+    "empty": "Non è stato ancora aggiunto alcun indirizzo.",
+    "loadFailed": "Impossibile caricare gli indirizzi di questo cliente.",
+    "statusActive": "Attivo",
+    "statusInactive": "Inattivo"
   },
   "charge": {
     "breadcrumbLabel": "Addebito",
