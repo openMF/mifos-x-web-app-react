@@ -13,14 +13,24 @@ import { Input } from '@/components/ui/input'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Label } from '@/components/ui/label'
+import { SavingsAccountApi } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { useBusinessDateState } from '@/lib/business-date'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+const savingsApi = new SavingsAccountApi(getConfiguration())
 
 const RejectSavingsAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Reject' })
   const { groupId, accountId } = useParams()
   const navigate = useNavigate()
 
-  const [rejectedOnDate, setRejectedOnDate] = useState('')
+  // Defaults to the business date, like the Angular web app.
+  const [rejectedOnDate, setRejectedOnDate] = useBusinessDateState()
   const [note, setNote] = useState('')
+
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const backToAccount = () => {
     if (groupId && accountId) {
@@ -30,8 +40,31 @@ const RejectSavingsAccount = () => {
     }
   }
 
-  const onSubmit = () => {
-    backToAccount()
+  const onSubmit = async () => {
+    if (!accountId) return
+
+    setSaving(true)
+    setError(null)
+    try {
+      await savingsApi.handleCommands6(
+        Number(accountId),
+        {
+          locale: 'en',
+          dateFormat: 'yyyy-MM-dd',
+          rejectedOnDate,
+          note: note || undefined,
+        } as Record<string, unknown>,
+        'reject'
+      )
+      backToAccount()
+    } catch (e) {
+      console.error('reject failed', e)
+      setError(
+        datatableErrorMessage(e) ?? 'Rejection failed. Please try again.'
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -50,7 +83,10 @@ const RejectSavingsAccount = () => {
               <Input
                 type="date"
                 value={rejectedOnDate}
-                onChange={e => setRejectedOnDate(e.target.value)}
+                onChange={e => {
+                  setRejectedOnDate(e.target.value)
+                  setError(null)
+                }}
               />
             </div>
 
@@ -59,18 +95,31 @@ const RejectSavingsAccount = () => {
               <Input
                 placeholder="Optional note…"
                 value={note}
-                onChange={e => setNote(e.target.value)}
+                onChange={e => {
+                  setNote(e.target.value)
+                  setError(null)
+                }}
               />
             </div>
 
+            {error && (
+              <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+                {error}
+              </div>
+            )}
+
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={backToAccount}>
+              <Button
+                variant="outline"
+                onClick={backToAccount}
+                disabled={saving}
+              >
                 Cancel
               </Button>
               <Button
                 className="bg-[#0e77b7] hover:bg-[#0662a3]"
                 onClick={onSubmit}
-                disabled={!rejectedOnDate}
+                disabled={!rejectedOnDate || saving}
               >
                 Confirm
               </Button>

@@ -6,6 +6,42 @@
   "configurations": "Configurations",
   "configureMakerCheckerTasks": "Configure Maker Checker Tasks",
   "currencyConfiguration": "Currency Configuration",
+  "entityChecks": {
+    "actions": "Actions",
+    "allProducts": "All products",
+    "confirm": "Confirm",
+    "confirmDelete": "Are you sure you want to delete the check for data table \"{{name}}\"?",
+    "createTitle": "Create Entity Data Table Check",
+    "deleteCheck": "Delete the {{name}} check",
+    "deleting": "Deleting...",
+    "entities": {
+      "client": "Client",
+      "group": "Group",
+      "loan": "Loan",
+      "savingsAccount": "Savings Account"
+    },
+    "errors": {
+      "createFailed": "Failed to create the entity data table check.",
+      "deleteFailed": "Failed to delete the entity data table check.",
+      "loadFailed": "Failed to load entity data table checks.",
+      "templateFailed": "Failed to load the entity data table check template."
+    },
+    "fields": {
+      "dataTable": "Data Table",
+      "dataTableRequired": "Data Table*",
+      "entityRequired": "Entity*",
+      "product": "Product",
+      "productName": "Product Name",
+      "statusRequired": "Status*",
+      "systemDefined": "System Defined"
+    },
+    "placeholders": {
+      "noDataTables": "No data tables for this entity",
+      "selectDataTable": "Select a data table",
+      "selectEntity": "Select an entity",
+      "selectStatus": "Select a status"
+    }
+  },
   "entityDataTableChecks": "Entity Data Table Checks",
   "entityToEntityMapping": "Entity to Entity Mapping",
   "errors": {
@@ -41,6 +77,23 @@
   "manageHolidays": "Manage Holidays",
   "manageHooks": "Manage Hooks",
   "manageJobs": "Manage Jobs",
+  "manageMakerChecker": {
+    "clearAll": "Clear all",
+    "errors": {
+      "loadFailed": "Failed to load the maker checker tasks.",
+      "saveFailed": "Failed to save the maker checker tasks."
+    },
+    "noTasksMatch": "No tasks match.",
+    "saveWithCount": "Save ({{count}})",
+    "savedChanges_one": "Saved {{count}} change.",
+    "savedChanges_other": "Saved {{count}} changes.",
+    "searchPlaceholder": "Search all tasks",
+    "selectAll": "Select all",
+    "statusOff": "Maker checker is <strong>off</strong>, so none of the tasks below need approval yet. Turn on <code>maker-checker</code> in <link>Global Configurations</link> for them to take effect.",
+    "statusOn": "Maker checker is <strong>on</strong>: the tasks ticked below wait for a checker's approval.",
+    "taskGroups": "Task groups",
+    "tasksMatching": "Tasks matching \"{{term}}\""
+  },
   "manageReports": "Manage Reports",
   "manageRolesAndPermissions": "Manage Roles and Permissions",
   "manageSurveys": "Manage Surveys",
@@ -125,6 +178,138 @@
   "searchByMaker": "Search by maker",
   "searchEvents": "Search events…",
   "searchReports": "Search reports...",
+  "smsCampaign": {
+    "title": "SMS Campaigns",
+    "create": "Create SMS Campaign",
+    "edit": "Edit SMS Campaign",
+    "empty": "No SMS campaigns yet",
+    "reactivate": "Reactivate",
+    "confirm": "Confirm",
+    "unassigned": "Unassigned",
+    "notification": "Notification (no SMS provider)",
+    "noProviders": "No SMS providers configured",
+    "noBusinessRules": "No business rules for this trigger type",
+    "noParameters": "This business rule has no parameters.",
+    "noColumns": "Fill in the business rule parameters and choose \"Get parameters\" to list the placeholders.",
+    "businessRuleParameters": "Business Rule Parameters",
+    "templateParameters": "Template Parameters",
+    "getParameters": "Get parameters",
+    "previewMessage": "Preview message",
+    "previewEmpty": "No matching record to preview.",
+    "recipients_one": "{{count}} message would be sent",
+    "recipients_other": "{{count}} messages would be sent",
+    "steps": {
+      "campaign": "Campaign",
+      "message": "Message",
+      "preview": "Preview"
+    },
+    "fields": {
+      "name": "Name",
+      "templateMessage": "Template Message",
+      "campaignType": "Campaign Type",
+      "triggerType": "Trigger Type",
+      "status": "Status",
+      "submittedBy": "Submitted By",
+      "campaignName": "Campaign Name",
+      "smsProvider": "SMS Provider",
+      "isNotification": "Is notification?",
+      "scheduleDate": "Schedule Date",
+      "repeats": "Repeats",
+      "repetitionInterval": "Repetition Interval",
+      "repeatsOnDay": "Repeats on Day",
+      "recurrence": "Recurrence",
+      "businessRule": "Business Rule",
+      "campaignMessage": "Campaign Message",
+      "submittedOn": "Submitted On",
+      "activatedOn": "Activated On",
+      "closedOn": "Closed On"
+    },
+    "placeholders": {
+      "smsProvider": "Select an SMS provider",
+      "triggerType": "Select a trigger type",
+      "businessRule": "Select a business rule",
+      "triggerFirst": "Select a trigger type first"
+    },
+    "hints": {
+      "checkStart": "Shown in your browser's time zone. Check it before saving, since the server may use another.",
+      "startInPast": "Choose a time in the future."
+    },
+    "frequency": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "closed": "Closed"
+    },
+    "errors": {
+      "loadList": "Failed to load the SMS campaigns.",
+      "load": "Failed to load the SMS campaign.",
+      "loadTemplate": "Failed to load the SMS campaign options.",
+      "loadParameters": "Failed to load the business rule parameters.",
+      "runReport": "Failed to get the business rule parameters.",
+      "preview": "Failed to preview the message.",
+      "create": "Failed to create the SMS campaign.",
+      "update": "Failed to update the SMS campaign.",
+      "delete": "Failed to delete the SMS campaign.",
+      "activate": "Failed to activate the SMS campaign.",
+      "close": "Failed to close the SMS campaign.",
+      "reactivate": "Failed to reactivate the SMS campaign.",
+      "messages": "Failed to load the messages."
+    },
+    "messages": {
+      "title": "Messages",
+      "selectStatus": "Select a status",
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "message": "Message",
+      "mobileNo": "Mobile No.",
+      "count_one": "{{count}} message",
+      "count_other": "{{count}} messages",
+      "empty": "No messages found",
+      "status": {
+        "pending": "Pending SMS",
+        "waiting": "Waiting for Delivery Report",
+        "sent": "Sent SMS",
+        "delivered": "Delivered SMS",
+        "failed": "Failed SMS"
+      },
+      "bothDates": "Set both dates to filter by date."
+    },
+    "commands": {
+      "activate": {
+        "title": "Activate SMS Campaign",
+        "description": "The campaign is activated on this date. Direct campaigns send their messages right away; scheduled campaigns follow their schedule.",
+        "date": "Activation Date"
+      },
+      "close": {
+        "title": "Close SMS Campaign",
+        "description": "The campaign stops sending messages from this date.",
+        "date": "Closure Date"
+      },
+      "reactivate": {
+        "title": "Reactivate SMS Campaign",
+        "description": "The campaign sends messages again from this date.",
+        "date": "Reactivation Date"
+      }
+    },
+    "deleteDialog": {
+      "confirm": "Are you sure you want to delete the SMS campaign \"{{name}}\"?",
+      "deleting": "Deleting..."
+    }
+  },
   "smsCampaigns": "SMS Campaigns",
   "standingInstructionsHistory": "Standing Instructions History",
   "success": {

@@ -566,5 +566,10 @@
       "saving": "Risparmi",
       "share": "Azioni"
     }
+  },
+  "reports": {
+    "allEngines": "Tutti",
+    "filterByEngine": "Filtra per motore",
+    "matchCount": "{{shown}} / {{total}}"
   }
 }
