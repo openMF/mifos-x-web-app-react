@@ -70,6 +70,62 @@
     "title": "Manage Funds"
   },
   "investors": "Investors",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Cron Expression*",
+      "cronHelp": "Quartz format: seconds minutes hours day-of-month month day-of-week [year], e.g. <code>0 1 0 1/1 * ? *</code> runs every day at 00:01.",
+      "jobName": "Job Name*",
+      "title": "Edit Job"
+    },
+    "errors": {
+      "changeStatus": "Failed to change the scheduler status.",
+      "cronRequired": "Please enter a cron expression.",
+      "loadHistory": "Failed to load the run history.",
+      "loadJob": "Failed to load the job.",
+      "loadJobs": "Failed to load the scheduler jobs.",
+      "nameRequired": "Please enter a job name.",
+      "notStarted": "could not be started",
+      "updateJob": "Failed to update the job."
+    },
+    "history": {
+      "caption_one": "{{count}} run • Page {{page}} of {{pages}}",
+      "caption_other": "{{count}} runs • Page {{page}} of {{pages}}",
+      "columns": {
+        "ended": "Ended",
+        "error": "Error",
+        "started": "Started",
+        "trigger": "Trigger"
+      },
+      "title": "Run History: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Activate Scheduler",
+      "activeHint": "Active: jobs run on their schedule",
+      "caption": "{{shown}} of {{total}} jobs",
+      "columns": {
+        "actions": "Actions",
+        "job": "Job",
+        "nextRun": "Next Run",
+        "previousRun": "Previous Run",
+        "running": "Running"
+      },
+      "editJob": "Edit {{name}}",
+      "filterPlaceholder": "Filter by job name",
+      "runHistoryOf": "Run history of {{name}}",
+      "runSelected": "Run Selected Jobs",
+      "runSelectedCount": "Run Selected Jobs ({{count}})",
+      "scheduler": "Scheduler:",
+      "selectAll": "Select all jobs",
+      "selectJob": "Select {{name}}",
+      "started_one": "Started {{count}} job. Use Refresh to see the result.",
+      "started_other": "Started {{count}} jobs. Use Refresh to see the result.",
+      "starting": "Starting...",
+      "success": "Success",
+      "suspendScheduler": "Suspend Scheduler",
+      "suspended": "Suspended",
+      "suspendedHint": "Suspended: no job runs on its schedule"
+    }
+  },
   "manageCodes": "Manage Codes",
   "manageDataTables": "Manage Data tables",
   "manageEmployees": "Manage Employees",

@@ -70,6 +70,62 @@
     "title": "Gestionar fondos"
   },
   "investors": "Inversores",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Expresión cron*",
+      "cronHelp": "Formato Quartz: segundos minutos horas día-del-mes mes día-de-la-semana [año]; p. ej., <code>0 1 0 1/1 * ? *</code> se ejecuta todos los días a las 00:01.",
+      "jobName": "Nombre del trabajo*",
+      "title": "Editar trabajo"
+    },
+    "errors": {
+      "changeStatus": "No se pudo cambiar el estado del planificador.",
+      "cronRequired": "Por favor, introduzca una expresión cron.",
+      "loadHistory": "Error al cargar el historial de ejecuciones.",
+      "loadJob": "Error al cargar el trabajo.",
+      "loadJobs": "Error al cargar los trabajos del planificador.",
+      "nameRequired": "Por favor, introduzca un nombre para el trabajo.",
+      "notStarted": "no se pudo iniciar",
+      "updateJob": "No se pudo actualizar el trabajo."
+    },
+    "history": {
+      "caption_one": "{{count}} ejecución • Página {{page}} de {{pages}}",
+      "caption_other": "{{count}} ejecuciones • Página {{page}} de {{pages}}",
+      "columns": {
+        "ended": "Finalizado",
+        "error": "Error",
+        "started": "Iniciado",
+        "trigger": "Disparador"
+      },
+      "title": "Historial de ejecuciones: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Activar planificador",
+      "activeHint": "Activo: los trabajos se ejecutan según su programación",
+      "caption": "{{shown}} de {{total}} trabajos",
+      "columns": {
+        "actions": "Acciones",
+        "job": "Trabajo",
+        "nextRun": "Próxima ejecución",
+        "previousRun": "Ejecución anterior",
+        "running": "En ejecución"
+      },
+      "editJob": "Editar {{name}}",
+      "filterPlaceholder": "Filtrar por nombre del trabajo",
+      "runHistoryOf": "Historial de ejecuciones de {{name}}",
+      "runSelected": "Ejecutar trabajos seleccionados",
+      "runSelectedCount": "Ejecutar trabajos seleccionados ({{count}})",
+      "scheduler": "Planificador:",
+      "selectAll": "Seleccionar todos los trabajos",
+      "selectJob": "Seleccionar {{name}}",
+      "started_one": "Se inició {{count}} trabajo. Use Actualizar para ver el resultado.",
+      "started_other": "Se iniciaron {{count}} trabajos. Use Actualizar para ver el resultado.",
+      "starting": "Iniciando...",
+      "success": "Correcto",
+      "suspendScheduler": "Suspender planificador",
+      "suspended": "Suspendido",
+      "suspendedHint": "Suspendido: ningún trabajo se ejecuta según su programación"
+    }
+  },
   "manageCodes": "Gestionar códigos",
   "manageDataTables": "Gestionar tablas de datos",
   "manageEmployees": "Gestionar empleados",

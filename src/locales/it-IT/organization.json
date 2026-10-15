@@ -70,6 +70,62 @@
     "title": "Gestisci fondi"
   },
   "investors": "Investitori",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Espressione cron*",
+      "cronHelp": "Formato Quartz: secondi minuti ore giorno-del-mese mese giorno-della-settimana [anno], ad es. <code>0 1 0 1/1 * ? *</code> viene eseguito ogni giorno alle 00:01.",
+      "jobName": "Nome del lavoro*",
+      "title": "Modifica lavoro"
+    },
+    "errors": {
+      "changeStatus": "Impossibile modificare lo stato dello scheduler.",
+      "cronRequired": "Inserisci un'espressione cron.",
+      "loadHistory": "Impossibile caricare la cronologia delle esecuzioni.",
+      "loadJob": "Impossibile caricare il lavoro.",
+      "loadJobs": "Impossibile caricare i lavori dello scheduler.",
+      "nameRequired": "Inserisci un nome per il lavoro.",
+      "notStarted": "non è stato possibile avviarlo",
+      "updateJob": "Impossibile aggiornare il lavoro."
+    },
+    "history": {
+      "caption_one": "{{count}} esecuzione • Pagina {{page}} di {{pages}}",
+      "caption_other": "{{count}} esecuzioni • Pagina {{page}} di {{pages}}",
+      "columns": {
+        "ended": "Terminato",
+        "error": "Errore",
+        "started": "Avviato",
+        "trigger": "Attivazione"
+      },
+      "title": "Cronologia esecuzioni: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Attiva scheduler",
+      "activeHint": "Attivo: i lavori vengono eseguiti secondo la loro pianificazione",
+      "caption": "{{shown}} di {{total}} lavori",
+      "columns": {
+        "actions": "Azioni",
+        "job": "Lavoro",
+        "nextRun": "Prossima esecuzione",
+        "previousRun": "Esecuzione precedente",
+        "running": "In esecuzione"
+      },
+      "editJob": "Modifica {{name}}",
+      "filterPlaceholder": "Filtra per nome del lavoro",
+      "runHistoryOf": "Cronologia esecuzioni di {{name}}",
+      "runSelected": "Esegui lavori selezionati",
+      "runSelectedCount": "Esegui lavori selezionati ({{count}})",
+      "scheduler": "Scheduler:",
+      "selectAll": "Seleziona tutti i lavori",
+      "selectJob": "Seleziona {{name}}",
+      "started_one": "{{count}} lavoro avviato. Usa Aggiorna per vedere il risultato.",
+      "started_other": "{{count}} lavori avviati. Usa Aggiorna per vedere il risultato.",
+      "starting": "Avvio in corso...",
+      "success": "Riuscito",
+      "suspendScheduler": "Sospendi scheduler",
+      "suspended": "Sospeso",
+      "suspendedHint": "Sospeso: nessun lavoro viene eseguito secondo la pianificazione"
+    }
+  },
   "manageCodes": "Gestisci codici",
   "manageDataTables": "Gestisci tabelle dati",
   "manageEmployees": "Gestisci dipendenti",

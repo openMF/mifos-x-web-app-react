@@ -70,6 +70,62 @@
     "title": "Gérer les fonds"
   },
   "investors": "Investisseurs",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Expression cron*",
+      "cronHelp": "Format Quartz : secondes minutes heures jour-du-mois mois jour-de-la-semaine [année], p. ex. <code>0 1 0 1/1 * ? *</code> s'exécute tous les jours à 00:01.",
+      "jobName": "Nom de la tâche*",
+      "title": "Modifier la tâche"
+    },
+    "errors": {
+      "changeStatus": "Échec de la modification du statut du planificateur.",
+      "cronRequired": "Veuillez saisir une expression cron.",
+      "loadHistory": "Échec du chargement de l'historique d'exécution.",
+      "loadJob": "Échec du chargement de la tâche.",
+      "loadJobs": "Échec du chargement des tâches planifiées.",
+      "nameRequired": "Veuillez saisir un nom de tâche.",
+      "notStarted": "n'a pas pu être lancée",
+      "updateJob": "Échec de la mise à jour de la tâche."
+    },
+    "history": {
+      "caption_one": "{{count}} exécution • Page {{page}} sur {{pages}}",
+      "caption_other": "{{count}} exécutions • Page {{page}} sur {{pages}}",
+      "columns": {
+        "ended": "Fin",
+        "error": "Erreur",
+        "started": "Début",
+        "trigger": "Déclencheur"
+      },
+      "title": "Historique d'exécution : {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Activer le planificateur",
+      "activeHint": "Actif : les tâches s'exécutent selon leur planification",
+      "caption": "{{shown}} sur {{total}} tâches",
+      "columns": {
+        "actions": "Actions",
+        "job": "Tâche",
+        "nextRun": "Prochaine exécution",
+        "previousRun": "Exécution précédente",
+        "running": "En cours"
+      },
+      "editJob": "Modifier {{name}}",
+      "filterPlaceholder": "Filtrer par nom de tâche",
+      "runHistoryOf": "Historique d'exécution de {{name}}",
+      "runSelected": "Exécuter les tâches sélectionnées",
+      "runSelectedCount": "Exécuter les tâches sélectionnées ({{count}})",
+      "scheduler": "Planificateur :",
+      "selectAll": "Sélectionner toutes les tâches",
+      "selectJob": "Sélectionner {{name}}",
+      "started_one": "{{count}} tâche lancée. Utilisez Actualiser pour voir le résultat.",
+      "started_other": "{{count}} tâches lancées. Utilisez Actualiser pour voir le résultat.",
+      "starting": "Lancement...",
+      "success": "Réussi",
+      "suspendScheduler": "Suspendre le planificateur",
+      "suspended": "Suspendu",
+      "suspendedHint": "Suspendu : aucune tâche ne s'exécute selon sa planification"
+    }
+  },
   "manageCodes": "Gérer les codes",
   "manageDataTables": "Gérer les tables de données",
   "manageEmployees": "Gérer les employés",
