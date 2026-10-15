@@ -178,6 +178,138 @@
   "searchByMaker": "Rechercher par créateur",
   "searchEvents": "Rechercher des événements",
   "searchReports": "Rechercher des rapports",
+  "smsCampaign": {
+    "title": "Campagnes SMS",
+    "create": "Créer une campagne SMS",
+    "edit": "Modifier la campagne SMS",
+    "empty": "Aucune campagne SMS pour le moment",
+    "reactivate": "Réactiver",
+    "confirm": "Confirmer",
+    "unassigned": "Non attribué",
+    "notification": "Notification (sans fournisseur SMS)",
+    "noProviders": "Aucun fournisseur SMS configuré",
+    "noBusinessRules": "Aucune règle métier pour ce type de déclenchement",
+    "noParameters": "Cette règle métier n'a pas de paramètres.",
+    "noColumns": "Renseignez les paramètres de la règle métier puis choisissez « Obtenir les paramètres » pour afficher les champs de fusion.",
+    "businessRuleParameters": "Paramètres de la règle métier",
+    "templateParameters": "Paramètres du modèle",
+    "getParameters": "Obtenir les paramètres",
+    "previewMessage": "Aperçu du message",
+    "previewEmpty": "Aucun enregistrement à prévisualiser.",
+    "recipients_one": "{{count}} message serait envoyé",
+    "recipients_other": "{{count}} messages seraient envoyés",
+    "steps": {
+      "campaign": "Campagne",
+      "message": "Message",
+      "preview": "Aperçu"
+    },
+    "fields": {
+      "name": "Nom",
+      "templateMessage": "Message modèle",
+      "campaignType": "Type de campagne",
+      "triggerType": "Type de déclenchement",
+      "status": "Statut",
+      "submittedBy": "Soumis par",
+      "campaignName": "Nom de la campagne",
+      "smsProvider": "Fournisseur SMS",
+      "isNotification": "Est une notification ?",
+      "scheduleDate": "Date planifiée",
+      "repeats": "Répétition",
+      "repetitionInterval": "Intervalle de répétition",
+      "repeatsOnDay": "Répéter le jour",
+      "recurrence": "Récurrence",
+      "businessRule": "Règle métier",
+      "campaignMessage": "Message de la campagne",
+      "submittedOn": "Soumis le",
+      "activatedOn": "Activé le",
+      "closedOn": "Clôturé le"
+    },
+    "placeholders": {
+      "smsProvider": "Sélectionnez un fournisseur SMS",
+      "triggerType": "Sélectionnez un type de déclenchement",
+      "businessRule": "Sélectionnez une règle métier",
+      "triggerFirst": "Sélectionnez d'abord un type de déclenchement"
+    },
+    "hints": {
+      "checkStart": "Affichée dans le fuseau horaire de votre navigateur. Vérifiez-la avant d'enregistrer, car le serveur peut en utiliser un autre.",
+      "startInPast": "Choisissez une heure dans le futur."
+    },
+    "frequency": {
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "yearly": "Annuel"
+    },
+    "weekdays": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "En attente",
+      "closed": "Clôturée"
+    },
+    "errors": {
+      "loadList": "Impossible de charger les campagnes SMS.",
+      "load": "Impossible de charger la campagne SMS.",
+      "loadTemplate": "Impossible de charger les options de la campagne SMS.",
+      "loadParameters": "Impossible de charger les paramètres de la règle métier.",
+      "runReport": "Impossible d'obtenir les paramètres de la règle métier.",
+      "preview": "Impossible d'afficher l'aperçu du message.",
+      "create": "Impossible de créer la campagne SMS.",
+      "update": "Impossible de mettre à jour la campagne SMS.",
+      "delete": "Impossible de supprimer la campagne SMS.",
+      "activate": "Impossible d'activer la campagne SMS.",
+      "close": "Impossible de clôturer la campagne SMS.",
+      "reactivate": "Impossible de réactiver la campagne SMS.",
+      "messages": "Impossible de charger les messages."
+    },
+    "messages": {
+      "title": "Messages",
+      "selectStatus": "Sélectionnez un statut",
+      "fromDate": "Date de début",
+      "toDate": "Date de fin",
+      "message": "Message",
+      "mobileNo": "N° de mobile",
+      "count_one": "{{count}} message",
+      "count_other": "{{count}} messages",
+      "empty": "Aucun message trouvé",
+      "status": {
+        "pending": "SMS en attente",
+        "waiting": "En attente de l'accusé de réception",
+        "sent": "SMS envoyés",
+        "delivered": "SMS remis",
+        "failed": "SMS en échec"
+      },
+      "bothDates": "Indiquez les deux dates pour filtrer par date."
+    },
+    "commands": {
+      "activate": {
+        "title": "Activer la campagne SMS",
+        "description": "La campagne est activée à cette date. Les campagnes directes envoient leurs messages immédiatement ; les campagnes planifiées suivent leur planification.",
+        "date": "Date d'activation"
+      },
+      "close": {
+        "title": "Clôturer la campagne SMS",
+        "description": "La campagne cesse d'envoyer des messages à partir de cette date.",
+        "date": "Date de clôture"
+      },
+      "reactivate": {
+        "title": "Réactiver la campagne SMS",
+        "description": "La campagne envoie à nouveau des messages à partir de cette date.",
+        "date": "Date de réactivation"
+      }
+    },
+    "deleteDialog": {
+      "confirm": "Voulez-vous vraiment supprimer la campagne SMS « {{name}} » ?",
+      "deleting": "Suppression..."
+    }
+  },
   "smsCampaigns": "Campagnes SMS",
   "standingInstructionsHistory": "Historique des instructions permanentes",
   "success": {

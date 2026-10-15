@@ -102,6 +102,10 @@ import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
 import PasswordPreferences from '@/pages/organization/password-preferences/PasswordPreferences'
+import SmsCampaigns from '@/pages/organization/sms-campaigns/SmsCampaigns'
+import CreateSmsCampaign from '@/pages/organization/sms-campaigns/CreateSmsCampaign'
+import ViewSmsCampaign from '@/pages/organization/sms-campaigns/ViewSmsCampaign'
+import EditSmsCampaign from '@/pages/organization/sms-campaigns/EditSmsCampaign'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -622,6 +626,24 @@ const AppRoutes = () => {
           <Route
             path="/organization/password-preferences"
             element={<PasswordPreferences />}
+          />
+
+          {/* SMS Campaigns */}
+          <Route
+            path="/organization/sms-campaigns"
+            element={<SmsCampaigns />}
+          />
+          <Route
+            path="/organization/sms-campaigns/create"
+            element={<CreateSmsCampaign />}
+          />
+          <Route
+            path="/organization/sms-campaigns/:id"
+            element={<ViewSmsCampaign />}
+          />
+          <Route
+            path="/organization/sms-campaigns/:id/edit"
+            element={<EditSmsCampaign />}
           />
 
           {/* Products */}
