@@ -14,5 +14,49 @@
   "savingsProducts": "Productos de ahorro",
   "shareProduct": "Producto de acciones",
   "shareProducts": "Productos de acciones",
-  "title": "Productos"
+  "title": "Productos",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "Ninguna",
+      "cash": "Efectivo",
+      "accrualPeriodic": "Devengo (periódico)",
+      "accrualUpfront": "Devengo (anticipado)"
+    },
+    "sections": {
+      "assets": "Activos",
+      "income": "Ingresos",
+      "expenses": "Gastos",
+      "liabilities": "Pasivos"
+    },
+    "fields": {
+      "fundSource": "Fuente de fondos",
+      "loanPortfolio": "Cartera de préstamos",
+      "transfersInSuspense": "Transferencias en suspenso",
+      "interestReceivable": "Intereses por cobrar",
+      "feesReceivable": "Comisiones por cobrar",
+      "penaltiesReceivable": "Penalizaciones por cobrar",
+      "incomeFromInterest": "Ingresos por intereses",
+      "incomeFromFees": "Ingresos por comisiones",
+      "incomeFromPenalties": "Ingresos por penalizaciones",
+      "incomeFromRecovery": "Ingresos por pagos recuperados",
+      "incomeFromChargeOffInterest": "Ingresos por intereses castigados",
+      "incomeFromChargeOffFees": "Ingresos por comisiones castigadas",
+      "incomeFromChargeOffPenalty": "Ingresos por penalizaciones castigadas",
+      "incomeFromGoodwillCreditInterest": "Ingresos por intereses de crédito de buena voluntad",
+      "incomeFromGoodwillCreditFees": "Ingresos por comisiones de crédito de buena voluntad",
+      "incomeFromGoodwillCreditPenalty": "Ingresos por penalizaciones de crédito de buena voluntad",
+      "lossesWrittenOff": "Pérdidas por cancelación",
+      "goodwillCreditExpense": "Gastos por crédito de buena voluntad",
+      "chargeOffExpense": "Gasto por castigo",
+      "chargeOffFraudExpense": "Gasto por castigo por fraude",
+      "overpaymentLiability": "Pasivo por sobrepago"
+    },
+    "enableAccrualActivityPosting": "Registrar la actividad de devengo en la fecha de vencimiento de la cuota",
+    "selectAccount": "Seleccione una cuenta",
+    "noAccounts": "No hay cuentas contables de este tipo. Agréguelas en el plan de cuentas.",
+    "missingAccounts": "Seleccione las cuentas contables que requiere esta regla contable: {{accounts}}.",
+    "saveFailed": "No se pudo crear el producto de préstamo.",
+    "type": "Tipo",
+    "notMapped": "Sin asignar"
+  }
 }

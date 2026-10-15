@@ -7,6 +7,7 @@
  */
 import { useNavigate as _useNavigate, useParams } from 'react-router-dom' // Reserved for future use: _useNavigate
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button as _Button } from '@/components/ui/button' // Reserved for future use: _Button
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
@@ -17,11 +18,19 @@ import {
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { Separator } from '@radix-ui/react-separator'
+import {
+  accountingFieldsFor,
+  glAccountLabel,
+  mappingKey,
+  ruleLabel,
+  type GlAccountOption,
+} from './loanProductAccounting'
 
 const LoanProductApi = new LoanProductsApi(getConfiguration())
 
 const ViewLoanProducts = () => {
   const { id } = useParams()
+  const { t } = useTranslation('products')
   const [loanProduct, setLoanProduct] =
     useState<GetLoanProductsProductIdResponse | null>(null)
 
@@ -469,9 +478,37 @@ const ViewLoanProducts = () => {
         </h2>
         <div className="p-6 grid grid-cols-2 gap-y-4 text-sm">
           <div className="font-medium text-zinc-500 dark:text-zinc-400">
-            Type:
+            {t('loanProductAccounting.type')}:
           </div>
-          {'Missing in OpenApi'}
+          <div>
+            {ruleLabel(loanProduct?.accountingRule?.id)
+              ? t(
+                  `loanProductAccounting.rules.${ruleLabel(loanProduct?.accountingRule?.id)}`
+                )
+              : '—'}
+          </div>
+          {accountingFieldsFor(loanProduct?.accountingRule?.id)
+            .map(field => ({
+              field,
+              account: (
+                loanProduct?.accountingMappings as
+                  | Record<string, GlAccountOption | undefined>
+                  | undefined
+              )?.[mappingKey(field.key)],
+            }))
+            // Optional accounts are listed only when one is mapped
+            .filter(({ field, account }) => field.required || account?.id)
+            .map(({ field, account }) => (
+              <div key={field.key} className="contents">
+                <div className="font-medium text-zinc-500 dark:text-zinc-400">
+                  {t(`loanProductAccounting.fields.${field.label}`)}:
+                </div>
+                <div>
+                  {glAccountLabel(account) ||
+                    t('loanProductAccounting.notMapped')}
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </div>

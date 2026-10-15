@@ -14,5 +14,49 @@
   "savingsProducts": "Produits d'épargne",
   "shareProduct": "Produit d'actions",
   "shareProducts": "Produits d'actions",
-  "title": "Produits"
+  "title": "Produits",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "Aucune",
+      "cash": "Trésorerie",
+      "accrualPeriodic": "Engagement (périodique)",
+      "accrualUpfront": "Engagement (anticipé)"
+    },
+    "sections": {
+      "assets": "Actifs",
+      "income": "Produits",
+      "expenses": "Charges",
+      "liabilities": "Passifs"
+    },
+    "fields": {
+      "fundSource": "Source des fonds",
+      "loanPortfolio": "Portefeuille de prêts",
+      "transfersInSuspense": "Transferts en suspens",
+      "interestReceivable": "Intérêts à recevoir",
+      "feesReceivable": "Frais à recevoir",
+      "penaltiesReceivable": "Pénalités à recevoir",
+      "incomeFromInterest": "Produits d'intérêts",
+      "incomeFromFees": "Produits des frais",
+      "incomeFromPenalties": "Produits des pénalités",
+      "incomeFromRecovery": "Produits des remboursements recouvrés",
+      "incomeFromChargeOffInterest": "Produits des intérêts passés en perte",
+      "incomeFromChargeOffFees": "Produits des frais passés en perte",
+      "incomeFromChargeOffPenalty": "Produits des pénalités passées en perte",
+      "incomeFromGoodwillCreditInterest": "Produits des intérêts de geste commercial",
+      "incomeFromGoodwillCreditFees": "Produits des frais de geste commercial",
+      "incomeFromGoodwillCreditPenalty": "Produits des pénalités de geste commercial",
+      "lossesWrittenOff": "Pertes sur créances radiées",
+      "goodwillCreditExpense": "Charges de geste commercial",
+      "chargeOffExpense": "Charge de passage en perte",
+      "chargeOffFraudExpense": "Charge de passage en perte pour fraude",
+      "overpaymentLiability": "Passif de trop-perçu"
+    },
+    "enableAccrualActivityPosting": "Comptabiliser l'activité d'engagement à la date d'échéance de chaque échéance",
+    "selectAccount": "Sélectionnez un compte",
+    "noAccounts": "Aucun compte comptable de ce type. Ajoutez-en dans le plan comptable.",
+    "missingAccounts": "Sélectionnez les comptes comptables requis par cette règle comptable : {{accounts}}.",
+    "saveFailed": "Le produit de prêt n'a pas pu être créé.",
+    "type": "Type",
+    "notMapped": "Non associé"
+  }
 }
