@@ -6,6 +6,42 @@
   "configurations": "Configurations",
   "configureMakerCheckerTasks": "Configure Maker Checker Tasks",
   "currencyConfiguration": "Currency Configuration",
+  "entityChecks": {
+    "actions": "Actions",
+    "allProducts": "All products",
+    "confirm": "Confirm",
+    "confirmDelete": "Are you sure you want to delete the check for data table \"{{name}}\"?",
+    "createTitle": "Create Entity Data Table Check",
+    "deleteCheck": "Delete the {{name}} check",
+    "deleting": "Deleting...",
+    "entities": {
+      "client": "Client",
+      "group": "Group",
+      "loan": "Loan",
+      "savingsAccount": "Savings Account"
+    },
+    "errors": {
+      "createFailed": "Failed to create the entity data table check.",
+      "deleteFailed": "Failed to delete the entity data table check.",
+      "loadFailed": "Failed to load entity data table checks.",
+      "templateFailed": "Failed to load the entity data table check template."
+    },
+    "fields": {
+      "dataTable": "Data Table",
+      "dataTableRequired": "Data Table*",
+      "entityRequired": "Entity*",
+      "product": "Product",
+      "productName": "Product Name",
+      "statusRequired": "Status*",
+      "systemDefined": "System Defined"
+    },
+    "placeholders": {
+      "noDataTables": "No data tables for this entity",
+      "selectDataTable": "Select a data table",
+      "selectEntity": "Select an entity",
+      "selectStatus": "Select a status"
+    }
+  },
   "entityDataTableChecks": "Entity Data Table Checks",
   "entityToEntityMapping": "Entity to Entity Mapping",
   "errors": {
