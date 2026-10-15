@@ -107,6 +107,29 @@
   "loanProvisioningCriteria": "Criteri di accantonamento prestiti",
   "paymentType": "Tipo di pagamento",
   "product": "Prodotto",
+  "productMix": {
+    "columns": {
+      "productName": "Nome prodotto",
+      "restrictedProducts": "Prodotti con restrizione"
+    },
+    "created": "Combinazione di prodotti creata correttamente.",
+    "createTitle": "Crea combinazione di prodotti",
+    "errors": {
+      "createFailed": "Impossibile creare la combinazione di prodotti.",
+      "restrictionsFailed": "Impossibile caricare i prodotti che possono essere limitati.",
+      "templateFailed": "Impossibile caricare i prodotti di prestito."
+    },
+    "fields": {
+      "productRequired": "Prodotto *",
+      "restrictedProductsRequired": "Prodotti con restrizione *"
+    },
+    "placeholders": {
+      "noProducts": "Ogni prodotto di prestito ha già una combinazione di prodotti",
+      "noRestrictedProducts": "Nessun altro prodotto di prestito disponibile",
+      "selectProduct": "Seleziona un prodotto di prestito",
+      "selectRestrictedProducts": "Seleziona i prodotti che non possono essere combinati"
+    }
+  },
   "productsMix": "Mix prodotti",
   "recurringDepositProducts": "Prodotti deposito ricorrente",
   "savingsProducts": "Prodotti di risparmio",
