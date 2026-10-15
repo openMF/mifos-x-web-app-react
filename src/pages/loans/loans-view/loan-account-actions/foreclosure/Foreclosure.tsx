@@ -5,39 +5,96 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { LoanTransactionsApi } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { useBusinessDateState } from '@/lib/business-date'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+const loanTransactionsApi = new LoanTransactionsApi(getConfiguration())
 
 const Foreclosure = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Foreclosure' })
   const navigate = useNavigate()
+  // The loan action routes name the loan id `:loanId` (or, before MXWAR-189, `:id`).
+  const params = useParams()
+  const loanId = params.loanId ?? params.id
 
   // form state
-  const [transactionDate, setTransactionDate] = useState('')
-  const [principal] = useState('')
-  const [interest] = useState('')
-  const [feeAmount] = useState('')
+  // Defaults to the business date, like the Angular web app.
+  const [transactionDate, setTransactionDate] = useBusinessDateState()
+  const [principal, setPrincipal] = useState('')
+  const [interest, setInterest] = useState('')
+  const [feeAmount, setFeeAmount] = useState('')
   const [penaltyAmount, setPenaltyAmount] = useState('')
-  const [transactionAmount] = useState('')
+  const [transactionAmount, setTransactionAmount] = useState('')
   const [note, setNote] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  // amounts, currency and payment types from the foreclosure template for the chosen date,
+  // as the Angular web app does
+  useEffect(() => {
+    if (!loanId || !transactionDate) return
+    loanTransactionsApi
+      .retrieveTransactionTemplate(
+        Number(loanId),
+        'foreclosure',
+        'yyyy-MM-dd',
+        transactionDate as unknown as object,
+        'en'
+      )
+      .then(res => {
+        const tpl = res.data ?? {}
+        setPrincipal(String(tpl.principalPortion ?? ''))
+        setInterest(String(tpl.interestPortion ?? ''))
+        setFeeAmount(String(tpl.feeChargesPortion ?? ''))
+        setPenaltyAmount(String(tpl.penaltyChargesPortion ?? ''))
+        setTransactionAmount(tpl.amount != null ? String(tpl.amount) : '')
+      })
+      .catch(e => console.error('foreclosure template failed', e))
+  }, [loanId, transactionDate])
 
   // simple validation
   const canSubmit =
     Boolean(transactionDate) &&
-    penaltyAmount !== '' &&
     transactionAmount !== '' &&
     note.trim().length > 0
 
   // handle submit
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!canSubmit) return
-    navigate(-1)
+    if (!canSubmit || !loanId) return
+
+    setSaving(true)
+    setError(null)
+    try {
+      // Fineract works out the amounts itself, as in the Angular web app.
+      await loanTransactionsApi.executeLoanTransaction(
+        Number(loanId),
+        {
+          locale: 'en',
+          dateFormat: 'yyyy-MM-dd',
+          transactionDate,
+          note,
+        } as Record<string, unknown>,
+        'foreclosure'
+      )
+      navigate(-1)
+    } catch (e) {
+      console.error('foreclosure failed', e)
+      setError(
+        datatableErrorMessage(e) ?? 'Foreclosure failed. Please try again.'
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -56,7 +113,10 @@ const Foreclosure = () => {
             <Input
               type="date"
               value={transactionDate}
-              onChange={e => setTransactionDate(e.target.value)}
+              onChange={e => {
+                setTransactionDate(e.target.value)
+                setError(null)
+              }}
             />
           </div>
 
@@ -80,15 +140,8 @@ const Foreclosure = () => {
 
           {/* penalty amount */}
           <div className="space-y-2">
-            <Label>Penalty Amount*</Label>
-            <Input
-              type="number"
-              min="0"
-              step="0.01"
-              value={penaltyAmount}
-              onChange={e => setPenaltyAmount(e.target.value)}
-              placeholder="0"
-            />
+            <Label>Penalty Amount</Label>
+            <Input value={penaltyAmount} readOnly />
           </div>
 
           {/* transaction amount */}
@@ -102,10 +155,19 @@ const Foreclosure = () => {
             <Label>Note*</Label>
             <textarea
               value={note}
-              onChange={e => setNote(e.target.value)}
+              onChange={e => {
+                setNote(e.target.value)
+                setError(null)
+              }}
               className="w-full min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
           </div>
+
+          {error && (
+            <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+              {error}
+            </div>
+          )}
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
@@ -113,12 +175,13 @@ const Foreclosure = () => {
               type="button"
               variant="outline"
               onClick={() => navigate(-1)}
+              disabled={saving}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={!canSubmit}
+              disabled={!canSubmit || saving}
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
               Foreclosure
