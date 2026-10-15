@@ -212,7 +212,10 @@ export function MultiStepForm({
                 {step.component}
 
                 {stepError && (
-                  <div className="mt-4 rounded-md bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-600">
+                  <div
+                    role="alert"
+                    className="mt-4 rounded-md bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-600"
+                  >
                     {stepError}
                   </div>
                 )}
