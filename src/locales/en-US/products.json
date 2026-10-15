@@ -9,6 +9,29 @@
   "loanProvisioningCriteria": "Loan Provisioning Criteria",
   "paymentType": "Payment Type",
   "product": "Product",
+  "productMix": {
+    "columns": {
+      "productName": "Product Name",
+      "restrictedProducts": "Restricted Products"
+    },
+    "created": "Product mix created successfully.",
+    "createTitle": "Create Product Mix",
+    "errors": {
+      "createFailed": "Failed to create the product mix.",
+      "restrictionsFailed": "Failed to load the products that can be restricted.",
+      "templateFailed": "Failed to load the loan products."
+    },
+    "fields": {
+      "productRequired": "Product *",
+      "restrictedProductsRequired": "Restricted Products *"
+    },
+    "placeholders": {
+      "noProducts": "Every loan product already has a product mix",
+      "noRestrictedProducts": "No other loan products available",
+      "selectProduct": "Select a loan product",
+      "selectRestrictedProducts": "Select products that cannot be combined"
+    }
+  },
   "productsMix": "Products Mix",
   "recurringDepositProducts": "Recurring Deposit Products",
   "savingsProducts": "Savings Products",
