@@ -6,24 +6,48 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { LoansApi } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+const loansApi = new LoansApi(getConfiguration())
 
 const UndoApproval = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Undo Approval' })
   const navigate = useNavigate()
+  // The loan action routes name the loan id `:loanId` (or, before MXWAR-189, `:id`).
+  const params = useParams()
+  const loanId = params.loanId ?? params.id
 
   // form state
   const [note, setNote] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // submit handler
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    navigate(-1)
+    if (!loanId) return
+
+    setSaving(true)
+    setError(null)
+    try {
+      await loansApi.stateTransitions(Number(loanId), { note }, 'undoApproval')
+      navigate(-1)
+    } catch (e) {
+      console.error('undo approval failed', e)
+      setError(
+        datatableErrorMessage(e) ?? 'Undo approval failed. Please try again.'
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -39,8 +63,20 @@ const UndoApproval = () => {
           {/* note input */}
           <div className="w-full space-y-2">
             <Label>Note</Label>
-            <Input value={note} onChange={e => setNote(e.target.value)} />
+            <Input
+              value={note}
+              onChange={e => {
+                setNote(e.target.value)
+                setError(null)
+              }}
+            />
           </div>
+
+          {error && (
+            <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+              {error}
+            </div>
+          )}
 
           {/* actions */}
           <div className="flex gap-4 pt-2">
@@ -48,11 +84,13 @@ const UndoApproval = () => {
               type="button"
               variant="outline"
               onClick={() => navigate(-1)}
+              disabled={saving}
             >
               Cancel
             </Button>
             <Button
               type="submit"
+              disabled={saving}
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
               Submit
