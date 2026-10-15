@@ -321,6 +321,14 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - The generated client has no API class for `/loan-originators` (list, template, get, create, update, delete), so the Loan Originators pages call it through `@/lib/axios`
 
+### `/entityDatatableChecks` (GET)
+
+- `retrieveAll6` is typed as `GetEntityDatatableChecksResponse[]`, but the response is a page: `{ totalFilteredRecords, pageItems }`
+
+### `/entityDatatableChecks/template` (GET)
+
+- `GetEntityDatatableChecksTemplateResponse` types `datatables`, `statusClient`, `statusLoans`, `statusGroup` and `statusSavings` as `object[]`; the real items are `{ entity, dataTableName }` and `{ name, code }`
+
 ---
 
 ## System: Manage Data Tables

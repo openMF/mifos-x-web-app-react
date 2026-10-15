@@ -6,6 +6,42 @@
   "configurations": "Configurations",
   "configureMakerCheckerTasks": "Configurer les tâches de vérification",
   "currencyConfiguration": "Configuration des devises",
+  "entityChecks": {
+    "actions": "Actions",
+    "allProducts": "Tous les produits",
+    "confirm": "Confirmer",
+    "confirmDelete": "Voulez-vous vraiment supprimer la vérification de la table de données « {{name}} » ?",
+    "createTitle": "Créer une vérification de table de données d'entité",
+    "deleteCheck": "Supprimer la vérification {{name}}",
+    "deleting": "Suppression...",
+    "entities": {
+      "client": "Client",
+      "group": "Groupe",
+      "loan": "Prêt",
+      "savingsAccount": "Compte d'épargne"
+    },
+    "errors": {
+      "createFailed": "Échec de la création de la vérification de table de données d'entité.",
+      "deleteFailed": "Échec de la suppression de la vérification de table de données d'entité.",
+      "loadFailed": "Échec du chargement des vérifications de table de données d'entité.",
+      "templateFailed": "Échec du chargement du modèle de vérification de table de données d'entité."
+    },
+    "fields": {
+      "dataTable": "Table de données",
+      "dataTableRequired": "Table de données*",
+      "entityRequired": "Entité*",
+      "product": "Produit",
+      "productName": "Nom du produit",
+      "statusRequired": "Statut*",
+      "systemDefined": "Défini par le système"
+    },
+    "placeholders": {
+      "noDataTables": "Aucune table de données pour cette entité",
+      "selectDataTable": "Sélectionnez une table de données",
+      "selectEntity": "Sélectionnez une entité",
+      "selectStatus": "Sélectionnez un statut"
+    }
+  },
   "entityDataTableChecks": "Vérifications de table de données d'entité",
   "entityToEntityMapping": "Mappage d'entité à entité",
   "errors": {

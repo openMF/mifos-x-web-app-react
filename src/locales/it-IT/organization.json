@@ -6,6 +6,42 @@
   "configurations": "Configurazioni",
   "configureMakerCheckerTasks": "Configura attività di verifica",
   "currencyConfiguration": "Configurazione valuta",
+  "entityChecks": {
+    "actions": "Azioni",
+    "allProducts": "Tutti i prodotti",
+    "confirm": "Conferma",
+    "confirmDelete": "Sei sicuro di voler eliminare il controllo per la tabella dati \"{{name}}\"?",
+    "createTitle": "Crea controllo tabella dati entità",
+    "deleteCheck": "Elimina il controllo {{name}}",
+    "deleting": "Eliminazione...",
+    "entities": {
+      "client": "Cliente",
+      "group": "Gruppo",
+      "loan": "Prestito",
+      "savingsAccount": "Conto risparmio"
+    },
+    "errors": {
+      "createFailed": "Impossibile creare il controllo tabella dati entità.",
+      "deleteFailed": "Impossibile eliminare il controllo tabella dati entità.",
+      "loadFailed": "Impossibile caricare i controlli tabella dati entità.",
+      "templateFailed": "Impossibile caricare il modello del controllo tabella dati entità."
+    },
+    "fields": {
+      "dataTable": "Tabella dati",
+      "dataTableRequired": "Tabella dati*",
+      "entityRequired": "Entità*",
+      "product": "Prodotto",
+      "productName": "Nome prodotto",
+      "statusRequired": "Stato*",
+      "systemDefined": "Definito dal sistema"
+    },
+    "placeholders": {
+      "noDataTables": "Nessuna tabella dati per questa entità",
+      "selectDataTable": "Seleziona una tabella dati",
+      "selectEntity": "Seleziona un'entità",
+      "selectStatus": "Seleziona uno stato"
+    }
+  },
   "entityDataTableChecks": "Controlli tabella dati entità",
   "entityToEntityMapping": "Mappatura da entità a entità",
   "errors": {
