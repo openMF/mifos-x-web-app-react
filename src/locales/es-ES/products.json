@@ -107,6 +107,29 @@
   "loanProvisioningCriteria": "Criterios de provisión de préstamos",
   "paymentType": "Tipo de pago",
   "product": "Producto",
+  "productMix": {
+    "columns": {
+      "productName": "Nombre del producto",
+      "restrictedProducts": "Productos restringidos"
+    },
+    "created": "Combinación de productos creada correctamente.",
+    "createTitle": "Crear combinación de productos",
+    "errors": {
+      "createFailed": "No se pudo crear la combinación de productos.",
+      "restrictionsFailed": "No se pudieron cargar los productos que se pueden restringir.",
+      "templateFailed": "No se pudieron cargar los productos de préstamo."
+    },
+    "fields": {
+      "productRequired": "Producto *",
+      "restrictedProductsRequired": "Productos restringidos *"
+    },
+    "placeholders": {
+      "noProducts": "Todos los productos de préstamo ya tienen una combinación de productos",
+      "noRestrictedProducts": "No hay otros productos de préstamo disponibles",
+      "selectProduct": "Seleccione un producto de préstamo",
+      "selectRestrictedProducts": "Seleccione los productos que no se pueden combinar"
+    }
+  },
   "productsMix": "Combinación de productos",
   "recurringDepositProducts": "Productos de depósito recurrente",
   "savingsProducts": "Productos de ahorro",
