@@ -198,7 +198,12 @@
     "selectTypePlaceholder": "Select type",
     "typeHome": "Home",
     "typeWork": "Work",
-    "typeOther": "Other"
+    "typeOther": "Other",
+    "loading": "Loading addresses...",
+    "empty": "No addresses have been added yet.",
+    "loadFailed": "Could not load the addresses for this client.",
+    "statusActive": "Active",
+    "statusInactive": "Inactive"
   },
   "charge": {
     "breadcrumbLabel": "Charge",
