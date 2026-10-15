@@ -14,6 +14,7 @@ import {
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import { Separator } from '@radix-ui/react-separator'
 
 // API instance for FD products
@@ -52,6 +53,8 @@ const ViewFixedDepositProducts = () => {
           { label: fdProducts?.name ?? 'View', current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mb-4" />
 
       {/* FD Product Details Card */}
       <div className="bg-white dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-700 shadow-sm">
