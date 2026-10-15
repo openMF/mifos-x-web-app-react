@@ -14,5 +14,51 @@
   "savingsProducts": "Savings Products",
   "shareProduct": "Share Product",
   "shareProducts": "Share Products",
-  "title": "Products"
+  "title": "Products",
+  "viewShareProduct": {
+    "sections": {
+      "details": "Details",
+      "currency": "Currency",
+      "terms": "Terms",
+      "settings": "Settings",
+      "marketPrice": "Market Price Periods",
+      "charges": "Charges",
+      "accounting": "Accounting"
+    },
+    "fields": {
+      "name": "Name",
+      "shortName": "Short Name",
+      "description": "Description",
+      "currency": "Currency",
+      "decimalPlaces": "Decimal Places",
+      "inMultiplesOf": "Currency in Multiples Of",
+      "totalShares": "Total Number of Shares",
+      "sharesIssued": "Shares to be Issued",
+      "unitPrice": "Nominal/Unit Price",
+      "capitalValue": "Capital Value",
+      "sharesPerClient": "Shares per Client",
+      "minimumActivePeriod": "Minimum Active Period",
+      "lockinPeriod": "Lock-in Period",
+      "allowDividendsForInactive": "Allow Dividends for Inactive Clients",
+      "fromDate": "From Date",
+      "type": "Type",
+      "amount": "Amount",
+      "collectedOn": "Collected On"
+    },
+    "accounting": {
+      "none": "None",
+      "cashBased": "Cash Based",
+      "shareReference": "Share Reference",
+      "shareSuspense": "Share Suspense Control",
+      "equity": "Equity",
+      "incomeFromFees": "Income from Fees"
+    },
+    "sharesPerClient": "{{value}} (Min: {{min}}, Max: {{max}})",
+    "noMarketPrice": "No market price periods have been set for this product.",
+    "noCharges": "No charges are attached to this product.",
+    "errors": {
+      "load": "The share product could not be loaded.",
+      "invalidId": "This share product ID is not valid."
+    }
+  }
 }
