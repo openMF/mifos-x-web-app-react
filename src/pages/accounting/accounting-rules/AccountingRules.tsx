@@ -32,6 +32,7 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import { AccountingRulesApi, type AccountingRuleData } from '@/fineract-api'
 
 import { Plus } from 'lucide-react'
+import { formatTags, formatAccounts } from './accounting-rules.utils'
 
 //accounting API
 const accountingRulesApi = new AccountingRulesApi(getConfiguration())
@@ -41,20 +42,33 @@ const AccountingRules = () => {
 
   //state to fetch accouting data
   const [rules, setRules] = useState<AccountingRuleData[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
 
   useEffect(() => {
+    let isCurrent = true
     const fetchRules = async () => {
       try {
+        setIsLoading(true)
         const response = await accountingRulesApi.retrieveAllAccountingRules()
-        setRules(response.data || [])
+        if (isCurrent) {
+          setRules(response.data || [])
+        }
       } catch (err) {
         console.error('Failed to fetch accounting rules', err)
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
       }
     }
     fetchRules()
+
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   const filtered = rules.filter(rule =>
@@ -156,41 +170,50 @@ const AccountingRules = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginated.map((rule, idx) => (
-              <TableRow
-                key={idx}
-                onClick={() =>
-                  navigate(`/accounting/accounting-rules/view/${rule.id}`)
-                }
-                className="text-base hover:bg-muted"
-              >
-                <TableCell className="px-6 py-4">{rule.name}</TableCell>
-                <TableCell className="px-6 py-4">{rule.officeName}</TableCell>
-                <TableCell className="px-6 py-4">
-                  {Array.isArray(rule.debitTags)
-                    ? rule.debitTags.map(tag => tag.tag).join(', ')
-                    : rule.debitTags || '—'}
-                </TableCell>
-
-                <TableCell className="px-6 py-4">
-                  {Array.isArray(rule.debitAccounts)
-                    ? rule.debitAccounts.map(acc => acc.name).join(', ')
-                    : rule.debitAccounts || '—'}
-                </TableCell>
-
-                <TableCell className="px-6 py-4">
-                  {Array.isArray(rule.creditTags)
-                    ? rule.creditTags.map(tag => tag.tag).join(', ')
-                    : rule.creditTags || '—'}
-                </TableCell>
-
-                <TableCell className="px-6 py-4">
-                  {Array.isArray(rule.creditAccounts)
-                    ? rule.creditAccounts.map(acc => acc.name).join(', ')
-                    : rule.creditAccounts || '—'}
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  Loading accounting rules...
                 </TableCell>
               </TableRow>
-            ))}
+            ) : paginated.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  No accounting rules found
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginated.map((rule, idx) => (
+                <TableRow
+                  key={rule.id ?? idx}
+                  onClick={() =>
+                    navigate(`/accounting/accounting-rules/view/${rule.id}`)
+                  }
+                  className="text-base hover:bg-muted cursor-pointer"
+                >
+                  <TableCell className="px-6 py-4">{rule.name}</TableCell>
+                  <TableCell className="px-6 py-4">{rule.officeName}</TableCell>
+                  <TableCell className="px-6 py-4">
+                    {formatTags(rule.debitTags)}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {formatAccounts(rule.debitAccounts)}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {formatTags(rule.creditTags)}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {formatAccounts(rule.creditAccounts)}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

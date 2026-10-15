@@ -82,6 +82,10 @@ import LoanOriginators from '@/pages/organization/loan-originators/LoanOriginato
 import CreateLoanOriginator from '@/pages/organization/loan-originators/CreateLoanOriginator'
 import ViewLoanOriginator from '@/pages/organization/loan-originators/ViewLoanOriginator'
 import EditLoanOriginator from '@/pages/organization/loan-originators/EditLoanOriginator'
+import LoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/LoanProvisioningCriteria'
+import CreateLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/CreateLoanProvisioningCriteria'
+import ViewLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/ViewLoanProvisioningCriteria'
+import EditLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/EditLoanProvisioningCriteria'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -133,6 +137,7 @@ import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
 import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
+import EditDataTable from '@/pages/system/manage-data-tables/EditDataTable'
 import ViewDataTables from '@/pages/system/manage-data-tables/ViewDataTables'
 import Codes from '@/pages/system/codes/Codes'
 import ViewCodes from '@/pages/system/codes/ViewCodes'
@@ -538,6 +543,24 @@ const AppRoutes = () => {
             element={<EditLoanOriginator />}
           />
 
+          {/* Loan Provisioning Criteria */}
+          <Route
+            path="/organization/loan-provisioning"
+            element={<LoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/create"
+            element={<CreateLoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/:id"
+            element={<ViewLoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/:id/edit"
+            element={<EditLoanProvisioningCriteria />}
+          />
+
           {/* Payment Types */}
           <Route path="/organization/payment-types" element={<Payment />} />
           <Route
@@ -758,6 +781,10 @@ const AppRoutes = () => {
             element={<CreateDataTable />}
           />
           <Route path="/system/data-tables/:id" element={<ViewDataTables />} />
+          <Route
+            path="/system/data-tables/:id/edit"
+            element={<EditDataTable />}
+          />
 
           {/* Manage Codes*/}
           <Route path="/system/codes" element={<Codes />} />

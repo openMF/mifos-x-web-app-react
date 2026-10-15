@@ -71,6 +71,57 @@
     "title": "Oficinas",
     "unnamedOffice": "Oficina sin nombre"
   },
+  "provisioningCriteria": {
+    "title": "Criterios de provisión de préstamos",
+    "create": "Crear criterios de provisión de préstamos",
+    "createButton": "Crear criterios de provisión",
+    "edit": "Editar criterios de provisión de préstamos",
+    "fields": {
+      "criteriaName": "Nombre de los criterios",
+      "criteriaNameRequired": "Nombre de los criterios*",
+      "createdBy": "Creado por",
+      "loanProducts": "Productos de préstamo",
+      "loanProductsRequired": "Productos de préstamo*",
+      "selectLoanProducts": "Seleccione productos de préstamo",
+      "minAge": "Antigüedad mínima",
+      "maxAge": "Antigüedad máxima",
+      "percentage": "Porcentaje",
+      "minAgeDays": "Antigüedad mínima (días)",
+      "minAgeDaysRequired": "Antigüedad mínima (días)*",
+      "maxAgeDays": "Antigüedad máxima (días)",
+      "maxAgeDaysRequired": "Antigüedad máxima (días)*",
+      "percentageColumn": "Porcentaje (%)",
+      "percentageColumnRequired": "Porcentaje (%)*",
+      "liabilityAccount": "Cuenta de pasivo",
+      "liabilityAccountRequired": "Cuenta de pasivo*",
+      "expenseAccount": "Cuenta de gastos",
+      "expenseAccountRequired": "Cuenta de gastos*",
+      "selectAccount": "Seleccione una cuenta",
+      "noAccounts": "No hay cuentas",
+      "fieldForCategory": "{{field}} para {{category}}"
+    },
+    "validation": {
+      "nameRequired": "Introduzca un nombre para los criterios.",
+      "productRequired": "Seleccione al menos un producto de préstamo.",
+      "fillEveryField": "Complete todos los campos de {{category}}.",
+      "notNegative": "{{category}}: las antigüedades y el porcentaje deben ser 0 o más.",
+      "minAboveMax": "{{category}}: la antigüedad mínima no puede ser mayor que la antigüedad máxima.",
+      "percentageAbove100": "{{category}}: el porcentaje no puede ser mayor que 100."
+    },
+    "messages": {
+      "loadListError": "Error al cargar los criterios de provisión.",
+      "loadError": "Error al cargar los criterios de provisión.",
+      "loadTemplateError": "Error al cargar la plantilla de criterios.",
+      "createError": "Error al crear los criterios de provisión.",
+      "updateError": "Error al actualizar los criterios de provisión.",
+      "deleteError": "Error al eliminar los criterios de provisión."
+    },
+    "delete": {
+      "confirm": "Confirmar",
+      "deleting": "Eliminando...",
+      "message": "¿Está seguro de que desea eliminar los criterios de provisión \"{{name}}\"?"
+    }
+  },
   "searchByMaker": "Buscar por creador",
   "searchEvents": "Buscar eventos",
   "searchReports": "Buscar informes",

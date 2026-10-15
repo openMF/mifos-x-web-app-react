@@ -71,6 +71,57 @@
     "title": "Offices",
     "unnamedOffice": "Unnamed Office"
   },
+  "provisioningCriteria": {
+    "title": "Loan Provisioning Criteria",
+    "create": "Create Loan Provisioning Criteria",
+    "createButton": "Create Provisioning Criteria",
+    "edit": "Edit Loan Provisioning Criteria",
+    "fields": {
+      "criteriaName": "Criteria Name",
+      "criteriaNameRequired": "Criteria Name*",
+      "createdBy": "Created By",
+      "loanProducts": "Loan Products",
+      "loanProductsRequired": "Loan Products*",
+      "selectLoanProducts": "Select loan products",
+      "minAge": "Min Age",
+      "maxAge": "Max Age",
+      "percentage": "Percentage",
+      "minAgeDays": "Min Age (days)",
+      "minAgeDaysRequired": "Min Age (days)*",
+      "maxAgeDays": "Max Age (days)",
+      "maxAgeDaysRequired": "Max Age (days)*",
+      "percentageColumn": "Percentage (%)",
+      "percentageColumnRequired": "Percentage (%)*",
+      "liabilityAccount": "Liability Account",
+      "liabilityAccountRequired": "Liability Account*",
+      "expenseAccount": "Expense Account",
+      "expenseAccountRequired": "Expense Account*",
+      "selectAccount": "Select an account",
+      "noAccounts": "No accounts",
+      "fieldForCategory": "{{field}} for {{category}}"
+    },
+    "validation": {
+      "nameRequired": "Please enter a criteria name.",
+      "productRequired": "Select at least one loan product.",
+      "fillEveryField": "Fill in every field for {{category}}.",
+      "notNegative": "{{category}}: ages and percentage must be 0 or more.",
+      "minAboveMax": "{{category}}: Min Age cannot be more than Max Age.",
+      "percentageAbove100": "{{category}}: the percentage cannot be more than 100."
+    },
+    "messages": {
+      "loadListError": "Failed to load provisioning criteria.",
+      "loadError": "Failed to load the provisioning criteria.",
+      "loadTemplateError": "Failed to load the criteria template.",
+      "createError": "Failed to create the provisioning criteria.",
+      "updateError": "Failed to update the provisioning criteria.",
+      "deleteError": "Failed to delete the provisioning criteria."
+    },
+    "delete": {
+      "confirm": "Confirm",
+      "deleting": "Deleting...",
+      "message": "Are you sure you want to delete the provisioning criteria \"{{name}}\"?"
+    }
+  },
   "searchByMaker": "Search by maker",
   "searchEvents": "Search events…",
   "searchReports": "Search reports...",
