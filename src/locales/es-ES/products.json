@@ -198,5 +198,51 @@
         "noOptions": "No hay motivos de cancelación. Agregue valores al código WriteOffReasons en Sistema > Administrar códigos."
       }
     }
+  },
+  "viewShareProduct": {
+    "sections": {
+      "details": "Detalles",
+      "currency": "Moneda",
+      "terms": "Términos",
+      "settings": "Configuración",
+      "marketPrice": "Períodos de precio de mercado",
+      "charges": "Cargos",
+      "accounting": "Contabilidad"
+    },
+    "fields": {
+      "name": "Nombre",
+      "shortName": "Nombre corto",
+      "description": "Descripción",
+      "currency": "Moneda",
+      "decimalPlaces": "Decimales",
+      "inMultiplesOf": "Moneda en múltiplos de",
+      "totalShares": "Número total de acciones",
+      "sharesIssued": "Acciones a emitir",
+      "unitPrice": "Precio nominal/unitario",
+      "capitalValue": "Valor del capital",
+      "sharesPerClient": "Acciones por cliente",
+      "minimumActivePeriod": "Período activo mínimo",
+      "lockinPeriod": "Período de bloqueo",
+      "allowDividendsForInactive": "Permitir dividendos para clientes inactivos",
+      "fromDate": "Fecha desde",
+      "type": "Tipo",
+      "amount": "Monto",
+      "collectedOn": "Cobrado en"
+    },
+    "accounting": {
+      "none": "Ninguna",
+      "cashBased": "Basada en efectivo",
+      "shareReference": "Referencia de acciones",
+      "shareSuspense": "Control de suspenso de acciones",
+      "equity": "Patrimonio",
+      "incomeFromFees": "Ingresos por comisiones"
+    },
+    "sharesPerClient": "{{value}} (Mín.: {{min}}, Máx.: {{max}})",
+    "noMarketPrice": "No se han definido períodos de precio de mercado para este producto.",
+    "noCharges": "Este producto no tiene cargos asociados.",
+    "errors": {
+      "load": "No se pudo cargar el producto de acciones.",
+      "invalidId": "El ID de este producto de acciones no es válido."
+    }
   }
 }

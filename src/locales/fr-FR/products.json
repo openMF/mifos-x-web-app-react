@@ -198,5 +198,51 @@
         "noOptions": "Aucun motif de radiation. Ajoutez des valeurs au code WriteOffReasons dans Système > Gérer les codes."
       }
     }
+  },
+  "viewShareProduct": {
+    "sections": {
+      "details": "Détails",
+      "currency": "Devise",
+      "terms": "Conditions",
+      "settings": "Paramètres",
+      "marketPrice": "Périodes de prix du marché",
+      "charges": "Frais",
+      "accounting": "Comptabilité"
+    },
+    "fields": {
+      "name": "Nom",
+      "shortName": "Nom court",
+      "description": "Description",
+      "currency": "Devise",
+      "decimalPlaces": "Décimales",
+      "inMultiplesOf": "Devise en multiples de",
+      "totalShares": "Nombre total de parts",
+      "sharesIssued": "Parts à émettre",
+      "unitPrice": "Prix nominal/unitaire",
+      "capitalValue": "Valeur du capital",
+      "sharesPerClient": "Parts par client",
+      "minimumActivePeriod": "Période d'activité minimale",
+      "lockinPeriod": "Période de blocage",
+      "allowDividendsForInactive": "Autoriser les dividendes pour les clients inactifs",
+      "fromDate": "Date de début",
+      "type": "Type",
+      "amount": "Montant",
+      "collectedOn": "Perçu le"
+    },
+    "accounting": {
+      "none": "Aucune",
+      "cashBased": "Comptabilité de caisse",
+      "shareReference": "Référence des parts",
+      "shareSuspense": "Contrôle d'attente des parts",
+      "equity": "Capitaux propres",
+      "incomeFromFees": "Revenus des frais"
+    },
+    "sharesPerClient": "{{value}} (Min : {{min}}, Max : {{max}})",
+    "noMarketPrice": "Aucune période de prix du marché n'est définie pour ce produit.",
+    "noCharges": "Aucun frais n'est associé à ce produit.",
+    "errors": {
+      "load": "Le produit de parts sociales n'a pas pu être chargé.",
+      "invalidId": "L'identifiant de ce produit de parts sociales n'est pas valide."
+    }
   }
 }

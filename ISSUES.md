@@ -94,6 +94,14 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - Not present in OpenAPI
 
+### `/products/share-products/{id}`
+
+**Mistyped in `GetProductsTypeProductIdResponse`** (`GET /products/share/{productId}`):
+
+- `accountingRule`, `lockPeriodTypeEnum`, `minimumActivePeriodForDividendsTypeEnum` and the charges' `chargeCalculationType`/`chargeTimeType` are typed with `description`, but Fineract sends `value`
+- `charges` and `marketPrice` are typed as `Set`, but Fineract sends JSON arrays
+- `marketPrice[].fromDate` is typed as a string, but Fineract sends a `[year, month, day]` array
+
 ### `/products/products-mix` [TO BE FIXED] (Schema didn't exist before)
 
 - `loanproducts?associations=productMixes`
