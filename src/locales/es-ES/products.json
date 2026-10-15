@@ -3,6 +3,39 @@
   "charges": "Cargos",
   "delinquencyBucket": "Cubo de morosidad",
   "fixedDepositProducts": "Productos de depósito a plazo fijo",
+  "floatingRate": {
+    "created": "Tasa flotante creada correctamente.",
+    "createTitle": "Crear tasa flotante",
+    "errors": {
+      "createFailed": "No se pudo crear la tasa flotante."
+    },
+    "fields": {
+      "active": "Activa",
+      "isBaseLendingRate": "Es tasa base de préstamo",
+      "nameRequired": "Nombre de la tasa flotante *"
+    },
+    "periods": {
+      "add": "Agregar período de tasa",
+      "baseRateNote": "Los períodos de una tasa base de préstamo no pueden ser diferenciales respecto a la tasa base de préstamo.",
+      "empty": "Aún no se han agregado períodos de tasa. Agregue al menos un período.",
+      "fieldForRow": "{{field}} del período {{row}}",
+      "fromDate": "Fecha desde",
+      "fromDateRequired": "Fecha desde *",
+      "interestRate": "Tasa de interés",
+      "interestRateRequired": "Tasa de interés (%) *",
+      "isDifferential": "Es diferencial",
+      "remove": "Eliminar período {{row}}",
+      "title": "Períodos de tasa"
+    },
+    "validation": {
+      "duplicateFromDate": "Dos períodos de tasa no pueden tener la misma fecha desde.",
+      "fillEveryField": "Ingrese la fecha desde y la tasa de interés del período {{row}}.",
+      "fromDateInFuture": "La fecha desde del período {{row}} debe ser futura.",
+      "nameRequired": "El nombre de la tasa flotante es obligatorio.",
+      "periodRequired": "Agregue al menos un período de tasa.",
+      "rateNotNumber": "La tasa de interés del período {{row}} debe ser un número."
+    }
+  },
   "floatingRates": "Tasas flotantes",
   "loanProduct": "Producto de préstamo",
   "loanProducts": "Productos de préstamo",

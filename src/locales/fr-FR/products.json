@@ -3,6 +3,39 @@
   "charges": "Frais",
   "delinquencyBucket": "Catégorie de retard",
   "fixedDepositProducts": "Produits de dépôt à terme",
+  "floatingRate": {
+    "created": "Taux variable créé avec succès.",
+    "createTitle": "Créer un taux variable",
+    "errors": {
+      "createFailed": "Échec de la création du taux variable."
+    },
+    "fields": {
+      "active": "Actif",
+      "isBaseLendingRate": "Est un taux de base",
+      "nameRequired": "Nom du taux variable *"
+    },
+    "periods": {
+      "add": "Ajouter une période",
+      "baseRateNote": "Les périodes d'un taux de base ne peuvent pas être différentielles par rapport au taux de base.",
+      "empty": "Aucune période ajoutée pour le moment. Ajoutez au moins une période.",
+      "fieldForRow": "{{field}} de la période {{row}}",
+      "fromDate": "Date de début",
+      "fromDateRequired": "Date de début *",
+      "interestRate": "Taux d'intérêt",
+      "interestRateRequired": "Taux d'intérêt (%) *",
+      "isDifferential": "Est différentiel",
+      "remove": "Supprimer la période {{row}}",
+      "title": "Périodes de taux"
+    },
+    "validation": {
+      "duplicateFromDate": "Deux périodes ne peuvent pas avoir la même date de début.",
+      "fillEveryField": "Saisissez la date de début et le taux d'intérêt de la période {{row}}.",
+      "fromDateInFuture": "La date de début de la période {{row}} doit être dans le futur.",
+      "nameRequired": "Le nom du taux variable est obligatoire.",
+      "periodRequired": "Ajoutez au moins une période de taux.",
+      "rateNotNumber": "Le taux d'intérêt de la période {{row}} doit être un nombre."
+    }
+  },
   "floatingRates": "Taux variables",
   "loanProduct": "Produit de prêt",
   "loanProducts": "Produits de prêt",
