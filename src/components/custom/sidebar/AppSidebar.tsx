@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog'
 import { useLogout } from '@/hooks/use-logout'
 import { useFrequentlyAccessed } from '@/hooks/use-frequently-accessed'
+import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
 import type { ParseKeys } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import {
@@ -92,6 +93,7 @@ export const AppSidebar = () => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const handleLogout = useLogout()
+  const [logoutOpen, setLogoutOpen] = useState(false)
   const { t } = useTranslation('common')
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
 
@@ -167,8 +169,9 @@ export const AppSidebar = () => {
               variant="ghost"
               size="icon"
               className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
-              onClick={() => void handleLogout()}
+              onClick={() => setLogoutOpen(true)}
               aria-label={t('tooltips.signOut')}
+              data-testid="sidebar-logout"
             >
               <LogOut className="w-5 h-5" />
             </Button>
@@ -270,6 +273,11 @@ export const AppSidebar = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <LogoutConfirmDialog
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        onConfirm={() => void handleLogout()}
+      />
     </Sidebar>
   )
 }

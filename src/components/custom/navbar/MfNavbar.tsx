@@ -44,6 +44,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useLogout } from '@/hooks/use-logout'
+import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
 
@@ -69,6 +70,7 @@ const MfNavbar = () => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const handleLogout = useLogout()
+  const [logoutOpen, setLogoutOpen] = useState(false)
   const { t } = useTranslation([
     'common',
     'accounting',
@@ -81,7 +83,7 @@ const MfNavbar = () => {
   const handleNavigate = (path?: string) => {
     if (!path || path.trim() === '') return
     else if (path === 'signout') {
-      void handleLogout()
+      setLogoutOpen(true)
     } else if (path.startsWith('http')) {
       window.open(path, '_blank')
     } else {
@@ -354,6 +356,11 @@ const MfNavbar = () => {
           tooltip={t('common:accessibility.userMenu')}
         />
       </div>
+      <LogoutConfirmDialog
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        onConfirm={() => void handleLogout()}
+      />
     </div>
   )
 }
