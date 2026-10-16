@@ -43,6 +43,14 @@ describe('getPasswordPolicyError', () => {
     )
   })
 
+  it('treats underscore as a word character (not a special character)', () => {
+    expect(getPasswordPolicyError('Mifos12345_AB', 'strong')).toContain(
+      'special character'
+    )
+
+    expect(getPasswordPolicyError('Mifos12345!AB', 'strong')).toBeNull()
+  })
+
   it('fails closed if the active policy is missing or unknown', () => {
     expect(getPasswordPolicyError('Mifos12', undefined)).toContain(
       'unavailable'

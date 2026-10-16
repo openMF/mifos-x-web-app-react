@@ -46,7 +46,7 @@ export const getPasswordPolicyError = (
     return 'Password must include at least one numeric digit.'
   }
   if (secure) return null
-  if (!/[^A-Za-z0-9\s]/.test(password)) {
+  if (!/[^A-Za-z0-9_\s]/.test(password)) {
     return 'Password must include at least one special character.'
   }
   if (/(.)\1/.test(password)) {
