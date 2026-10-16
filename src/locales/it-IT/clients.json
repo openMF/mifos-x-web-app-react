@@ -11,6 +11,8 @@
   "createGuarantor": "Crea garante",
   "errors": {
     "failedActivateClient": "Impossibile attivare il cliente.",
+    "failedCloseClient": "Impossibile chiudere il cliente.",
+    "failedFetchClient": "Impossibile caricare i dettagli del cliente.",
     "failedApproveClients": "Impossibile approvare uno o più clienti.",
     "failedFetchClient": "Impossibile recuperare i dettagli del cliente.",
     "failedLoadCenters": "Impossibile caricare i centri. Riprova.",
@@ -37,6 +39,7 @@
   "success": {
     "clientCreated": "Cliente creato con successo.",
     "clientActivated": "Cliente attivato con successo.",
+    "clientClosed": "Cliente chiuso con successo.",
     "clientTransferProposed": "Trasferimento cliente proposto con successo.",
     "staffAssigned": "Personale assegnato con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
@@ -98,6 +101,23 @@
       "dateInFuture": "La data di trasferimento non può essere nel futuro.",
       "dateBeforeActivated": "La data di trasferimento non può essere antecedente alla data di attivazione.",
       "failedFetchOffices": "Impossibile caricare gli uffici."
+    }
+  },
+  "close": {
+    "title": "Chiudi Cliente",
+    "labelClosedOnDate": "Data di Chiusura*",
+    "labelClosureReason": "Motivo della Chiusura*",
+    "selectClosureReason": "Seleziona il motivo della chiusura",
+    "noReasonsFound": "Nessun motivo di chiusura disponibile",
+    "noReasonsAvailable": "Nessun motivo di chiusura configurato. Configurare i motivi di chiusura nelle Impostazioni.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Si prega di inserire una data di chiusura.",
+      "dateInFuture": "La data di chiusura non può essere nel futuro.",
+      "dateBeforeActivated": "La data di chiusura non può essere antecedente alla data di attivazione.",
+      "reasonRequired": "Si prega di selezionare un motivo di chiusura.",
+      "failedFetchReasons": "Impossibile recuperare i motivi di chiusura."
     }
   },
   "view": {

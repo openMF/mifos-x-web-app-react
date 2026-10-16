@@ -11,6 +11,8 @@
   "createGuarantor": "Crear garante",
   "errors": {
     "failedActivateClient": "No se pudo activar el cliente.",
+    "failedCloseClient": "No se pudo cerrar el cliente.",
+    "failedFetchClient": "Error al cargar los detalles del cliente.",
     "failedApproveClients": "Error al aprobar uno o más clientes.",
     "failedFetchClient": "Error al obtener los detalles del cliente.",
     "failedLoadCenters": "Error al cargar centros. Por favor, inténtelo de nuevo.",
@@ -37,6 +39,7 @@
   "success": {
     "clientCreated": "Cliente creado exitosamente.",
     "clientActivated": "Cliente activado exitosamente.",
+    "clientClosed": "Cliente cerrado exitosamente.",
     "clientTransferProposed": "Transferencia de cliente propuesta con éxito.",
     "staffAssigned": "Personal asignado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
@@ -75,10 +78,10 @@
     "noStaffAvailable": "No hay miembros del personal disponibles para esta oficina.",
     "confirm": "Confirmar",
     "errors": {
-      "failedFetchClient": "Error al cargar los detalles del cliente.",
+      "failedFetchClient": "Error al obtener los detalles del cliente.",
       "staffRequired": "Por favor seleccione un miembro del personal.",
       "failedFetchStaff": "Error al cargar las opciones de personal.",
-      "failedAssignStaff": "Error al asignar el personal."
+      "failedAssignStaff": "Error al asignar personal."
     }
   },
   "transfer": {
@@ -95,9 +98,26 @@
       "officeRequired": "Por favor seleccione una oficina de destino.",
       "destinationSameAsCurrent": "La oficina de destino no puede ser la misma que la oficina actual del cliente.",
       "dateRequired": "Por favor ingrese una fecha de transferencia.",
-      "dateInFuture": "La fecha de transferencia no puede ser futura.",
+      "dateInFuture": "La fecha de transferencia no puede ser en el futuro.",
       "dateBeforeActivated": "La fecha de transferencia no puede ser anterior a la fecha de activación.",
-      "failedFetchOffices": "Error al cargar las oficinas."
+      "failedFetchOffices": "Error al cargar oficinas."
+    }
+  },
+  "close": {
+    "title": "Cerrar Cliente",
+    "labelClosedOnDate": "Fecha de Cierre*",
+    "labelClosureReason": "Motivo de Cierre*",
+    "selectClosureReason": "Seleccionar motivo de cierre",
+    "noReasonsFound": "No hay motivos de cierre disponibles",
+    "noReasonsAvailable": "No hay motivos de cierre configurados. Por favor configure los motivos de cierre en Configuración.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de cierre.",
+      "dateInFuture": "La fecha de cierre no puede ser en el futuro.",
+      "dateBeforeActivated": "La fecha de cierre no puede ser anterior a la fecha de activación.",
+      "reasonRequired": "Por favor seleccione un motivo de cierre.",
+      "failedFetchReasons": "Error al obtener los motivos de cierre."
     }
   },
   "view": {
