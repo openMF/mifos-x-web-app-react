@@ -11,6 +11,8 @@
   "createGuarantor": "Créer un garant",
   "errors": {
     "failedActivateClient": "Échec de l'activation du client.",
+    "failedCloseClient": "Échec de la fermeture du client.",
+    "failedFetchClient": "Échec du chargement des détails du client.",
     "failedApproveClients": "Échec de l'approbation d'un ou plusieurs clients.",
     "failedLoadCenters": "Échec du chargement des centres. Veuillez réessayer.",
     "failedLoadClients": "Échec du chargement des clients. Veuillez réessayer.",
@@ -35,6 +37,7 @@
   "success": {
     "clientCreated": "Client créé avec succès.",
     "clientActivated": "Client activé avec succès.",
+    "clientClosed": "Client fermé avec succès.",
     "clientsApproved": "Clients sélectionnés approuvés avec succès.",
     "familyMemberAdded": "Membre de la famille ajouté avec succès."
   },
@@ -58,6 +61,23 @@
       "dateRequired": "Veuillez saisir une date d'activation.",
       "dateInFuture": "La date d'activation ne peut pas être dans le futur.",
       "dateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission."
+    }
+  },
+  "close": {
+    "title": "Fermer le Client",
+    "labelClosedOnDate": "Date de Fermeture*",
+    "labelClosureReason": "Motif de Fermeture*",
+    "selectClosureReason": "Sélectionner un motif de fermeture",
+    "noReasonsFound": "Aucun motif de fermeture disponible",
+    "noReasonsAvailable": "Aucun motif de fermeture n'est configuré. Veuillez configurer les motifs de fermeture dans les Paramètres.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date de fermeture.",
+      "dateInFuture": "La date de fermeture ne peut pas être dans le futur.",
+      "dateBeforeActivated": "La date de fermeture ne peut pas être antérieure à la date d'activation.",
+      "reasonRequired": "Veuillez sélectionner un motif de fermeture.",
+      "failedFetchReasons": "Échec de la récupération des motifs de fermeture."
     }
   },
   "view": {

@@ -92,8 +92,9 @@ const ClientsView = () => {
     .filter(Boolean)
     .join(', ')
 
-  /** Fineract client status 100 = pending (300 = active) */
+  /** Fineract client status 100 = pending, 300 = active */
   const isPending = client?.status?.id === 100
+  const isActive = client?.status?.id === 300
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -239,11 +240,14 @@ const ClientsView = () => {
                 {
                   label: t('view.menu.actions'),
                   children: [
-                    {
-                      label: t('view.menu.close'),
-                      path: 'signature',
-                      disabled: true,
-                    },
+                    ...(isActive
+                      ? [
+                          {
+                            label: t('view.menu.close'),
+                            path: `clients/${client?.id}/actions/close`,
+                          },
+                        ]
+                      : []),
                     {
                       label: t('view.menu.transferClients'),
                       path: 'signature',
