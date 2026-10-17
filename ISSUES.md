@@ -300,6 +300,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `PutClientsClientIdRequest` only has `externalId`, `resourceExternalId` [TO BE FIXED] (firstname, lastname added)
 
+### `/clients/{id}?command=proposeTransfer` (POST)
+
+- `PostClientsClientIdRequest` only declares `activationDate`, `dateFormat`, and `locale`. Missing `destinationOfficeId`, `transferDate`, and `note`.
+
 ### `/savingsaccounts/template`
 
 - `GetSavingsAccountsTemplateResponse` missing `fieldOfficerOptions`, `interestCompoundingPeriodTypeOptions`, `interestPostingPeriodTypeOptions`, `interestCalculationTypeOptions`, `interestCalculationDaysInYearTypeOptions`, `lockinPeriodFrequencyTypeOptions`, `savingsAmountOnClosureTypeOptions`, `withdrawalFeeTypeOptions`, `chargeOptions`, `currencyOptions`

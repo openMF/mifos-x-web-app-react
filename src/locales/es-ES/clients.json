@@ -12,9 +12,11 @@
   "errors": {
     "failedActivateClient": "No se pudo activar el cliente.",
     "failedApproveClients": "Error al aprobar uno o más clientes.",
+    "failedFetchClient": "Error al obtener los detalles del cliente.",
     "failedLoadCenters": "Error al cargar centros. Por favor, inténtelo de nuevo.",
     "failedLoadClients": "Error al cargar clientes. Por favor, inténtelo de nuevo.",
     "failedLoadGroups": "Error al cargar grupos. Por favor, inténtelo de nuevo.",
+    "failedTransferClient": "Error al transferir el cliente.",
     "noClientsSelected": "No se han seleccionado clientes para aprobación."
   },
   "groups": "Grupos",
@@ -35,6 +37,7 @@
   "success": {
     "clientCreated": "Cliente creado exitosamente.",
     "clientActivated": "Cliente activado exitosamente.",
+    "clientTransferProposed": "Transferencia de cliente propuesta con éxito.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
     "familyMemberAdded": "Miembro de familia agregado exitosamente."
   },
@@ -58,6 +61,25 @@
       "dateRequired": "Por favor ingrese una fecha de activación.",
       "dateInFuture": "La fecha de activación no puede ser futura.",
       "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
+  },
+  "transfer": {
+    "title": "Transferir Cliente",
+    "office": "Oficina*",
+    "selectOffice": "Seleccionar oficina de destino",
+    "noOfficesFound": "No hay oficinas de destino disponibles",
+    "noOfficesAvailable": "No hay otras oficinas disponibles para transferir.",
+    "transferDate": "Fecha de Transferencia*",
+    "note": "Nota",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "officeRequired": "Por favor seleccione una oficina de destino.",
+      "destinationSameAsCurrent": "La oficina de destino no puede ser la misma que la oficina actual del cliente.",
+      "dateRequired": "Por favor ingrese una fecha de transferencia.",
+      "dateInFuture": "La fecha de transferencia no puede ser futura.",
+      "dateBeforeActivated": "La fecha de transferencia no puede ser anterior a la fecha de activación.",
+      "failedFetchOffices": "Error al cargar las oficinas."
     }
   },
   "view": {

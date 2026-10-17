@@ -12,9 +12,11 @@
   "errors": {
     "failedActivateClient": "Impossibile attivare il cliente.",
     "failedApproveClients": "Impossibile approvare uno o più clienti.",
+    "failedFetchClient": "Impossibile recuperare i dettagli del cliente.",
     "failedLoadCenters": "Impossibile caricare i centri. Riprova.",
     "failedLoadClients": "Impossibile caricare i clienti. Riprova.",
     "failedLoadGroups": "Impossibile caricare i gruppi. Riprova.",
+    "failedTransferClient": "Impossibile trasferire il cliente.",
     "noClientsSelected": "Nessun cliente selezionato per l'approvazione."
   },
   "groups": "Gruppi",
@@ -35,6 +37,7 @@
   "success": {
     "clientCreated": "Cliente creato con successo.",
     "clientActivated": "Cliente attivato con successo.",
+    "clientTransferProposed": "Trasferimento cliente proposto con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
     "familyMemberAdded": "Membro della famiglia aggiunto con successo."
   },
@@ -58,6 +61,25 @@
       "dateRequired": "Inserisci una data di attivazione.",
       "dateInFuture": "La data di attivazione non può essere nel futuro.",
       "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
+  "transfer": {
+    "title": "Trasferisci Cliente",
+    "office": "Ufficio*",
+    "selectOffice": "Seleziona ufficio di destinazione",
+    "noOfficesFound": "Nessun ufficio di destinazione disponibile",
+    "noOfficesAvailable": "Nessun altro ufficio disponibile per il trasferimento.",
+    "transferDate": "Data di Trasferimento*",
+    "note": "Nota",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "officeRequired": "Seleziona un ufficio di destinazione.",
+      "destinationSameAsCurrent": "L'ufficio di destinazione non può essere lo stesso dell'ufficio attuale del cliente.",
+      "dateRequired": "Inserisci una data di trasferimento.",
+      "dateInFuture": "La data di trasferimento non può essere nel futuro.",
+      "dateBeforeActivated": "La data di trasferimento non può essere antecedente alla data di attivazione.",
+      "failedFetchOffices": "Impossibile caricare gli uffici."
     }
   },
   "view": {
