@@ -1,6 +1,84 @@
 {
   "adhocQuery": "Query ad hoc",
   "auditTrails": "Audit trail",
+  "bulkImport": {
+    "description": "Scarica un modello, compilalo e caricalo per creare record in blocco.",
+    "unknownType": "Tipo di importazione sconosciuto \"{{name}}\".",
+    "importTitle": "Importazione: {{name}}",
+    "types": {
+      "offices": "Uffici",
+      "users": "Utenti",
+      "groups": "Gruppi",
+      "centers": "Centri",
+      "clients": "Clienti",
+      "employees": "Dipendenti",
+      "guarantors": "Garanti",
+      "journalEntries": "Registrazioni contabili",
+      "loanAccounts": "Conti di prestito",
+      "savingsAccounts": "Conti di risparmio",
+      "fixedDepositAccounts": "Conti di deposito a termine",
+      "recurringDepositAccounts": "Conti di deposito ricorrente",
+      "chartOfAccounts": "Piano dei conti",
+      "shareAccounts": "Conti azionari",
+      "loanRepayments": "Rimborsi dei prestiti",
+      "savingsTransactions": "Transazioni di risparmio",
+      "fixedDepositTransactions": "Transazioni di deposito a termine",
+      "recurringDepositTransactions": "Transazioni di deposito ricorrente"
+    },
+    "legalForms": {
+      "person": "Persona",
+      "entity": "Ente"
+    },
+    "download": {
+      "heading": "1. Scarica il modello",
+      "office": "Ufficio",
+      "allOffices": "Tutti gli uffici",
+      "staff": "Personale",
+      "allStaff": "Tutto il personale",
+      "selectOfficeFirst": "Seleziona prima un ufficio",
+      "noStaff": "Nessun membro del personale in questo ufficio",
+      "legalForm": "Forma giuridica*",
+      "selectLegalForm": "Seleziona una forma giuridica",
+      "button": "Scarica modello",
+      "downloading": "Download in corso..."
+    },
+    "upload": {
+      "heading": "2. Carica il file compilato",
+      "file": "File (.xls)*",
+      "legalFormNote": "Il file viene importato con la forma giuridica selezionata a sinistra.",
+      "button": "Carica",
+      "uploading": "Caricamento...",
+      "uploaded": "{{fileName}} è stato caricato. Fineract lo importa in background; usa Aggiorna per vedere il risultato."
+    },
+    "imports": {
+      "heading": "Importazioni",
+      "refresh": "Aggiorna",
+      "count_one": "{{count}} importazione",
+      "count_other": "{{count}} importazioni",
+      "empty": "Ancora nessuna importazione",
+      "downloadFile": "Scarica {{name}}",
+      "columns": {
+        "name": "Nome",
+        "importTime": "Ora di importazione",
+        "endTime": "Ora di fine",
+        "completed": "Completata",
+        "total": "Totale",
+        "success": "Riusciti",
+        "failed": "Non riusciti",
+        "file": "File"
+      }
+    },
+    "errors": {
+      "loadImports": "Impossibile caricare le importazioni.",
+      "loadOffices": "Impossibile caricare gli uffici.",
+      "loadStaff": "Impossibile caricare il personale.",
+      "templateLegalForm": "Seleziona una forma giuridica per il modello dei clienti.",
+      "uploadLegalForm": "Seleziona la forma giuridica per cui è stato preparato il file dei clienti.",
+      "downloadTemplate": "Impossibile scaricare il modello.",
+      "upload": "Impossibile caricare il file.",
+      "downloadFile": "Impossibile scaricare il file di importazione."
+    }
+  },
   "bulkLoanReassignment": "Riassegnazione massiva dei prestiti",
   "collateralManagement": "Gestione garanzie",
   "configurations": "Configurazioni",
