@@ -36,7 +36,9 @@
     "clientCreated": "Client created successfully.",
     "clientActivated": "Client activated successfully.",
     "clientsApproved": "Selected clients approved successfully.",
-    "familyMemberAdded": "Family member added successfully."
+    "familyMemberAdded": "Family member added successfully.",
+    "familyMemberUpdated": "Family member updated successfully.",
+    "familyMemberDeleted": "Family member deleted successfully."
   },
   "title": "Clients",
   "unnamedClient": "Unnamed Client",
@@ -252,7 +254,14 @@
     "loadFailed": "Could not load the family members.",
     "empty": "No family members have been added yet.",
     "templateFailed": "Could not load the options for this form.",
-    "addFailed": "Could not add the family member."
+    "addFailed": "Could not add the family member.",
+    "columnActions": "Actions",
+    "editButton": "Edit",
+    "deleteButton": "Delete",
+    "confirmDelete": "Are you sure you want to delete this family member?",
+    "memberFailed": "Could not load this family member.",
+    "updateFailed": "Could not update the family member.",
+    "deleteFailed": "Could not delete the family member."
   },
   "generalData": {
     "headings": {

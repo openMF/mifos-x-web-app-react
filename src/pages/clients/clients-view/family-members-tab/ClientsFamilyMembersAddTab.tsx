@@ -41,9 +41,25 @@ type ClientApiErrorResponse = {
 /** A select's value is a string; Fineract expects the code value id as a number. */
 const toId = (value: string) => (value ? Number(value) : undefined)
 
+/** The select value for a code value id, or empty when none is set. */
+const toOption = (value?: number) => (value ? String(value) : '')
+
+/**
+ * Fineract sends the date of birth either as "yyyy-MM-dd" or as [y, m, d];
+ * the date input needs "yyyy-MM-dd".
+ */
+const toInputDate = (value?: string | number[]) =>
+  Array.isArray(value)
+    ? value.map((part, i) => String(part).padStart(i ? 2 : 4, '0')).join('-')
+    : (value ?? '')
+
+/**
+ * Adds a family member, or edits one when the route has a familyMemberId.
+ */
 const ClientsFamilyMembersAddTab = () => {
-  const { id } = useParams()
+  const { id, familyMemberId } = useParams()
   const navigate = useNavigate()
+  const isEdit = familyMemberId !== undefined
 
   // form state
   const [form, setForm] = useState({
@@ -64,29 +80,70 @@ const ClientsFamilyMembersAddTab = () => {
   const [template, setTemplate] = useState<ClientFamilyMembersData>({})
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  // In edit mode the form stays disabled until the member has been loaded.
+  const [memberLoaded, setMemberLoaded] = useState(!isEdit)
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
 
   useEffect(() => {
     if (!id) return
     let active = true
-    familyMemberApi()
-      .getTemplate2(Number(id))
-      .then(res => {
-        if (active) setTemplate(res.data ?? {})
+    // Keeps a previously loaded member from being submitted under a new id.
+    setMemberLoaded(!isEdit)
+    const api = familyMemberApi()
+    // When editing, the form is filled only once the options are known.
+    Promise.all([
+      api.getTemplate2(Number(id)),
+      isEdit
+        ? api.getFamilyMember(Number(familyMemberId), Number(id))
+        : undefined,
+    ])
+      .then(([templateRes, memberRes]) => {
+        if (!active) return
+        setTemplate(templateRes.data ?? {})
+        if (!memberRes) return
+        const member = memberRes.data ?? {}
+        setForm({
+          firstName: member.firstName ?? '',
+          middleName: member.middleName ?? '',
+          lastName: member.lastName ?? '',
+          qualification: member.qualification ?? '',
+          age: member.age === undefined ? '' : String(member.age),
+          isDependent: !!member.isDependent,
+          relationship: toOption(member.relationshipId),
+          gender: toOption(member.genderId),
+          profession: toOption(member.professionId),
+          maritalStatus: toOption(member.maritalStatusId),
+          dob: toInputDate(member.dateOfBirth),
+        })
+        setMemberLoaded(true)
       })
       .catch(e => {
-        console.error('Failed to load the family member template', e)
-        if (active) setError(t('familyMembers.templateFailed'))
+        console.error('Failed to load the family member form', e)
+        if (active)
+          setError(
+            t(
+              isEdit
+                ? 'familyMembers.memberFailed'
+                : 'familyMembers.templateFailed'
+            )
+          )
       })
     return () => {
       active = false
     }
-  }, [id, t])
+  }, [id, familyMemberId, isEdit, t])
 
   // update helper
   const set = (k: keyof typeof form, v: string | boolean) =>
     setForm(f => ({ ...f, [k]: v }))
+
+  // A select reports an empty value when its value is set in the same render
+  // its options first appear, as when an edited member loads; no option has
+  // an empty value, so that report is ignored.
+  const setSelect = (k: keyof typeof form) => (v: string) => {
+    if (v) set(k, v)
+  }
 
   // required validation
   const isValid =
@@ -103,32 +160,48 @@ const ClientsFamilyMembersAddTab = () => {
   // handle submit
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!id || !isValid || submitting) return
+    if (!id || !isValid || !memberLoaded || submitting) return
     setSubmitting(true)
     setError('')
+    const request = {
+      firstName: form.firstName.trim(),
+      middleName: form.middleName.trim(),
+      lastName: form.lastName.trim(),
+      qualification: form.qualification.trim(),
+      age: Number(form.age),
+      isDependent: form.isDependent,
+      relationshipId: toId(form.relationship),
+      genderId: toId(form.gender),
+      professionId: toId(form.profession),
+      maritalStatusId: toId(form.maritalStatus),
+      dateOfBirth: form.dob,
+      dateFormat: 'yyyy-MM-dd',
+      locale: 'en',
+    }
     try {
-      await familyMemberApi().addClientFamilyMembers(Number(id), {
-        firstName: form.firstName.trim(),
-        middleName: form.middleName.trim(),
-        lastName: form.lastName.trim(),
-        qualification: form.qualification.trim(),
-        age: Number(form.age),
-        isDependent: form.isDependent,
-        relationshipId: toId(form.relationship),
-        genderId: toId(form.gender),
-        professionId: toId(form.profession),
-        maritalStatusId: toId(form.maritalStatus),
-        dateOfBirth: form.dob,
-        dateFormat: 'yyyy-MM-dd',
-        locale: 'en',
-      })
-      backToList({ successMessage: t('success.familyMemberAdded') })
+      if (isEdit) {
+        // Fineract's update fails when professionId or maritalStatusId is
+        // missing, and reads 0 as "leave unchanged".
+        await familyMemberApi().updateClientFamilyMembers(
+          Number(familyMemberId),
+          Number(id),
+          {
+            ...request,
+            professionId: request.professionId ?? 0,
+            maritalStatusId: request.maritalStatusId ?? 0,
+          }
+        )
+        backToList({ successMessage: t('success.familyMemberUpdated') })
+      } else {
+        await familyMemberApi().addClientFamilyMembers(Number(id), request)
+        backToList({ successMessage: t('success.familyMemberAdded') })
+      }
     } catch (err) {
       const data = (err as AxiosError<ClientApiErrorResponse>).response?.data
       setError(
         data?.errors?.[0]?.defaultUserMessage ||
           data?.defaultUserMessage ||
-          t('familyMembers.addFailed')
+          t(isEdit ? 'familyMembers.updateFailed' : 'familyMembers.addFailed')
       )
     } finally {
       setSubmitting(false)
@@ -209,7 +282,7 @@ const ClientsFamilyMembersAddTab = () => {
           </Label>
           <Select
             value={form.relationship}
-            onValueChange={v => set('relationship', v)}
+            onValueChange={setSelect('relationship')}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
@@ -228,7 +301,7 @@ const ClientsFamilyMembersAddTab = () => {
             {t('familyMembers.labelGender')}
             <span className="text-red-500">*</span>
           </Label>
-          <Select value={form.gender} onValueChange={v => set('gender', v)}>
+          <Select value={form.gender} onValueChange={setSelect('gender')}>
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
             </SelectTrigger>
@@ -247,7 +320,7 @@ const ClientsFamilyMembersAddTab = () => {
           <Label>{t('familyMembers.labelProfession')}</Label>
           <Select
             value={form.profession}
-            onValueChange={v => set('profession', v)}
+            onValueChange={setSelect('profession')}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
@@ -265,7 +338,7 @@ const ClientsFamilyMembersAddTab = () => {
           <Label>{t('familyMembers.labelMaritalStatus')}</Label>
           <Select
             value={form.maritalStatus}
-            onValueChange={v => set('maritalStatus', v)}
+            onValueChange={setSelect('maritalStatus')}
           >
             <SelectTrigger className="rounded-none border-0 border-b border-zinc-300">
               <SelectValue placeholder={t('familyMembers.selectPlaceholder')} />
@@ -308,7 +381,7 @@ const ClientsFamilyMembersAddTab = () => {
         </Button>
         <Button
           type="submit"
-          disabled={!isValid || submitting}
+          disabled={!isValid || !memberLoaded || submitting}
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white"
         >
           {tc('actions.submit')}

@@ -36,7 +36,9 @@
     "clientCreated": "Cliente creato con successo.",
     "clientActivated": "Cliente attivato con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
-    "familyMemberAdded": "Membro della famiglia aggiunto con successo."
+    "familyMemberAdded": "Membro della famiglia aggiunto con successo.",
+    "familyMemberUpdated": "Membro della famiglia aggiornato con successo.",
+    "familyMemberDeleted": "Membro della famiglia eliminato con successo."
   },
   "title": "Clienti",
   "unnamedClient": "Cliente senza nome",
@@ -252,7 +254,14 @@
     "loadFailed": "Impossibile caricare i membri della famiglia.",
     "empty": "Non sono ancora stati aggiunti membri della famiglia.",
     "templateFailed": "Impossibile caricare le opzioni di questo modulo.",
-    "addFailed": "Impossibile aggiungere il membro della famiglia."
+    "addFailed": "Impossibile aggiungere il membro della famiglia.",
+    "columnActions": "Azioni",
+    "editButton": "Modifica",
+    "deleteButton": "Elimina",
+    "confirmDelete": "Sei sicuro di voler eliminare questo membro della famiglia?",
+    "memberFailed": "Impossibile caricare questo membro della famiglia.",
+    "updateFailed": "Impossibile aggiornare il membro della famiglia.",
+    "deleteFailed": "Impossibile eliminare il membro della famiglia."
   },
   "generalData": {
     "headings": {
