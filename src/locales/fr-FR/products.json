@@ -9,6 +9,29 @@
   "loanProvisioningCriteria": "Critères de provisionnement des prêts",
   "paymentType": "Type de paiement",
   "product": "Produit",
+  "productMix": {
+    "columns": {
+      "productName": "Nom du produit",
+      "restrictedProducts": "Produits restreints"
+    },
+    "created": "Combinaison de produits créée avec succès.",
+    "createTitle": "Créer une combinaison de produits",
+    "errors": {
+      "createFailed": "Échec de la création de la combinaison de produits.",
+      "restrictionsFailed": "Échec du chargement des produits pouvant être restreints.",
+      "templateFailed": "Échec du chargement des produits de prêt."
+    },
+    "fields": {
+      "productRequired": "Produit *",
+      "restrictedProductsRequired": "Produits restreints *"
+    },
+    "placeholders": {
+      "noProducts": "Chaque produit de prêt a déjà une combinaison de produits",
+      "noRestrictedProducts": "Aucun autre produit de prêt n'est disponible",
+      "selectProduct": "Sélectionnez un produit de prêt",
+      "selectRestrictedProducts": "Sélectionnez les produits qui ne peuvent pas être combinés"
+    }
+  },
   "productsMix": "Mix produits",
   "recurringDepositProducts": "Produits de dépôt récurrent",
   "savingsProducts": "Produits d'épargne",
