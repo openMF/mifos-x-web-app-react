@@ -1,6 +1,103 @@
 {
   "addCharge": "Agregar cargo",
   "charges": "Cargos",
+  "createShareProduct": {
+    "heading": "Crear producto de acciones",
+    "breadcrumb": "Crear",
+    "prefix": "Producto de acciones",
+    "submit": "Enviar",
+    "select": "Seleccionar",
+    "created": "Producto de acciones creado correctamente.",
+    "createFailed": "No se pudo crear el producto de acciones.",
+    "templateFailed": "No se pudieron cargar las opciones del producto. Actualice la página.",
+    "steps": {
+      "details": "Detalles",
+      "currency": "Moneda",
+      "terms": "Términos",
+      "settings": "Configuración",
+      "marketPrice": "Precio de mercado",
+      "charges": "Cargos",
+      "accounting": "Contabilidad"
+    },
+    "details": {
+      "name": "Nombre del producto*",
+      "shortName": "Nombre corto*",
+      "description": "Descripción*"
+    },
+    "currency": {
+      "currency": "Moneda*",
+      "decimalPlaces": "Decimales*",
+      "inMultiplesOf": "Moneda en múltiplos de"
+    },
+    "terms": {
+      "totalShares": "Número total de acciones*",
+      "sharesIssued": "Acciones a emitir*",
+      "unitPrice": "Precio nominal/unitario*",
+      "shareCapital": "Valor del capital",
+      "shareCapitalHint": "Acciones a emitir multiplicadas por el precio nominal (calculado automáticamente)."
+    },
+    "settings": {
+      "sharesPerClient": "Acciones por cliente",
+      "minimumShares": "Mínimo*",
+      "nominalShares": "Predeterminado*",
+      "maximumShares": "Máximo*",
+      "minimumActivePeriod": "Período activo mínimo para dividendos",
+      "lockinPeriod": "Período de bloqueo",
+      "frequency": "Frecuencia",
+      "type": "Tipo",
+      "noLockinPeriod": "Ninguno",
+      "allowDividendsForInactiveClients": "Permitir dividendos para clientes inactivos"
+    },
+    "marketPrice": {
+      "fromDate": "Fecha desde",
+      "shareValue": "Precio nominal/unitario",
+      "add": "Agregar",
+      "remove": "Eliminar período de precio de mercado",
+      "none": "No se han agregado períodos de precio de mercado.",
+      "actions": "Acciones"
+    },
+    "charges": {
+      "charge": "Cargo",
+      "add": "Agregar",
+      "none": "No hay cargos disponibles para esta moneda",
+      "name": "Nombre",
+      "type": "Tipo",
+      "amount": "Monto",
+      "collectedOn": "Cobrado en",
+      "actions": "Acciones",
+      "remove": "Eliminar cargo"
+    },
+    "accounting": {
+      "none": "Ninguna",
+      "cash": "Efectivo",
+      "assets": "Activos",
+      "liabilities": "Pasivos",
+      "equity": "Patrimonio de acciones",
+      "income": "Ingresos",
+      "shareReferenceId": "Referencia de acciones*",
+      "shareSuspenseId": "Control de suspenso de acciones*",
+      "shareEquityId": "Patrimonio*",
+      "incomeFromFeeAccountId": "Ingresos por comisiones*"
+    },
+    "validation": {
+      "nameRequired": "El nombre del producto es obligatorio.",
+      "shortNameRequired": "El nombre corto es obligatorio.",
+      "descriptionRequired": "La descripción es obligatoria.",
+      "currencyRequired": "La moneda es obligatoria.",
+      "decimalPlacesRequired": "Los decimales deben ser cero o más.",
+      "inMultiplesOfInvalid": "La moneda en múltiplos de debe ser un número entero mayor que cero.",
+      "totalSharesRequired": "El número total de acciones debe ser un número entero mayor que cero.",
+      "sharesIssuedRequired": "Las acciones a emitir deben ser un número entero mayor que cero.",
+      "sharesIssuedTooHigh": "Las acciones a emitir no pueden superar el número total de acciones.",
+      "unitPriceRequired": "El precio nominal/unitario debe ser mayor que cero.",
+      "sharesPerClientRequired": "Las acciones mínimas, predeterminadas y máximas por cliente deben ser números enteros mayores que cero.",
+      "sharesPerClientOrder": "Las acciones por cliente deben cumplir mínimo ≤ predeterminado ≤ máximo.",
+      "minimumActivePeriodRequired": "La frecuencia y el tipo del período activo mínimo son obligatorios.",
+      "lockinPeriodIncomplete": "Ingrese la frecuencia y el tipo del período de bloqueo, o deje ambos vacíos.",
+      "lockinPeriodInvalid": "La frecuencia del período de bloqueo debe ser un número entero mayor que cero.",
+      "glMappingsRequired": "Seleccione una cuenta contable para cada asignación obligatoria."
+    }
+  },
   "delinquencyBucket": "Cubo de morosidad",
   "fixedDepositProducts": "Productos de depósito a plazo fijo",
   "floatingRates": "Tasas flotantes",

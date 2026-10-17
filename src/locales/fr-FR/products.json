@@ -1,6 +1,103 @@
 {
   "addCharge": "Ajouter un frais",
   "charges": "Frais",
+  "createShareProduct": {
+    "heading": "Créer un produit de parts sociales",
+    "breadcrumb": "Créer",
+    "prefix": "Produit de parts sociales",
+    "submit": "Soumettre",
+    "select": "Sélectionner",
+    "created": "Produit de parts sociales créé avec succès.",
+    "createFailed": "Échec de la création du produit de parts sociales.",
+    "templateFailed": "Impossible de charger les options du produit. Veuillez actualiser la page.",
+    "steps": {
+      "details": "Détails",
+      "currency": "Devise",
+      "terms": "Conditions",
+      "settings": "Paramètres",
+      "marketPrice": "Prix du marché",
+      "charges": "Frais",
+      "accounting": "Comptabilité"
+    },
+    "details": {
+      "name": "Nom du produit*",
+      "shortName": "Nom court*",
+      "description": "Description*"
+    },
+    "currency": {
+      "currency": "Devise*",
+      "decimalPlaces": "Décimales*",
+      "inMultiplesOf": "Devise en multiples de"
+    },
+    "terms": {
+      "totalShares": "Nombre total de parts*",
+      "sharesIssued": "Parts à émettre*",
+      "unitPrice": "Prix nominal/unitaire*",
+      "shareCapital": "Valeur du capital",
+      "shareCapitalHint": "Parts à émettre multipliées par le prix nominal (calculé automatiquement)."
+    },
+    "settings": {
+      "sharesPerClient": "Parts par client",
+      "minimumShares": "Minimum*",
+      "nominalShares": "Par défaut*",
+      "maximumShares": "Maximum*",
+      "minimumActivePeriod": "Période active minimale pour les dividendes",
+      "lockinPeriod": "Période de blocage",
+      "frequency": "Fréquence",
+      "type": "Type",
+      "noLockinPeriod": "Aucun",
+      "allowDividendsForInactiveClients": "Autoriser les dividendes pour les clients inactifs"
+    },
+    "marketPrice": {
+      "fromDate": "Date de début",
+      "shareValue": "Prix nominal/unitaire",
+      "add": "Ajouter",
+      "remove": "Supprimer la période de prix du marché",
+      "none": "Aucune période de prix du marché n'a été ajoutée.",
+      "actions": "Actions"
+    },
+    "charges": {
+      "charge": "Frais",
+      "add": "Ajouter",
+      "none": "Aucun frais disponible pour cette devise",
+      "name": "Nom",
+      "type": "Type",
+      "amount": "Montant",
+      "collectedOn": "Prélevé le",
+      "actions": "Actions",
+      "remove": "Supprimer les frais"
+    },
+    "accounting": {
+      "none": "Aucune",
+      "cash": "Espèces",
+      "assets": "Actifs",
+      "liabilities": "Passifs",
+      "equity": "Capitaux propres",
+      "income": "Revenus",
+      "shareReferenceId": "Référence des parts*",
+      "shareSuspenseId": "Contrôle d'attente des parts*",
+      "shareEquityId": "Capitaux propres*",
+      "incomeFromFeeAccountId": "Revenus des frais*"
+    },
+    "validation": {
+      "nameRequired": "Le nom du produit est obligatoire.",
+      "shortNameRequired": "Le nom court est obligatoire.",
+      "descriptionRequired": "La description est obligatoire.",
+      "currencyRequired": "La devise est obligatoire.",
+      "decimalPlacesRequired": "Le nombre de décimales doit être supérieur ou égal à zéro.",
+      "inMultiplesOfInvalid": "La devise en multiples de doit être un nombre entier supérieur à zéro.",
+      "totalSharesRequired": "Le nombre total de parts doit être un nombre entier supérieur à zéro.",
+      "sharesIssuedRequired": "Les parts à émettre doivent être un nombre entier supérieur à zéro.",
+      "sharesIssuedTooHigh": "Les parts à émettre ne peuvent pas dépasser le nombre total de parts.",
+      "unitPriceRequired": "Le prix nominal/unitaire doit être supérieur à zéro.",
+      "sharesPerClientRequired": "Les parts minimales, par défaut et maximales par client doivent être des nombres entiers supérieurs à zéro.",
+      "sharesPerClientOrder": "Les parts par client doivent respecter minimum ≤ par défaut ≤ maximum.",
+      "minimumActivePeriodRequired": "La fréquence et le type de la période active minimale sont obligatoires.",
+      "lockinPeriodIncomplete": "Saisissez la fréquence et le type de la période de blocage, ou laissez les deux vides.",
+      "lockinPeriodInvalid": "La fréquence de la période de blocage doit être un nombre entier supérieur à zéro.",
+      "glMappingsRequired": "Sélectionnez un compte du grand livre pour chaque affectation obligatoire."
+    }
+  },
   "delinquencyBucket": "Catégorie de retard",
   "fixedDepositProducts": "Produits de dépôt à terme",
   "floatingRates": "Taux variables",
