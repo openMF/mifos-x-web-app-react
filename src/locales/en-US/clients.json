@@ -12,9 +12,11 @@
   "errors": {
     "failedActivateClient": "Failed to activate client.",
     "failedApproveClients": "Failed to approve one or more clients.",
+    "failedFetchClient": "Failed to fetch client details.",
     "failedLoadCenters": "Failed to load centers. Please try again.",
     "failedLoadClients": "Failed to load clients. Please try again.",
     "failedLoadGroups": "Failed to load groups. Please try again.",
+    "failedTransferClient": "Failed to transfer client.",
     "noClientsSelected": "No clients selected for approval."
   },
   "groups": "Groups",
@@ -35,6 +37,7 @@
   "success": {
     "clientCreated": "Client created successfully.",
     "clientActivated": "Client activated successfully.",
+    "clientTransferProposed": "Client transfer proposed successfully.",
     "staffAssigned": "Staff assigned successfully.",
     "clientsApproved": "Selected clients approved successfully.",
     "familyMemberAdded": "Family member added successfully."
@@ -74,6 +77,25 @@
       "staffRequired": "Please select a staff member.",
       "failedFetchStaff": "Failed to load staff options.",
       "failedAssignStaff": "Failed to assign staff."
+    }
+  },
+  "transfer": {
+    "title": "Transfer Client",
+    "office": "Office*",
+    "selectOffice": "Select destination office",
+    "noOfficesFound": "No destination offices available",
+    "noOfficesAvailable": "No other offices available for transfer.",
+    "transferDate": "Transfer Date*",
+    "note": "Note",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "officeRequired": "Please select a destination office.",
+      "destinationSameAsCurrent": "Destination office cannot be the same as the client's current office.",
+      "dateRequired": "Please enter a transfer date.",
+      "dateInFuture": "The transfer date cannot be in the future.",
+      "dateBeforeActivated": "The transfer date cannot be before the activation date.",
+      "failedFetchOffices": "Failed to load offices."
     }
   },
   "view": {
