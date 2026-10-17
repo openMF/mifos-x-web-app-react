@@ -2,6 +2,60 @@
   "adhocQuery": "Consulta ad hoc",
   "auditTrails": "Rastros de auditoría",
   "bulkLoanReassignment": "Reasignación masiva de préstamos",
+  "cashiers": {
+    "breadcrumbs": {
+      "tellers": "Cajas"
+    },
+    "count_one": "{{count}} cajero",
+    "count_other": "{{count}} cajeros",
+    "create": "Crear cajero",
+    "deleteAria": "Eliminar {{name}}",
+    "deleteDialog": {
+      "confirm": "¿Está seguro de que desea eliminar al cajero \"{{name}}\"?",
+      "confirmButton": "Confirmar",
+      "deleting": "Eliminando..."
+    },
+    "edit": "Editar cajero",
+    "editAria": "Editar {{name}}",
+    "empty": "Aún no hay cajeros",
+    "errors": {
+      "create": "No se pudo crear el cajero.",
+      "delete": "No se pudo eliminar el cajero.",
+      "load": "No se pudo cargar el cajero.",
+      "loadList": "No se pudieron cargar los cajeros.",
+      "loadStaff": "No se pudo cargar el personal.",
+      "update": "No se pudo actualizar el cajero."
+    },
+    "fields": {
+      "actions": "Acciones",
+      "cashier": "Cajero",
+      "description": "Descripción",
+      "endDate": "Fecha de fin",
+      "endTime": "Hora de fin",
+      "from": "Desde",
+      "shift": "Turno",
+      "staff": "Personal",
+      "startDate": "Fecha de inicio",
+      "startTime": "Hora de inicio",
+      "teller": "Caja",
+      "to": "Hasta"
+    },
+    "placeholders": {
+      "noStaff": "No hay personal en esta oficina",
+      "staff": "Seleccione un miembro del personal"
+    },
+    "shift": {
+      "fullDay": "Día completo",
+      "range": "{{start}} - {{end}}"
+    },
+    "title": "Cajeros",
+    "validation": {
+      "datesRequired": "Introduzca las fechas de inicio y de fin.",
+      "endDateBeforeStart": "La fecha de fin no puede ser anterior a la fecha de inicio.",
+      "endTimeBeforeStart": "La hora de fin debe ser posterior a la hora de inicio.",
+      "staffRequired": "Seleccione un miembro del personal."
+    }
+  },
   "collateralManagement": "Gestión de garantías",
   "configurations": "Configuraciones",
   "configureMakerCheckerTasks": "Configurar tareas de revisión",

@@ -2,6 +2,60 @@
   "adhocQuery": "Query ad hoc",
   "auditTrails": "Audit trail",
   "bulkLoanReassignment": "Riassegnazione massiva dei prestiti",
+  "cashiers": {
+    "breadcrumbs": {
+      "tellers": "Sportelli"
+    },
+    "count_one": "{{count}} cassiere",
+    "count_other": "{{count}} cassieri",
+    "create": "Crea cassiere",
+    "deleteAria": "Elimina {{name}}",
+    "deleteDialog": {
+      "confirm": "Sei sicuro di voler eliminare il cassiere \"{{name}}\"?",
+      "confirmButton": "Conferma",
+      "deleting": "Eliminazione..."
+    },
+    "edit": "Modifica cassiere",
+    "editAria": "Modifica {{name}}",
+    "empty": "Ancora nessun cassiere",
+    "errors": {
+      "create": "Impossibile creare il cassiere.",
+      "delete": "Impossibile eliminare il cassiere.",
+      "load": "Impossibile caricare il cassiere.",
+      "loadList": "Impossibile caricare i cassieri.",
+      "loadStaff": "Impossibile caricare il personale.",
+      "update": "Impossibile aggiornare il cassiere."
+    },
+    "fields": {
+      "actions": "Azioni",
+      "cashier": "Cassiere",
+      "description": "Descrizione",
+      "endDate": "Data di fine",
+      "endTime": "Ora di fine",
+      "from": "Dal",
+      "shift": "Turno",
+      "staff": "Personale",
+      "startDate": "Data di inizio",
+      "startTime": "Ora di inizio",
+      "teller": "Sportello",
+      "to": "Al"
+    },
+    "placeholders": {
+      "noStaff": "Nessun membro del personale in questo ufficio",
+      "staff": "Seleziona un membro del personale"
+    },
+    "shift": {
+      "fullDay": "Giornata intera",
+      "range": "{{start}} - {{end}}"
+    },
+    "title": "Cassieri",
+    "validation": {
+      "datesRequired": "Inserisci le date di inizio e di fine.",
+      "endDateBeforeStart": "La data di fine non può essere precedente alla data di inizio.",
+      "endTimeBeforeStart": "L'ora di fine deve essere successiva all'ora di inizio.",
+      "staffRequired": "Seleziona un membro del personale."
+    }
+  },
   "collateralManagement": "Gestione garanzie",
   "configurations": "Configurazioni",
   "configureMakerCheckerTasks": "Configura attività di verifica",

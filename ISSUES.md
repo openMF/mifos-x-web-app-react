@@ -355,6 +355,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - The generated client has no API class for `/jobs` (list, get, update, `executeJob`, `runhistory`); only `SchedulerApi` (`/scheduler`) exists, so the Manage Jobs pages call `/jobs` through `@/lib/axios`
 
+### `/tellers/{tellerId}/cashiers` (POST) / `/tellers/{tellerId}/cashiers/{cashierId}` (PUT)
+
+- `PostTellersTellerIdCashiersRequest` and `PutTellersTellerIdCashiersCashierIdRequest` missing `startDate`, `hourStartTime`, `minStartTime`, `hourEndTime`, `minEndTime` (the Cashier pages cast the payload)
+
 ## Organization: SMS Campaigns
 
 ### `/smscampaigns`, `/smscampaigns/template`, `/smscampaigns/{campaignId}`, `/smscampaigns/preview`
