@@ -133,6 +133,7 @@ import EditDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/d
 import ProductsMix from '@/pages/products/products-mix/ProductsMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
+import CreateFixedDepositProduct from '@/pages/products/fixed-deposit-products/create-fixed-deposit-product/CreateFixedDepositProduct'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
@@ -748,6 +749,10 @@ const AppRoutes = () => {
           <Route
             path="/products/fixed-deposit-products"
             element={<FixedDepositProducts />}
+          />
+          <Route
+            path="/products/fixed-deposit-products/create"
+            element={<CreateFixedDepositProduct />}
           />
           <Route
             path="/products/fixed-deposit-products/:id/general"

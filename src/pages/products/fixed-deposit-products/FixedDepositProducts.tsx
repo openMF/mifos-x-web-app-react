@@ -87,7 +87,7 @@ const FixedDepositProducts = () => {
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate('/products/fixed-deposits/create')}
+          onClick={() => navigate('/products/fixed-deposit-products/create')}
         >
           <Plus className="mr-2" /> Create Fixed Deposit Product
         </Button>
