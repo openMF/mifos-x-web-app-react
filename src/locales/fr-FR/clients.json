@@ -35,6 +35,7 @@
   "success": {
     "clientCreated": "Client créé avec succès.",
     "clientActivated": "Client activé avec succès.",
+    "staffAssigned": "Personnel assigné avec succès.",
     "clientsApproved": "Clients sélectionnés approuvés avec succès.",
     "familyMemberAdded": "Membre de la famille ajouté avec succès."
   },
@@ -58,6 +59,21 @@
       "dateRequired": "Veuillez saisir une date d'activation.",
       "dateInFuture": "La date d'activation ne peut pas être dans le futur.",
       "dateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission."
+    }
+  },
+  "assignStaff": {
+    "title": "Assigner du Personnel",
+    "labelStaff": "Personnel*",
+    "selectStaff": "Sélectionner du Personnel",
+    "loadingStaff": "Chargement du personnel...",
+    "noStaffFound": "Aucun personnel disponible",
+    "noStaffAvailable": "Aucun membre du personnel disponible pour ce bureau.",
+    "confirm": "Confirmer",
+    "errors": {
+      "failedFetchClient": "Échec du chargement des détails du client.",
+      "staffRequired": "Veuillez sélectionner un membre du personnel.",
+      "failedFetchStaff": "Échec du chargement des options de personnel.",
+      "failedAssignStaff": "Échec de l'assignation du personnel."
     }
   },
   "view": {
@@ -92,6 +108,7 @@
       "actions": "Actions",
       "close": "Fermer",
       "transferClients": "Transférer des Clients",
+      "assignStaff": "Assigner du Personnel",
       "unassignStaff": "Désattribuer du Personnel",
       "more": "Plus",
       "addCharge": "Ajouter des Frais",

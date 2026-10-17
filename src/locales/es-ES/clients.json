@@ -35,6 +35,7 @@
   "success": {
     "clientCreated": "Cliente creado exitosamente.",
     "clientActivated": "Cliente activado exitosamente.",
+    "staffAssigned": "Personal asignado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
     "familyMemberAdded": "Miembro de familia agregado exitosamente."
   },
@@ -58,6 +59,21 @@
       "dateRequired": "Por favor ingrese una fecha de activación.",
       "dateInFuture": "La fecha de activación no puede ser futura.",
       "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
+  },
+  "assignStaff": {
+    "title": "Asignar Personal",
+    "labelStaff": "Personal*",
+    "selectStaff": "Seleccionar Personal",
+    "loadingStaff": "Cargando personal...",
+    "noStaffFound": "No hay personal disponible",
+    "noStaffAvailable": "No hay miembros del personal disponibles para esta oficina.",
+    "confirm": "Confirmar",
+    "errors": {
+      "failedFetchClient": "Error al cargar los detalles del cliente.",
+      "staffRequired": "Por favor seleccione un miembro del personal.",
+      "failedFetchStaff": "Error al cargar las opciones de personal.",
+      "failedAssignStaff": "Error al asignar el personal."
     }
   },
   "view": {
@@ -92,6 +108,7 @@
       "actions": "Acciones",
       "close": "Cerrar",
       "transferClients": "Transferir Clientes",
+      "assignStaff": "Asignar Personal",
       "unassignStaff": "Desasignar Personal",
       "more": "Más",
       "addCharge": "Agregar Cargo",
