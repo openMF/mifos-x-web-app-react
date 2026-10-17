@@ -5,9 +5,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit'
 import { loginFineract } from '@/pages/login/loginApi'
-import { clearOidcToken, hasSession } from '@/lib/http-client'
+import {
+  clearOidcToken,
+  getOidcUserDetails,
+  hasSession,
+  type OidcUserDetails,
+} from '@/lib/http-client'
 
 interface AuthState {
   loading: boolean
@@ -18,7 +27,9 @@ interface AuthState {
 
 const initialState: AuthState = {
   loading: false,
-  user: null,
+  // A password session keeps its user in memory only, but an OIDC session's
+  // details are stored with its token, so a reload mid-session restores them.
+  user: getOidcUserDetails() as Record<string, unknown> | null,
   error: null,
   isAuthenticated: hasSession(),
 }
@@ -50,6 +61,12 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    /** The OIDC callback established a session for this user. */
+    oidcSignedIn: (state, action: PayloadAction<OidcUserDetails>) => {
+      state.user = action.payload as Record<string, unknown>
+      state.isAuthenticated = true
+      state.error = null
+    },
     logout: state => {
       state.user = null
       state.isAuthenticated = false
@@ -75,5 +92,5 @@ const authSlice = createSlice({
   },
 })
 
-export const { logout } = authSlice.actions
+export const { logout, oidcSignedIn } = authSlice.actions
 export default authSlice.reducer

@@ -19,6 +19,22 @@ const TOKEN_KEY = 'mifosToken'
 const OIDC_TOKEN_KEY = 'mifosOidcAccessToken'
 /** Expiry of the OIDC token, epoch seconds, as reported by the provider. */
 const OIDC_EXPIRES_AT_KEY = 'mifosOidcExpiresAt'
+/** The signed-in user's details, as the security plugin reported them. */
+const OIDC_USER_KEY = 'mifosOidcUser'
+
+/**
+ * Who is signed in through OIDC: what the password sign-in gets back from
+ * Fineract's /authentication, here supplied by the security plugin.
+ */
+export interface OidcUserDetails {
+  username?: string
+  /** The identity provider's user id (the token's sub claim). */
+  userId?: string
+  officeId?: number
+  officeName?: string
+  roles?: Array<{ id: number; name?: string; description?: string }>
+  permissions?: string[]
+}
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem(TOKEN_KEY)
@@ -59,6 +75,28 @@ export const setOidcToken = (token: string, expiresAt?: number): void => {
 export const clearOidcToken = (): void => {
   localStorage.removeItem(OIDC_TOKEN_KEY)
   localStorage.removeItem(OIDC_EXPIRES_AT_KEY)
+  // The details describe the session, so they go with it.
+  localStorage.removeItem(OIDC_USER_KEY)
+}
+
+export const setOidcUserDetails = (details: OidcUserDetails): void => {
+  localStorage.setItem(OIDC_USER_KEY, JSON.stringify(details))
+}
+
+/**
+ * The stored details, or null without a live OIDC session. Ignored when OIDC
+ * is off, so leftovers from a deployment that used to run it cannot restore
+ * a signed-in user.
+ */
+export const getOidcUserDetails = (): OidcUserDetails | null => {
+  if (!envConfig.oidcEnabled || !getOidcToken()) return null
+
+  try {
+    const stored = localStorage.getItem(OIDC_USER_KEY)
+    return stored ? (JSON.parse(stored) as OidcUserDetails) : null
+  } catch {
+    return null
+  }
 }
 
 export const clearAuthToken = (): void => {
