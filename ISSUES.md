@@ -44,6 +44,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `holdGuaranteeFunds`
 - More missing fields in description/code
 - Unnecessary fields also present
+- `GetLoanProductsAccountingRule` has `description`, but the response sends the rule name as `value` (e.g. `CASH BASED`)
 
 ### `/products/loan-products/create`
 
@@ -55,6 +56,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `interestFreePeriodOptions` missing
 - `overAppliedCalculationTypeOptions` missing
 - `floatingRateOptions` missing
+
+**Missing in `PostLoanProductsRequest`:**
+
+- `writeOffReasonsToExpenseMappings` (Fineract reads it with the other advanced accounting mappings)
 
 ### `/products/saving-products/{id}/general`
 

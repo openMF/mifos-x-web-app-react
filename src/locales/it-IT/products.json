@@ -14,5 +14,49 @@
   "savingsProducts": "Prodotti di risparmio",
   "shareProduct": "Prodotto azionario",
   "shareProducts": "Prodotti azionari",
-  "title": "Prodotti"
+  "title": "Prodotti",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "Nessuna",
+      "cash": "Cassa",
+      "accrualPeriodic": "Competenza (periodica)",
+      "accrualUpfront": "Competenza (anticipata)"
+    },
+    "sections": {
+      "assets": "Attività",
+      "income": "Ricavi",
+      "expenses": "Costi",
+      "liabilities": "Passività"
+    },
+    "fields": {
+      "fundSource": "Fonte dei fondi",
+      "loanPortfolio": "Portafoglio prestiti",
+      "transfersInSuspense": "Trasferimenti in sospeso",
+      "interestReceivable": "Interessi da ricevere",
+      "feesReceivable": "Commissioni da ricevere",
+      "penaltiesReceivable": "Penali da ricevere",
+      "incomeFromInterest": "Ricavi da interessi",
+      "incomeFromFees": "Ricavi da commissioni",
+      "incomeFromPenalties": "Ricavi da penali",
+      "incomeFromRecovery": "Ricavi da rimborsi recuperati",
+      "incomeFromChargeOffInterest": "Ricavi da interessi stralciati",
+      "incomeFromChargeOffFees": "Ricavi da commissioni stralciate",
+      "incomeFromChargeOffPenalty": "Ricavi da penali stralciate",
+      "incomeFromGoodwillCreditInterest": "Ricavi da interessi di credito di cortesia",
+      "incomeFromGoodwillCreditFees": "Ricavi da commissioni di credito di cortesia",
+      "incomeFromGoodwillCreditPenalty": "Ricavi da penali di credito di cortesia",
+      "lossesWrittenOff": "Perdite su crediti cancellati",
+      "goodwillCreditExpense": "Costi per credito di cortesia",
+      "chargeOffExpense": "Costo di stralcio",
+      "chargeOffFraudExpense": "Costo di stralcio per frode",
+      "overpaymentLiability": "Passività per pagamenti in eccesso"
+    },
+    "enableAccrualActivityPosting": "Registra l'attività di competenza alla data di scadenza della rata",
+    "selectAccount": "Seleziona un conto",
+    "noAccounts": "Nessun conto contabile di questo tipo. Aggiungilo nel piano dei conti.",
+    "missingAccounts": "Seleziona i conti contabili richiesti da questa regola contabile: {{accounts}}.",
+    "saveFailed": "Impossibile creare il prodotto di prestito.",
+    "type": "Tipo",
+    "notMapped": "Non associato"
+  }
 }

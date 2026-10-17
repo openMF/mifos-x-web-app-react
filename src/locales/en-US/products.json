@@ -14,5 +14,49 @@
   "savingsProducts": "Savings Products",
   "shareProduct": "Share Product",
   "shareProducts": "Share Products",
-  "title": "Products"
+  "title": "Products",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "None",
+      "cash": "Cash",
+      "accrualPeriodic": "Accrual (Periodic)",
+      "accrualUpfront": "Accrual (Upfront)"
+    },
+    "sections": {
+      "assets": "Assets",
+      "income": "Income",
+      "expenses": "Expenses",
+      "liabilities": "Liabilities"
+    },
+    "fields": {
+      "fundSource": "Fund source",
+      "loanPortfolio": "Loan portfolio",
+      "transfersInSuspense": "Transfers in suspense",
+      "interestReceivable": "Interest receivable",
+      "feesReceivable": "Fees receivable",
+      "penaltiesReceivable": "Penalties receivable",
+      "incomeFromInterest": "Income from interest",
+      "incomeFromFees": "Income from fees",
+      "incomeFromPenalties": "Income from penalties",
+      "incomeFromRecovery": "Income from recovery repayments",
+      "incomeFromChargeOffInterest": "Income from charge-off interest",
+      "incomeFromChargeOffFees": "Income from charge-off fees",
+      "incomeFromChargeOffPenalty": "Income from charge-off penalties",
+      "incomeFromGoodwillCreditInterest": "Income from goodwill credit interest",
+      "incomeFromGoodwillCreditFees": "Income from goodwill credit fees",
+      "incomeFromGoodwillCreditPenalty": "Income from goodwill credit penalties",
+      "lossesWrittenOff": "Losses written off",
+      "goodwillCreditExpense": "Expenses from goodwill credit",
+      "chargeOffExpense": "Charge-off expense",
+      "chargeOffFraudExpense": "Charge-off fraud expense",
+      "overpaymentLiability": "Overpayment liability"
+    },
+    "enableAccrualActivityPosting": "Enable accrual activity posting on the installment due date",
+    "selectAccount": "Select an account",
+    "noAccounts": "No GL accounts of this type. Add them in the Chart of Accounts.",
+    "missingAccounts": "Select the GL accounts this accounting rule requires: {{accounts}}.",
+    "saveFailed": "The loan product could not be created.",
+    "type": "Type",
+    "notMapped": "Not mapped"
+  }
 }
