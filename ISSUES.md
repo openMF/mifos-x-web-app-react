@@ -45,6 +45,8 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - More missing fields in description/code
 - Unnecessary fields also present
 - `GetLoanProductsAccountingRule` has `description`, but the response sends the rule name as `value` (e.g. `CASH BASED`)
+- `penaltyToIncomeAccountMappings` and `writeOffReasonsToExpenseMappings` missing
+- `GetChargeOffReasonToExpenseAccountMappings` has `chargeOffReasonCodeValue`, but the response sends `reasonCodeValue`
 
 ### `/products/loan-products/create`
 
@@ -56,10 +58,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `interestFreePeriodOptions` missing
 - `overAppliedCalculationTypeOptions` missing
 - `floatingRateOptions` missing
+- `penaltyOptions` and `writeOffReasonOptions` missing (the advanced accounting rules read them)
 
 **Missing in `PostLoanProductsRequest`:**
 
 - `writeOffReasonsToExpenseMappings` (Fineract reads it with the other advanced accounting mappings)
+- `paymentChannelToFundSourceMappings`, `feeToIncomeAccountMappings` and `penaltyToIncomeAccountMappings` are typed with the response rows; Fineract reads `paymentTypeId` / `fundSourceAccountId` and `chargeId` / `incomeAccountId`
 
 ### `/products/saving-products/{id}/general`
 
