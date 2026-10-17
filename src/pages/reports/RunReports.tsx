@@ -51,6 +51,10 @@ const RunReports: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, string>>({})
   const [reportCategory, setReportCategory] = useState<string | undefined>()
+  const [matchedReportName, setMatchedReportName] = useState<
+    string | undefined
+  >()
+  const displayName = matchedReportName ?? reportName ?? ''
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,21 +67,25 @@ const RunReports: React.FC = () => {
         const officesApi = new OfficesApi(config)
 
         // Fetch the list of all reports to find the ID of the current report
-        const formattedSearchName = reportName.replace(/-/g, ' ').toLowerCase()
         const reportsListRes = await reportsApi.retrieveReportList({})
         const allReports = reportsListRes.data as BasicReport[]
 
-        const matchedReport = allReports.find(
-          r =>
-            (r.reportName &&
-              r.reportName.toLowerCase() === formattedSearchName) ||
-            (r.name && r.name.toLowerCase() === formattedSearchName)
-        )
+        const findByName = (searchName: string) =>
+          allReports.find(
+            r =>
+              r.reportName?.toLowerCase() === searchName ||
+              r.name?.toLowerCase() === searchName
+          )
+
+        // Match the exact name first so that names containing hyphens, such
+        // as "Active Loans - Summary", are found. Hyphenated slugs from older
+        // links are still matched as a fallback.
+        const matchedReport =
+          findByName(reportName.toLowerCase()) ??
+          findByName(reportName.replace(/-/g, ' ').toLowerCase())
 
         if (!matchedReport) {
-          setError(
-            `Could not find a report named "${reportName.replace(/-/g, ' ')}".`
-          )
+          setError(`Could not find a report named "${reportName}".`)
           setLoading(false)
           return
         }
@@ -89,6 +97,7 @@ const RunReports: React.FC = () => {
         ])
 
         setReportCategory(matchedReport.reportCategory)
+        setMatchedReportName(matchedReport.reportName ?? matchedReport.name)
         setReportData(reportRes.data as ReportMetadata)
         setOffices(officeRes.data as Office[])
       } catch (_err) {
@@ -108,9 +117,7 @@ const RunReports: React.FC = () => {
     try {
       setError(null)
       const runReportsApi = new RunReportsApi(getConfiguration())
-      const exactReportName = reportName!.replace(/-/g, ' ')
-
-      await runReportsApi.runReport(exactReportName, false, {
+      await runReportsApi.runReport(displayName, false, {
         params: formValues,
       })
 
@@ -176,7 +183,7 @@ const RunReports: React.FC = () => {
                 },
               ]
             : []),
-          { label: reportName?.replace(/-/g, ' ') ?? '' },
+          { label: displayName },
         ]}
       />
       <Link
@@ -187,9 +194,7 @@ const RunReports: React.FC = () => {
       </Link>
       <Card>
         <CardHeader>
-          <CardTitle className="capitalize">
-            {reportName?.replace(/-/g, ' ')}
-          </CardTitle>
+          <CardTitle className="capitalize">{displayName}</CardTitle>
         </CardHeader>
         <CardContent>
           {error && (
