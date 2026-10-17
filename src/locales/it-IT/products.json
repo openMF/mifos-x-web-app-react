@@ -57,6 +57,48 @@
     "missingAccounts": "Seleziona i conti contabili richiesti da questa regola contabile: {{accounts}}.",
     "saveFailed": "Impossibile creare il prodotto di prestito.",
     "type": "Tipo",
-    "notMapped": "Non associato"
+    "notMapped": "Non associato",
+    "advanced": {
+      "title": "Regole contabili avanzate",
+      "add": "Aggiungi",
+      "remove": "Rimuovi",
+      "noRows": "Ancora nessuna associazione. Vengono usati i conti predefiniti qui sopra.",
+      "incompleteRows": "Scegli entrambi i valori in ogni riga delle regole contabili avanzate, oppure rimuovi la riga: {{tables}}.",
+      "paymentChannels": {
+        "title": "Fonti di fondi per canale di pagamento",
+        "value": "Tipo di pagamento",
+        "selectValue": "Seleziona un tipo di pagamento",
+        "account": "Fonte dei fondi",
+        "noOptions": "Nessun tipo di pagamento. Aggiungili in Organizzazione > Tipi di pagamento."
+      },
+      "fees": {
+        "title": "Commissioni su conti di ricavo specifici",
+        "value": "Commissione",
+        "selectValue": "Seleziona una commissione",
+        "account": "Conto di ricavo",
+        "noOptions": "Nessuna commissione sui prestiti. Aggiungile in Prodotti > Addebiti."
+      },
+      "penalties": {
+        "title": "Penali su conti di ricavo specifici",
+        "value": "Penale",
+        "selectValue": "Seleziona una penale",
+        "account": "Conto di ricavo",
+        "noOptions": "Nessuna penale sui prestiti. Aggiungile in Prodotti > Addebiti."
+      },
+      "chargeOffReasons": {
+        "title": "Motivi di passaggio a perdita su conti di costo",
+        "value": "Motivo di passaggio a perdita",
+        "selectValue": "Seleziona un motivo di passaggio a perdita",
+        "account": "Conto di costo",
+        "noOptions": "Nessun motivo di passaggio a perdita. Aggiungi valori al codice ChargeOffReasons in Sistema > Gestisci codici."
+      },
+      "writeOffReasons": {
+        "title": "Motivi di stralcio su conti di costo",
+        "value": "Motivo di stralcio",
+        "selectValue": "Seleziona un motivo di stralcio",
+        "account": "Conto di costo",
+        "noOptions": "Nessun motivo di stralcio. Aggiungi valori al codice WriteOffReasons in Sistema > Gestisci codici."
+      }
+    }
   }
 }

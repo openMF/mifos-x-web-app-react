@@ -34,7 +34,13 @@ export const usesAccounts = (rule?: number) =>
   rule !== undefined && rule > ACCOUNTING_RULE.none
 
 /** Which GL accounts of the template a field picks from */
-export type AccountList = 'asset' | 'income' | 'expense' | 'liability' | 'fund'
+export type AccountList =
+  | 'asset'
+  | 'income'
+  | 'expense'
+  | 'liability'
+  | 'fund'
+  | 'incomeOrLiability'
 
 export type AccountingSection = 'assets' | 'income' | 'expenses' | 'liabilities'
 
@@ -255,6 +261,7 @@ export const withoutAccountMappings = <T extends Record<string, unknown>>(
 ): T => {
   const next: Record<string, unknown> = { ...values }
   for (const f of ACCOUNTING_FIELDS) delete next[f.key]
+  for (const m of ADVANCED_MAPPINGS) delete next[m.key]
   delete next.enableAccrualActivityPosting
   return next as T
 }
@@ -275,3 +282,172 @@ export const glAccountLabel = (account?: GlAccountOption) =>
       ? `${account.name} (${account.glCode})`
       : account.name
     : ''
+
+/** Translation keys under loanProductAccounting.advanced */
+export type AdvancedMappingLabel =
+  | 'paymentChannels'
+  | 'fees'
+  | 'penalties'
+  | 'chargeOffReasons'
+  | 'writeOffReasons'
+
+/** Template option lists the first column of a mapping table picks from */
+export type AdvancedMappingOptions =
+  | 'paymentTypes'
+  | 'fees'
+  | 'penalties'
+  | 'chargeOffReasons'
+  | 'writeOffReasons'
+
+export type AdvancedMapping = {
+  /** Request array, e.g. feeToIncomeAccountMappings */
+  key: string
+  label: AdvancedMappingLabel
+  options: AdvancedMappingOptions
+  /** Row field holding the payment type, charge or code value id */
+  valueKey: string
+  /** Row field holding the GL account id */
+  accountKey: string
+  list: AccountList
+  /** Fields of a GET /loanproducts/{id} row: the mapped thing and its account */
+  readValue: 'paymentType' | 'charge' | 'reasonCodeValue'
+  readAccount: 'fundSourceAccount' | 'incomeAccount' | 'expenseAccount'
+}
+
+/**
+ * The "Advanced accounting rules" of the Angular web app's Accounting step,
+ * with the names Fineract reads (LoanProductAccountingParams): each table maps
+ * a payment type, fee, penalty or reason to its own GL account instead of the
+ * product's default one. The account lists are the ones Angular offers and
+ * Fineract accepts (fees may also go to a liability account).
+ */
+export const ADVANCED_MAPPINGS: AdvancedMapping[] = [
+  {
+    key: 'paymentChannelToFundSourceMappings',
+    label: 'paymentChannels',
+    options: 'paymentTypes',
+    valueKey: 'paymentTypeId',
+    accountKey: 'fundSourceAccountId',
+    list: 'asset',
+    readValue: 'paymentType',
+    readAccount: 'fundSourceAccount',
+  },
+  {
+    key: 'feeToIncomeAccountMappings',
+    label: 'fees',
+    options: 'fees',
+    valueKey: 'chargeId',
+    accountKey: 'incomeAccountId',
+    list: 'incomeOrLiability',
+    readValue: 'charge',
+    readAccount: 'incomeAccount',
+  },
+  {
+    key: 'penaltyToIncomeAccountMappings',
+    label: 'penalties',
+    options: 'penalties',
+    valueKey: 'chargeId',
+    accountKey: 'incomeAccountId',
+    list: 'income',
+    readValue: 'charge',
+    readAccount: 'incomeAccount',
+  },
+  {
+    key: 'chargeOffReasonToExpenseAccountMappings',
+    label: 'chargeOffReasons',
+    options: 'chargeOffReasons',
+    valueKey: 'chargeOffReasonCodeValueId',
+    accountKey: 'expenseAccountId',
+    list: 'expense',
+    readValue: 'reasonCodeValue',
+    readAccount: 'expenseAccount',
+  },
+  {
+    key: 'writeOffReasonsToExpenseMappings',
+    label: 'writeOffReasons',
+    options: 'writeOffReasons',
+    valueKey: 'writeOffReasonCodeValueId',
+    accountKey: 'expenseAccountId',
+    list: 'expense',
+    readValue: 'reasonCodeValue',
+    readAccount: 'expenseAccount',
+  },
+]
+
+/** One row of a mapping table; an id is undefined until it is chosen */
+export type AdvancedMappingRow = Record<string, number | undefined>
+
+export const mappingRows = (
+  values: Record<string, unknown>,
+  mapping: AdvancedMapping
+): AdvancedMappingRow[] =>
+  Array.isArray(values[mapping.key])
+    ? (values[mapping.key] as AdvancedMappingRow[])
+    : []
+
+/** The "Advanced accounting rules" box is ticked while the tables are in the request */
+export const usesAdvancedMappings = (values: Record<string, unknown>) =>
+  ADVANCED_MAPPINGS.some(m => Array.isArray(values[m.key]))
+
+/**
+ * Ticking the box adds the five tables, empty; unticking removes them with
+ * their rows, so nothing of a hidden table is sent.
+ */
+export const withAdvancedMappings = <T extends Record<string, unknown>>(
+  values: T,
+  enabled: boolean
+): T => {
+  const next: Record<string, unknown> = { ...values }
+  for (const m of ADVANCED_MAPPINGS) {
+    if (enabled) next[m.key] = mappingRows(values, m)
+    else delete next[m.key]
+  }
+  return next as T
+}
+
+export const emptyMappingRow = (
+  mapping: AdvancedMapping
+): AdvancedMappingRow => ({
+  [mapping.valueKey]: undefined,
+  [mapping.accountKey]: undefined,
+})
+
+/**
+ * Ids already mapped in the other rows of a table: a payment type, charge or
+ * reason can be mapped once (Fineract refuses a reason mapped twice).
+ */
+export const usedMappingValues = (
+  rows: AdvancedMappingRow[],
+  mapping: AdvancedMapping,
+  exceptRow?: number
+) =>
+  new Set(
+    rows
+      .filter((_, i) => i !== exceptRow)
+      .map(row => row[mapping.valueKey])
+      .filter((id): id is number => id !== undefined)
+  )
+
+/** The tables with a row whose value or account is not chosen yet */
+export const incompleteMappings = (values: Record<string, unknown>) =>
+  ADVANCED_MAPPINGS.filter(m =>
+    mappingRows(values, m).some(row => !row[m.valueKey] || !row[m.accountKey])
+  )
+
+type MappedValue = { id?: number; name?: string }
+
+/**
+ * The rows of a table as GET /loanproducts/{id} returns them, e.g.
+ * { paymentType: {...}, fundSourceAccount: {...} }, for the View page.
+ */
+export const readMappings = (
+  product: Record<string, unknown> | null | undefined,
+  mapping: AdvancedMapping
+) =>
+  (Array.isArray(product?.[mapping.key])
+    ? (product[mapping.key] as Record<string, unknown>[])
+    : []
+  ).map(row => ({
+    value: row[mapping.readValue] as MappedValue | undefined,
+    account: row[mapping.readAccount] as GlAccountOption | undefined,
+  }))

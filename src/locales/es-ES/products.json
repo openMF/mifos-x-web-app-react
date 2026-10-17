@@ -57,6 +57,48 @@
     "missingAccounts": "Seleccione las cuentas contables que requiere esta regla contable: {{accounts}}.",
     "saveFailed": "No se pudo crear el producto de préstamo.",
     "type": "Tipo",
-    "notMapped": "Sin asignar"
+    "notMapped": "Sin asignar",
+    "advanced": {
+      "title": "Reglas contables avanzadas",
+      "add": "Agregar",
+      "remove": "Quitar",
+      "noRows": "Todavía no hay asignaciones. Se usan las cuentas predeterminadas de arriba.",
+      "incompleteRows": "Elija ambos valores en cada fila de las reglas contables avanzadas, o quite la fila: {{tables}}.",
+      "paymentChannels": {
+        "title": "Fuentes de fondos por canal de pago",
+        "value": "Tipo de pago",
+        "selectValue": "Seleccione un tipo de pago",
+        "account": "Fuente de fondos",
+        "noOptions": "No hay tipos de pago. Agréguelos en Organización > Tipos de pago."
+      },
+      "fees": {
+        "title": "Comisiones a cuentas de ingresos específicas",
+        "value": "Comisión",
+        "selectValue": "Seleccione una comisión",
+        "account": "Cuenta de ingresos",
+        "noOptions": "No hay comisiones de préstamo. Agréguelas en Productos > Cargos."
+      },
+      "penalties": {
+        "title": "Penalizaciones a cuentas de ingresos específicas",
+        "value": "Penalización",
+        "selectValue": "Seleccione una penalización",
+        "account": "Cuenta de ingresos",
+        "noOptions": "No hay penalizaciones de préstamo. Agréguelas en Productos > Cargos."
+      },
+      "chargeOffReasons": {
+        "title": "Motivos de castigo a cuentas de gastos",
+        "value": "Motivo de castigo",
+        "selectValue": "Seleccione un motivo de castigo",
+        "account": "Cuenta de gastos",
+        "noOptions": "No hay motivos de castigo. Agregue valores al código ChargeOffReasons en Sistema > Administrar códigos."
+      },
+      "writeOffReasons": {
+        "title": "Motivos de cancelación a cuentas de gastos",
+        "value": "Motivo de cancelación",
+        "selectValue": "Seleccione un motivo de cancelación",
+        "account": "Cuenta de gastos",
+        "noOptions": "No hay motivos de cancelación. Agregue valores al código WriteOffReasons en Sistema > Administrar códigos."
+      }
+    }
   }
 }
