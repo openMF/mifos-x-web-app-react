@@ -11,6 +11,8 @@
   "createGuarantor": "Crea garante",
   "errors": {
     "failedActivateClient": "Impossibile attivare il cliente.",
+    "failedCloseClient": "Impossibile chiudere il cliente.",
+    "failedFetchClient": "Impossibile caricare i dettagli del cliente.",
     "failedApproveClients": "Impossibile approvare uno o più clienti.",
     "failedLoadCenters": "Impossibile caricare i centri. Riprova.",
     "failedLoadClients": "Impossibile caricare i clienti. Riprova.",
@@ -35,6 +37,7 @@
   "success": {
     "clientCreated": "Cliente creato con successo.",
     "clientActivated": "Cliente attivato con successo.",
+    "clientClosed": "Cliente chiuso con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
     "familyMemberAdded": "Membro della famiglia aggiunto con successo."
   },
@@ -58,6 +61,23 @@
       "dateRequired": "Inserisci una data di attivazione.",
       "dateInFuture": "La data di attivazione non può essere nel futuro.",
       "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
+  "close": {
+    "title": "Chiudi Cliente",
+    "labelClosedOnDate": "Data di Chiusura*",
+    "labelClosureReason": "Motivo della Chiusura*",
+    "selectClosureReason": "Seleziona il motivo della chiusura",
+    "noReasonsFound": "Nessun motivo di chiusura disponibile",
+    "noReasonsAvailable": "Nessun motivo di chiusura configurato. Configurare i motivi di chiusura nelle Impostazioni.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Si prega di inserire una data di chiusura.",
+      "dateInFuture": "La data di chiusura non può essere nel futuro.",
+      "dateBeforeActivated": "La data di chiusura non può essere antecedente alla data di attivazione.",
+      "reasonRequired": "Si prega di selezionare un motivo di chiusura.",
+      "failedFetchReasons": "Impossibile recuperare i motivi di chiusura."
     }
   },
   "view": {
