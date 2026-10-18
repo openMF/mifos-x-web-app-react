@@ -550,6 +550,32 @@
     "shareAccounts": "Comptes de parts",
     "groupMemberships": "Adhésions aux groupes"
   },
+  "documents": {
+    "heading": "Documents",
+    "add": "Ajouter",
+    "name": "Nom",
+    "namePlaceholder": "Nom du document",
+    "description": "Description",
+    "optional": "Facultatif",
+    "file": "Fichier",
+    "fileName": "Nom du fichier",
+    "actions": "Actions",
+    "upload": "Téléverser",
+    "uploading": "Téléversement...",
+    "cancel": "Annuler",
+    "download": "Télécharger",
+    "delete": "Supprimer",
+    "confirmDelete": "Supprimer ce document ?",
+    "loading": "Chargement...",
+    "empty": "Aucun document",
+    "preview": "Aperçu",
+    "previewFailed": "L'aperçu de ce document est impossible.",
+    "openInNewTab": "Ouvrir dans un nouvel onglet",
+    "close": "Fermer",
+    "identifier": "Identifiant",
+    "noIdentifiers": "Aucun identifiant",
+    "identifiersLoadFailed": "Impossible de charger les identifiants. Veuillez réessayer."
+  },
   "search": {
     "enterQuery": "Saisissez un terme dans la barre de navigation pour trouver des clients, des groupes, des centres et des comptes.",
     "noResultsHint": "Recherchez par nom, numéro de compte ou identifiant externe. Les noms doivent parfois respecter les majuscules utilisées lors de leur enregistrement, par exemple « Ada » au lieu de « ada ».",
@@ -573,5 +599,56 @@
     "matchCount": "{{shown}} / {{total}}",
     "other": "Autres",
     "run": "Exécuter"
+  },
+  "session": {
+    "timeoutTitle": "Expiration de la session",
+    "timeoutMessage": "Aucune activité depuis un moment. Vous serez déconnecté dans <1>{{seconds}}</1> secondes.",
+    "signOutNow": "Se déconnecter maintenant",
+    "staySignedIn": "Rester connecté"
+  },
+  "shortcuts": {
+    "shortcutColumn": "Raccourcis",
+    "pageOrActionColumn": "Page ou action",
+    "descriptions": {
+      "toggleSidebar": "Afficher ou masquer la barre latérale",
+      "navigation": "Page de navigation",
+      "runReport": "Exécuter un rapport",
+      "checkerInbox": "Boîte de réception et tâches en attente du vérificateur",
+      "createClient": "Créer un client",
+      "createGroup": "Créer un groupe",
+      "createCenter": "Créer un centre",
+      "frequentPosting": "Publication fréquente",
+      "closureEntries": "Écritures de clôture",
+      "journalEntry": "Écriture comptable",
+      "reports": "Rapports",
+      "accounting": "Comptabilité",
+      "saveForm": "Enregistrer/soumettre les formulaires",
+      "cancelForm": "Annuler",
+      "help": "Aide",
+      "logout": "Se déconnecter"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Accueil",
+    "clients": "Clients",
+    "client": "Client",
+    "groups": "Groupes",
+    "group": "Groupe",
+    "loanAccount": "Compte de prêt",
+    "savingsAccount": "Compte d'épargne",
+    "sharesAccount": "Compte d'actions",
+    "tabs": {
+      "general": "Général",
+      "accountDetails": "Détails du compte",
+      "repaymentSchedule": "Échéancier de remboursement",
+      "transactions": "Transactions",
+      "loanCollateral": "Détails de la garantie du prêt",
+      "termVariations": "Variations de durée",
+      "loanDocuments": "Documents du prêt",
+      "charges": "Frais",
+      "documents": "Documents",
+      "dividends": "Dividendes",
+      "notes": "Notes"
+    }
   }
 }

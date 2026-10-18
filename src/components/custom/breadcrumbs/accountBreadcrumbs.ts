@@ -5,6 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import i18next, { type ParseKeys } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 export interface AccountCrumb {
@@ -23,31 +25,36 @@ const ACCOUNT_VIEW_OWNERS: Record<AccountSegment, OwnerSegment[]> = {
   'shares-accounts': ['clients'],
 }
 
-const OWNER_LABELS: Record<OwnerSegment, { list: string; single: string }> = {
-  clients: { list: 'Clients', single: 'Client' },
-  groups: { list: 'Groups', single: 'Group' },
-}
+type LabelKey = ParseKeys<'common'>
 
-const ACCOUNT_LABELS: Record<AccountSegment, string> = {
-  'loans-accounts': 'Loan Account',
-  'savings-accounts': 'Savings Account',
-  'shares-accounts': 'Shares Account',
+const OWNER_LABELS: Record<OwnerSegment, { list: LabelKey; single: LabelKey }> =
+  {
+    clients: { list: 'breadcrumbs.clients', single: 'breadcrumbs.client' },
+    groups: { list: 'breadcrumbs.groups', single: 'breadcrumbs.group' },
+  }
+
+const ACCOUNT_LABELS: Record<AccountSegment, LabelKey> = {
+  'loans-accounts': 'breadcrumbs.loanAccount',
+  'savings-accounts': 'breadcrumbs.savingsAccount',
+  'shares-accounts': 'breadcrumbs.sharesAccount',
 }
 
 /** Tab routes of the loan, savings and shares account views. */
-const ACCOUNT_TAB_LABELS: Record<string, string> = {
-  general: 'General',
-  accountdetail: 'Account Details',
-  'repayment-schedule': 'Repayment Schedule',
-  transactions: 'Transactions',
-  'loan-collateral': 'Loan Collateral Details',
-  'term-variations': 'Term Variations',
-  'loan-documents': 'Loan Documents',
-  charges: 'Charges',
-  documents: 'Documents',
-  dividends: 'Dividends',
-  notes: 'Notes',
+const ACCOUNT_TAB_LABELS: Record<string, LabelKey> = {
+  general: 'breadcrumbs.tabs.general',
+  accountdetail: 'breadcrumbs.tabs.accountDetails',
+  'repayment-schedule': 'breadcrumbs.tabs.repaymentSchedule',
+  transactions: 'breadcrumbs.tabs.transactions',
+  'loan-collateral': 'breadcrumbs.tabs.loanCollateral',
+  'term-variations': 'breadcrumbs.tabs.termVariations',
+  'loan-documents': 'breadcrumbs.tabs.loanDocuments',
+  charges: 'breadcrumbs.tabs.charges',
+  documents: 'breadcrumbs.tabs.documents',
+  dividends: 'breadcrumbs.tabs.dividends',
+  notes: 'breadcrumbs.tabs.notes',
 }
+
+const translate = (key: LabelKey) => i18next.t(key, { ns: 'common' })
 
 const ACCOUNT_PATH =
   /^\/(clients|groups)\/([^/]+)\/(loans-accounts|savings-accounts|shares-accounts)\/([^/]+)(?:\/actions\/([^/]+)|\/([^/]+))?/
@@ -84,25 +91,26 @@ export const buildAccountBreadcrumbs = (
   { ownerLabel, accountLabel, actionLabel }: AccountBreadcrumbOptions = {}
 ): AccountCrumb[] => {
   const match = ACCOUNT_PATH.exec(pathname)
-  if (!match) return [{ label: 'Home', href: '/home' }]
+  if (!match) return [{ label: translate('breadcrumbs.home'), href: '/home' }]
 
   const owner = match[1] as OwnerSegment
   const ownerId = match[2]
   const account = match[3] as AccountSegment
   const accountId = match[4]
   const actionSegment = match[5]
-  const tabLabel = match[6] ? ACCOUNT_TAB_LABELS[match[6]] : undefined
+  const tabKey = match[6] ? ACCOUNT_TAB_LABELS[match[6]] : undefined
+  const tabLabel = tabKey ? translate(tabKey) : undefined
 
   const hasAccountView = ACCOUNT_VIEW_OWNERS[account].includes(owner)
   const crumbs: AccountCrumb[] = [
-    { label: 'Home', href: '/home' },
-    { label: OWNER_LABELS[owner].list, href: `/${owner}` },
+    { label: translate('breadcrumbs.home'), href: '/home' },
+    { label: translate(OWNER_LABELS[owner].list), href: `/${owner}` },
     {
-      label: ownerLabel || OWNER_LABELS[owner].single,
+      label: ownerLabel || translate(OWNER_LABELS[owner].single),
       href: `/${owner}/${ownerId}/general`,
     },
     {
-      label: accountLabel || ACCOUNT_LABELS[account],
+      label: accountLabel || translate(ACCOUNT_LABELS[account]),
       href: hasAccountView
         ? `/${owner}/${ownerId}/${account}/${accountId}/general`
         : undefined,
@@ -127,5 +135,7 @@ export const useAccountBreadcrumbs = (
   options: AccountBreadcrumbOptions = {}
 ): AccountCrumb[] => {
   const { pathname } = useLocation()
+  // Subscribes to language changes so the crumbs are rebuilt in the new language
+  useTranslation('common')
   return buildAccountBreadcrumbs(pathname, options)
 }
