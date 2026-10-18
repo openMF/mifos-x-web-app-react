@@ -57,6 +57,48 @@
     "missingAccounts": "Select the GL accounts this accounting rule requires: {{accounts}}.",
     "saveFailed": "The loan product could not be created.",
     "type": "Type",
-    "notMapped": "Not mapped"
+    "notMapped": "Not mapped",
+    "advanced": {
+      "title": "Advanced accounting rules",
+      "add": "Add",
+      "remove": "Remove",
+      "noRows": "No mappings yet. The default accounts above are used.",
+      "incompleteRows": "Choose both values in each row of the advanced accounting rules, or remove the row: {{tables}}.",
+      "paymentChannels": {
+        "title": "Fund sources for payment channels",
+        "value": "Payment type",
+        "selectValue": "Select a payment type",
+        "account": "Fund source",
+        "noOptions": "No payment types. Add them under Organization > Payment Types."
+      },
+      "fees": {
+        "title": "Fees to specific income accounts",
+        "value": "Fee",
+        "selectValue": "Select a fee",
+        "account": "Income account",
+        "noOptions": "No loan fees. Add them under Products > Charges."
+      },
+      "penalties": {
+        "title": "Penalties to specific income accounts",
+        "value": "Penalty",
+        "selectValue": "Select a penalty",
+        "account": "Income account",
+        "noOptions": "No loan penalties. Add them under Products > Charges."
+      },
+      "chargeOffReasons": {
+        "title": "Charge-off reasons to expense accounts",
+        "value": "Charge-off reason",
+        "selectValue": "Select a charge-off reason",
+        "account": "Expense account",
+        "noOptions": "No charge-off reasons. Add values to the ChargeOffReasons code under System > Manage Codes."
+      },
+      "writeOffReasons": {
+        "title": "Write-off reasons to expense accounts",
+        "value": "Write-off reason",
+        "selectValue": "Select a write-off reason",
+        "account": "Expense account",
+        "noOptions": "No write-off reasons. Add values to the WriteOffReasons code under System > Manage Codes."
+      }
+    }
   }
 }
