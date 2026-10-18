@@ -57,6 +57,48 @@
     "missingAccounts": "Sélectionnez les comptes comptables requis par cette règle comptable : {{accounts}}.",
     "saveFailed": "Le produit de prêt n'a pas pu être créé.",
     "type": "Type",
-    "notMapped": "Non associé"
+    "notMapped": "Non associé",
+    "advanced": {
+      "title": "Règles comptables avancées",
+      "add": "Ajouter",
+      "remove": "Supprimer",
+      "noRows": "Aucune association pour l'instant. Les comptes par défaut ci-dessus sont utilisés.",
+      "incompleteRows": "Choisissez les deux valeurs de chaque ligne des règles comptables avancées, ou supprimez la ligne : {{tables}}.",
+      "paymentChannels": {
+        "title": "Sources des fonds par canal de paiement",
+        "value": "Type de paiement",
+        "selectValue": "Sélectionnez un type de paiement",
+        "account": "Source des fonds",
+        "noOptions": "Aucun type de paiement. Ajoutez-en dans Organisation > Types de paiement."
+      },
+      "fees": {
+        "title": "Frais vers des comptes de produits spécifiques",
+        "value": "Frais",
+        "selectValue": "Sélectionnez des frais",
+        "account": "Compte de produits",
+        "noOptions": "Aucuns frais de prêt. Ajoutez-en dans Produits > Frais."
+      },
+      "penalties": {
+        "title": "Pénalités vers des comptes de produits spécifiques",
+        "value": "Pénalité",
+        "selectValue": "Sélectionnez une pénalité",
+        "account": "Compte de produits",
+        "noOptions": "Aucune pénalité de prêt. Ajoutez-en dans Produits > Frais."
+      },
+      "chargeOffReasons": {
+        "title": "Motifs de passage en perte vers des comptes de charges",
+        "value": "Motif de passage en perte",
+        "selectValue": "Sélectionnez un motif de passage en perte",
+        "account": "Compte de charges",
+        "noOptions": "Aucun motif de passage en perte. Ajoutez des valeurs au code ChargeOffReasons dans Système > Gérer les codes."
+      },
+      "writeOffReasons": {
+        "title": "Motifs de radiation vers des comptes de charges",
+        "value": "Motif de radiation",
+        "selectValue": "Sélectionnez un motif de radiation",
+        "account": "Compte de charges",
+        "noOptions": "Aucun motif de radiation. Ajoutez des valeurs au code WriteOffReasons dans Système > Gérer les codes."
+      }
+    }
   }
 }
