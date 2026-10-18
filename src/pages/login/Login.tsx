@@ -41,12 +41,13 @@ import { LanguageSwitcher } from '@/components/custom/language-switcher/Language
 import { envConfig } from '@/lib/env-config'
 import { isOidcUsable } from '@/lib/oidc-config'
 import OidcLoginButton from '@/pages/login/OidcLoginButton'
+import type { OidcCallbackState } from '@/pages/login/Callback'
 
 const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  // Set by the OIDC callback route when the code exchange fails.
-  const oidcError = (location.state as { oidcError?: boolean } | null)
+  // Set by the OIDC callback route when a sign-in is not accepted.
+  const oidcError = (location.state as Partial<OidcCallbackState> | null)
     ?.oidcError
   const { t } = useTranslation(['auth', 'common'])
   const { user } = useSelector((state: RootState) => state.auth)
@@ -277,7 +278,7 @@ const Login = () => {
 
           {oidcOnly && (
             <div className="w-full max-w-xs flex flex-col items-center">
-              <OidcLoginButton callbackFailed={oidcError} />
+              <OidcLoginButton callbackError={oidcError} />
             </div>
           )}
 
