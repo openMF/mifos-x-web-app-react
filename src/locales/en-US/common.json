@@ -599,5 +599,56 @@
     "matchCount": "{{shown}} / {{total}}",
     "other": "Other",
     "run": "Run"
+  },
+  "session": {
+    "timeoutTitle": "Session timeout",
+    "timeoutMessage": "There has been no activity for a while. You will be signed out in <1>{{seconds}}</1> seconds.",
+    "signOutNow": "Sign out now",
+    "staySignedIn": "Stay signed in"
+  },
+  "shortcuts": {
+    "shortcutColumn": "Shortcuts",
+    "pageOrActionColumn": "Page or action",
+    "descriptions": {
+      "toggleSidebar": "Toggle Sidebar",
+      "navigation": "Navigation Page",
+      "runReport": "Run Report",
+      "checkerInbox": "Checker Inbox & Pending Tasks",
+      "createClient": "Create Client",
+      "createGroup": "Create Group",
+      "createCenter": "Create Center",
+      "frequentPosting": "Frequent Posting",
+      "closureEntries": "Closure Entries",
+      "journalEntry": "Journal Entry",
+      "reports": "Reports",
+      "accounting": "Accounting",
+      "saveForm": "Save/Submit Forms",
+      "cancelForm": "Cancel",
+      "help": "Help",
+      "logout": "Logout"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "clients": "Clients",
+    "client": "Client",
+    "groups": "Groups",
+    "group": "Group",
+    "loanAccount": "Loan Account",
+    "savingsAccount": "Savings Account",
+    "sharesAccount": "Shares Account",
+    "tabs": {
+      "general": "General",
+      "accountDetails": "Account Details",
+      "repaymentSchedule": "Repayment Schedule",
+      "transactions": "Transactions",
+      "loanCollateral": "Loan Collateral Details",
+      "termVariations": "Term Variations",
+      "loanDocuments": "Loan Documents",
+      "charges": "Charges",
+      "documents": "Documents",
+      "dividends": "Dividends",
+      "notes": "Notes"
+    }
   }
 }
