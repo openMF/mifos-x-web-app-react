@@ -19,9 +19,11 @@ import {
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { Separator } from '@radix-ui/react-separator'
 import {
+  ADVANCED_MAPPINGS,
   accountingFieldsFor,
   glAccountLabel,
   mappingKey,
+  readMappings,
   ruleLabel,
   type GlAccountOption,
 } from './loanProductAccounting'
@@ -507,6 +509,30 @@ const ViewLoanProducts = () => {
                   {glAccountLabel(account) ||
                     t('loanProductAccounting.notMapped')}
                 </div>
+              </div>
+            ))}
+          {/* Advanced accounting rules: only the tables with rows */}
+          {ADVANCED_MAPPINGS.map(m => ({
+            mapping: m,
+            rows: readMappings(
+              loanProduct as Record<string, unknown> | null,
+              m
+            ),
+          }))
+            .filter(({ rows }) => rows.length)
+            .map(({ mapping, rows }) => (
+              <div key={mapping.key} className="contents">
+                <h3 className="col-span-2 pt-2 font-semibold">
+                  {t(`loanProductAccounting.advanced.${mapping.label}.title`)}
+                </h3>
+                {rows.map(({ value, account }, i) => (
+                  <div key={i} className="contents">
+                    <div className="font-medium text-zinc-500 dark:text-zinc-400">
+                      {value?.name ?? '—'}:
+                    </div>
+                    <div>{glAccountLabel(account) || '—'}</div>
+                  </div>
+                ))}
               </div>
             ))}
         </div>
