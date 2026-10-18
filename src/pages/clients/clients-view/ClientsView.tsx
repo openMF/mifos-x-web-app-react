@@ -33,6 +33,7 @@ const clientsApi = new ClientApi(getConfiguration())
  */
 type ClientWithLegalForm = GetClientsClientIdResponse & {
   legalForm?: { id?: number } | null
+  staffId?: number | null
   staffName?: string | null
   mobileNo?: string | null
   groups?: Array<{ id?: number; name?: string }> | null
@@ -251,10 +252,20 @@ const ClientsView = () => {
                     },
                   ],
                 },
-                {
-                  label: t('view.menu.unassignStaff'),
-                  path: `clients/${client?.id}/edit`,
-                },
+                ...(client
+                  ? [
+                      {
+                        label:
+                          client.staffId != null
+                            ? t('view.menu.unassignStaff')
+                            : t('view.menu.assignStaff'),
+                        path:
+                          client.staffId != null
+                            ? `clients/${client.id}/edit`
+                            : `clients/${client.id}/actions/assign-staff`,
+                      },
+                    ]
+                  : []),
                 {
                   label: t('view.menu.more'),
                   children: [

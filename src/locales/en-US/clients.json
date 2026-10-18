@@ -35,6 +35,7 @@
   "success": {
     "clientCreated": "Client created successfully.",
     "clientActivated": "Client activated successfully.",
+    "staffAssigned": "Staff assigned successfully.",
     "clientsApproved": "Selected clients approved successfully.",
     "familyMemberAdded": "Family member added successfully."
   },
@@ -58,6 +59,21 @@
       "dateRequired": "Please enter an activation date.",
       "dateInFuture": "The activation date cannot be in the future.",
       "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
+  },
+  "assignStaff": {
+    "title": "Assign Staff",
+    "labelStaff": "Staff*",
+    "selectStaff": "Select Staff",
+    "loadingStaff": "Loading staff...",
+    "noStaffFound": "No staff available",
+    "noStaffAvailable": "No staff members available for this office.",
+    "confirm": "Confirm",
+    "errors": {
+      "failedFetchClient": "Failed to fetch client details.",
+      "staffRequired": "Please select a staff member.",
+      "failedFetchStaff": "Failed to load staff options.",
+      "failedAssignStaff": "Failed to assign staff."
     }
   },
   "view": {
@@ -92,6 +108,7 @@
       "actions": "Actions",
       "close": "Close",
       "transferClients": "Transfer Clients",
+      "assignStaff": "Assign Staff",
       "unassignStaff": "Unassign Staff",
       "more": "More",
       "addCharge": "Add Charge",
