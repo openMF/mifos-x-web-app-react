@@ -11,6 +11,8 @@
   "createGuarantor": "Create Guarantor",
   "errors": {
     "failedActivateClient": "Failed to activate client.",
+    "failedCloseClient": "Failed to close client.",
+    "failedFetchClient": "Failed to load client details.",
     "failedApproveClients": "Failed to approve one or more clients.",
     "failedFetchClient": "Failed to fetch client details.",
     "failedLoadCenters": "Failed to load centers. Please try again.",
@@ -37,6 +39,7 @@
   "success": {
     "clientCreated": "Client created successfully.",
     "clientActivated": "Client activated successfully.",
+    "clientClosed": "Client closed successfully.",
     "clientTransferProposed": "Client transfer proposed successfully.",
     "staffAssigned": "Staff assigned successfully.",
     "clientsApproved": "Selected clients approved successfully.",
@@ -98,6 +101,23 @@
       "dateInFuture": "The transfer date cannot be in the future.",
       "dateBeforeActivated": "The transfer date cannot be before the activation date.",
       "failedFetchOffices": "Failed to load offices."
+    }
+  },
+  "close": {
+    "title": "Close Client",
+    "labelClosedOnDate": "Closed On Date*",
+    "labelClosureReason": "Closure Reason*",
+    "selectClosureReason": "Select Closure Reason",
+    "noReasonsFound": "No closure reasons available",
+    "noReasonsAvailable": "No closure reasons are configured. Please configure client closure reasons in Settings.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter a closure date.",
+      "dateInFuture": "The closure date cannot be in the future.",
+      "dateBeforeActivated": "The closure date cannot be before the activation date.",
+      "reasonRequired": "Please select a closure reason.",
+      "failedFetchReasons": "Failed to fetch closure reasons."
     }
   },
   "view": {

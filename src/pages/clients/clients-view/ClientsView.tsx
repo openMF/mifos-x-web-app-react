@@ -244,11 +244,14 @@ const ClientsView = () => {
                 {
                   label: t('view.menu.actions'),
                   children: [
-                    {
-                      label: t('view.menu.close'),
-                      path: 'signature',
-                      disabled: true,
-                    },
+                    ...(isActive
+                      ? [
+                          {
+                            label: t('view.menu.close'),
+                            path: `clients/${client?.id}/actions/close`,
+                          },
+                        ]
+                      : []),
                     ...(isActive
                       ? [
                           {

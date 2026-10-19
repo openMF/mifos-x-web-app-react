@@ -238,6 +238,7 @@ import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
+import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
@@ -914,6 +915,7 @@ const AppRoutes = () => {
             path="/clients/:id/actions/transfer-client"
             element={<TransferClient />}
           />
+          <Route path="/clients/:id/actions/close" element={<CloseClient />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="personal-data" element={<ClientsPersonalDataTab />} />

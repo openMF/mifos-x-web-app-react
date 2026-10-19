@@ -11,6 +11,8 @@
   "createGuarantor": "Créer un garant",
   "errors": {
     "failedActivateClient": "Échec de l'activation du client.",
+    "failedCloseClient": "Échec de la fermeture du client.",
+    "failedFetchClient": "Échec du chargement des détails du client.",
     "failedApproveClients": "Échec de l'approbation d'un ou plusieurs clients.",
     "failedFetchClient": "Échec de la récupération des détails du client.",
     "failedLoadCenters": "Échec du chargement des centres. Veuillez réessayer.",
@@ -37,6 +39,7 @@
   "success": {
     "clientCreated": "Client créé avec succès.",
     "clientActivated": "Client activé avec succès.",
+    "clientClosed": "Client fermé avec succès.",
     "clientTransferProposed": "Transfert de client proposé avec succès.",
     "staffAssigned": "Personnel assigné avec succès.",
     "clientsApproved": "Clients sélectionnés approuvés avec succès.",
@@ -75,7 +78,7 @@
     "noStaffAvailable": "Aucun membre du personnel disponible pour ce bureau.",
     "confirm": "Confirmer",
     "errors": {
-      "failedFetchClient": "Échec du chargement des détails du client.",
+      "failedFetchClient": "Échec de la récupération des détails du client.",
       "staffRequired": "Veuillez sélectionner un membre du personnel.",
       "failedFetchStaff": "Échec du chargement des options de personnel.",
       "failedAssignStaff": "Échec de l'assignation du personnel."
@@ -88,16 +91,33 @@
     "noOfficesFound": "Aucun bureau de destination disponible",
     "noOfficesAvailable": "Aucun autre bureau disponible pour le transfert.",
     "transferDate": "Date de Transfert*",
-    "note": "Remarque",
+    "note": "Note",
     "confirm": "Confirmer",
     "cancel": "Annuler",
     "errors": {
       "officeRequired": "Veuillez sélectionner un bureau de destination.",
       "destinationSameAsCurrent": "Le bureau de destination ne peut pas être le même que le bureau actuel du client.",
-      "dateRequired": "Veuillez saisir une date de transfert.",
+      "dateRequired": "Veuillez entrer une date de transfert.",
       "dateInFuture": "La date de transfert ne peut pas être dans le futur.",
       "dateBeforeActivated": "La date de transfert ne peut pas être antérieure à la date d'activation.",
       "failedFetchOffices": "Échec du chargement des bureaux."
+    }
+  },
+  "close": {
+    "title": "Fermer le Client",
+    "labelClosedOnDate": "Date de Fermeture*",
+    "labelClosureReason": "Motif de Fermeture*",
+    "selectClosureReason": "Sélectionner un motif de fermeture",
+    "noReasonsFound": "Aucun motif de fermeture disponible",
+    "noReasonsAvailable": "Aucun motif de fermeture n'est configuré. Veuillez configurer les motifs de fermeture dans les Paramètres.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date de fermeture.",
+      "dateInFuture": "La date de fermeture ne peut pas être dans le futur.",
+      "dateBeforeActivated": "La date de fermeture ne peut pas être antérieure à la date d'activation.",
+      "reasonRequired": "Veuillez sélectionner un motif de fermeture.",
+      "failedFetchReasons": "Échec de la récupération des motifs de fermeture."
     }
   },
   "view": {
