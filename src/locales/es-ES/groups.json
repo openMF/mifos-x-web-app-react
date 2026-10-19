@@ -109,11 +109,6 @@
     "tableSavingAccount": "Cuenta de Ahorro",
     "tableLastActive": "Último Activo"
   },
-  "notes": {
-    "heading": "Notas",
-    "placeholder": "Escribir una nota ....",
-    "addButton": "+ Agregar"
-  },
   "committee": {
     "heading": "Miembros Clientes",
     "addButton": "+ Agregar"

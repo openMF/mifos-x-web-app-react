@@ -109,11 +109,6 @@
     "tableSavingAccount": "Compte d'Épargne",
     "tableLastActive": "Dernière Activité"
   },
-  "notes": {
-    "heading": "Notes",
-    "placeholder": "Écrire une note ....",
-    "addButton": "+ Ajouter"
-  },
   "committee": {
     "heading": "Membres Clients",
     "addButton": "+ Ajouter"
