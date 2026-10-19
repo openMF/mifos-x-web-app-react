@@ -45,7 +45,8 @@
     "clientsApproved": "Selected clients approved successfully.",
     "familyMemberAdded": "Family member added successfully.",
     "familyMemberUpdated": "Family member updated successfully.",
-    "familyMemberDeleted": "Family member deleted successfully."
+    "familyMemberDeleted": "Family member deleted successfully.",
+    "chargeAdded": "Client charge added successfully."
   },
   "title": "Clients",
   "unnamedClient": "Unnamed Client",
@@ -67,6 +68,30 @@
       "dateRequired": "Please enter an activation date.",
       "dateInFuture": "The activation date cannot be in the future.",
       "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
+  },
+  "addCharge": {
+    "title": "Add Client Charge",
+    "charge": "Charge",
+    "selectCharge": "Select Charge",
+    "amount": "Amount",
+    "chargeCalculation": "Charge Calculation",
+    "chargeTimeType": "Charge time type",
+    "dueDate": "Due for collection on",
+    "dueOn": "Due On",
+    "repeatsEvery": "Repeats Every",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "errors": {
+      "chargeRequired": "Please select a charge.",
+      "amountRequired": "Please enter an amount.",
+      "amountPositive": "Amount must be greater than zero.",
+      "dueDateRequired": "Please select a due date.",
+      "feeOnMonthDayRequired": "Please select a fee date.",
+      "feeIntervalRequired": "Please enter repeat interval.",
+      "failedAddCharge": "Failed to add charge to client.",
+      "failedLoadTemplate": "Failed to load charge options."
     }
   },
   "assignStaff": {

@@ -45,7 +45,8 @@
     "clientsApproved": "Clients sélectionnés approuvés avec succès.",
     "familyMemberAdded": "Membre de la famille ajouté avec succès.",
     "familyMemberUpdated": "Membre de la famille mis à jour avec succès.",
-    "familyMemberDeleted": "Membre de la famille supprimé avec succès."
+    "familyMemberDeleted": "Membre de la famille supprimé avec succès.",
+    "chargeAdded": "Frais de client ajoutés avec succès."
   },
   "title": "Clients",
   "unnamedClient": "Client sans nom",
@@ -67,6 +68,30 @@
       "dateRequired": "Veuillez saisir une date d'activation.",
       "dateInFuture": "La date d'activation ne peut pas être dans le futur.",
       "dateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission."
+    }
+  },
+  "addCharge": {
+    "title": "Ajouter des Frais au Client",
+    "charge": "Frais",
+    "selectCharge": "Sélectionner des Frais",
+    "amount": "Montant",
+    "chargeCalculation": "Calcul des Frais",
+    "chargeTimeType": "Type de temps de frais",
+    "dueDate": "Échéance pour recouvrement le",
+    "dueOn": "Échéance le",
+    "repeatsEvery": "Se répète tous les",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "confirm": "Confirmer",
+    "errors": {
+      "chargeRequired": "Veuillez sélectionner des frais.",
+      "amountRequired": "Veuillez saisir un montant.",
+      "amountPositive": "Le montant doit être supérieur à zéro.",
+      "dueDateRequired": "Veuillez sélectionner une date d'échéance.",
+      "feeOnMonthDayRequired": "Veuillez sélectionner une date pour les frais.",
+      "feeIntervalRequired": "Veuillez saisir un intervalle de répétition.",
+      "failedAddCharge": "Échec de l'ajout des frais au client.",
+      "failedLoadTemplate": "Échec du chargement des options de frais."
     }
   },
   "assignStaff": {

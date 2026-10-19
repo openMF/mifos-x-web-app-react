@@ -45,7 +45,8 @@
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
     "familyMemberAdded": "Miembro de familia agregado exitosamente.",
     "familyMemberUpdated": "Miembro de familia actualizado exitosamente.",
-    "familyMemberDeleted": "Miembro de familia eliminado exitosamente."
+    "familyMemberDeleted": "Miembro de familia eliminado exitosamente.",
+    "chargeAdded": "Cargo del cliente agregado exitosamente."
   },
   "title": "Clientes",
   "unnamedClient": "Cliente sin nombre",
@@ -67,6 +68,30 @@
       "dateRequired": "Por favor ingrese una fecha de activación.",
       "dateInFuture": "La fecha de activación no puede ser futura.",
       "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
+  },
+  "addCharge": {
+    "title": "Agregar Cargo al Cliente",
+    "charge": "Cargo",
+    "selectCharge": "Seleccionar Cargo",
+    "amount": "Monto",
+    "chargeCalculation": "Cálculo de Cargo",
+    "chargeTimeType": "Tipo de tiempo de cargo",
+    "dueDate": "Vence para cobro en",
+    "dueOn": "Vence en",
+    "repeatsEvery": "Se repite cada",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "confirm": "Confirmar",
+    "errors": {
+      "chargeRequired": "Por favor seleccione un cargo.",
+      "amountRequired": "Por favor ingrese un monto.",
+      "amountPositive": "El monto debe ser mayor que cero.",
+      "dueDateRequired": "Por favor seleccione una fecha de vencimiento.",
+      "feeOnMonthDayRequired": "Por favor seleccione una fecha de cargo.",
+      "feeIntervalRequired": "Por favor ingrese el intervalo de repetición.",
+      "failedAddCharge": "Error al agregar el cargo al cliente.",
+      "failedLoadTemplate": "Error al cargar las opciones de cargos."
     }
   },
   "assignStaff": {
