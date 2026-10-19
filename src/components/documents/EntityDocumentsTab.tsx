@@ -9,6 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Eye, Plus } from 'lucide-react'
 
+import fineract from '@/lib/axios'
 import { DocumentsApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { isPreviewable, toPreviewBlob } from '@/lib/document-preview'
@@ -26,6 +27,7 @@ import {
 } from '@/components/ui/table'
 import DocumentPreviewDialog from './DocumentPreviewDialog'
 import { useDocumentPreview } from './useDocumentPreview'
+import { extractErrorMessage } from './document-utils'
 import type { DocumentEntityType, EntityDocument } from './types'
 
 /**
@@ -59,6 +61,7 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
   const [description, setDescription] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   /** Identifies the newest list request, so stale responses can be discarded. */
   const loadIdRef = useRef(0)
@@ -114,30 +117,58 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
     setName('')
     setDescription('')
     setFile(null)
+    setUploadError(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const uploadDocument = async () => {
     if (!entityId || !file || !name.trim()) return
-    setSubmitting(true)
-    try {
-      await docsApi().createDocument(
-        entityType,
-        entityId,
-        undefined,
-        undefined,
-        description || undefined,
-        undefined,
-        name.trim(),
-        file
+
+    if (file.size === 0) {
+      setUploadError(
+        t(
+          'documents.emptyFileError',
+          'The selected file is empty (0 bytes). Please choose a valid file.'
+        )
       )
+      return
+    }
+
+    setSubmitting(true)
+    setUploadError(null)
+
+    let uploadSucceeded = false
+    try {
+      const formData = new FormData()
+      const safeFileName = file.name.replace(/[^\w.-]+/g, '_') || 'document'
+      formData.append('file', file, safeFileName)
+      formData.append('name', name.trim())
+      formData.append('description', description.trim())
+
+      await fineract.post(`/v1/${entityType}/${entityId}/documents`, formData, {
+        headers: {
+          'Content-Type': undefined,
+        },
+      })
+      uploadSucceeded = true
+    } catch (e: unknown) {
+      console.error('Upload failed', e)
+      const message = extractErrorMessage(
+        e,
+        t(
+          'documents.uploadFailed',
+          'Failed to upload document. Please try again.'
+        )
+      )
+      setUploadError(message)
+    } finally {
+      setSubmitting(false)
+    }
+
+    if (uploadSucceeded) {
       setAdding(false)
       resetForm()
       await load()
-    } catch (e) {
-      console.error('Upload failed', e)
-    } finally {
-      setSubmitting(false)
     }
   }
 
@@ -190,7 +221,10 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
         </h3>
         <Button
           className="bg-[#0e77b7] hover:bg-[#0662a3] text-white rounded-md border-0 shadow-none"
-          onClick={() => setAdding(v => !v)}
+          onClick={() => {
+            setAdding(v => !v)
+            resetForm()
+          }}
           disabled={!entityId}
         >
           <Plus className="mr-1 h-4 w-4" />
@@ -200,12 +234,25 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
 
       {adding && (
         <div className="grid gap-3 rounded border bg-white p-4 md:grid-cols-3 dark:bg-zinc-900">
+          {uploadError && (
+            <div
+              role="alert"
+              aria-live="polite"
+              className="md:col-span-3 rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300"
+            >
+              {uploadError}
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="doc-name">{t('documents.name')}</Label>
             <Input
               id="doc-name"
               value={name}
-              onChange={e => setName(e.target.value)}
+              disabled={submitting}
+              onChange={e => {
+                setName(e.target.value)
+                if (uploadError) setUploadError(null)
+              }}
               placeholder={t('documents.namePlaceholder')}
             />
           </div>
@@ -216,7 +263,11 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
             <Input
               id="doc-description"
               value={description}
-              onChange={e => setDescription(e.target.value)}
+              disabled={submitting}
+              onChange={e => {
+                setDescription(e.target.value)
+                if (uploadError) setUploadError(null)
+              }}
               placeholder={t('documents.optional')}
             />
           </div>
@@ -226,13 +277,18 @@ const EntityDocumentsTab = ({ entityType, entityId, heading }: Props) => {
               id="doc-file"
               type="file"
               ref={fileInputRef}
-              onChange={e => setFile(e.target.files?.[0] ?? null)}
+              disabled={submitting}
+              onChange={e => {
+                setFile(e.target.files?.[0] ?? null)
+                if (uploadError) setUploadError(null)
+              }}
             />
           </div>
 
           <div className="flex justify-end gap-2 md:col-span-3">
             <Button
               variant="outline"
+              disabled={submitting}
               onClick={() => {
                 setAdding(false)
                 resetForm()

@@ -562,6 +562,8 @@
     "actions": "Actions",
     "upload": "Upload",
     "uploading": "Uploading...",
+    "uploadFailed": "Failed to upload document. Please try again.",
+    "emptyFileError": "The selected file is empty (0 bytes). Please choose a valid file.",
     "cancel": "Cancel",
     "download": "Download",
     "delete": "Delete",
