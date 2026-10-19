@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import AppSelect from '@/components/custom/select/AppSelect'
+import { useTranslation } from 'react-i18next'
 import { todayInputValue } from '@/lib/date-utils'
 import type {
   ExtendedClientTemplate,
@@ -20,7 +21,7 @@ const LEGAL_FORM_PERSON = 1
 const LEGAL_FORM_ENTITY = 2
 
 /** Clears an optional select; Radix Select cannot select an empty value */
-const NONE_OPTION = { id: 'none', name: 'None' }
+const NONE_OPTION_ID = 'none'
 
 interface ClientGeneralStepProps {
   formData: ExtendedPostClientsRequest
@@ -33,6 +34,8 @@ const ClientGeneralStep = ({
   onChange,
   template,
 }: ClientGeneralStepProps) => {
+  const { t } = useTranslation('clients')
+
   const handleChange = (
     field: keyof ExtendedPostClientsRequest,
     value: string | number | boolean | undefined
@@ -48,7 +51,7 @@ const ClientGeneralStep = ({
   const toOptions = (
     options: Iterable<{ id?: number; name?: string; displayName?: string }> = []
   ) => [
-    NONE_OPTION,
+    { id: NONE_OPTION_ID, name: t('form.none') },
     ...Array.from(options).map(o => ({
       id: o.id ?? 0,
       name: o.name ?? o.displayName ?? '',
@@ -60,7 +63,7 @@ const ClientGeneralStep = ({
     (field: keyof ExtendedPostClientsRequest) => (value: string) =>
       handleChange(
         field,
-        value && value !== NONE_OPTION.id ? Number(value) : undefined
+        value && value !== NONE_OPTION_ID ? Number(value) : undefined
       )
 
   const handleActiveChange = (active: boolean) => {
@@ -79,13 +82,13 @@ const ClientGeneralStep = ({
       <div className="flex flex-wrap gap-6">
         {/* select office */}
         <AppSelect
-          selectLabel="Office*"
+          selectLabel={`${t('form.labelOffice')}*`}
           selectValue={formData.officeId?.toString() ?? ''}
           selectOnChange={v =>
             // staff belongs to an office, so a new office clears the pick
             onChange({ ...formData, officeId: Number(v), staffId: undefined })
           }
-          selectPlaceholder="Select Office"
+          selectPlaceholder={t('form.selectOffice')}
           selectOptions={Array.from(template.officeOptions ?? []).map(o => ({
             id: o.id ?? 0,
             name: o.name ?? '',
@@ -94,19 +97,19 @@ const ClientGeneralStep = ({
 
         {/* select legal form */}
         <AppSelect
-          selectLabel="Legal Form*"
+          selectLabel={`${t('form.labelLegalForm')}*`}
           selectValue={formData.legalFormId?.toString() ?? ''}
           selectOnChange={v => handleChange('legalFormId', Number(v))}
-          selectPlaceholder="Select Legal Form"
+          selectPlaceholder={t('form.selectLegalForm')}
           selectOptions={[
-            { id: LEGAL_FORM_PERSON, name: 'Person' },
-            { id: LEGAL_FORM_ENTITY, name: 'Entity' },
+            { id: LEGAL_FORM_PERSON, name: t('form.legalFormPerson') },
+            { id: LEGAL_FORM_ENTITY, name: t('form.legalFormEntity') },
           ]}
         />
 
         {/* input external id */}
         <div className="w-full md:w-[48%] space-y-2">
-          <Label htmlFor="externalId">External Id</Label>
+          <Label htmlFor="externalId">{t('form.labelExternalId')}</Label>
           <Input
             id="externalId"
             value={formData.externalId ?? ''}
@@ -122,7 +125,7 @@ const ClientGeneralStep = ({
         {/* input first name */}
         <div className="w-full md:w-[48%] space-y-2">
           <Label htmlFor="firstname">
-            First Name
+            {t('form.labelFirstName')}
             {!isEntity && '*'}
           </Label>
           <Input
@@ -137,7 +140,7 @@ const ClientGeneralStep = ({
         {/* input middle name */}
         {!isEntity && (
           <div className="w-full md:w-[48%] space-y-2">
-            <Label htmlFor="middlename">Middle Name</Label>
+            <Label htmlFor="middlename">{t('form.labelMiddleName')}</Label>
             <Input
               id="middlename"
               value={formData.middlename ?? ''}
@@ -151,7 +154,7 @@ const ClientGeneralStep = ({
         {/* input last name */}
         <div className="w-full md:w-[48%] space-y-2">
           <Label htmlFor="lastname">
-            Last Name
+            {t('form.labelLastName')}
             {!isEntity && '*'}
           </Label>
           <Input
@@ -167,7 +170,7 @@ const ClientGeneralStep = ({
       {/* input date of birth */}
       <div className="flex flex-wrap gap-6">
         <div className="w-full md:w-[48%] space-y-2">
-          <Label htmlFor="dateOfBirth">Date of Birth</Label>
+          <Label htmlFor="dateOfBirth">{t('form.labelDateOfBirth')}</Label>
           <Input
             id="dateOfBirth"
             type="date"
@@ -180,10 +183,10 @@ const ClientGeneralStep = ({
 
         {/* select gender (code values from Admin > System > Manage Codes) */}
         <AppSelect
-          selectLabel="Gender"
+          selectLabel={t('form.labelGender')}
           selectValue={formData.genderId?.toString() ?? ''}
           selectOnChange={handleIdChange('genderId')}
-          selectPlaceholder="Select Gender"
+          selectPlaceholder={t('form.selectGender')}
           selectOptions={toOptions(template.genderOptions)}
         />
       </div>
@@ -191,10 +194,10 @@ const ClientGeneralStep = ({
       <div className="flex flex-wrap gap-6 items-end">
         {/* select staff (the office's staff, from the template) */}
         <AppSelect
-          selectLabel="Staff"
+          selectLabel={t('form.labelStaff')}
           selectValue={formData.staffId?.toString() ?? ''}
           selectOnChange={handleIdChange('staffId')}
-          selectPlaceholder="Select Staff"
+          selectPlaceholder={t('form.selectStaff')}
           selectOptions={toOptions(template.staffOptions)}
         />
 
@@ -208,7 +211,7 @@ const ClientGeneralStep = ({
             }
           />
           <Label htmlFor="isStaff" className="cursor-pointer font-normal">
-            Is staff?
+            {t('form.labelIsStaff')}
           </Label>
         </div>
       </div>
@@ -216,7 +219,7 @@ const ClientGeneralStep = ({
       <div className="flex flex-wrap gap-6">
         {/* input mobile number */}
         <div className="w-full md:w-[48%] space-y-2">
-          <Label htmlFor="mobileNo">Mobile No</Label>
+          <Label htmlFor="mobileNo">{t('form.labelMobileNo')}</Label>
           <Input
             id="mobileNo"
             value={formData.mobileNo ?? ''}
@@ -228,7 +231,7 @@ const ClientGeneralStep = ({
 
         <div className="w-full md:w-[48%] space-y-2">
           {/* input email address */}
-          <Label htmlFor="emailAddress">Email Address</Label>
+          <Label htmlFor="emailAddress">{t('form.labelEmailAddress')}</Label>
           <Input
             id="emailAddress"
             value={formData.emailAddress ?? ''}
@@ -242,19 +245,19 @@ const ClientGeneralStep = ({
       <div className="flex flex-wrap gap-6">
         {/* select client type (code values) */}
         <AppSelect
-          selectLabel="Client Type"
+          selectLabel={t('form.labelClientType')}
           selectValue={formData.clientTypeId?.toString() ?? ''}
           selectOnChange={handleIdChange('clientTypeId')}
-          selectPlaceholder="Select Client Type"
+          selectPlaceholder={t('form.selectClientType')}
           selectOptions={toOptions(template.clientTypeOptions)}
         />
 
         {/* select client classification (code values) */}
         <AppSelect
-          selectLabel="Client Classification"
+          selectLabel={t('form.labelClientClassification')}
           selectValue={formData.clientClassificationId?.toString() ?? ''}
           selectOnChange={handleIdChange('clientClassificationId')}
-          selectPlaceholder="Select Client Classification"
+          selectPlaceholder={t('form.selectClientClassification')}
           selectOptions={toOptions(template.clientClassificationOptions)}
         />
       </div>
@@ -262,7 +265,7 @@ const ClientGeneralStep = ({
       <div className="flex flex-wrap gap-6 items-end">
         {/* input submitted on date; required, and not in the future */}
         <div className="w-full md:w-[48%] space-y-2">
-          <Label htmlFor="submittedOnDate">Submitted On*</Label>
+          <Label htmlFor="submittedOnDate">{t('form.labelSubmittedOn')}*</Label>
           <Input
             id="submittedOnDate"
             type="date"
@@ -283,7 +286,7 @@ const ClientGeneralStep = ({
             onCheckedChange={checked => handleActiveChange(checked === true)}
           />
           <Label htmlFor="active" className="cursor-pointer font-normal">
-            Active?
+            {t('form.labelActive')}
           </Label>
         </div>
       </div>
@@ -292,7 +295,9 @@ const ClientGeneralStep = ({
       {formData.active && (
         <div className="flex flex-wrap gap-6">
           <div className="w-full md:w-[48%] space-y-2">
-            <Label htmlFor="activationDate">Activation Date*</Label>
+            <Label htmlFor="activationDate">
+              {t('form.labelActivationDate')}*
+            </Label>
             <Input
               id="activationDate"
               type="date"
