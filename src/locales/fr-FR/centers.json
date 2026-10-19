@@ -32,10 +32,45 @@
     "placeholderExternalId": "Saisir l'id externe",
     "breadcrumb": "Modifier"
   },
+  "activate": {
+    "title": "Activer le Centre",
+    "labelActivationDate": "Date d'Activation*",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date d'activation.",
+      "dateInFuture": "La date d'activation ne peut pas être dans le futur.",
+      "dateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission."
+    }
+  },
   "close": {
+    "title": "Fermer le Centre",
     "heading": "Fermer le Centre",
-    "labelClosedOn": "Date de fermeture*",
-    "breadcrumb": "Fermer"
+    "labelClosedOnDate": "Date de fermeture*",
+    "labelClosureReason": "Motif de Fermeture*",
+    "labelClosureReasonOptional": "Motif de Fermeture (Optionnel)",
+    "selectClosureReason": "Sélectionner un motif de fermeture",
+    "noReasonsFound": "Aucun motif de fermeture disponible",
+    "noReasonsAvailable": "Aucun motif de fermeture n'est configuré. Veuillez configurer les motifs de fermeture dans les Paramètres.",
+    "breadcrumb": "Fermer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date de fermeture.",
+      "dateInFuture": "La date de fermeture ne peut pas être dans le futur.",
+      "dateBeforeActivated": "La date de fermeture ne peut pas être antérieure à la date d'activation.",
+      "reasonRequired": "Veuillez sélectionner un motif de fermeture.",
+      "failedFetchReasons": "Échec de la récupération des motifs de fermeture."
+    }
+  },
+  "success": {
+    "centerActivated": "Centre activé avec succès.",
+    "centerClosed": "Centre fermé avec succès."
+  },
+  "errors": {
+    "failedActivateCenter": "Échec de l'activation du centre.",
+    "failedCloseCenter": "Échec de la fermeture du centre.",
+    "failedFetchCenter": "Échec du chargement des détails du centre."
   },
   "view": {
     "centerName": "Nom du Centre :",
@@ -47,7 +82,6 @@
     "meetingFrequency": "Fréquence de Réunion:",
     "missingInOpenAPI": "Manquant dans OpenAPI",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce centre?",
-    "activateTodo": "À FAIRE : activer le centre",
     "tabs": {
       "general": "Général",
       "notes": "Notes"

@@ -32,10 +32,45 @@
     "placeholderExternalId": "Enter external id",
     "breadcrumb": "Edit"
   },
+  "activate": {
+    "title": "Activate Center",
+    "labelActivationDate": "Activation Date*",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter an activation date.",
+      "dateInFuture": "The activation date cannot be in the future.",
+      "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
+  },
   "close": {
+    "title": "Close Center",
     "heading": "Close Center",
-    "labelClosedOn": "Closed on date*",
-    "breadcrumb": "Close"
+    "labelClosedOnDate": "Closed on date*",
+    "labelClosureReason": "Closure Reason*",
+    "labelClosureReasonOptional": "Closure Reason (Optional)",
+    "selectClosureReason": "Select Closure Reason",
+    "noReasonsFound": "No closure reasons available",
+    "noReasonsAvailable": "No closure reasons are configured. Please configure center closure reasons in Settings.",
+    "breadcrumb": "Close",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter a closure date.",
+      "dateInFuture": "The closure date cannot be in the future.",
+      "dateBeforeActivated": "The closure date cannot be before the activation date.",
+      "reasonRequired": "Please select a closure reason.",
+      "failedFetchReasons": "Failed to fetch closure reasons."
+    }
+  },
+  "success": {
+    "centerActivated": "Center activated successfully.",
+    "centerClosed": "Center closed successfully."
+  },
+  "errors": {
+    "failedActivateCenter": "Failed to activate center.",
+    "failedCloseCenter": "Failed to close center.",
+    "failedFetchCenter": "Failed to load center details."
   },
   "view": {
     "centerName": "Center Name :",
@@ -47,7 +82,6 @@
     "meetingFrequency": "Meeting Frequency:",
     "missingInOpenAPI": "Missing in OpenAPI",
     "confirmDelete": "Are you sure you want to delete this center?",
-    "activateTodo": "TODO: activate center",
     "tabs": {
       "general": "General",
       "notes": "Notes"
