@@ -164,6 +164,8 @@ import MakerChecker from '@/pages/system/maker-checker/MakerChecker'
 import SchedulerJobs from '@/pages/system/scheduler-jobs/SchedulerJobs'
 import EditSchedulerJob from '@/pages/system/scheduler-jobs/EditSchedulerJob'
 import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHistory'
+import ExternalServices from '@/pages/system/external-services/ExternalServices'
+import EditExternalService from '@/pages/system/external-services/EditExternalService'
 import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
@@ -895,6 +897,16 @@ const AppRoutes = () => {
           <Route
             path="/system/jobs/:id/history"
             element={<SchedulerJobHistory />}
+          />
+
+          {/* External Services */}
+          <Route
+            path="/system/external-services"
+            element={<ExternalServices />}
+          />
+          <Route
+            path="/system/external-services/:service/edit"
+            element={<EditExternalService />}
           />
           <Route path="/system/hooks" element={<ManageHooks />} />
 
