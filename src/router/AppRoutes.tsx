@@ -98,6 +98,10 @@ import Tellers from '@/pages/organization/tellers/Tellers'
 import CreateTellers from '@/pages/organization/tellers/CreateTellers'
 import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
+import Cashiers from '@/pages/organization/tellers/cashiers/Cashiers'
+import CreateCashier from '@/pages/organization/tellers/cashiers/CreateCashier'
+import ViewCashier from '@/pages/organization/tellers/cashiers/ViewCashier'
+import EditCashier from '@/pages/organization/tellers/cashiers/EditCashier'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
@@ -622,6 +626,22 @@ const AppRoutes = () => {
           <Route
             path="/organization/tellers/:id/edit"
             element={<EditTellers />}
+          />
+          <Route
+            path="/organization/tellers/:id/cashiers"
+            element={<Cashiers />}
+          />
+          <Route
+            path="/organization/tellers/:id/cashiers/create"
+            element={<CreateCashier />}
+          />
+          <Route
+            path="/organization/tellers/:id/cashiers/:cashierId"
+            element={<ViewCashier />}
+          />
+          <Route
+            path="/organization/tellers/:id/cashiers/:cashierId/edit"
+            element={<EditCashier />}
           />
 
           {/* Investors */}

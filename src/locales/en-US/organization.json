@@ -2,6 +2,60 @@
   "adhocQuery": "AdHocQuery",
   "auditTrails": "Audit Trails",
   "bulkLoanReassignment": "Bulk Loan Reassignment",
+  "cashiers": {
+    "breadcrumbs": {
+      "tellers": "Tellers"
+    },
+    "count_one": "{{count}} cashier",
+    "count_other": "{{count}} cashiers",
+    "create": "Create Cashier",
+    "deleteAria": "Delete {{name}}",
+    "deleteDialog": {
+      "confirm": "Are you sure you want to delete the cashier \"{{name}}\"?",
+      "confirmButton": "Confirm",
+      "deleting": "Deleting..."
+    },
+    "edit": "Edit Cashier",
+    "editAria": "Edit {{name}}",
+    "empty": "No cashiers yet",
+    "errors": {
+      "create": "Failed to create the cashier.",
+      "delete": "Failed to delete the cashier.",
+      "load": "Failed to load the cashier.",
+      "loadList": "Failed to load the cashiers.",
+      "loadStaff": "Failed to load the staff.",
+      "update": "Failed to update the cashier."
+    },
+    "fields": {
+      "actions": "Actions",
+      "cashier": "Cashier",
+      "description": "Description",
+      "endDate": "End Date",
+      "endTime": "End Time",
+      "from": "From",
+      "shift": "Shift",
+      "staff": "Staff",
+      "startDate": "Start Date",
+      "startTime": "Start Time",
+      "teller": "Teller",
+      "to": "To"
+    },
+    "placeholders": {
+      "noStaff": "No staff in this office",
+      "staff": "Select a staff member"
+    },
+    "shift": {
+      "fullDay": "Full day",
+      "range": "{{start}} - {{end}}"
+    },
+    "title": "Cashiers",
+    "validation": {
+      "datesRequired": "Enter the start and end dates.",
+      "endDateBeforeStart": "The end date cannot be before the start date.",
+      "endTimeBeforeStart": "The end time must be after the start time.",
+      "staffRequired": "Select a staff member."
+    }
+  },
   "collateralManagement": "Collateral Management",
   "configurations": "Configurations",
   "configureMakerCheckerTasks": "Configure Maker Checker Tasks",

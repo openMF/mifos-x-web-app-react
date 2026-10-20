@@ -2,6 +2,60 @@
   "adhocQuery": "Requête ad hoc",
   "auditTrails": "Journaux d'audit",
   "bulkLoanReassignment": "Réaffectation massive des prêts",
+  "cashiers": {
+    "breadcrumbs": {
+      "tellers": "Guichetiers"
+    },
+    "count_one": "{{count}} caissier",
+    "count_other": "{{count}} caissiers",
+    "create": "Créer un caissier",
+    "deleteAria": "Supprimer {{name}}",
+    "deleteDialog": {
+      "confirm": "Êtes-vous sûr de vouloir supprimer le caissier « {{name}} » ?",
+      "confirmButton": "Confirmer",
+      "deleting": "Suppression..."
+    },
+    "edit": "Modifier le caissier",
+    "editAria": "Modifier {{name}}",
+    "empty": "Aucun caissier pour le moment",
+    "errors": {
+      "create": "Impossible de créer le caissier.",
+      "delete": "Impossible de supprimer le caissier.",
+      "load": "Impossible de charger le caissier.",
+      "loadList": "Impossible de charger les caissiers.",
+      "loadStaff": "Impossible de charger le personnel.",
+      "update": "Impossible de mettre à jour le caissier."
+    },
+    "fields": {
+      "actions": "Actions",
+      "cashier": "Caissier",
+      "description": "Description",
+      "endDate": "Date de fin",
+      "endTime": "Heure de fin",
+      "from": "Du",
+      "shift": "Horaires",
+      "staff": "Personnel",
+      "startDate": "Date de début",
+      "startTime": "Heure de début",
+      "teller": "Guichetier",
+      "to": "Au"
+    },
+    "placeholders": {
+      "noStaff": "Aucun membre du personnel dans cette agence",
+      "staff": "Sélectionnez un membre du personnel"
+    },
+    "shift": {
+      "fullDay": "Journée entière",
+      "range": "{{start}} - {{end}}"
+    },
+    "title": "Caissiers",
+    "validation": {
+      "datesRequired": "Saisissez les dates de début et de fin.",
+      "endDateBeforeStart": "La date de fin ne peut pas être antérieure à la date de début.",
+      "endTimeBeforeStart": "L'heure de fin doit être postérieure à l'heure de début.",
+      "staffRequired": "Sélectionnez un membre du personnel."
+    }
+  },
   "collateralManagement": "Gestion des garanties",
   "configurations": "Configurations",
   "configureMakerCheckerTasks": "Configurer les tâches de vérification",
