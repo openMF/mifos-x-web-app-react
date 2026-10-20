@@ -23,6 +23,7 @@ import AppSelect from '@/components/custom/select/AppSelect'
 
 import fineract from '@/lib/axios'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { getTenantId } from '@/lib/http-client'
 import { UserGeneratedDocumentsApi, type TemplateMapper } from '@/fineract-api'
 
 import TemplateTextEditor, {
@@ -78,7 +79,7 @@ const toOptionId = (
 }
 
 const defaultMapper = (entityId: string): TemplateMapper => {
-  const tenant = localStorage.getItem('mifosTenant') || 'default'
+  const tenant = getTenantId()
   return Number(entityId) === CLIENT_ENTITY_ID
     ? {
         mapperorder: 0,
