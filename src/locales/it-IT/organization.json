@@ -102,6 +102,59 @@
     },
     "title": "Gestisci fondi"
   },
+  "hooks": {
+    "actions": {
+      "add": "Aggiungi",
+      "confirm": "Conferma",
+      "deleting": "Eliminazione..."
+    },
+    "create": "Crea hook",
+    "deleteConfirm": "Sei sicuro di voler eliminare l'hook \"{{name}}\"?",
+    "edit": "Modifica hook",
+    "errors": {
+      "addEvent": "Aggiungi almeno un evento.",
+      "create": "Impossibile creare l'hook.",
+      "delete": "Impossibile eliminare l'hook.",
+      "duplicateEvent": "Questo evento è già nell'elenco.",
+      "enterField": "Inserisci {{field}}.",
+      "enterName": "Inserisci un nome per l'hook.",
+      "loadHook": "Impossibile caricare l'hook.",
+      "loadHooks": "Impossibile caricare gli hook.",
+      "loadTemplates": "Impossibile caricare i modelli di hook.",
+      "selectTemplate": "Seleziona un modello di hook.",
+      "update": "Impossibile aggiornare l'hook."
+    },
+    "events": {
+      "empty": "Nessun evento ancora",
+      "help": "L'hook viene chiamato quando si verifica uno di questi eventi.",
+      "remove": "Rimuovi {{entity}} {{action}}",
+      "title": "Eventi"
+    },
+    "fields": {
+      "action": "Azione",
+      "group": "Gruppo",
+      "name": "Nome hook",
+      "nameRequired": "Nome hook*",
+      "template": "Modello hook",
+      "templateRequired": "Modello hook*"
+    },
+    "list": {
+      "empty": "0 di 0",
+      "search": "Cerca hook..."
+    },
+    "placeholders": {
+      "action": "Seleziona un'azione",
+      "entity": "Seleziona un'entità",
+      "group": "Seleziona un gruppo",
+      "template": "Seleziona un modello"
+    },
+    "secretHidden": "Impostato (nascosto)",
+    "settings": "Impostazioni {{template}}",
+    "status": {
+      "disabled": "Disabilitato",
+      "enabled": "Abilitato"
+    }
+  },
   "investors": "Investitori",
   "jobs": {
     "edit": {

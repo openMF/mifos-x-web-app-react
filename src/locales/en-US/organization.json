@@ -102,6 +102,59 @@
     },
     "title": "Manage Funds"
   },
+  "hooks": {
+    "actions": {
+      "add": "Add",
+      "confirm": "Confirm",
+      "deleting": "Deleting..."
+    },
+    "create": "Create Hook",
+    "deleteConfirm": "Are you sure you want to delete the hook \"{{name}}\"?",
+    "edit": "Edit Hook",
+    "errors": {
+      "addEvent": "Add at least one event.",
+      "create": "Failed to create the hook.",
+      "delete": "Failed to delete the hook.",
+      "duplicateEvent": "That event is already in the list.",
+      "enterField": "Please enter {{field}}.",
+      "enterName": "Please enter a hook name.",
+      "loadHook": "Failed to load the hook.",
+      "loadHooks": "Failed to load the hooks.",
+      "loadTemplates": "Failed to load the hook templates.",
+      "selectTemplate": "Select a hook template.",
+      "update": "Failed to update the hook."
+    },
+    "events": {
+      "empty": "No events yet",
+      "help": "The hook is called when one of these happens.",
+      "remove": "Remove {{entity}} {{action}}",
+      "title": "Events"
+    },
+    "fields": {
+      "action": "Action",
+      "group": "Group",
+      "name": "Hook Name",
+      "nameRequired": "Hook Name*",
+      "template": "Hook Template",
+      "templateRequired": "Hook Template*"
+    },
+    "list": {
+      "empty": "0 of 0",
+      "search": "Search hooks..."
+    },
+    "placeholders": {
+      "action": "Select an action",
+      "entity": "Select an entity",
+      "group": "Select a group",
+      "template": "Select a template"
+    },
+    "secretHidden": "Set (hidden)",
+    "settings": "{{template}} settings",
+    "status": {
+      "disabled": "Disabled",
+      "enabled": "Enabled"
+    }
+  },
   "investors": "Investors",
   "jobs": {
     "edit": {
