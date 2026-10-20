@@ -198,5 +198,51 @@
         "noOptions": "Nessun motivo di stralcio. Aggiungi valori al codice WriteOffReasons in Sistema > Gestisci codici."
       }
     }
+  },
+  "viewShareProduct": {
+    "sections": {
+      "details": "Dettagli",
+      "currency": "Valuta",
+      "terms": "Termini",
+      "settings": "Impostazioni",
+      "marketPrice": "Periodi di prezzo di mercato",
+      "charges": "Commissioni",
+      "accounting": "Contabilità"
+    },
+    "fields": {
+      "name": "Nome",
+      "shortName": "Nome breve",
+      "description": "Descrizione",
+      "currency": "Valuta",
+      "decimalPlaces": "Cifre decimali",
+      "inMultiplesOf": "Valuta in multipli di",
+      "totalShares": "Numero totale di azioni",
+      "sharesIssued": "Azioni da emettere",
+      "unitPrice": "Prezzo nominale/unitario",
+      "capitalValue": "Valore del capitale",
+      "sharesPerClient": "Azioni per cliente",
+      "minimumActivePeriod": "Periodo attivo minimo",
+      "lockinPeriod": "Periodo di blocco",
+      "allowDividendsForInactive": "Consenti dividendi per clienti inattivi",
+      "fromDate": "Data di inizio",
+      "type": "Tipo",
+      "amount": "Importo",
+      "collectedOn": "Riscosso il"
+    },
+    "accounting": {
+      "none": "Nessuna",
+      "cashBased": "Per cassa",
+      "shareReference": "Riferimento azioni",
+      "shareSuspense": "Controllo sospesi azioni",
+      "equity": "Patrimonio netto",
+      "incomeFromFees": "Ricavi da commissioni"
+    },
+    "sharesPerClient": "{{value}} (Min: {{min}}, Max: {{max}})",
+    "noMarketPrice": "Non sono stati definiti periodi di prezzo di mercato per questo prodotto.",
+    "noCharges": "Nessuna commissione è associata a questo prodotto.",
+    "errors": {
+      "load": "Impossibile caricare il prodotto azionario.",
+      "invalidId": "L'ID di questo prodotto azionario non è valido."
+    }
   }
 }

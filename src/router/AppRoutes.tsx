@@ -115,6 +115,7 @@ import CreateSavingsProducts from '@/pages/products/savings-products/create-savi
 import ViewSavingsProducts from '@/pages/products/savings-products/ViewSavingsProducts'
 import ShareProducts from '@/pages/products/share-products/ShareProducts'
 import CreateShareProduct from '@/pages/products/share-products/create-share-product/CreateShareProduct'
+import ViewShareProduct from '@/pages/products/share-products/ViewShareProduct'
 import Charges from '@/pages/products/charges/Charges'
 import ViewCharges from '@/pages/products/charges/ViewCharges'
 import EditCharges from '@/pages/products/charges/EditCharges'
@@ -686,6 +687,10 @@ const AppRoutes = () => {
           <Route
             path="/products/share-products/create"
             element={<CreateShareProduct />}
+          />
+          <Route
+            path="/products/share-products/:id"
+            element={<ViewShareProduct />}
           />
 
           {/* Charges */}
