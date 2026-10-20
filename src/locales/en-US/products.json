@@ -1,6 +1,104 @@
 {
   "addCharge": "Add Charge",
   "charges": "Charges",
+  "createShareProduct": {
+    "heading": "Create Share Product",
+    "breadcrumb": "Create",
+    "prefix": "Share Product",
+    "submit": "Submit",
+    "select": "Select",
+    "created": "Share product created successfully.",
+    "createFailed": "Failed to create the share product.",
+    "templateFailed": "Failed to load the product options. Please refresh the page.",
+    "steps": {
+      "details": "Details",
+      "currency": "Currency",
+      "terms": "Terms",
+      "settings": "Settings",
+      "marketPrice": "Market Price",
+      "charges": "Charges",
+      "accounting": "Accounting"
+    },
+    "details": {
+      "name": "Product Name*",
+      "shortName": "Short Name*",
+      "description": "Description*"
+    },
+    "currency": {
+      "currency": "Currency*",
+      "decimalPlaces": "Decimal Places*",
+      "inMultiplesOf": "Currency in Multiples Of*"
+    },
+    "terms": {
+      "totalShares": "Total Number of Shares*",
+      "sharesIssued": "Shares to be Issued",
+      "unitPrice": "Nominal/Unit Price*",
+      "shareCapital": "Capital Value",
+      "shareCapitalHint": "Shares to be issued multiplied by the nominal price (calculated automatically)."
+    },
+    "settings": {
+      "sharesPerClient": "Shares per Client",
+      "minimumShares": "Minimum",
+      "nominalShares": "Default*",
+      "maximumShares": "Maximum",
+      "minimumActivePeriod": "Minimum Active Period for Dividends",
+      "lockinPeriod": "Lock-in Period",
+      "frequency": "Frequency",
+      "type": "Type",
+      "noLockinPeriod": "None",
+      "allowDividendsForInactiveClients": "Allow dividends for inactive clients"
+    },
+    "marketPrice": {
+      "fromDate": "From Date",
+      "shareValue": "Nominal/Unit Price",
+      "add": "Add",
+      "remove": "Remove market price period",
+      "none": "No market price periods have been added.",
+      "actions": "Actions"
+    },
+    "charges": {
+      "charge": "Charge",
+      "add": "Add",
+      "none": "No charges available for this currency",
+      "name": "Name",
+      "type": "Type",
+      "amount": "Amount",
+      "collectedOn": "Collected On",
+      "actions": "Actions",
+      "remove": "Remove charge"
+    },
+    "accounting": {
+      "none": "None",
+      "cash": "Cash",
+      "assets": "Assets",
+      "liabilities": "Liabilities",
+      "equity": "Share Equity",
+      "income": "Income",
+      "shareReferenceId": "Share Reference*",
+      "shareSuspenseId": "Share Suspense Control*",
+      "shareEquityId": "Equity*",
+      "incomeFromFeeAccountId": "Income from Fees*"
+    },
+    "validation": {
+      "nameRequired": "Product name is required.",
+      "shortNameRequired": "Short name is required.",
+      "descriptionRequired": "Description is required.",
+      "currencyRequired": "Currency is required.",
+      "decimalPlacesRequired": "Decimal places must be zero or more.",
+      "inMultiplesOfInvalid": "Currency in multiples of must be a whole number greater than zero.",
+      "totalSharesRequired": "Total number of shares must be a whole number greater than zero.",
+      "sharesIssuedInvalid": "Shares to be issued must be a whole number greater than zero.",
+      "sharesIssuedTooHigh": "Shares to be issued cannot be more than the total number of shares.",
+      "unitPriceRequired": "Nominal/unit price must be greater than zero.",
+      "nominalSharesRequired": "Default shares per client must be a whole number greater than zero.",
+      "sharesPerClientInvalid": "Minimum and maximum shares per client must be whole numbers greater than zero.",
+      "sharesPerClientOrder": "Shares per client must satisfy minimum ≤ default ≤ maximum.",
+      "minimumActivePeriodInvalid": "Minimum active period frequency must be a whole number greater than zero, and needs a type.",
+      "lockinPeriodIncomplete": "Enter both the lock-in period frequency and its type, or leave both empty.",
+      "lockinPeriodInvalid": "Lock-in period frequency must be a whole number greater than zero.",
+      "glMappingsRequired": "Select a GL account for every required mapping."
+    }
+  },
   "delinquencyBucket": "Delinquency Bucket",
   "fixedDepositProducts": "Fixed Deposit Products",
   "floatingRates": "Floating Rates",
