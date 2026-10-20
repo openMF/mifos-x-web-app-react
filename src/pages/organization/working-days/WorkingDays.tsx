@@ -5,12 +5,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
-import AppSelect from '@/components/custom/select/AppSelect'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { CalendarDays, Loader2 } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 
 import { WorkingDaysApi, type EnumOptionData } from '@/fineract-api'
@@ -44,13 +51,48 @@ const WorkingDays = () => {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
 
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const [validationAttempted, setValidationAttempted] = useState(false)
+  const savingRef = useRef(false)
+  const firstDayRef = useRef<HTMLButtonElement>(null)
+  const policyRef = useRef<HTMLButtonElement>(null)
+  const validOptions = rescheduleOptions
+    .filter(
+      option =>
+        option.id != null &&
+        Number.isFinite(option.id) &&
+        Boolean(option.value?.trim())
+    )
+    .filter(
+      (option, index, options) =>
+        options.findIndex(item => item.id === option.id) === index
+    )
+  const policyValid = validOptions.some(
+    option => option.id?.toString() === repaymentRescheduleType
+  )
+  const daysInvalid = validationAttempted && selectedDays.length === 0
+  const policyInvalid = validationAttempted && !policyValid
+
   // fetch the current working days configuration
   const fetchWorkingDays = useCallback(async () => {
     setLoading(true)
     setLoadError(false)
+    setSaveError('')
+    setValidationAttempted(false)
 
     try {
-      const res = await workingDaysApi.retrieveAll17()
+      const [configurationResult, templateResult] = await Promise.allSettled([
+        workingDaysApi.retrieveAll17(),
+        workingDaysApi.template4(),
+      ])
+      if (configurationResult.status === 'rejected') {
+        throw configurationResult.reason
+      }
+
+      const res = configurationResult.value
+      const template =
+        templateResult.status === 'fulfilled' ? templateResult.value : undefined
       const days = (res.data.recurrence ?? '')
         .replace(RECURRENCE_PREFIX, '')
         .split(',')
@@ -63,7 +105,13 @@ const WorkingDays = () => {
       setExtendTermForDailyRepayments(
         res.data.extendTermForDailyRepayments ?? false
       )
-      setRescheduleOptions(res.data.repaymentRescheduleOptions ?? [])
+      setRescheduleOptions(template?.data.repaymentRescheduleOptions ?? [])
+      if (templateResult.status === 'rejected') {
+        console.error(
+          'Failed to fetch repayment policy options',
+          templateResult.reason
+        )
+      }
     } catch (err) {
       console.error('Failed to fetch working days', err)
       // Without the current configuration the form would submit an empty
@@ -87,6 +135,19 @@ const WorkingDays = () => {
   // handle working days update
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (savingRef.current) return
+    setValidationAttempted(true)
+    setSaveError('')
+    if (selectedDays.length === 0) {
+      firstDayRef.current?.focus()
+      return
+    }
+    if (!policyValid) {
+      policyRef.current?.focus()
+      return
+    }
+    savingRef.current = true
+    setSaving(true)
 
     // BYDAY is a comma-separated list in week order, with no trailing comma.
     const recurrence =
@@ -111,12 +172,17 @@ const WorkingDays = () => {
       navigate('/organization')
     } catch (err) {
       console.error('Failed to update working days', err)
-      alert('Failed to update working days')
+      setSaveError(
+        'Your changes could not be saved. Please try again. Your selections have been kept.'
+      )
+    } finally {
+      savingRef.current = false
+      setSaving(false)
     }
   }
 
   return (
-    <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
+    <div className="mx-auto max-w-5xl px-4 py-8 text-sm sm:px-6 sm:py-10">
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
@@ -124,87 +190,243 @@ const WorkingDays = () => {
           { label: 'Working Days', current: true },
         ]}
       />
-
-      <h1 className="text-2xl font-semibold mb-4">Working Days</h1>
-
-      <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-3xl mx-auto">
+      <div className="mb-8 flex items-start gap-4">
+        <div className="flex size-11 shrink-0 items-center justify-center rounded-lg border bg-muted/40 text-[#1074b9]">
+          <CalendarDays className="size-5" aria-hidden="true" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Working Days
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Set your working week and how repayments are handled on non-working
+            days.
+          </p>
+        </div>
+      </div>
+      <div className="overflow-hidden rounded-xl border bg-background shadow-sm">
         {loading ? (
-          <p className="text-center text-zinc-500">Loading...</p>
+          <p
+            role="status"
+            className="flex items-center justify-center gap-3 p-12 text-muted-foreground"
+          >
+            <Loader2
+              className="size-4 motion-safe:animate-spin"
+              aria-hidden="true"
+            />
+            Loading working days…
+          </p>
         ) : loadError ? (
-          <div className="flex flex-col items-center gap-4 text-center">
-            <p className="text-zinc-700 dark:text-zinc-200">
-              Could not load the working days configuration.
+          <div className="space-y-4 p-8">
+            <p role="alert">
+              Could not load the working days configuration. Please try again.
             </p>
             <Button type="button" variant="outline" onClick={fetchWorkingDays}>
               Retry
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
-            {/* Working Days list */}
-            <div className="grid grid-cols-1 sm:grid-cols-2">
-              <div className="text-zinc-700 dark:text-zinc-200 font-medium mb-4">
-                Working Days
-              </div>
-
-              <div className="space-y-4">
-                {WEEK_DAYS.map(day => (
-                  <label key={day.value} className="flex items-center gap-3">
+          <form onSubmit={handleSubmit} noValidate aria-busy={saving}>
+            <fieldset disabled={saving} className="min-w-0 border-0 p-0">
+              <legend className="sr-only">Working days settings</legend>
+              <section
+                className="grid gap-6 border-b p-6 sm:p-8 md:grid-cols-[240px_1fr]"
+                aria-labelledby="working-week-heading"
+              >
+                <div>
+                  <h2 id="working-week-heading" className="font-semibold">
+                    Working week
+                  </h2>
+                  <p
+                    id="working-week-help"
+                    className="mt-2 leading-6 text-muted-foreground"
+                  >
+                    Choose the days your organization operates. Select at least
+                    one day.
+                  </p>
+                </div>
+                <fieldset
+                  className="min-w-0"
+                  aria-describedby={
+                    daysInvalid
+                      ? 'working-week-help days-error'
+                      : 'working-week-help'
+                  }
+                >
+                  <legend className="sr-only">Select working days</legend>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {WEEK_DAYS.map((day, index) => (
+                      <label
+                        key={day.value}
+                        htmlFor={`day-${day.value}`}
+                        className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 has-[[data-state=checked]]:border-[#1074b9] has-[[data-state=checked]]:bg-[#1074b9]/5"
+                      >
+                        <Checkbox
+                          id={`day-${day.value}`}
+                          ref={index === 0 ? firstDayRef : undefined}
+                          checked={selectedDays.includes(day.value)}
+                          disabled={saving}
+                          aria-invalid={daysInvalid}
+                          onCheckedChange={checked =>
+                            toggleDay(day.value, checked === true)
+                          }
+                        />
+                        <span>{day.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {daysInvalid && (
+                    <p
+                      id="days-error"
+                      role="alert"
+                      className="mt-3 text-sm text-destructive"
+                    >
+                      Select at least one working day.
+                    </p>
+                  )}
+                </fieldset>
+              </section>
+              <section
+                className="grid gap-6 border-b p-6 sm:p-8 md:grid-cols-[240px_1fr]"
+                aria-labelledby="repayment-heading"
+              >
+                <div>
+                  <h2 id="repayment-heading" className="font-semibold">
+                    Repayment scheduling
+                  </h2>
+                  <p className="mt-2 leading-6 text-muted-foreground">
+                    Choose how to handle payments that fall outside your working
+                    week.
+                  </p>
+                </div>
+                <div className="min-w-0 space-y-6">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="repayment-policy"
+                      className="block font-medium"
+                    >
+                      Payments due on non-working days
+                    </label>
+                    <Select
+                      value={policyValid ? repaymentRescheduleType : ''}
+                      onValueChange={setRepaymentRescheduleType}
+                      disabled={saving || validOptions.length === 0}
+                    >
+                      <SelectTrigger
+                        id="repayment-policy"
+                        ref={policyRef}
+                        className="min-h-11 w-full"
+                        aria-required="true"
+                        aria-invalid={policyInvalid}
+                        aria-describedby={
+                          validOptions.length === 0
+                            ? 'policy-unavailable'
+                            : policyInvalid
+                              ? 'policy-error'
+                              : undefined
+                        }
+                      >
+                        <SelectValue placeholder="Select a repayment policy" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {validOptions.map(option => (
+                          <SelectItem key={option.id} value={String(option.id)}>
+                            {option.value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {validOptions.length === 0 ? (
+                      <div
+                        id="policy-unavailable"
+                        role="alert"
+                        className="space-y-3"
+                      >
+                        <p className="text-destructive">
+                          No repayment policies are available. Reload the
+                          settings to try again.
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={fetchWorkingDays}
+                        >
+                          Reload settings
+                        </Button>
+                      </div>
+                    ) : policyInvalid ? (
+                      <p
+                        id="policy-error"
+                        role="alert"
+                        className="text-destructive"
+                      >
+                        Select an available repayment policy.
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-4">
                     <Checkbox
-                      checked={selectedDays.includes(day.value)}
+                      id="extend-loan-term"
+                      className="mt-0.5"
+                      checked={extendTermForDailyRepayments}
+                      disabled={saving}
+                      aria-describedby="extend-loan-term-help"
                       onCheckedChange={checked =>
-                        toggleDay(day.value, checked === true)
+                        setExtendTermForDailyRepayments(checked === true)
                       }
                     />
-                    <span>{day.name}</span>
-                  </label>
-                ))}
+                    <div>
+                      <label
+                        htmlFor="extend-loan-term"
+                        className="cursor-pointer font-medium"
+                      >
+                        Extend loan terms for daily repayments
+                      </label>
+                      <p
+                        id="extend-loan-term-help"
+                        className="mt-1 leading-6 text-muted-foreground"
+                      >
+                        Apply term extension to loans with a daily repayment
+                        schedule.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </fieldset>
+            <div className="flex flex-col gap-4 bg-muted/20 px-6 py-5 sm:px-8">
+              {saveError && (
+                <p role="alert" className="text-destructive">
+                  {saveError}
+                </p>
+              )}
+              <div className="flex flex-wrap items-center justify-end gap-3">
+                <span role="status" className="mr-auto text-muted-foreground">
+                  {saving ? 'Saving your settings…' : ''}
+                </span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-h-11 px-5"
+                  disabled={saving}
+                  onClick={() => navigate('/organization')}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="min-h-11 bg-[#1074b9] px-5 text-white hover:bg-[#0d639e]"
+                  disabled={saving || validOptions.length === 0}
+                >
+                  {saving && (
+                    <Loader2
+                      className="size-4 motion-safe:animate-spin"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {saving ? 'Saving…' : 'Save changes'}
+                </Button>
               </div>
-            </div>
-
-            {/* Non-working day policy */}
-            <div className="mt-8">
-              <AppSelect
-                selectLabel="Payments due on non working days"
-                selectPlaceholder="Select policy"
-                selectValue={repaymentRescheduleType}
-                selectOnChange={setRepaymentRescheduleType}
-                selectClassname="w-full"
-                selectOptions={rescheduleOptions.map(option => ({
-                  id: option.id ?? '',
-                  name: option.value ?? '',
-                }))}
-              />
-            </div>
-
-            {/* Extend term toggle */}
-            <div className="mt-6 flex items-center justify-between">
-              <span>
-                Extend the term for loans following a daily repayment schedule
-              </span>
-              <Checkbox
-                checked={extendTermForDailyRepayments}
-                onCheckedChange={checked =>
-                  setExtendTermForDailyRepayments(checked === true)
-                }
-              />
-            </div>
-
-            {/* Actions */}
-            <div className="mt-8 flex justify-center gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate('/organization')}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
-              >
-                Submit
-              </Button>
             </div>
           </form>
         )}
