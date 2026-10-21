@@ -24,11 +24,14 @@ import {
   type GetLoansLoanIdResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 const loanApi = new LoansApi(getConfiguration())
 const officeApi = new OfficesApi(getConfiguration())
 
 const LoanApproval = () => {
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const batchApi = new BatchAPIApi(getConfiguration())
   const [filter, setFilter] = useState('')
   const [selectedIds, setSelectedIds] = useState<number[]>([])
@@ -204,7 +207,13 @@ const LoanApproval = () => {
                           <TableCell>{loan.loanProductName}</TableCell>
                           <TableCell>{loan.accountNo}</TableCell>
                           <TableCell>
-                            {loan.principal?.toLocaleString()}
+                            {loan.principal === undefined
+                              ? ''
+                              : formatDisplayNumber(
+                                  loan.principal,
+                                  undefined,
+                                  decimalPlaces
+                                )}
                           </TableCell>
                           <TableCell>{loan.loanPurposeName ?? '-'}</TableCell>
                         </TableRow>

@@ -7,6 +7,8 @@
  */
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayCurrency } from '@/lib/number-format'
 
 import {
   Table,
@@ -63,6 +65,7 @@ const fmtDate = (d: unknown) => {
 
 const SharesAccountTransactionsTab = () => {
   const { accountId } = useParams()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [loading, setLoading] = useState(true)
   const [acct, setAcct] = useState<ShareAccount | null>(null)
   const [rows, setRows] = useState<ShareTx[]>([])
@@ -95,11 +98,7 @@ const SharesAccountTransactionsTab = () => {
   const money = (n: number | null | undefined) =>
     n == null
       ? '—'
-      : new Intl.NumberFormat(undefined, {
-          style: 'currency',
-          currency: currencyCode,
-          minimumFractionDigits: 0,
-        }).format(Number(n))
+      : formatDisplayCurrency(Number(n), currencyCode, undefined, decimalPlaces)
 
   return (
     <div>

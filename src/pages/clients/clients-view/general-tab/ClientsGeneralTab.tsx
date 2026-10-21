@@ -26,6 +26,8 @@ import {
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { formatDate } from '@/lib/date-utils'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayCurrency } from '@/lib/number-format'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -270,6 +272,7 @@ const DepositAccounts = ({
 }
 
 const ClientsGeneralTab = () => {
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const navigate = useNavigate()
   const { id } = useParams()
   const { t, i18n } = useTranslation('clients')
@@ -381,21 +384,12 @@ const ClientsGeneralTab = () => {
   /** An amount in its account's currency, e.g. ₹34,557.20, or "—". */
   const money = (value: unknown, currency?: AccountCurrency) => {
     if (typeof value !== 'number') return '—'
-    const digits = currency?.decimalPlaces ?? 2
-    const options = {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits,
-    }
-    try {
-      return new Intl.NumberFormat(i18n.language, {
-        ...options,
-        style: 'currency',
-        currency: currency?.code,
-      }).format(value)
-    } catch {
-      // no currency, or a code Intl does not know
-      return new Intl.NumberFormat(i18n.language, options).format(value)
-    }
+    return formatDisplayCurrency(
+      value,
+      currency?.code,
+      i18n.language,
+      decimalPlaces
+    )
   }
 
   // Calculated from the accounts, as the Angular web app does: Fineract has no
