@@ -21,9 +21,15 @@ const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
 
 interface LanguageSwitcherProps {
   className?: string
+  id?: string
+  ariaLabel?: string
 }
 
-export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
+export function LanguageSwitcher({
+  className,
+  id,
+  ariaLabel,
+}: LanguageSwitcherProps) {
   const { i18n, t } = useTranslation('common')
 
   const handleChange = (value: string) => {
@@ -32,7 +38,11 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
 
   return (
     <Select value={i18n.language} onValueChange={handleChange}>
-      <SelectTrigger className={className} aria-label={t('fields.language')}>
+      <SelectTrigger
+        className={className}
+        id={id}
+        aria-label={ariaLabel || t('fields.language')}
+      >
         <SelectValue placeholder={t('fields.language')} />
       </SelectTrigger>
       <SelectContent>
