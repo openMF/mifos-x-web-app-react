@@ -67,7 +67,6 @@ const systemItems = [
     icon: faFileAlt,
     name: 'Manage Surveys',
     path: '/system/surveys',
-    disabled: true,
   },
   {
     icon: faKey,
