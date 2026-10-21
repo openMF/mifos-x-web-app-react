@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type {
   GetLoansLoanIdResponse,
   GetLoansLoanIdAmortizationType,
@@ -17,6 +18,8 @@ import type {
 } from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 const loansApi = new LoansApi(getConfiguration())
 
@@ -91,6 +94,8 @@ const Section = ({
 
 const LoansAccountDetails = () => {
   const { loanId } = useParams()
+  const { i18n } = useTranslation()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [loan, setLoan] = useState<ExtendedLoan | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -130,7 +135,11 @@ const LoansAccountDetails = () => {
 
   const annualRate =
     typeof loan.annualInterestRate === 'number'
-      ? loan.annualInterestRate.toFixed(2)
+      ? formatDisplayNumber(
+          loan.annualInterestRate,
+          i18n.language,
+          decimalPlaces
+        )
       : undefined
   const freqVal = enumVal(loan.interestRateFrequencyType)
   const perPeriodRate =

@@ -6,6 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState } from 'react'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
 import AppSelect from '@/components/custom/select/AppSelect'
@@ -35,6 +37,7 @@ const SavingsProductChargesStep = ({
   template,
 }: SavingsProductChargesStepProps) => {
   const [selectedChargeId, setSelectedChargeId] = useState('')
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
 
   const chargeOptions = Array.from(template?.chargeOptions ?? []).map(
     option => ({
@@ -120,7 +123,9 @@ const SavingsProductChargesStep = ({
               <TableRow key={charge.id}>
                 <TableCell>{charge.name}</TableCell>
                 <TableCell>{charge.chargeCalculationType}</TableCell>
-                <TableCell>{charge.amount.toFixed(2)}</TableCell>
+                <TableCell>
+                  {formatDisplayNumber(charge.amount, undefined, decimalPlaces)}
+                </TableCell>
                 <TableCell>{charge.chargeTimeType}</TableCell>
                 <TableCell className="text-right">
                   <Button

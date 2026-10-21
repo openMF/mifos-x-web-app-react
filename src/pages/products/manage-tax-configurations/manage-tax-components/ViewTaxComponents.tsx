@@ -16,6 +16,8 @@ import {
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 const taxComponentsApi = new TaxComponentsApi(getConfiguration())
 
@@ -39,6 +41,7 @@ const formatDateArray = (startDate: unknown) => {
 const ViewTaxComponents = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [taxComponent, setTaxComponent] =
     useState<GetTaxesComponentsResponse | null>(null)
 
@@ -98,7 +101,14 @@ const ViewTaxComponents = () => {
 
           <div className="font-medium">Percentage</div>
           <div className="text-zinc-600 dark:text-zinc-400">
-            {taxComponent.percentage?.toFixed(2)} %
+            {taxComponent.percentage === undefined
+              ? ''
+              : formatDisplayNumber(
+                  taxComponent.percentage,
+                  undefined,
+                  decimalPlaces
+                )}{' '}
+            %
           </div>
 
           <div className="font-medium">Debit Account Type</div>
