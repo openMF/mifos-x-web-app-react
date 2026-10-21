@@ -37,6 +37,24 @@
     "labelClosedOn": "Closed on date*",
     "breadcrumb": "Close"
   },
+  "assignStaff": {
+    "title": "Assign Staff",
+    "labelStaff": "Staff*",
+    "selectStaff": "Select Staff",
+    "loadingStaff": "Loading staff...",
+    "noStaffFound": "No staff found",
+    "noStaffAvailable": "No staff members are available for this center's office.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "failedFetchCenter": "Failed to load center details.",
+      "staffRequired": "Please select a staff member.",
+      "failedAssignStaff": "Failed to assign staff."
+    }
+  },
+  "success": {
+    "staffAssigned": "Staff assigned successfully."
+  },
   "view": {
     "centerName": "Center Name :",
     "accountNo": "Account #:",
