@@ -503,6 +503,64 @@
     "officeCreated": "Ufficio creato con successo.",
     "officeSaved": "Ufficio salvato con successo."
   },
+  "surveys": {
+    "addOption": "Aggiungi opzione",
+    "addQuestion": "Aggiungi domanda",
+    "create": "Crea sondaggio",
+    "createButton": "Crea sondaggio",
+    "deactivate": "Disattiva",
+    "edit": "Modifica sondaggio",
+    "fields": {
+      "action": "Azione",
+      "countryCode": "Codice paese",
+      "countryCodeHint": "es. IT",
+      "countryCodeRequired": "Codice paese *",
+      "description": "Descrizione",
+      "key": "Chiave",
+      "keyRequired": "Chiave *",
+      "name": "Nome",
+      "nameRequired": "Nome *",
+      "option": "Opzione",
+      "optionRequired": "Opzione *",
+      "questionRequired": "Domanda *",
+      "questions": "Domande",
+      "status": "Stato",
+      "value": "Valore",
+      "valueRequired": "Valore *"
+    },
+    "messages": {
+      "createError": "Impossibile creare il sondaggio.",
+      "loadError": "Impossibile caricare il sondaggio.",
+      "loadListError": "Impossibile caricare i sondaggi.",
+      "statusError": "Impossibile modificare lo stato del sondaggio.",
+      "updateError": "Impossibile aggiornare il sondaggio."
+    },
+    "moveOptionDown": "Sposta giù l'opzione {{option}} della domanda {{number}}",
+    "moveOptionUp": "Sposta su l'opzione {{option}} della domanda {{number}}",
+    "moveQuestionDown": "Sposta giù la domanda {{number}}",
+    "moveQuestionUp": "Sposta su la domanda {{number}}",
+    "noQuestions": "Non è stata ancora aggiunta nessuna domanda.",
+    "optionText": "Domanda {{number}}, testo dell'opzione {{option}}",
+    "optionValue": "Domanda {{number}}, valore dell'opzione {{option}}",
+    "questionNumber": "Domanda {{number}}",
+    "removeOption": "Rimuovi l'opzione {{option}} della domanda {{number}}",
+    "removeQuestion": "Rimuovi la domanda {{number}}",
+    "status": {
+      "active": "Attivo",
+      "inactive": "Inattivo"
+    },
+    "title": "Gestisci sondaggi",
+    "validation": {
+      "countryCode": "Il codice paese deve essere di due lettere, per esempio IT.",
+      "keyRequired": "La chiave è obbligatoria.",
+      "nameRequired": "Il nome è obbligatorio.",
+      "optionRequired": "La domanda {{number}} deve avere almeno un'opzione.",
+      "optionText": "Ogni opzione della domanda {{number}} deve avere un testo.",
+      "optionValue": "Ogni valore delle opzioni della domanda {{number}} deve essere un numero intero di massimo quattro cifre.",
+      "questionFields": "La domanda {{number}} deve avere una chiave e un testo.",
+      "questionRequired": "Aggiungi almeno una domanda."
+    }
+  },
   "tellerCashierManagement": "Gestione cassieri",
   "title": "Organizzazione",
   "workingDays": "Giorni lavorativi"

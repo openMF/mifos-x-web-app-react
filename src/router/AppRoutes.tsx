@@ -163,6 +163,10 @@ import ManageExternalEvents from '@/pages/system/manage-external-events/ManageEx
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
 import MakerChecker from '@/pages/system/maker-checker/MakerChecker'
 import SchedulerJobs from '@/pages/system/scheduler-jobs/SchedulerJobs'
+import ManageSurveys from '@/pages/system/manage-surveys/ManageSurveys'
+import CreateSurvey from '@/pages/system/manage-surveys/CreateSurvey'
+import ViewSurvey from '@/pages/system/manage-surveys/ViewSurvey'
+import EditSurvey from '@/pages/system/manage-surveys/EditSurvey'
 import EditSchedulerJob from '@/pages/system/scheduler-jobs/EditSchedulerJob'
 import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHistory'
 import Configurations from '@/pages/system/configurations/Configurations'
@@ -904,6 +908,12 @@ const AppRoutes = () => {
             element={<SchedulerJobHistory />}
           />
           <Route path="/system/hooks" element={<ManageHooks />} />
+
+          {/* Manage Surveys */}
+          <Route path="/system/surveys" element={<ManageSurveys />} />
+          <Route path="/system/surveys/create" element={<CreateSurvey />} />
+          <Route path="/system/surveys/:id" element={<ViewSurvey />} />
+          <Route path="/system/surveys/:id/edit" element={<EditSurvey />} />
 
           {/* Manage Hooks */}
           <Route path="/system/configurations" element={<Configurations />} />
