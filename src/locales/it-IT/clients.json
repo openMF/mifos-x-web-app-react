@@ -504,5 +504,19 @@
       "activationDateBeforeSubmitted": "La data di attivazione non può essere precedente alla data d'inserimento.",
       "createFailed": "Impossibile creare il cliente."
     }
+  },
+  "standingInstructions": {
+    "title": "Istruzioni Permanenti",
+    "loading": "Caricamento delle istruzioni permanenti...",
+    "empty": "Questo cliente non ha istruzioni permanenti.",
+    "failedLoad": "Impossibile caricare le istruzioni permanenti. Riprova.",
+    "columnName": "Nome",
+    "columnFromAccount": "Conto di Origine",
+    "columnBeneficiary": "Beneficiario",
+    "columnToAccount": "Conto di Destinazione",
+    "columnAmount": "Importo",
+    "columnValidity": "Validità",
+    "columnStatus": "Stato",
+    "validityRange": "dal {{from}} al {{till}}"
   }
 }

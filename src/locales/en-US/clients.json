@@ -504,5 +504,19 @@
       "activationDateBeforeSubmitted": "The activation date cannot be before the submitted on date.",
       "createFailed": "Failed to create client."
     }
+  },
+  "standingInstructions": {
+    "title": "Standing Instructions",
+    "loading": "Loading standing instructions...",
+    "empty": "This client has no standing instructions.",
+    "failedLoad": "Failed to load standing instructions. Please try again.",
+    "columnName": "Name",
+    "columnFromAccount": "From Account",
+    "columnBeneficiary": "Beneficiary",
+    "columnToAccount": "To Account",
+    "columnAmount": "Amount",
+    "columnValidity": "Validity",
+    "columnStatus": "Status",
+    "validityRange": "{{from}} to {{till}}"
   }
 }

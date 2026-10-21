@@ -504,5 +504,19 @@
       "activationDateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission.",
       "createFailed": "Impossible de créer le client."
     }
+  },
+  "standingInstructions": {
+    "title": "Instructions Permanentes",
+    "loading": "Chargement des instructions permanentes...",
+    "empty": "Ce client n'a aucune instruction permanente.",
+    "failedLoad": "Impossible de charger les instructions permanentes. Veuillez réessayer.",
+    "columnName": "Nom",
+    "columnFromAccount": "Compte Source",
+    "columnBeneficiary": "Bénéficiaire",
+    "columnToAccount": "Compte de Destination",
+    "columnAmount": "Montant",
+    "columnValidity": "Validité",
+    "columnStatus": "Statut",
+    "validityRange": "{{from}} au {{till}}"
   }
 }
