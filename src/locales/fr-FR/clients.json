@@ -611,5 +611,19 @@
       "productFailed": "Impossible de charger le produit sélectionné.",
       "createFailed": "Échec de la création du compte de dépôt à terme."
     }
+  },
+  "standingInstructions": {
+    "title": "Instructions Permanentes",
+    "loading": "Chargement des instructions permanentes...",
+    "empty": "Ce client n'a aucune instruction permanente.",
+    "failedLoad": "Impossible de charger les instructions permanentes. Veuillez réessayer.",
+    "columnName": "Nom",
+    "columnFromAccount": "Compte Source",
+    "columnBeneficiary": "Bénéficiaire",
+    "columnToAccount": "Compte de Destination",
+    "columnAmount": "Montant",
+    "columnValidity": "Validité",
+    "columnStatus": "Statut",
+    "validityRange": "{{from}} au {{till}}"
   }
 }

@@ -611,5 +611,19 @@
       "productFailed": "No se pudo cargar el producto seleccionado.",
       "createFailed": "No se pudo crear la cuenta de depósito a plazo fijo."
     }
+  },
+  "standingInstructions": {
+    "title": "Instrucciones Permanentes",
+    "loading": "Cargando instrucciones permanentes...",
+    "empty": "Este cliente no tiene instrucciones permanentes.",
+    "failedLoad": "No se pudieron cargar las instrucciones permanentes. Inténtelo de nuevo.",
+    "columnName": "Nombre",
+    "columnFromAccount": "Cuenta de Origen",
+    "columnBeneficiary": "Beneficiario",
+    "columnToAccount": "Cuenta de Destino",
+    "columnAmount": "Monto",
+    "columnValidity": "Validez",
+    "columnStatus": "Estado",
+    "validityRange": "{{from}} a {{till}}"
   }
 }
