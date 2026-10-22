@@ -234,6 +234,41 @@
   "searchByMaker": "Rechercher par créateur",
   "searchEvents": "Rechercher des événements",
   "searchReports": "Rechercher des rapports",
+  "serviceSettings": {
+    "editTitle": "Modifier {{service}}",
+    "errors": {
+      "loadServices": "Échec du chargement des services externes.",
+      "loadSettings": "Échec du chargement des paramètres.",
+      "saveSettings": "Échec de l'enregistrement des paramètres."
+    },
+    "fields": {
+      "accessKey": "Clé d'accès",
+      "bucketName": "Nom du bucket",
+      "endPoint": "Point de terminaison",
+      "fcmEndPoint": "Point de terminaison FCM",
+      "fromEmail": "E-mail de l'expéditeur",
+      "fromName": "Nom de l'expéditeur",
+      "gcmEndPoint": "Point de terminaison GCM",
+      "host": "Hôte",
+      "password": "Mot de passe",
+      "port": "Port",
+      "secretKey": "Clé secrète",
+      "serverKey": "Clé du serveur",
+      "tenantAppKey": "Clé d'application du client",
+      "useTls": "Utiliser TLS",
+      "username": "Nom d'utilisateur"
+    },
+    "notSet": "Non défini",
+    "secretPlaceholder": "Défini. Laisser vide pour le conserver",
+    "secretSet": "Défini (masqué)",
+    "services": {
+      "amazonS3": "Amazon S3",
+      "email": "E-mail (SMTP)",
+      "pushNotification": "Notifications push",
+      "smsGateway": "Passerelle SMS"
+    },
+    "unknownService": "Service externe inconnu « {{slug}} »."
+  },
   "smsCampaign": {
     "title": "Campagnes SMS",
     "create": "Créer une campagne SMS",
