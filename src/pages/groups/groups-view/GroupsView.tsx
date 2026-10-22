@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
@@ -17,7 +18,7 @@ import { faCircle, faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { Outlet, useLocation, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
@@ -55,7 +56,9 @@ const GroupsView = () => {
   const { t, i18n } = useTranslation('groups')
   const { t: tc } = useTranslation('common')
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [group, setGroup] = useState<ExtendedGroupResponse>()
+  const [deleteError, setDeleteError] = useState('')
   const datatables = useEntityDatatables('m_group')
 
   useEffect(() => {
@@ -89,7 +92,7 @@ const GroupsView = () => {
       label: string
       path?: string
       onClick?: () => void
-      children?: { label: string; path: string; onClick?: () => void }[]
+      children?: { label: string; path?: string; onClick?: () => void }[]
     }[] = []
 
     if (!isActive && hasPerm('UPDATE_GROUP')) {
@@ -154,7 +157,7 @@ const GroupsView = () => {
       }
     }
 
-    const more: { label: string; path: string; onClick?: () => void }[] = []
+    const more: { label: string; path?: string; onClick?: () => void }[] = []
     if (hasCalendar && hasPerm('SAVEORUPDATEATTENDANCE_MEETING')) {
       more.push({
         label: t('view.menu.attendance'),
@@ -188,10 +191,33 @@ const GroupsView = () => {
     if (hasPerm('DELETE_GROUP')) {
       more.push({
         label: t('view.menu.delete'),
-        path: '#',
-        onClick: () => {
-          if (confirm(t('view.confirmDelete'))) {
-            // wire your delete call here
+        onClick: async () => {
+          if (!group?.id || !confirm(t('view.confirmDelete'))) return
+          setDeleteError('')
+          try {
+            await groupsApi.delete11(group.id)
+            const state: RouteSuccessState = {
+              successMessage: t('view.deleted'),
+            }
+            navigate('/groups', { state })
+          } catch (err) {
+            console.error('Failed to delete group', err)
+            // Fineract explains the refusal, e.g. a group that is not Pending
+            const data = (
+              err as {
+                response?: {
+                  data?: {
+                    defaultUserMessage?: string
+                    errors?: Array<{ defaultUserMessage?: string }>
+                  }
+                }
+              }
+            )?.response?.data
+            setDeleteError(
+              data?.errors?.[0]?.defaultUserMessage ??
+                data?.defaultUserMessage ??
+                t('view.deleteFailed')
+            )
           }
         },
       })
@@ -201,7 +227,16 @@ const GroupsView = () => {
     }
 
     return opts
-  }, [group, isActive, hasMembers, hasCalendar, hasStaff, inCenter, t])
+  }, [
+    group,
+    isActive,
+    hasMembers,
+    hasCalendar,
+    hasStaff,
+    inCenter,
+    navigate,
+    t,
+  ])
 
   // status value for tooltip + color
   const statusVal = group?.status?.value
@@ -229,6 +264,12 @@ const GroupsView = () => {
           ...(activeTabLabel ? [{ label: activeTabLabel }] : []),
         ]}
       />
+
+      {deleteError && (
+        <div className="mt-6 text-sm text-red-600" role="alert">
+          {deleteError}
+        </div>
+      )}
 
       <div className="bg-[#0e77b7] text-white p-6 mt-6 rounded-t-lg flex justify-between items-start relative">
         <div className="space-y-2">
