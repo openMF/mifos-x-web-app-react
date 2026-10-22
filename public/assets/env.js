@@ -6,7 +6,8 @@
   window.__env.FINERACT_API_URL = ''
   window.__env.FINERACT_API_PROVIDER = '/fineract-provider'
   window.__env.FINERACT_API_VERSION = '/api'
-  window.__env.FINERACT_PLATFORM_TENANT_IDENTIFIER = 'default'
+  // The FINERACT_PLATFORM_TENANT* keys are left unset for the same reason as
+  // the OIDC keys below: so the VITE_FINERACT_PLATFORM_TENANT* variables apply.
 
   // Language & Locale
   window.__env.MIFOS_DEFAULT_LANGUAGE = 'en-US'

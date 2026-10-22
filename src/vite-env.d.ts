@@ -12,6 +12,7 @@ interface ImportMetaEnv {
   readonly VITE_FINERACT_API_PROVIDER: string
   readonly VITE_FINERACT_API_VERSION: string
   readonly VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER: string
+  readonly VITE_FINERACT_PLATFORM_TENANTS_IDENTIFIER: string
 }
 
 interface ImportMeta {

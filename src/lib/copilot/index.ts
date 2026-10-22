@@ -55,13 +55,9 @@ export function createCopilotTransport(): CopilotTransport {
 
   return createV1Transport({
     baseUrl: url,
-    getHeaders: () => ({
-      ...getAuthHeaders(),
-      // The tenant chosen at sign-in, which the axios client sends on every
-      // Fineract call (lib/axios.ts). The assistant must act in that tenant.
-      'Fineract-Platform-TenantId':
-        localStorage.getItem('mifosTenant') || 'default',
-    }),
+    // The same credential and tenant every Fineract call from this screen
+    // carries, so the assistant acts in the tenant signed in to.
+    getHeaders: getAuthHeaders,
     getBackendOrigin,
   })
 }
