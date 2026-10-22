@@ -168,6 +168,7 @@ import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHisto
 import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
+import AboutUs from '@/pages/system/about-us/AboutUs'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -909,6 +910,9 @@ const AppRoutes = () => {
           {/* Audit Trails */}
           <Route path="/system/audit-trails" element={<AuditTrails />} />
           <Route path="/system/audit-trails/:id" element={<ViewAuditTrail />} />
+
+          {/* About Us */}
+          <Route path="/system/about-us" element={<AboutUs />} />
 
           {/* Institution */}
 

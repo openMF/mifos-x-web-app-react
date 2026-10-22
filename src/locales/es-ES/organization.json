@@ -1,4 +1,37 @@
 {
+  "aboutUs": {
+    "ecosystem": "La Iniciativa Mifos es la administradora de la plataforma, pero la verdadera magia ocurre en el ecosistema:",
+    "ecosystemParts": {
+      "community": "La Comunidad",
+      "communityDescription": "Cientos de desarrolladores e implementadores contribuyendo con código, traducciones y soporte.",
+      "foundation": "La Fundación",
+      "foundationDescription": "El organismo sin fines de lucro que asegura la sostenibilidad y gobernanza a largo plazo del proyecto.",
+      "partners": "Socios Certificados",
+      "partnersDescription": "Una red global de socios de implementación que personalizan y despliegan Mifos para instituciones locales.",
+      "platform": "La Plataforma Mifos X",
+      "platformDescription": "El robusto motor bancario central."
+    },
+    "ecosystemTitle": "El Ecosistema",
+    "introduction": "La Iniciativa Mifos es una organización sin fines de lucro 501(c)(3) y una comunidad global de desarrolladores, instituciones financieras y emprendedores sociales. Creemos que el acceso a los servicios financieros es un derecho humano fundamental, sin embargo, miles de millones de personas siguen excluidas del sistema financiero formal.",
+    "mission": "Acelerar la inclusión financiera catalizando un ecosistema de tecnología de código abierto, comunidad e intercambio de conocimientos.",
+    "missionTitle": "Nuestra Misión",
+    "openSource": "Elegimos el modelo de Código Abierto porque creemos que la infraestructura financiera debería ser:",
+    "openSourceTitle": "Por Qué Código Abierto",
+    "platform": "Cerramos esta brecha proporcionando la <mifosLink>Plataforma Mifos X</mifosLink>—el sistema bancario central de código abierto líder en el mundo. Al hacer que la tecnología bancaria de nivel empresarial sea gratuita y accesible, reducimos las barreras de entrada para las Instituciones de Microfinanzas (IMFs), Fintechs y ONGs, permitiéndoles escalar su impacto y atender la \"última milla\" de manera eficiente.",
+    "title": "Sobre Nosotros",
+    "values": {
+      "affordable": "Asequible",
+      "affordableDescription": "La eliminación de los costos de licencia permite a los socios invertir más en sus clientes.",
+      "innovative": "Innovador",
+      "innovativeDescription": "Una comunidad global de desarrolladores asegura que la plataforma evolucione más rápido de lo que cualquier proveedor individual podría gestionar.",
+      "secure": "Seguro",
+      "secureDescription": "Con ojos puestos en el código de todo el mundo, la seguridad y la estabilidad son primordiales.",
+      "transparent": "Transparente",
+      "transparentDescription": "Sin tarifas ocultas ni algoritmos de caja negra."
+    },
+    "vision": "Un mundo donde cada individuo y pequeña empresa tenga acceso a las herramientas financieras que necesitan para prosperar, independientemente de su ubicación o nivel de ingresos.",
+    "visionTitle": "Nuestra Visión"
+  },
   "adhocQuery": "Consulta ad hoc",
   "auditTrails": "Rastros de auditoría",
   "bulkLoanReassignment": "Reasignación masiva de préstamos",

@@ -1,4 +1,37 @@
 {
+  "aboutUs": {
+    "ecosystem": "The Mifos Initiative is the steward of the platform, but the real magic happens in the ecosystem:",
+    "ecosystemParts": {
+      "community": "The Community",
+      "communityDescription": "Hundreds of developers and implementers contributing code, translations, and support.",
+      "foundation": "The Foundation",
+      "foundationDescription": "The non-profit body ensuring the long-term sustainability and governance of the project.",
+      "partners": "Certified Partners",
+      "partnersDescription": "A global network of implementation partners who customize and deploy Mifos for local institutions.",
+      "platform": "The Mifos X Platform",
+      "platformDescription": "The robust core banking engine."
+    },
+    "ecosystemTitle": "The Ecosystem",
+    "introduction": "The Mifos Initiative is a 501(c)(3) non-profit organization and a global community of developers, financial institutions, and social entrepreneurs. We believe that access to financial services is a fundamental human right, yet billions of people remain excluded from the formal financial system.",
+    "mission": "To accelerate financial inclusion by catalyzing an ecosystem of open-source technology, community, and knowledge sharing.",
+    "missionTitle": "Our Mission",
+    "openSource": "We chose the Open Source model because we believe financial infrastructure should be:",
+    "openSourceTitle": "Why Open Source",
+    "platform": "We bridge this gap by providing the <mifosLink>Mifos X Platform</mifosLink>—the world's leading open-source core banking system. By making enterprise-grade banking technology free and accessible, we lower the barrier to entry for Microfinance Institutions (MFIs), Fintechs, and NGOs, allowing them to scale their impact and serve the \"last mile\" efficiently.",
+    "title": "About Us",
+    "values": {
+      "affordable": "Affordable",
+      "affordableDescription": "Eliminating licensing costs allows partners to invest more in their clients.",
+      "innovative": "Innovative",
+      "innovativeDescription": "A global community of developers ensures the platform evolves faster than any single vendor could manage.",
+      "secure": "Secure",
+      "secureDescription": "With eyes on the code from around the world, security and stability are paramount.",
+      "transparent": "Transparent",
+      "transparentDescription": "No hidden fees or black-box algorithms."
+    },
+    "vision": "A world where every individual and small business has access to the financial tools they need to thrive, regardless of their location or income level.",
+    "visionTitle": "Our Vision"
+  },
   "adhocQuery": "AdHocQuery",
   "auditTrails": "Audit Trails",
   "bulkLoanReassignment": "Bulk Loan Reassignment",

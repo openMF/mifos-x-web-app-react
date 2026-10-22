@@ -23,6 +23,7 @@ import {
   faClock,
   faCogs,
   faTools,
+  faUsers,
   faArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -77,6 +78,7 @@ const systemItems = [
     name: 'Manage External Events',
     path: '/system/external-events',
   },
+  { icon: faUsers, name: 'About Us', path: '/system/about-us' },
 ]
 
 const System = () => {
