@@ -98,6 +98,7 @@ import Tellers from '@/pages/organization/tellers/Tellers'
 import CreateTellers from '@/pages/organization/tellers/CreateTellers'
 import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
+import ViewCashiers from '@/pages/organization/tellers/cashiers/viewCashiers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
@@ -619,6 +620,10 @@ const AppRoutes = () => {
             element={<CreateTellers />}
           />
           <Route path="/organization/tellers/:id" element={<ViewTellers />} />
+          <Route
+            path="/organization/tellers/:id/cashiers"
+            element={<ViewCashiers />}
+          />
           <Route
             path="/organization/tellers/:id/edit"
             element={<EditTellers />}
