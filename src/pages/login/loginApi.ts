@@ -6,15 +6,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import fineract from '@/lib/axios'
+import { getTenantId } from '@/lib/http-client'
 
 export const loginFineract = async (username: string, password: string) => {
-  const tenant = localStorage.getItem('mifosTenant') || 'default'
   const response = await fineract.post(
     '/v1/authentication',
     { username, password },
     {
       params: {
-        tenantIdentifier: tenant,
+        tenantIdentifier: getTenantId(),
       },
     }
   )

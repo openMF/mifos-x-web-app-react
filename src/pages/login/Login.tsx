@@ -39,6 +39,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
 import { envConfig } from '@/lib/env-config'
+import { getTenantId, getTenantOptions, setTenantId } from '@/lib/http-client'
 import { isOidcUsable } from '@/lib/oidc-config'
 import OidcLoginButton from '@/pages/login/OidcLoginButton'
 
@@ -72,8 +73,11 @@ const Login = () => {
     if (isDockerProxy) return ''
     return localStorage.getItem('mifosServer') || 'https://localhost:8443'
   })
+  const tenantOptions = getTenantOptions()
   const [tenant, setTenant] = useState(() => {
-    return localStorage.getItem('mifosTenant') || 'default'
+    // The tenant last signed in to, unless this deployment no longer offers it.
+    const stored = getTenantId()
+    return tenantOptions.includes(stored) ? stored : tenantOptions[0]
   })
   const [showPassword, setShowPassword] = useState(false)
 
@@ -86,7 +90,7 @@ const Login = () => {
     if (!isDockerProxy) {
       localStorage.setItem('mifosServer', server)
     }
-    localStorage.setItem('mifosTenant', tenant)
+    setTenantId(tenant)
     dispatch(loginUser(form))
   }
 
@@ -205,7 +209,11 @@ const Login = () => {
             </SelectTrigger>
             <SelectContent className="dark:bg-zinc-800 dark:text-white">
               <SelectGroup>
-                <SelectItem value="default">Default</SelectItem>
+                {tenantOptions.map(option => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
