@@ -33,14 +33,14 @@ type ClientApiErrorResponse = {
   }>
 }
 
-const getClientErrorMessage = (error: unknown) => {
+const getClientErrorMessage = (error: unknown, fallback: string) => {
   const axiosError = error as AxiosError<ClientApiErrorResponse>
   const responseData = axiosError.response?.data
 
   return (
     responseData?.errors?.[0]?.defaultUserMessage ||
     responseData?.defaultUserMessage ||
-    'Failed to create client'
+    fallback
   )
 }
 
@@ -68,6 +68,7 @@ const buildClientRequest = (
 const CreateClients = () => {
   const navigate = useNavigate()
   const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
   const [clientTemplate, setClientTemplate] = useState<ExtendedClientTemplate>()
 
   const [formData, setFormData] = useState<ExtendedPostClientsRequest>({
@@ -121,14 +122,16 @@ const CreateClients = () => {
       navigate(clientId ? `/clients/${clientId}` : '/clients', { state })
     } catch (error) {
       // Surfaced by the stepper, which shows the message above the buttons
-      throw new Error(getClientErrorMessage(error))
+      throw new Error(
+        getClientErrorMessage(error, t('form.errors.createFailed'))
+      )
     }
   }
 
   // Fineract rejects these outright, so catch them before the request goes out
   const validateGeneral = (): string | null => {
     if (!formData.officeId) {
-      return 'Please select an office.'
+      return t('form.errors.officeRequired')
     }
     // Fineract treats a name of only spaces as blank
     const firstname = formData.firstname?.trim()
@@ -136,19 +139,19 @@ const CreateClients = () => {
     // An entity's name is one fullname, so either field is enough
     if (formData.legalFormId === LEGAL_FORM_ENTITY) {
       if (!firstname && !lastname) {
-        return 'Please enter an entity name.'
+        return t('form.errors.entityNameRequired')
       }
     } else if (!firstname || !lastname) {
-      return 'Please enter a first name and a last name.'
+      return t('form.errors.namesRequired')
     }
     if (!formData.submittedOnDate) {
-      return 'Please enter a submitted on date.'
+      return t('form.errors.submittedOnRequired')
     }
     if (formData.submittedOnDate > todayInputValue()) {
-      return 'The submitted on date cannot be in the future.'
+      return t('form.errors.submittedOnInFuture')
     }
     if (formData.active && !formData.activationDate) {
-      return 'Please enter an activation date, or uncheck Active.'
+      return t('form.errors.activationDateRequired')
     }
     // The date input's max is not enforced: the stepper submits with a button
     if (
@@ -156,7 +159,7 @@ const CreateClients = () => {
       formData.activationDate &&
       formData.activationDate > todayInputValue()
     ) {
-      return 'The activation date cannot be in the future.'
+      return t('form.errors.activationDateInFuture')
     }
     // Fineract rejects an activation date before the submitted on date
     if (
@@ -164,19 +167,19 @@ const CreateClients = () => {
       formData.activationDate &&
       formData.activationDate < formData.submittedOnDate
     ) {
-      return 'The activation date cannot be before the submitted on date.'
+      return t('form.errors.activationDateBeforeSubmitted')
     }
     return null
   }
 
   if (!clientTemplate) {
-    return <div className="text-center py-10">Loading client template...</div>
+    return <div className="text-center py-10">{t('form.loadingTemplate')}</div>
   }
 
   //stepper forms
   const steps = [
     {
-      title: 'GENERAL',
+      title: t('form.stepGeneral'),
       validate: validateGeneral,
       component: (
         <ClientGeneralStep
@@ -193,17 +196,19 @@ const CreateClients = () => {
       <div className="mb-8">
         <AppBreadCrumbs
           items={[
-            { label: 'Home', href: '/home' },
-            { label: 'Clients', href: '/clients' },
-            { label: 'Create Client', current: true },
+            { label: tc('nav.home'), href: '/home' },
+            { label: t('title'), href: '/clients' },
+            { label: t('form.createTitle'), current: true },
           ]}
         />
       </div>
 
       <div className="bg-white dark:bg-zinc-900 border rounded-md shadow-sm p-6">
-        <h1 className="text-2xl font-semibold mb-10">Create Client</h1>
+        <h1 className="text-2xl font-semibold mb-10">
+          {t('form.createTitle')}
+        </h1>
         <MultiStepForm
-          prefix="Client"
+          prefix={t('client')}
           steps={steps}
           onSubmit={handleSubmit}
           onCancel={() => navigate('/clients')}
