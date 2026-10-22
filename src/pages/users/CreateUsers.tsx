@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { AxiosError } from 'axios'
 
 import { Label } from '@/components/ui/label'
@@ -62,6 +63,7 @@ const getUserErrorMessage = (error: unknown) => {
 }
 
 const CreateUsers = () => {
+  const { t } = useTranslation('auth')
   const [users, setUsers] = useState<GetUsersTemplateResponse>()
   const [staff, setStaff] = useState<StaffData[] | null>(null)
   const [activePasswordPolicy, setActivePasswordPolicy] =
@@ -83,6 +85,13 @@ const CreateUsers = () => {
     repeatPassword: '',
   })
 
+  // The active policy from Organization > Password Preferences. Fineract checks
+  // the password against its regex and returns its description when it fails;
+  // the regex itself is not sent, so the description is shown as the rule.
+  // Reading it needs READ_PASSWORD_PREFERENCES, so a user who can create users
+  // but not read the preferences gets a general line instead.
+  const [passwordPolicy, setPasswordPolicy] = useState<string | null>(null)
+
   const showPassword = !formData.sendPasswordToEmail
   const passwordPolicyError =
     showPassword && formData.password.length > 0
@@ -93,6 +102,16 @@ const CreateUsers = () => {
     showPassword &&
     formData.repeatPassword.length > 0 &&
     formData.password !== formData.repeatPassword
+
+  useEffect(() => {
+    passwordPreferencesApi
+      .retrieve1()
+      .then(res => setPasswordPolicy(res.data?.description ?? null))
+      .catch(err => {
+        console.error('Failed to fetch password policy', err)
+        setPasswordPolicy(t('user.passwordPolicyFallback'))
+      })
+  }, [t])
 
   // fetch template for offices, roles, etc.
   useEffect(() => {

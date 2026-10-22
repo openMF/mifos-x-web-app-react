@@ -70,6 +70,62 @@
     "title": "Gestionar fondos"
   },
   "investors": "Inversores",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Expresión cron*",
+      "cronHelp": "Formato Quartz: segundos minutos horas día-del-mes mes día-de-la-semana [año]; p. ej., <code>0 1 0 1/1 * ? *</code> se ejecuta todos los días a las 00:01.",
+      "jobName": "Nombre del trabajo*",
+      "title": "Editar trabajo"
+    },
+    "errors": {
+      "changeStatus": "No se pudo cambiar el estado del planificador.",
+      "cronRequired": "Por favor, introduzca una expresión cron.",
+      "loadHistory": "Error al cargar el historial de ejecuciones.",
+      "loadJob": "Error al cargar el trabajo.",
+      "loadJobs": "Error al cargar los trabajos del planificador.",
+      "nameRequired": "Por favor, introduzca un nombre para el trabajo.",
+      "notStarted": "no se pudo iniciar",
+      "updateJob": "No se pudo actualizar el trabajo."
+    },
+    "history": {
+      "caption_one": "{{count}} ejecución • Página {{page}} de {{pages}}",
+      "caption_other": "{{count}} ejecuciones • Página {{page}} de {{pages}}",
+      "columns": {
+        "ended": "Finalizado",
+        "error": "Error",
+        "started": "Iniciado",
+        "trigger": "Disparador"
+      },
+      "title": "Historial de ejecuciones: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Activar planificador",
+      "activeHint": "Activo: los trabajos se ejecutan según su programación",
+      "caption": "{{shown}} de {{total}} trabajos",
+      "columns": {
+        "actions": "Acciones",
+        "job": "Trabajo",
+        "nextRun": "Próxima ejecución",
+        "previousRun": "Ejecución anterior",
+        "running": "En ejecución"
+      },
+      "editJob": "Editar {{name}}",
+      "filterPlaceholder": "Filtrar por nombre del trabajo",
+      "runHistoryOf": "Historial de ejecuciones de {{name}}",
+      "runSelected": "Ejecutar trabajos seleccionados",
+      "runSelectedCount": "Ejecutar trabajos seleccionados ({{count}})",
+      "scheduler": "Planificador:",
+      "selectAll": "Seleccionar todos los trabajos",
+      "selectJob": "Seleccionar {{name}}",
+      "started_one": "Se inició {{count}} trabajo. Use Actualizar para ver el resultado.",
+      "started_other": "Se iniciaron {{count}} trabajos. Use Actualizar para ver el resultado.",
+      "starting": "Iniciando...",
+      "success": "Correcto",
+      "suspendScheduler": "Suspender planificador",
+      "suspended": "Suspendido",
+      "suspendedHint": "Suspendido: ningún trabajo se ejecuta según su programación"
+    }
+  },
   "manageCodes": "Gestionar códigos",
   "manageDataTables": "Gestionar tablas de datos",
   "manageEmployees": "Gestionar empleados",
@@ -178,6 +234,138 @@
   "searchByMaker": "Buscar por creador",
   "searchEvents": "Buscar eventos",
   "searchReports": "Buscar informes",
+  "smsCampaign": {
+    "title": "Campañas SMS",
+    "create": "Crear campaña SMS",
+    "edit": "Editar campaña SMS",
+    "empty": "Aún no hay campañas SMS",
+    "reactivate": "Reactivar",
+    "confirm": "Confirmar",
+    "unassigned": "Sin asignar",
+    "notification": "Notificación (sin proveedor SMS)",
+    "noProviders": "No hay proveedores SMS configurados",
+    "noBusinessRules": "No hay reglas de negocio para este tipo de activación",
+    "noParameters": "Esta regla de negocio no tiene parámetros.",
+    "noColumns": "Complete los parámetros de la regla de negocio y elija \"Obtener parámetros\" para ver los marcadores.",
+    "businessRuleParameters": "Parámetros de la regla de negocio",
+    "templateParameters": "Parámetros de plantilla",
+    "getParameters": "Obtener parámetros",
+    "previewMessage": "Vista previa del mensaje",
+    "previewEmpty": "No hay ningún registro para la vista previa.",
+    "recipients_one": "Se enviaría {{count}} mensaje",
+    "recipients_other": "Se enviarían {{count}} mensajes",
+    "steps": {
+      "campaign": "Campaña",
+      "message": "Mensaje",
+      "preview": "Vista previa"
+    },
+    "fields": {
+      "name": "Nombre",
+      "templateMessage": "Mensaje de plantilla",
+      "campaignType": "Tipo de campaña",
+      "triggerType": "Tipo de activación",
+      "status": "Estado",
+      "submittedBy": "Enviado por",
+      "campaignName": "Nombre de la campaña",
+      "smsProvider": "Proveedor SMS",
+      "isNotification": "¿Es una notificación?",
+      "scheduleDate": "Fecha programada",
+      "repeats": "Se repite",
+      "repetitionInterval": "Intervalo de repetición",
+      "repeatsOnDay": "Se repite el día",
+      "recurrence": "Recurrencia",
+      "businessRule": "Regla de negocio",
+      "campaignMessage": "Mensaje de la campaña",
+      "submittedOn": "Enviado el",
+      "activatedOn": "Activado el",
+      "closedOn": "Cerrado el"
+    },
+    "placeholders": {
+      "smsProvider": "Seleccione un proveedor SMS",
+      "triggerType": "Seleccione un tipo de activación",
+      "businessRule": "Seleccione una regla de negocio",
+      "triggerFirst": "Seleccione primero un tipo de activación"
+    },
+    "hints": {
+      "checkStart": "Se muestra en la zona horaria de su navegador. Revísela antes de guardar, ya que el servidor puede usar otra.",
+      "startInPast": "Elija una hora en el futuro."
+    },
+    "frequency": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    },
+    "weekdays": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "status": {
+      "active": "Activa",
+      "pending": "Pendiente",
+      "closed": "Cerrada"
+    },
+    "errors": {
+      "loadList": "No se pudieron cargar las campañas SMS.",
+      "load": "No se pudo cargar la campaña SMS.",
+      "loadTemplate": "No se pudieron cargar las opciones de la campaña SMS.",
+      "loadParameters": "No se pudieron cargar los parámetros de la regla de negocio.",
+      "runReport": "No se pudieron obtener los parámetros de la regla de negocio.",
+      "preview": "No se pudo mostrar la vista previa del mensaje.",
+      "create": "No se pudo crear la campaña SMS.",
+      "update": "No se pudo actualizar la campaña SMS.",
+      "delete": "No se pudo eliminar la campaña SMS.",
+      "activate": "No se pudo activar la campaña SMS.",
+      "close": "No se pudo cerrar la campaña SMS.",
+      "reactivate": "No se pudo reactivar la campaña SMS.",
+      "messages": "No se pudieron cargar los mensajes."
+    },
+    "messages": {
+      "title": "Mensajes",
+      "selectStatus": "Seleccione un estado",
+      "fromDate": "Desde",
+      "toDate": "Hasta",
+      "message": "Mensaje",
+      "mobileNo": "N.º de móvil",
+      "count_one": "{{count}} mensaje",
+      "count_other": "{{count}} mensajes",
+      "empty": "No se encontraron mensajes",
+      "status": {
+        "pending": "SMS pendientes",
+        "waiting": "En espera del informe de entrega",
+        "sent": "SMS enviados",
+        "delivered": "SMS entregados",
+        "failed": "SMS fallidos"
+      },
+      "bothDates": "Indique ambas fechas para filtrar por fecha."
+    },
+    "commands": {
+      "activate": {
+        "title": "Activar campaña SMS",
+        "description": "La campaña se activa en esta fecha. Las campañas directas envían sus mensajes de inmediato; las programadas siguen su programación.",
+        "date": "Fecha de activación"
+      },
+      "close": {
+        "title": "Cerrar campaña SMS",
+        "description": "La campaña deja de enviar mensajes desde esta fecha.",
+        "date": "Fecha de cierre"
+      },
+      "reactivate": {
+        "title": "Reactivar campaña SMS",
+        "description": "La campaña vuelve a enviar mensajes desde esta fecha.",
+        "date": "Fecha de reactivación"
+      }
+    },
+    "deleteDialog": {
+      "confirm": "¿Seguro que desea eliminar la campaña SMS \"{{name}}\"?",
+      "deleting": "Eliminando..."
+    }
+  },
   "smsCampaigns": "Campañas SMS",
   "standingInstructionsHistory": "Historial de instrucciones permanentes",
   "success": {

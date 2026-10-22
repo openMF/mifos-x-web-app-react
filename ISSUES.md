@@ -44,6 +44,9 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `holdGuaranteeFunds`
 - More missing fields in description/code
 - Unnecessary fields also present
+- `GetLoanProductsAccountingRule` has `description`, but the response sends the rule name as `value` (e.g. `CASH BASED`)
+- `penaltyToIncomeAccountMappings` and `writeOffReasonsToExpenseMappings` missing
+- `GetChargeOffReasonToExpenseAccountMappings` has `chargeOffReasonCodeValue`, but the response sends `reasonCodeValue`
 
 ### `/products/loan-products/create`
 
@@ -55,6 +58,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `interestFreePeriodOptions` missing
 - `overAppliedCalculationTypeOptions` missing
 - `floatingRateOptions` missing
+- `penaltyOptions` and `writeOffReasonOptions` missing (the advanced accounting rules read them)
+
+**Missing in `PostLoanProductsRequest`:**
+
+- `writeOffReasonsToExpenseMappings` (Fineract reads it with the other advanced accounting mappings)
+- `paymentChannelToFundSourceMappings`, `feeToIncomeAccountMappings` and `penaltyToIncomeAccountMappings` are typed with the response rows; Fineract reads `paymentTypeId` / `fundSourceAccountId` and `chargeId` / `incomeAccountId`
 
 ### `/products/saving-products/{id}/general`
 
@@ -84,6 +93,14 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/products/share`
 
 - Not present in OpenAPI
+
+### `/products/share-products/{id}`
+
+**Mistyped in `GetProductsTypeProductIdResponse`** (`GET /products/share/{productId}`):
+
+- `accountingRule`, `lockPeriodTypeEnum`, `minimumActivePeriodForDividendsTypeEnum` and the charges' `chargeCalculationType`/`chargeTimeType` are typed with `description`, but Fineract sends `value`
+- `charges` and `marketPrice` are typed as `Set`, but Fineract sends JSON arrays
+- `marketPrice[].fromDate` is typed as a string, but Fineract sends a `[year, month, day]` array
 
 ### `/products/products-mix` [TO BE FIXED] (Schema didn't exist before)
 
@@ -295,6 +312,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `PutClientsClientIdRequest` only has `externalId`, `resourceExternalId` [TO BE FIXED] (firstname, lastname added)
 
+### `/clients/{id}?command=proposeTransfer` (POST)
+
+- `PostClientsClientIdRequest` only declares `activationDate`, `dateFormat`, and `locale`. Missing `destinationOfficeId`, `transferDate`, and `note`.
+
 ### `/savingsaccounts/template`
 
 - `GetSavingsAccountsTemplateResponse` missing `fieldOfficerOptions`, `interestCompoundingPeriodTypeOptions`, `interestPostingPeriodTypeOptions`, `interestCalculationTypeOptions`, `interestCalculationDaysInYearTypeOptions`, `lockinPeriodFrequencyTypeOptions`, `savingsAmountOnClosureTypeOptions`, `withdrawalFeeTypeOptions`, `chargeOptions`, `currencyOptions`
@@ -345,3 +366,15 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `GetProvisioningCriteriaCriteriaIdResponse` has `provisioningcriteria`, but the response sends the categories as `definitions`
 - `retrieveProvisioningCriteria` has no `template` parameter; `?template=true` adds `selectedLoanProducts` and `glAccounts`, which the edit page needs
+
+### `/jobs`
+
+- The generated client has no API class for `/jobs` (list, get, update, `executeJob`, `runhistory`); only `SchedulerApi` (`/scheduler`) exists, so the Manage Jobs pages call `/jobs` through `@/lib/axios`
+
+## Organization: SMS Campaigns
+
+### `/smscampaigns`, `/smscampaigns/template`, `/smscampaigns/{campaignId}`, `/smscampaigns/preview`
+
+- The endpoints are only generated on `DefaultApi` with generic method names, and there are no request types for the create/update bodies (`campaignName`, `triggerType`, `runReportId`, `isNotification`, `paramValue` as an object, `recurrenceStartDate`, `frequency`, `interval`, `repeatsOnDay`, `dateTimeFormat`), so the SMS Campaigns pages call them through `@/lib/axios`
+- `SmsCampaignData.recurrenceStartDate` is typed as a string, but the API returns epoch seconds as a number (e.g. `1792434600.0`)
+- The notification flag is sent as `isNotification` but returned as `notification`

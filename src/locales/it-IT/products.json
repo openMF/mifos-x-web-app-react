@@ -1,6 +1,104 @@
 {
   "addCharge": "Aggiungi commissione",
   "charges": "Commissioni",
+  "createShareProduct": {
+    "heading": "Crea prodotto azionario",
+    "breadcrumb": "Crea",
+    "prefix": "Prodotto azionario",
+    "submit": "Invia",
+    "select": "Seleziona",
+    "created": "Prodotto azionario creato correttamente.",
+    "createFailed": "Impossibile creare il prodotto azionario.",
+    "templateFailed": "Impossibile caricare le opzioni del prodotto. Aggiorna la pagina.",
+    "steps": {
+      "details": "Dettagli",
+      "currency": "Valuta",
+      "terms": "Termini",
+      "settings": "Impostazioni",
+      "marketPrice": "Prezzo di mercato",
+      "charges": "Commissioni",
+      "accounting": "Contabilità"
+    },
+    "details": {
+      "name": "Nome prodotto*",
+      "shortName": "Nome breve*",
+      "description": "Descrizione*"
+    },
+    "currency": {
+      "currency": "Valuta*",
+      "decimalPlaces": "Cifre decimali*",
+      "inMultiplesOf": "Valuta in multipli di*"
+    },
+    "terms": {
+      "totalShares": "Numero totale di azioni*",
+      "sharesIssued": "Azioni da emettere",
+      "unitPrice": "Prezzo nominale/unitario*",
+      "shareCapital": "Valore del capitale",
+      "shareCapitalHint": "Azioni da emettere moltiplicate per il prezzo nominale (calcolato automaticamente)."
+    },
+    "settings": {
+      "sharesPerClient": "Azioni per cliente",
+      "minimumShares": "Minimo",
+      "nominalShares": "Predefinito*",
+      "maximumShares": "Massimo",
+      "minimumActivePeriod": "Periodo attivo minimo per i dividendi",
+      "lockinPeriod": "Periodo di blocco",
+      "frequency": "Frequenza",
+      "type": "Tipo",
+      "noLockinPeriod": "Nessuno",
+      "allowDividendsForInactiveClients": "Consenti dividendi per i clienti inattivi"
+    },
+    "marketPrice": {
+      "fromDate": "Data di inizio",
+      "shareValue": "Prezzo nominale/unitario",
+      "add": "Aggiungi",
+      "remove": "Rimuovi periodo di prezzo di mercato",
+      "none": "Non è stato aggiunto alcun periodo di prezzo di mercato.",
+      "actions": "Azioni"
+    },
+    "charges": {
+      "charge": "Commissione",
+      "add": "Aggiungi",
+      "none": "Nessuna commissione disponibile per questa valuta",
+      "name": "Nome",
+      "type": "Tipo",
+      "amount": "Importo",
+      "collectedOn": "Riscossa il",
+      "actions": "Azioni",
+      "remove": "Rimuovi commissione"
+    },
+    "accounting": {
+      "none": "Nessuna",
+      "cash": "Contanti",
+      "assets": "Attività",
+      "liabilities": "Passività",
+      "equity": "Patrimonio azionario",
+      "income": "Entrate",
+      "shareReferenceId": "Riferimento azioni*",
+      "shareSuspenseId": "Controllo sospesi azioni*",
+      "shareEquityId": "Patrimonio*",
+      "incomeFromFeeAccountId": "Entrate da commissioni*"
+    },
+    "validation": {
+      "nameRequired": "Il nome del prodotto è obbligatorio.",
+      "shortNameRequired": "Il nome breve è obbligatorio.",
+      "descriptionRequired": "La descrizione è obbligatoria.",
+      "currencyRequired": "La valuta è obbligatoria.",
+      "decimalPlacesRequired": "Le cifre decimali devono essere zero o più.",
+      "inMultiplesOfInvalid": "La valuta in multipli di deve essere un numero intero maggiore di zero.",
+      "totalSharesRequired": "Il numero totale di azioni deve essere un numero intero maggiore di zero.",
+      "sharesIssuedInvalid": "Le azioni da emettere devono essere un numero intero maggiore di zero.",
+      "sharesIssuedTooHigh": "Le azioni da emettere non possono superare il numero totale di azioni.",
+      "unitPriceRequired": "Il prezzo nominale/unitario deve essere maggiore di zero.",
+      "nominalSharesRequired": "Le azioni predefinite per cliente devono essere un numero intero maggiore di zero.",
+      "sharesPerClientInvalid": "Le azioni minime e massime per cliente devono essere numeri interi maggiori di zero.",
+      "sharesPerClientOrder": "Le azioni per cliente devono rispettare minimo ≤ predefinito ≤ massimo.",
+      "minimumActivePeriodInvalid": "La frequenza del periodo attivo minimo deve essere un numero intero maggiore di zero e richiede un tipo.",
+      "lockinPeriodIncomplete": "Inserisci sia la frequenza sia il tipo del periodo di blocco, oppure lascia entrambi vuoti.",
+      "lockinPeriodInvalid": "La frequenza del periodo di blocco deve essere un numero intero maggiore di zero.",
+      "glMappingsRequired": "Seleziona un conto di contabilità generale per ogni associazione obbligatoria."
+    }
+  },
   "delinquencyBucket": "Bucket di morosità",
   "fixedDepositProducts": "Prodotti deposito a termine",
   "floatingRates": "Tassi variabili",
@@ -14,5 +112,137 @@
   "savingsProducts": "Prodotti di risparmio",
   "shareProduct": "Prodotto azionario",
   "shareProducts": "Prodotti azionari",
-  "title": "Prodotti"
+  "title": "Prodotti",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "Nessuna",
+      "cash": "Cassa",
+      "accrualPeriodic": "Competenza (periodica)",
+      "accrualUpfront": "Competenza (anticipata)"
+    },
+    "sections": {
+      "assets": "Attività",
+      "income": "Ricavi",
+      "expenses": "Costi",
+      "liabilities": "Passività"
+    },
+    "fields": {
+      "fundSource": "Fonte dei fondi",
+      "loanPortfolio": "Portafoglio prestiti",
+      "transfersInSuspense": "Trasferimenti in sospeso",
+      "interestReceivable": "Interessi da ricevere",
+      "feesReceivable": "Commissioni da ricevere",
+      "penaltiesReceivable": "Penali da ricevere",
+      "incomeFromInterest": "Ricavi da interessi",
+      "incomeFromFees": "Ricavi da commissioni",
+      "incomeFromPenalties": "Ricavi da penali",
+      "incomeFromRecovery": "Ricavi da rimborsi recuperati",
+      "incomeFromChargeOffInterest": "Ricavi da interessi stralciati",
+      "incomeFromChargeOffFees": "Ricavi da commissioni stralciate",
+      "incomeFromChargeOffPenalty": "Ricavi da penali stralciate",
+      "incomeFromGoodwillCreditInterest": "Ricavi da interessi di credito di cortesia",
+      "incomeFromGoodwillCreditFees": "Ricavi da commissioni di credito di cortesia",
+      "incomeFromGoodwillCreditPenalty": "Ricavi da penali di credito di cortesia",
+      "lossesWrittenOff": "Perdite su crediti cancellati",
+      "goodwillCreditExpense": "Costi per credito di cortesia",
+      "chargeOffExpense": "Costo di stralcio",
+      "chargeOffFraudExpense": "Costo di stralcio per frode",
+      "overpaymentLiability": "Passività per pagamenti in eccesso"
+    },
+    "enableAccrualActivityPosting": "Registra l'attività di competenza alla data di scadenza della rata",
+    "selectAccount": "Seleziona un conto",
+    "noAccounts": "Nessun conto contabile di questo tipo. Aggiungilo nel piano dei conti.",
+    "missingAccounts": "Seleziona i conti contabili richiesti da questa regola contabile: {{accounts}}.",
+    "saveFailed": "Impossibile creare il prodotto di prestito.",
+    "type": "Tipo",
+    "notMapped": "Non associato",
+    "advanced": {
+      "title": "Regole contabili avanzate",
+      "add": "Aggiungi",
+      "remove": "Rimuovi",
+      "noRows": "Ancora nessuna associazione. Vengono usati i conti predefiniti qui sopra.",
+      "incompleteRows": "Scegli entrambi i valori in ogni riga delle regole contabili avanzate, oppure rimuovi la riga: {{tables}}.",
+      "paymentChannels": {
+        "title": "Fonti di fondi per canale di pagamento",
+        "value": "Tipo di pagamento",
+        "selectValue": "Seleziona un tipo di pagamento",
+        "account": "Fonte dei fondi",
+        "noOptions": "Nessun tipo di pagamento. Aggiungili in Organizzazione > Tipi di pagamento."
+      },
+      "fees": {
+        "title": "Commissioni su conti di ricavo specifici",
+        "value": "Commissione",
+        "selectValue": "Seleziona una commissione",
+        "account": "Conto di ricavo",
+        "noOptions": "Nessuna commissione sui prestiti. Aggiungile in Prodotti > Addebiti."
+      },
+      "penalties": {
+        "title": "Penali su conti di ricavo specifici",
+        "value": "Penale",
+        "selectValue": "Seleziona una penale",
+        "account": "Conto di ricavo",
+        "noOptions": "Nessuna penale sui prestiti. Aggiungile in Prodotti > Addebiti."
+      },
+      "chargeOffReasons": {
+        "title": "Motivi di passaggio a perdita su conti di costo",
+        "value": "Motivo di passaggio a perdita",
+        "selectValue": "Seleziona un motivo di passaggio a perdita",
+        "account": "Conto di costo",
+        "noOptions": "Nessun motivo di passaggio a perdita. Aggiungi valori al codice ChargeOffReasons in Sistema > Gestisci codici."
+      },
+      "writeOffReasons": {
+        "title": "Motivi di stralcio su conti di costo",
+        "value": "Motivo di stralcio",
+        "selectValue": "Seleziona un motivo di stralcio",
+        "account": "Conto di costo",
+        "noOptions": "Nessun motivo di stralcio. Aggiungi valori al codice WriteOffReasons in Sistema > Gestisci codici."
+      }
+    }
+  },
+  "viewShareProduct": {
+    "sections": {
+      "details": "Dettagli",
+      "currency": "Valuta",
+      "terms": "Termini",
+      "settings": "Impostazioni",
+      "marketPrice": "Periodi di prezzo di mercato",
+      "charges": "Commissioni",
+      "accounting": "Contabilità"
+    },
+    "fields": {
+      "name": "Nome",
+      "shortName": "Nome breve",
+      "description": "Descrizione",
+      "currency": "Valuta",
+      "decimalPlaces": "Cifre decimali",
+      "inMultiplesOf": "Valuta in multipli di",
+      "totalShares": "Numero totale di azioni",
+      "sharesIssued": "Azioni da emettere",
+      "unitPrice": "Prezzo nominale/unitario",
+      "capitalValue": "Valore del capitale",
+      "sharesPerClient": "Azioni per cliente",
+      "minimumActivePeriod": "Periodo attivo minimo",
+      "lockinPeriod": "Periodo di blocco",
+      "allowDividendsForInactive": "Consenti dividendi per clienti inattivi",
+      "fromDate": "Data di inizio",
+      "type": "Tipo",
+      "amount": "Importo",
+      "collectedOn": "Riscosso il"
+    },
+    "accounting": {
+      "none": "Nessuna",
+      "cashBased": "Per cassa",
+      "shareReference": "Riferimento azioni",
+      "shareSuspense": "Controllo sospesi azioni",
+      "equity": "Patrimonio netto",
+      "incomeFromFees": "Ricavi da commissioni"
+    },
+    "sharesPerClient": "{{value}} (Min: {{min}}, Max: {{max}})",
+    "noMarketPrice": "Non sono stati definiti periodi di prezzo di mercato per questo prodotto.",
+    "noCharges": "Nessuna commissione è associata a questo prodotto.",
+    "errors": {
+      "load": "Impossibile caricare il prodotto azionario.",
+      "invalidId": "L'ID di questo prodotto azionario non è valido."
+    }
+  }
 }

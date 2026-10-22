@@ -596,6 +596,8 @@
   "reports": {
     "allEngines": "All",
     "filterByEngine": "Filter by engine",
-    "matchCount": "{{shown}} / {{total}}"
+    "matchCount": "{{shown}} / {{total}}",
+    "other": "Other",
+    "run": "Run"
   }
 }

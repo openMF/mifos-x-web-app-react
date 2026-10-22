@@ -1,6 +1,104 @@
 {
   "addCharge": "Add Charge",
   "charges": "Charges",
+  "createShareProduct": {
+    "heading": "Create Share Product",
+    "breadcrumb": "Create",
+    "prefix": "Share Product",
+    "submit": "Submit",
+    "select": "Select",
+    "created": "Share product created successfully.",
+    "createFailed": "Failed to create the share product.",
+    "templateFailed": "Failed to load the product options. Please refresh the page.",
+    "steps": {
+      "details": "Details",
+      "currency": "Currency",
+      "terms": "Terms",
+      "settings": "Settings",
+      "marketPrice": "Market Price",
+      "charges": "Charges",
+      "accounting": "Accounting"
+    },
+    "details": {
+      "name": "Product Name*",
+      "shortName": "Short Name*",
+      "description": "Description*"
+    },
+    "currency": {
+      "currency": "Currency*",
+      "decimalPlaces": "Decimal Places*",
+      "inMultiplesOf": "Currency in Multiples Of*"
+    },
+    "terms": {
+      "totalShares": "Total Number of Shares*",
+      "sharesIssued": "Shares to be Issued",
+      "unitPrice": "Nominal/Unit Price*",
+      "shareCapital": "Capital Value",
+      "shareCapitalHint": "Shares to be issued multiplied by the nominal price (calculated automatically)."
+    },
+    "settings": {
+      "sharesPerClient": "Shares per Client",
+      "minimumShares": "Minimum",
+      "nominalShares": "Default*",
+      "maximumShares": "Maximum",
+      "minimumActivePeriod": "Minimum Active Period for Dividends",
+      "lockinPeriod": "Lock-in Period",
+      "frequency": "Frequency",
+      "type": "Type",
+      "noLockinPeriod": "None",
+      "allowDividendsForInactiveClients": "Allow dividends for inactive clients"
+    },
+    "marketPrice": {
+      "fromDate": "From Date",
+      "shareValue": "Nominal/Unit Price",
+      "add": "Add",
+      "remove": "Remove market price period",
+      "none": "No market price periods have been added.",
+      "actions": "Actions"
+    },
+    "charges": {
+      "charge": "Charge",
+      "add": "Add",
+      "none": "No charges available for this currency",
+      "name": "Name",
+      "type": "Type",
+      "amount": "Amount",
+      "collectedOn": "Collected On",
+      "actions": "Actions",
+      "remove": "Remove charge"
+    },
+    "accounting": {
+      "none": "None",
+      "cash": "Cash",
+      "assets": "Assets",
+      "liabilities": "Liabilities",
+      "equity": "Share Equity",
+      "income": "Income",
+      "shareReferenceId": "Share Reference*",
+      "shareSuspenseId": "Share Suspense Control*",
+      "shareEquityId": "Equity*",
+      "incomeFromFeeAccountId": "Income from Fees*"
+    },
+    "validation": {
+      "nameRequired": "Product name is required.",
+      "shortNameRequired": "Short name is required.",
+      "descriptionRequired": "Description is required.",
+      "currencyRequired": "Currency is required.",
+      "decimalPlacesRequired": "Decimal places must be zero or more.",
+      "inMultiplesOfInvalid": "Currency in multiples of must be a whole number greater than zero.",
+      "totalSharesRequired": "Total number of shares must be a whole number greater than zero.",
+      "sharesIssuedInvalid": "Shares to be issued must be a whole number greater than zero.",
+      "sharesIssuedTooHigh": "Shares to be issued cannot be more than the total number of shares.",
+      "unitPriceRequired": "Nominal/unit price must be greater than zero.",
+      "nominalSharesRequired": "Default shares per client must be a whole number greater than zero.",
+      "sharesPerClientInvalid": "Minimum and maximum shares per client must be whole numbers greater than zero.",
+      "sharesPerClientOrder": "Shares per client must satisfy minimum ≤ default ≤ maximum.",
+      "minimumActivePeriodInvalid": "Minimum active period frequency must be a whole number greater than zero, and needs a type.",
+      "lockinPeriodIncomplete": "Enter both the lock-in period frequency and its type, or leave both empty.",
+      "lockinPeriodInvalid": "Lock-in period frequency must be a whole number greater than zero.",
+      "glMappingsRequired": "Select a GL account for every required mapping."
+    }
+  },
   "delinquencyBucket": "Delinquency Bucket",
   "fixedDepositProducts": "Fixed Deposit Products",
   "floatingRates": "Floating Rates",
@@ -14,5 +112,137 @@
   "savingsProducts": "Savings Products",
   "shareProduct": "Share Product",
   "shareProducts": "Share Products",
-  "title": "Products"
+  "title": "Products",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "None",
+      "cash": "Cash",
+      "accrualPeriodic": "Accrual (Periodic)",
+      "accrualUpfront": "Accrual (Upfront)"
+    },
+    "sections": {
+      "assets": "Assets",
+      "income": "Income",
+      "expenses": "Expenses",
+      "liabilities": "Liabilities"
+    },
+    "fields": {
+      "fundSource": "Fund source",
+      "loanPortfolio": "Loan portfolio",
+      "transfersInSuspense": "Transfers in suspense",
+      "interestReceivable": "Interest receivable",
+      "feesReceivable": "Fees receivable",
+      "penaltiesReceivable": "Penalties receivable",
+      "incomeFromInterest": "Income from interest",
+      "incomeFromFees": "Income from fees",
+      "incomeFromPenalties": "Income from penalties",
+      "incomeFromRecovery": "Income from recovery repayments",
+      "incomeFromChargeOffInterest": "Income from charge-off interest",
+      "incomeFromChargeOffFees": "Income from charge-off fees",
+      "incomeFromChargeOffPenalty": "Income from charge-off penalties",
+      "incomeFromGoodwillCreditInterest": "Income from goodwill credit interest",
+      "incomeFromGoodwillCreditFees": "Income from goodwill credit fees",
+      "incomeFromGoodwillCreditPenalty": "Income from goodwill credit penalties",
+      "lossesWrittenOff": "Losses written off",
+      "goodwillCreditExpense": "Expenses from goodwill credit",
+      "chargeOffExpense": "Charge-off expense",
+      "chargeOffFraudExpense": "Charge-off fraud expense",
+      "overpaymentLiability": "Overpayment liability"
+    },
+    "enableAccrualActivityPosting": "Enable accrual activity posting on the installment due date",
+    "selectAccount": "Select an account",
+    "noAccounts": "No GL accounts of this type. Add them in the Chart of Accounts.",
+    "missingAccounts": "Select the GL accounts this accounting rule requires: {{accounts}}.",
+    "saveFailed": "The loan product could not be created.",
+    "type": "Type",
+    "notMapped": "Not mapped",
+    "advanced": {
+      "title": "Advanced accounting rules",
+      "add": "Add",
+      "remove": "Remove",
+      "noRows": "No mappings yet. The default accounts above are used.",
+      "incompleteRows": "Choose both values in each row of the advanced accounting rules, or remove the row: {{tables}}.",
+      "paymentChannels": {
+        "title": "Fund sources for payment channels",
+        "value": "Payment type",
+        "selectValue": "Select a payment type",
+        "account": "Fund source",
+        "noOptions": "No payment types. Add them under Organization > Payment Types."
+      },
+      "fees": {
+        "title": "Fees to specific income accounts",
+        "value": "Fee",
+        "selectValue": "Select a fee",
+        "account": "Income account",
+        "noOptions": "No loan fees. Add them under Products > Charges."
+      },
+      "penalties": {
+        "title": "Penalties to specific income accounts",
+        "value": "Penalty",
+        "selectValue": "Select a penalty",
+        "account": "Income account",
+        "noOptions": "No loan penalties. Add them under Products > Charges."
+      },
+      "chargeOffReasons": {
+        "title": "Charge-off reasons to expense accounts",
+        "value": "Charge-off reason",
+        "selectValue": "Select a charge-off reason",
+        "account": "Expense account",
+        "noOptions": "No charge-off reasons. Add values to the ChargeOffReasons code under System > Manage Codes."
+      },
+      "writeOffReasons": {
+        "title": "Write-off reasons to expense accounts",
+        "value": "Write-off reason",
+        "selectValue": "Select a write-off reason",
+        "account": "Expense account",
+        "noOptions": "No write-off reasons. Add values to the WriteOffReasons code under System > Manage Codes."
+      }
+    }
+  },
+  "viewShareProduct": {
+    "sections": {
+      "details": "Details",
+      "currency": "Currency",
+      "terms": "Terms",
+      "settings": "Settings",
+      "marketPrice": "Market Price Periods",
+      "charges": "Charges",
+      "accounting": "Accounting"
+    },
+    "fields": {
+      "name": "Name",
+      "shortName": "Short Name",
+      "description": "Description",
+      "currency": "Currency",
+      "decimalPlaces": "Decimal Places",
+      "inMultiplesOf": "Currency in Multiples Of",
+      "totalShares": "Total Number of Shares",
+      "sharesIssued": "Shares to be Issued",
+      "unitPrice": "Nominal/Unit Price",
+      "capitalValue": "Capital Value",
+      "sharesPerClient": "Shares per Client",
+      "minimumActivePeriod": "Minimum Active Period",
+      "lockinPeriod": "Lock-in Period",
+      "allowDividendsForInactive": "Allow Dividends for Inactive Clients",
+      "fromDate": "From Date",
+      "type": "Type",
+      "amount": "Amount",
+      "collectedOn": "Collected On"
+    },
+    "accounting": {
+      "none": "None",
+      "cashBased": "Cash Based",
+      "shareReference": "Share Reference",
+      "shareSuspense": "Share Suspense Control",
+      "equity": "Equity",
+      "incomeFromFees": "Income from Fees"
+    },
+    "sharesPerClient": "{{value}} (Min: {{min}}, Max: {{max}})",
+    "noMarketPrice": "No market price periods have been set for this product.",
+    "noCharges": "No charges are attached to this product.",
+    "errors": {
+      "load": "The share product could not be loaded.",
+      "invalidId": "This share product ID is not valid."
+    }
+  }
 }

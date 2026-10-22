@@ -70,6 +70,62 @@
     "title": "Manage Funds"
   },
   "investors": "Investors",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Cron Expression*",
+      "cronHelp": "Quartz format: seconds minutes hours day-of-month month day-of-week [year], e.g. <code>0 1 0 1/1 * ? *</code> runs every day at 00:01.",
+      "jobName": "Job Name*",
+      "title": "Edit Job"
+    },
+    "errors": {
+      "changeStatus": "Failed to change the scheduler status.",
+      "cronRequired": "Please enter a cron expression.",
+      "loadHistory": "Failed to load the run history.",
+      "loadJob": "Failed to load the job.",
+      "loadJobs": "Failed to load the scheduler jobs.",
+      "nameRequired": "Please enter a job name.",
+      "notStarted": "could not be started",
+      "updateJob": "Failed to update the job."
+    },
+    "history": {
+      "caption_one": "{{count}} run • Page {{page}} of {{pages}}",
+      "caption_other": "{{count}} runs • Page {{page}} of {{pages}}",
+      "columns": {
+        "ended": "Ended",
+        "error": "Error",
+        "started": "Started",
+        "trigger": "Trigger"
+      },
+      "title": "Run History: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Activate Scheduler",
+      "activeHint": "Active: jobs run on their schedule",
+      "caption": "{{shown}} of {{total}} jobs",
+      "columns": {
+        "actions": "Actions",
+        "job": "Job",
+        "nextRun": "Next Run",
+        "previousRun": "Previous Run",
+        "running": "Running"
+      },
+      "editJob": "Edit {{name}}",
+      "filterPlaceholder": "Filter by job name",
+      "runHistoryOf": "Run history of {{name}}",
+      "runSelected": "Run Selected Jobs",
+      "runSelectedCount": "Run Selected Jobs ({{count}})",
+      "scheduler": "Scheduler:",
+      "selectAll": "Select all jobs",
+      "selectJob": "Select {{name}}",
+      "started_one": "Started {{count}} job. Use Refresh to see the result.",
+      "started_other": "Started {{count}} jobs. Use Refresh to see the result.",
+      "starting": "Starting...",
+      "success": "Success",
+      "suspendScheduler": "Suspend Scheduler",
+      "suspended": "Suspended",
+      "suspendedHint": "Suspended: no job runs on its schedule"
+    }
+  },
   "manageCodes": "Manage Codes",
   "manageDataTables": "Manage Data tables",
   "manageEmployees": "Manage Employees",
@@ -178,6 +234,138 @@
   "searchByMaker": "Search by maker",
   "searchEvents": "Search events…",
   "searchReports": "Search reports...",
+  "smsCampaign": {
+    "title": "SMS Campaigns",
+    "create": "Create SMS Campaign",
+    "edit": "Edit SMS Campaign",
+    "empty": "No SMS campaigns yet",
+    "reactivate": "Reactivate",
+    "confirm": "Confirm",
+    "unassigned": "Unassigned",
+    "notification": "Notification (no SMS provider)",
+    "noProviders": "No SMS providers configured",
+    "noBusinessRules": "No business rules for this trigger type",
+    "noParameters": "This business rule has no parameters.",
+    "noColumns": "Fill in the business rule parameters and choose \"Get parameters\" to list the placeholders.",
+    "businessRuleParameters": "Business Rule Parameters",
+    "templateParameters": "Template Parameters",
+    "getParameters": "Get parameters",
+    "previewMessage": "Preview message",
+    "previewEmpty": "No matching record to preview.",
+    "recipients_one": "{{count}} message would be sent",
+    "recipients_other": "{{count}} messages would be sent",
+    "steps": {
+      "campaign": "Campaign",
+      "message": "Message",
+      "preview": "Preview"
+    },
+    "fields": {
+      "name": "Name",
+      "templateMessage": "Template Message",
+      "campaignType": "Campaign Type",
+      "triggerType": "Trigger Type",
+      "status": "Status",
+      "submittedBy": "Submitted By",
+      "campaignName": "Campaign Name",
+      "smsProvider": "SMS Provider",
+      "isNotification": "Is notification?",
+      "scheduleDate": "Schedule Date",
+      "repeats": "Repeats",
+      "repetitionInterval": "Repetition Interval",
+      "repeatsOnDay": "Repeats on Day",
+      "recurrence": "Recurrence",
+      "businessRule": "Business Rule",
+      "campaignMessage": "Campaign Message",
+      "submittedOn": "Submitted On",
+      "activatedOn": "Activated On",
+      "closedOn": "Closed On"
+    },
+    "placeholders": {
+      "smsProvider": "Select an SMS provider",
+      "triggerType": "Select a trigger type",
+      "businessRule": "Select a business rule",
+      "triggerFirst": "Select a trigger type first"
+    },
+    "hints": {
+      "checkStart": "Shown in your browser's time zone. Check it before saving, since the server may use another.",
+      "startInPast": "Choose a time in the future."
+    },
+    "frequency": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "closed": "Closed"
+    },
+    "errors": {
+      "loadList": "Failed to load the SMS campaigns.",
+      "load": "Failed to load the SMS campaign.",
+      "loadTemplate": "Failed to load the SMS campaign options.",
+      "loadParameters": "Failed to load the business rule parameters.",
+      "runReport": "Failed to get the business rule parameters.",
+      "preview": "Failed to preview the message.",
+      "create": "Failed to create the SMS campaign.",
+      "update": "Failed to update the SMS campaign.",
+      "delete": "Failed to delete the SMS campaign.",
+      "activate": "Failed to activate the SMS campaign.",
+      "close": "Failed to close the SMS campaign.",
+      "reactivate": "Failed to reactivate the SMS campaign.",
+      "messages": "Failed to load the messages."
+    },
+    "messages": {
+      "title": "Messages",
+      "selectStatus": "Select a status",
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "message": "Message",
+      "mobileNo": "Mobile No.",
+      "count_one": "{{count}} message",
+      "count_other": "{{count}} messages",
+      "empty": "No messages found",
+      "status": {
+        "pending": "Pending SMS",
+        "waiting": "Waiting for Delivery Report",
+        "sent": "Sent SMS",
+        "delivered": "Delivered SMS",
+        "failed": "Failed SMS"
+      },
+      "bothDates": "Set both dates to filter by date."
+    },
+    "commands": {
+      "activate": {
+        "title": "Activate SMS Campaign",
+        "description": "The campaign is activated on this date. Direct campaigns send their messages right away; scheduled campaigns follow their schedule.",
+        "date": "Activation Date"
+      },
+      "close": {
+        "title": "Close SMS Campaign",
+        "description": "The campaign stops sending messages from this date.",
+        "date": "Closure Date"
+      },
+      "reactivate": {
+        "title": "Reactivate SMS Campaign",
+        "description": "The campaign sends messages again from this date.",
+        "date": "Reactivation Date"
+      }
+    },
+    "deleteDialog": {
+      "confirm": "Are you sure you want to delete the SMS campaign \"{{name}}\"?",
+      "deleting": "Deleting..."
+    }
+  },
   "smsCampaigns": "SMS Campaigns",
   "standingInstructionsHistory": "Standing Instructions History",
   "success": {

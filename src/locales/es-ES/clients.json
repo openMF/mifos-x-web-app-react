@@ -11,10 +11,14 @@
   "createGuarantor": "Crear garante",
   "errors": {
     "failedActivateClient": "No se pudo activar el cliente.",
+    "failedCloseClient": "No se pudo cerrar el cliente.",
+    "failedFetchClient": "Error al cargar los detalles del cliente.",
     "failedApproveClients": "Error al aprobar uno o más clientes.",
+    "failedFetchClient": "Error al obtener los detalles del cliente.",
     "failedLoadCenters": "Error al cargar centros. Por favor, inténtelo de nuevo.",
     "failedLoadClients": "Error al cargar clientes. Por favor, inténtelo de nuevo.",
     "failedLoadGroups": "Error al cargar grupos. Por favor, inténtelo de nuevo.",
+    "failedTransferClient": "Error al transferir el cliente.",
     "noClientsSelected": "No se han seleccionado clientes para aprobación."
   },
   "groups": "Grupos",
@@ -35,8 +39,13 @@
   "success": {
     "clientCreated": "Cliente creado exitosamente.",
     "clientActivated": "Cliente activado exitosamente.",
+    "clientClosed": "Cliente cerrado exitosamente.",
+    "clientTransferProposed": "Transferencia de cliente propuesta con éxito.",
+    "staffAssigned": "Personal asignado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
-    "familyMemberAdded": "Miembro de familia agregado exitosamente."
+    "familyMemberAdded": "Miembro de familia agregado exitosamente.",
+    "familyMemberUpdated": "Miembro de familia actualizado exitosamente.",
+    "familyMemberDeleted": "Miembro de familia eliminado exitosamente."
   },
   "title": "Clientes",
   "unnamedClient": "Cliente sin nombre",
@@ -58,6 +67,57 @@
       "dateRequired": "Por favor ingrese una fecha de activación.",
       "dateInFuture": "La fecha de activación no puede ser futura.",
       "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
+  },
+  "assignStaff": {
+    "title": "Asignar Personal",
+    "labelStaff": "Personal*",
+    "selectStaff": "Seleccionar Personal",
+    "loadingStaff": "Cargando personal...",
+    "noStaffFound": "No hay personal disponible",
+    "noStaffAvailable": "No hay miembros del personal disponibles para esta oficina.",
+    "confirm": "Confirmar",
+    "errors": {
+      "failedFetchClient": "Error al obtener los detalles del cliente.",
+      "staffRequired": "Por favor seleccione un miembro del personal.",
+      "failedFetchStaff": "Error al cargar las opciones de personal.",
+      "failedAssignStaff": "Error al asignar personal."
+    }
+  },
+  "transfer": {
+    "title": "Transferir Cliente",
+    "office": "Oficina*",
+    "selectOffice": "Seleccionar oficina de destino",
+    "noOfficesFound": "No hay oficinas de destino disponibles",
+    "noOfficesAvailable": "No hay otras oficinas disponibles para transferir.",
+    "transferDate": "Fecha de Transferencia*",
+    "note": "Nota",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "officeRequired": "Por favor seleccione una oficina de destino.",
+      "destinationSameAsCurrent": "La oficina de destino no puede ser la misma que la oficina actual del cliente.",
+      "dateRequired": "Por favor ingrese una fecha de transferencia.",
+      "dateInFuture": "La fecha de transferencia no puede ser en el futuro.",
+      "dateBeforeActivated": "La fecha de transferencia no puede ser anterior a la fecha de activación.",
+      "failedFetchOffices": "Error al cargar oficinas."
+    }
+  },
+  "close": {
+    "title": "Cerrar Cliente",
+    "labelClosedOnDate": "Fecha de Cierre*",
+    "labelClosureReason": "Motivo de Cierre*",
+    "selectClosureReason": "Seleccionar motivo de cierre",
+    "noReasonsFound": "No hay motivos de cierre disponibles",
+    "noReasonsAvailable": "No hay motivos de cierre configurados. Por favor configure los motivos de cierre en Configuración.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de cierre.",
+      "dateInFuture": "La fecha de cierre no puede ser en el futuro.",
+      "dateBeforeActivated": "La fecha de cierre no puede ser anterior a la fecha de activación.",
+      "reasonRequired": "Por favor seleccione un motivo de cierre.",
+      "failedFetchReasons": "Error al obtener los motivos de cierre."
     }
   },
   "view": {
@@ -92,6 +152,7 @@
       "actions": "Acciones",
       "close": "Cerrar",
       "transferClients": "Transferir Clientes",
+      "assignStaff": "Asignar Personal",
       "unassignStaff": "Desasignar Personal",
       "more": "Más",
       "addCharge": "Agregar Cargo",
@@ -252,7 +313,14 @@
     "loadFailed": "No se pudieron cargar los miembros de familia.",
     "empty": "A\u00fan no se han agregado miembros de familia.",
     "templateFailed": "No se pudieron cargar las opciones de este formulario.",
-    "addFailed": "No se pudo agregar el miembro de familia."
+    "addFailed": "No se pudo agregar el miembro de familia.",
+    "columnActions": "Acciones",
+    "editButton": "Editar",
+    "deleteButton": "Eliminar",
+    "confirmDelete": "¿Está seguro de que desea eliminar este miembro de familia?",
+    "memberFailed": "No se pudo cargar este miembro de familia.",
+    "updateFailed": "No se pudo actualizar el miembro de familia.",
+    "deleteFailed": "No se pudo eliminar el miembro de familia."
   },
   "generalData": {
     "headings": {

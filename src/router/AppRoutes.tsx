@@ -102,6 +102,10 @@ import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
 import PasswordPreferences from '@/pages/organization/password-preferences/PasswordPreferences'
+import SmsCampaigns from '@/pages/organization/sms-campaigns/SmsCampaigns'
+import CreateSmsCampaign from '@/pages/organization/sms-campaigns/CreateSmsCampaign'
+import ViewSmsCampaign from '@/pages/organization/sms-campaigns/ViewSmsCampaign'
+import EditSmsCampaign from '@/pages/organization/sms-campaigns/EditSmsCampaign'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -110,6 +114,8 @@ import SavingsProducts from '@/pages/products/savings-products/SavingsProducts'
 import CreateSavingsProducts from '@/pages/products/savings-products/create-saving-products/CreateSavingsProducts'
 import ViewSavingsProducts from '@/pages/products/savings-products/ViewSavingsProducts'
 import ShareProducts from '@/pages/products/share-products/ShareProducts'
+import CreateShareProduct from '@/pages/products/share-products/create-share-product/CreateShareProduct'
+import ViewShareProduct from '@/pages/products/share-products/ViewShareProduct'
 import Charges from '@/pages/products/charges/Charges'
 import ViewCharges from '@/pages/products/charges/ViewCharges'
 import EditCharges from '@/pages/products/charges/EditCharges'
@@ -155,6 +161,9 @@ import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/Entit
 import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
 import MakerChecker from '@/pages/system/maker-checker/MakerChecker'
+import SchedulerJobs from '@/pages/system/scheduler-jobs/SchedulerJobs'
+import EditSchedulerJob from '@/pages/system/scheduler-jobs/EditSchedulerJob'
+import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHistory'
 import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
@@ -229,6 +238,9 @@ import Clients from '@/pages/clients/Clients'
 import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
+import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
+import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
+import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
@@ -624,6 +636,24 @@ const AppRoutes = () => {
             element={<PasswordPreferences />}
           />
 
+          {/* SMS Campaigns */}
+          <Route
+            path="/organization/sms-campaigns"
+            element={<SmsCampaigns />}
+          />
+          <Route
+            path="/organization/sms-campaigns/create"
+            element={<CreateSmsCampaign />}
+          />
+          <Route
+            path="/organization/sms-campaigns/:id"
+            element={<ViewSmsCampaign />}
+          />
+          <Route
+            path="/organization/sms-campaigns/:id/edit"
+            element={<EditSmsCampaign />}
+          />
+
           {/* Products */}
           <Route path="/products" element={<Products />} />
 
@@ -654,6 +684,14 @@ const AppRoutes = () => {
 
           {/* Share Products */}
           <Route path="/products/share-products" element={<ShareProducts />} />
+          <Route
+            path="/products/share-products/create"
+            element={<CreateShareProduct />}
+          />
+          <Route
+            path="/products/share-products/:id"
+            element={<ViewShareProduct />}
+          />
 
           {/* Charges */}
           <Route path="/products/charges" element={<Charges />} />
@@ -850,6 +888,14 @@ const AppRoutes = () => {
           {/* Configurations */}
           {/* Maker Checker */}
           <Route path="/system/maker-checker" element={<MakerChecker />} />
+
+          {/* Scheduler Jobs */}
+          <Route path="/system/jobs" element={<SchedulerJobs />} />
+          <Route path="/system/jobs/:id/edit" element={<EditSchedulerJob />} />
+          <Route
+            path="/system/jobs/:id/history"
+            element={<SchedulerJobHistory />}
+          />
           <Route path="/system/hooks" element={<ManageHooks />} />
 
           {/* Manage Hooks */}
@@ -871,6 +917,15 @@ const AppRoutes = () => {
             path="/clients/:id/actions/activate"
             element={<ActivateClient />}
           />
+          <Route
+            path="/clients/:id/actions/assign-staff"
+            element={<ClientAssignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/transfer-client"
+            element={<TransferClient />}
+          />
+          <Route path="/clients/:id/actions/close" element={<CloseClient />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="personal-data" element={<ClientsPersonalDataTab />} />
@@ -883,6 +938,10 @@ const AppRoutes = () => {
             />
             <Route
               path="family-members/add"
+              element={<ClientsFamilyMembersAddTab />}
+            />
+            <Route
+              path="family-members/:familyMemberId/edit"
               element={<ClientsFamilyMembersAddTab />}
             />
             <Route path="documents" element={<ClientsDocumentsTab />} />
