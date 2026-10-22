@@ -198,7 +198,12 @@
     "selectTypePlaceholder": "Seleccionar tipo",
     "typeHome": "Casa",
     "typeWork": "Trabajo",
-    "typeOther": "Otro"
+    "typeOther": "Otro",
+    "loading": "Cargando direcciones...",
+    "empty": "Aún no se han agregado direcciones.",
+    "loadFailed": "No se pudieron cargar las direcciones de este cliente.",
+    "statusActive": "Activa",
+    "statusInactive": "Inactiva"
   },
   "charge": {
     "breadcrumbLabel": "Cargo",
