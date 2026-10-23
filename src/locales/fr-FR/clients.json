@@ -12,6 +12,8 @@
   "errors": {
     "failedActivateClient": "Échec de l'activation du client.",
     "failedCloseClient": "Échec de la fermeture du client.",
+    "failedRejectClient": "Échec du rejet du client.",
+    "failedWithdrawClient": "Échec du retrait du client.",
     "failedFetchClient": "Échec du chargement des détails du client.",
     "failedApproveClients": "Échec de l'approbation d'un ou plusieurs clients.",
     "failedFetchClient": "Échec de la récupération des détails du client.",
@@ -40,6 +42,8 @@
     "clientCreated": "Client créé avec succès.",
     "clientActivated": "Client activé avec succès.",
     "clientClosed": "Client fermé avec succès.",
+    "clientRejected": "Client rejeté avec succès.",
+    "clientWithdrawn": "Client retiré avec succès.",
     "clientTransferProposed": "Transfert de client proposé avec succès.",
     "staffAssigned": "Personnel assigné avec succès.",
     "clientsApproved": "Clients sélectionnés approuvés avec succès.",
@@ -120,6 +124,40 @@
       "failedFetchReasons": "Échec de la récupération des motifs de fermeture."
     }
   },
+  "reject": {
+    "title": "Rejeter le Client",
+    "labelRejectedOnDate": "Date de Rejet*",
+    "labelRejectionReason": "Motif de Rejet*",
+    "selectRejectionReason": "Sélectionner un motif de rejet",
+    "noReasonsFound": "Aucun motif de rejet disponible",
+    "noReasonsAvailable": "Aucun motif de rejet n'est configuré. Veuillez configurer les motifs de rejet dans les Paramètres.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date de rejet.",
+      "dateInFuture": "La date de rejet ne peut pas être dans le futur.",
+      "dateBeforeSubmitted": "La date de rejet ne peut pas être antérieure à la date de soumission.",
+      "reasonRequired": "Veuillez sélectionner un motif de rejet.",
+      "failedFetchReasons": "Échec de la récupération des motifs de rejet."
+    }
+  },
+  "withdraw": {
+    "title": "Retirer le Client",
+    "labelWithdrawnOnDate": "Date de Retrait*",
+    "labelWithdrawalReason": "Motif de Retrait*",
+    "selectWithdrawalReason": "Sélectionner un motif de retrait",
+    "noReasonsFound": "Aucun motif de retrait disponible",
+    "noReasonsAvailable": "Aucun motif de retrait n'est configuré. Veuillez configurer les motifs de retrait dans les Paramètres.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date de retrait.",
+      "dateInFuture": "La date de retrait ne peut pas être dans le futur.",
+      "dateBeforeSubmitted": "La date de retrait ne peut pas être antérieure à la date de soumission.",
+      "reasonRequired": "Veuillez sélectionner un motif de retrait.",
+      "failedFetchReasons": "Échec de la récupération des motifs de retrait."
+    }
+  },
   "view": {
     "status": "Statut:",
     "office": "Bureau",
@@ -142,6 +180,8 @@
     },
     "menu": {
       "activate": "Activer",
+      "reject": "Rejeter",
+      "withdraw": "Retirer",
       "edit": "Modifier",
       "applications": "Demandes",
       "newLoanAccount": "Nouveau Compte de Prêt",

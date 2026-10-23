@@ -12,6 +12,8 @@
   "errors": {
     "failedActivateClient": "Failed to activate client.",
     "failedCloseClient": "Failed to close client.",
+    "failedRejectClient": "Failed to reject client.",
+    "failedWithdrawClient": "Failed to withdraw client.",
     "failedFetchClient": "Failed to load client details.",
     "failedApproveClients": "Failed to approve one or more clients.",
     "failedFetchClient": "Failed to fetch client details.",
@@ -40,6 +42,8 @@
     "clientCreated": "Client created successfully.",
     "clientActivated": "Client activated successfully.",
     "clientClosed": "Client closed successfully.",
+    "clientRejected": "Client rejected successfully.",
+    "clientWithdrawn": "Client withdrawn successfully.",
     "clientTransferProposed": "Client transfer proposed successfully.",
     "staffAssigned": "Staff assigned successfully.",
     "clientsApproved": "Selected clients approved successfully.",
@@ -120,6 +124,40 @@
       "failedFetchReasons": "Failed to fetch closure reasons."
     }
   },
+  "reject": {
+    "title": "Reject Client",
+    "labelRejectedOnDate": "Rejected On Date*",
+    "labelRejectionReason": "Rejection Reason*",
+    "selectRejectionReason": "Select Rejection Reason",
+    "noReasonsFound": "No rejection reasons available",
+    "noReasonsAvailable": "No rejection reasons are configured. Please configure client rejection reasons in Settings.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter a rejection date.",
+      "dateInFuture": "The rejection date cannot be in the future.",
+      "dateBeforeSubmitted": "The rejection date cannot be before the submitted date.",
+      "reasonRequired": "Please select a rejection reason.",
+      "failedFetchReasons": "Failed to fetch rejection reasons."
+    }
+  },
+  "withdraw": {
+    "title": "Withdraw Client",
+    "labelWithdrawnOnDate": "Withdrawn On Date*",
+    "labelWithdrawalReason": "Withdrawal Reason*",
+    "selectWithdrawalReason": "Select Withdrawal Reason",
+    "noReasonsFound": "No withdrawal reasons available",
+    "noReasonsAvailable": "No withdrawal reasons are configured. Please configure client withdrawal reasons in Settings.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter a withdrawal date.",
+      "dateInFuture": "The withdrawal date cannot be in the future.",
+      "dateBeforeSubmitted": "The withdrawal date cannot be before the submitted date.",
+      "reasonRequired": "Please select a withdrawal reason.",
+      "failedFetchReasons": "Failed to fetch withdrawal reasons."
+    }
+  },
   "view": {
     "status": "Status:",
     "office": "Office",
@@ -142,6 +180,8 @@
     },
     "menu": {
       "activate": "Activate",
+      "reject": "Reject",
+      "withdraw": "Withdraw",
       "edit": "Edit",
       "applications": "Applications",
       "newLoanAccount": "New Loan Account",
