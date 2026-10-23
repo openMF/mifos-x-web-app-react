@@ -14,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { Trans, useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { useIdleTimeout } from '@/hooks/use-idle-timeout'
 import { useLogout } from '@/hooks/use-logout'
@@ -24,6 +25,7 @@ import { envConfig } from '@/lib/env-config'
  * (MIFOS_SESSION_IDLE_TIMEOUT), and warns first so they can stay signed in.
  */
 const SessionTimeout = () => {
+  const { t } = useTranslation('common')
   const logout = useLogout()
   const { secondsLeft, staySignedIn } = useIdleTimeout(
     envConfig.sessionIdleTimeout,
@@ -40,23 +42,28 @@ const SessionTimeout = () => {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Session timeout</AlertDialogTitle>
+          <AlertDialogTitle>{t('session.timeoutTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            There has been no activity for a while. You will be signed out in{' '}
-            <span className="font-semibold tabular-nums">{secondsLeft}</span>{' '}
-            seconds.
+            <Trans
+              t={t}
+              i18nKey="session.timeoutMessage"
+              values={{ seconds: secondsLeft }}
+              components={{
+                1: <span className="font-semibold tabular-nums" />,
+              }}
+            />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           {/* A plain button, so closing the dialog does not count as staying */}
           <Button variant="outline" onClick={() => logout()}>
-            Sign out now
+            {t('session.signOutNow')}
           </Button>
           <AlertDialogAction
             className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             onClick={staySignedIn}
           >
-            Stay signed in
+            {t('session.staySignedIn')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

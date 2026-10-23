@@ -550,6 +550,32 @@
     "shareAccounts": "Conti azioni",
     "groupMemberships": "Adesioni ai gruppi"
   },
+  "documents": {
+    "heading": "Documenti",
+    "add": "Aggiungi",
+    "name": "Nome",
+    "namePlaceholder": "Nome del documento",
+    "description": "Descrizione",
+    "optional": "Facoltativo",
+    "file": "File",
+    "fileName": "Nome file",
+    "actions": "Azioni",
+    "upload": "Carica",
+    "uploading": "Caricamento in corso...",
+    "cancel": "Annulla",
+    "download": "Scarica",
+    "delete": "Elimina",
+    "confirmDelete": "Eliminare questo documento?",
+    "loading": "Caricamento...",
+    "empty": "Nessun documento",
+    "preview": "Anteprima",
+    "previewFailed": "Impossibile visualizzare l'anteprima di questo documento.",
+    "openInNewTab": "Apri in una nuova scheda",
+    "close": "Chiudi",
+    "identifier": "Identificativo",
+    "noIdentifiers": "Nessun identificativo",
+    "identifiersLoadFailed": "Impossibile caricare gli identificativi. Riprova."
+  },
   "search": {
     "enterQuery": "Inserisci un termine di ricerca nella barra di navigazione per trovare clienti, gruppi, centri e conti.",
     "noResultsHint": "Cerca per nome, numero di conto o ID esterno. Potrebbe essere necessario rispettare le maiuscole usate al salvataggio del nome, ad esempio \"Ada\" invece di \"ada\".",
@@ -573,5 +599,56 @@
     "matchCount": "{{shown}} / {{total}}",
     "other": "Altro",
     "run": "Esegui"
+  },
+  "session": {
+    "timeoutTitle": "Sessione scaduta",
+    "timeoutMessage": "Non ci sono state attività per un po'. Verrai disconnesso tra <1>{{seconds}}</1> secondi.",
+    "signOutNow": "Esci ora",
+    "staySignedIn": "Rimani connesso"
+  },
+  "shortcuts": {
+    "shortcutColumn": "Scorciatoie",
+    "pageOrActionColumn": "Pagina o azione",
+    "descriptions": {
+      "toggleSidebar": "Mostra/nascondi barra laterale",
+      "navigation": "Pagina di navigazione",
+      "runReport": "Esegui report",
+      "checkerInbox": "Posta in arrivo e attività in sospeso del revisore",
+      "createClient": "Crea cliente",
+      "createGroup": "Crea gruppo",
+      "createCenter": "Crea centro",
+      "frequentPosting": "Registrazione frequente",
+      "closureEntries": "Registrazioni di chiusura",
+      "journalEntry": "Voce di giornale",
+      "reports": "Report",
+      "accounting": "Contabilità",
+      "saveForm": "Salva/invia moduli",
+      "cancelForm": "Annulla",
+      "help": "Aiuto",
+      "logout": "Esci"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "clients": "Clienti",
+    "client": "Cliente",
+    "groups": "Gruppi",
+    "group": "Gruppo",
+    "loanAccount": "Conto prestito",
+    "savingsAccount": "Conto di risparmio",
+    "sharesAccount": "Conto azioni",
+    "tabs": {
+      "general": "Generale",
+      "accountDetails": "Dettagli conto",
+      "repaymentSchedule": "Piano di rimborso",
+      "transactions": "Transazioni",
+      "loanCollateral": "Dettagli garanzia del prestito",
+      "termVariations": "Variazioni della durata",
+      "loanDocuments": "Documenti del prestito",
+      "charges": "Commissioni",
+      "documents": "Documenti",
+      "dividends": "Dividendi",
+      "notes": "Note"
+    }
   }
 }

@@ -247,8 +247,8 @@ export const AppSidebar = () => {
           </DialogHeader>
           <div className="max-h-[70vh] overflow-y-auto">
             <div className="grid grid-cols-[minmax(145px,0.7fr)_1fr] border-b px-3 py-2 text-sm font-semibold text-muted-foreground">
-              <span>Shortcuts</span>
-              <span>Page or action</span>
+              <span>{t('shortcuts.shortcutColumn')}</span>
+              <span>{t('shortcuts.pageOrActionColumn')}</span>
             </div>
             {GLOBAL_SHORTCUTS.map((shortcut: GlobalShortcut) => (
               <div
@@ -267,7 +267,7 @@ export const AppSidebar = () => {
                     </span>
                   ))}
                 </div>
-                <span>{shortcut.description}</span>
+                <span>{t(shortcut.descriptionKey)}</span>
               </div>
             ))}
           </div>

@@ -7,6 +7,7 @@
  */
 import { Button } from '@/components/ui/button'
 import { useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface Steps {
   icon: ReactNode
@@ -19,6 +20,7 @@ interface StepsProp {
 }
 
 const AppStepper = ({ steps }: StepsProp) => {
+  const { t } = useTranslation('common')
   const [currentStep, setCurrentStep] = useState(0)
 
   const nextPage = () => {
@@ -78,7 +80,7 @@ const AppStepper = ({ steps }: StepsProp) => {
           disabled={currentStep === 0}
           onClick={prevPage}
         >
-          Previous
+          {t('actions.previous')}
         </Button>
 
         <Button
@@ -86,7 +88,7 @@ const AppStepper = ({ steps }: StepsProp) => {
           disabled={currentStep === steps.length - 1}
           onClick={nextPage}
         >
-          Next
+          {t('actions.next')}
         </Button>
       </div>
     </div>
