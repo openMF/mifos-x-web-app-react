@@ -503,6 +503,30 @@
     "officeCreated": "Oficina creada exitosamente.",
     "officeSaved": "Oficina guardada exitosamente."
   },
+  "systemInformation": {
+    "fields": {
+      "businessDate": "Fecha del sistema actual",
+      "fineract": "Apache Fineract®",
+      "name": "Nombre",
+      "renderTime": "Tiempo de renderizado",
+      "server": "Servidor",
+      "tenant": "Instancia",
+      "username": "Usuario",
+      "webApp": "Mifos® WebApp"
+    },
+    "licensing": {
+      "codeOfConduct": "<codeOfConductLink>Código de Conducta</codeOfConductLink> de Mifos a cumplir al colaborar en la comunidad.",
+      "contributorAgreement": "<contributorAgreementLink>Acuerdo de Contribuidor de Mifos</contributorAgreementLink>",
+      "distribution": "La distribución de código abierto Mifos X impulsada por Apache Fineract (incluyendo aplicaciones web, aplicaciones móviles y motor de inteligencia de negocios) está licenciada bajo la <mplLink>Licencia Pública de Mozilla, v2.0</mplLink>.",
+      "externalSoftware": "Consideraciones a tener en cuenta al <externalSoftwareLink>agregar software externo a Mifos</externalSoftwareLink>.",
+      "fineract": "La plataforma <fineractLink>Apache Fineract</fineractLink> está licenciada bajo la <apacheLicenseLink>Licencia Apache, Versión 2.0</apacheLicenseLink>. La Iniciativa Mifos fue la fuerza impulsora detrás de Apache Fineract, lanzándolo como Mifos X en 2011 y contribuyendo a Apache en 2016 con la graduación a un proyecto de nivel superior de la Apache Software Foundation en 2017.",
+      "howToLicense": "<licenseCodeLink>Cómo licenciar correctamente el código de Mifos que estás contribuyendo.</licenseCodeLink>",
+      "legacy": "Nuestro código base heredado (Mifos 2) se rige por la <apacheLicenseLink>Licencia Apache 2.0</apacheLicenseLink>. Por favor, lee lo siguiente para aprender cómo adherirte correctamente a los términos de la licencia.",
+      "licenseFaq": "Las implicaciones de lo que esto significa al modificar el código fuente se pueden encontrar en las <licenseFaqLink>Preguntas frecuentes de la Licencia Apache</licenseFaqLink>",
+      "title": "Licenciamiento de Software"
+    },
+    "title": "Información del Sistema"
+  },
   "tellerCashierManagement": "Gestión de cajeros",
   "title": "Organización",
   "workingDays": "Días laborables"
