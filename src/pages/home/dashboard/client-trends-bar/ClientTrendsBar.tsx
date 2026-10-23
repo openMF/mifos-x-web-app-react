@@ -27,6 +27,7 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { format, subDays, subWeeks, subMonths } from 'date-fns'
 import { useTranslation } from 'react-i18next'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 const runReportApi = new RunReportsApi(getConfiguration())
 
@@ -155,7 +156,7 @@ const ClientTrendsLine = ({ officeId }: { officeId: number }) => {
     }),
     { onboarded: 0, loaned: 0 }
   )
-  const number = new Intl.NumberFormat(i18n.language)
+  const number = (value: number) => formatDisplayNumber(value, i18n.language, 0)
 
   return (
     <Card
@@ -207,7 +208,7 @@ const ClientTrendsLine = ({ officeId }: { officeId: number }) => {
                 {chartConfig[key].label}
               </div>
               <p className="text-2xl font-semibold tabular-nums">
-                {status === 'ready' ? number.format(totals[key]) : '—'}
+                {status === 'ready' ? number(totals[key]) : '—'}
               </p>
             </div>
           ))}
