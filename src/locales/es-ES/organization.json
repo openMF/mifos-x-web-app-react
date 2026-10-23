@@ -160,6 +160,103 @@
     }
   },
   "manageCodes": "Gestionar códigos",
+  "manageDashboards": {
+    "title": "Administrar paneles",
+    "autoRefresh": "Se actualiza cada 10 minutos",
+    "lastUpdated": "Última actualización a las {{time}}. Se actualiza cada 10 minutos.",
+    "office": "Oficina",
+    "refresh": "Actualizar",
+    "loadError": "No se pudo cargar el panel.",
+    "allOffices": "Todas las oficinas",
+    "chartType": "Tipo de gráfico",
+    "activeOfTotal": "{{active}} activas de {{total}}",
+    "allHidden": "Todos los widgets están ocultos. Vuelva a activarlos en la pestaña Configuración de widgets.",
+    "tabs": {
+      "overview": "Resumen de operaciones institucionales",
+      "widgets": "Configuración de widgets"
+    },
+    "clients": {
+      "title": "Clientes",
+      "active": "Activos",
+      "pending": "Pendientes",
+      "newThisMonth": "Activados este mes"
+    },
+    "loans": {
+      "title": "Préstamos desembolsados",
+      "collectionRate": "Tasa de cobro"
+    },
+    "deposits": {
+      "title": "Saldos de depósitos",
+      "savings": "Cuentas de ahorro",
+      "fixed": "Depósitos a plazo fijo",
+      "recurring": "Depósitos recurrentes"
+    },
+    "shares": {
+      "title": "Cuentas de acciones activas",
+      "total": "Todas las cuentas de acciones"
+    },
+    "trend": {
+      "title": "Tendencia de crecimiento mensual",
+      "description": "Clientes activados y préstamos desembolsados en cada uno de los últimos 12 meses.",
+      "bar": "Barras",
+      "line": "Líneas"
+    },
+    "mix": {
+      "title": "Cuentas activas por tipo",
+      "description": "Cuentas activas de cada tipo en todas las oficinas.",
+      "ring": "Anillo",
+      "pie": "Circular",
+      "empty": "Todavía no hay cuentas activas.",
+      "loans": "Préstamos",
+      "savings": "Ahorros",
+      "fixed": "Depósitos a plazo fijo",
+      "recurring": "Depósitos recurrentes",
+      "shares": "Acciones"
+    },
+    "widgets": {
+      "note": "Los widgets ocultos no aparecen en el resumen. Fineract no tiene un ajuste para esto, así que la elección solo se guarda en este navegador.",
+      "search": "Filtrar widgets por nombre o descripción",
+      "module": "Módulo",
+      "name": "Widget",
+      "description": "Descripción",
+      "visible": "Visible",
+      "noMatch": "Ningún widget coincide con el filtro.",
+      "modules": {
+        "all": "Todos los módulos",
+        "global": "Global",
+        "client": "Clientes",
+        "loan": "Préstamos",
+        "savings": "Ahorros",
+        "shares": "Acciones"
+      },
+      "items": {
+        "clients": {
+          "name": "Clientes",
+          "description": "Clientes totales, activos y pendientes, y clientes activados este mes."
+        },
+        "loans": {
+          "name": "Préstamos desembolsados",
+          "description": "Montos desembolsados y pendientes de desembolso, y cuánto de lo exigible se ha cobrado."
+        },
+        "deposits": {
+          "name": "Saldos de depósitos",
+          "description": "Saldos de las cuentas de ahorro, depósitos a plazo fijo y depósitos recurrentes activas."
+        },
+        "shares": {
+          "name": "Cuentas de acciones",
+          "description": "Cuentas de acciones activas y totales."
+        },
+        "trend": {
+          "name": "Tendencia de crecimiento mensual",
+          "description": "Clientes activados y préstamos desembolsados en cada uno de los últimos 12 meses."
+        },
+        "accountMix": {
+          "name": "Cuentas activas por tipo",
+          "description": "Cómo se reparten las cuentas activas de préstamos, ahorros, depósitos y acciones."
+        }
+      }
+    }
+  },
   "manageDataTables": "Gestionar tablas de datos",
   "manageEmployees": "Gestionar empleados",
   "manageExternalEvents": "Gestionar eventos externos",
