@@ -160,6 +160,103 @@
     }
   },
   "manageCodes": "Gestisci codici",
+  "manageDashboards": {
+    "title": "Gestisci dashboard",
+    "autoRefresh": "Si aggiorna ogni 10 minuti",
+    "lastUpdated": "Ultimo aggiornamento alle {{time}}. Si aggiorna ogni 10 minuti.",
+    "office": "Filiale",
+    "refresh": "Aggiorna",
+    "loadError": "Impossibile caricare la dashboard.",
+    "allOffices": "Tutte le filiali",
+    "chartType": "Tipo di grafico",
+    "activeOfTotal": "{{active}} attivi su {{total}}",
+    "allHidden": "Tutti i widget sono nascosti. Riattivali nella scheda Configurazione widget.",
+    "tabs": {
+      "overview": "Panoramica delle operazioni dell'istituto",
+      "widgets": "Configurazione widget"
+    },
+    "clients": {
+      "title": "Clienti",
+      "active": "Attivi",
+      "pending": "In attesa",
+      "newThisMonth": "Attivati questo mese"
+    },
+    "loans": {
+      "title": "Prestiti erogati",
+      "collectionRate": "Tasso di incasso"
+    },
+    "deposits": {
+      "title": "Saldi dei depositi",
+      "savings": "Conti di risparmio",
+      "fixed": "Depositi vincolati",
+      "recurring": "Depositi ricorrenti"
+    },
+    "shares": {
+      "title": "Conti azionari attivi",
+      "total": "Tutti i conti azionari"
+    },
+    "trend": {
+      "title": "Andamento mensile della crescita",
+      "description": "Clienti attivati e prestiti erogati in ciascuno degli ultimi 12 mesi.",
+      "bar": "Barre",
+      "line": "Linee"
+    },
+    "mix": {
+      "title": "Conti attivi per tipo",
+      "description": "Conti attivi di ogni tipo in tutte le filiali.",
+      "ring": "Anello",
+      "pie": "Torta",
+      "empty": "Non ci sono ancora conti attivi.",
+      "loans": "Prestiti",
+      "savings": "Risparmio",
+      "fixed": "Depositi vincolati",
+      "recurring": "Depositi ricorrenti",
+      "shares": "Azioni"
+    },
+    "widgets": {
+      "note": "I widget nascosti non compaiono nella panoramica. Fineract non ha un'impostazione per questo, quindi la scelta viene salvata solo in questo browser.",
+      "search": "Filtra i widget per nome o descrizione",
+      "module": "Modulo",
+      "name": "Widget",
+      "description": "Descrizione",
+      "visible": "Visibile",
+      "noMatch": "Nessun widget corrisponde al filtro.",
+      "modules": {
+        "all": "Tutti i moduli",
+        "global": "Globale",
+        "client": "Clienti",
+        "loan": "Prestiti",
+        "savings": "Risparmio",
+        "shares": "Azioni"
+      },
+      "items": {
+        "clients": {
+          "name": "Clienti",
+          "description": "Clienti totali, attivi e in attesa, e clienti attivati questo mese."
+        },
+        "loans": {
+          "name": "Prestiti erogati",
+          "description": "Importi erogati e in attesa di erogazione, e quanto del dovuto è stato incassato."
+        },
+        "deposits": {
+          "name": "Saldi dei depositi",
+          "description": "Saldi dei conti di risparmio, depositi vincolati e depositi ricorrenti attivi."
+        },
+        "shares": {
+          "name": "Conti azionari",
+          "description": "Conti azionari attivi e totali."
+        },
+        "trend": {
+          "name": "Andamento mensile della crescita",
+          "description": "Clienti attivati e prestiti erogati in ciascuno degli ultimi 12 mesi."
+        },
+        "accountMix": {
+          "name": "Conti attivi per tipo",
+          "description": "Come si suddividono i conti attivi di prestiti, risparmio, depositi e azioni."
+        }
+      }
+    }
+  },
   "manageDataTables": "Gestisci tabelle dati",
   "manageEmployees": "Gestisci dipendenti",
   "manageExternalEvents": "Gestisci eventi esterni",
