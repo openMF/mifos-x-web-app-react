@@ -242,6 +242,7 @@ import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
+import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
 import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
@@ -936,6 +937,10 @@ const AppRoutes = () => {
           <Route
             path="/clients/:id/actions/assign-staff"
             element={<ClientAssignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/unassign-staff"
+            element={<ClientUnassignStaff />}
           />
           <Route
             path="/clients/:id/actions/transfer-client"
