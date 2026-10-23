@@ -503,6 +503,64 @@
     "officeCreated": "Oficina creada exitosamente.",
     "officeSaved": "Oficina guardada exitosamente."
   },
+  "surveys": {
+    "addOption": "Añadir opción",
+    "addQuestion": "Añadir pregunta",
+    "create": "Crear encuesta",
+    "createButton": "Crear encuesta",
+    "deactivate": "Desactivar",
+    "edit": "Editar encuesta",
+    "fields": {
+      "action": "Acción",
+      "countryCode": "Código de país",
+      "countryCodeHint": "p. ej. ES",
+      "countryCodeRequired": "Código de país *",
+      "description": "Descripción",
+      "key": "Clave",
+      "keyRequired": "Clave *",
+      "name": "Nombre",
+      "nameRequired": "Nombre *",
+      "option": "Opción",
+      "optionRequired": "Opción *",
+      "questionRequired": "Pregunta *",
+      "questions": "Preguntas",
+      "status": "Estado",
+      "value": "Valor",
+      "valueRequired": "Valor *"
+    },
+    "messages": {
+      "createError": "No se pudo crear la encuesta.",
+      "loadError": "No se pudo cargar la encuesta.",
+      "loadListError": "No se pudieron cargar las encuestas.",
+      "statusError": "No se pudo cambiar el estado de la encuesta.",
+      "updateError": "No se pudo actualizar la encuesta."
+    },
+    "moveOptionDown": "Bajar la opción {{option}} de la pregunta {{number}}",
+    "moveOptionUp": "Subir la opción {{option}} de la pregunta {{number}}",
+    "moveQuestionDown": "Bajar la pregunta {{number}}",
+    "moveQuestionUp": "Subir la pregunta {{number}}",
+    "noQuestions": "Todavía no se han añadido preguntas.",
+    "optionText": "Pregunta {{number}}, texto de la opción {{option}}",
+    "optionValue": "Pregunta {{number}}, valor de la opción {{option}}",
+    "questionNumber": "Pregunta {{number}}",
+    "removeOption": "Eliminar la opción {{option}} de la pregunta {{number}}",
+    "removeQuestion": "Eliminar la pregunta {{number}}",
+    "status": {
+      "active": "Activa",
+      "inactive": "Inactiva"
+    },
+    "title": "Gestionar encuestas",
+    "validation": {
+      "countryCode": "El código de país debe tener dos letras, por ejemplo ES.",
+      "keyRequired": "La clave es obligatoria.",
+      "nameRequired": "El nombre es obligatorio.",
+      "optionRequired": "La pregunta {{number}} necesita al menos una opción.",
+      "optionText": "Cada opción de la pregunta {{number}} necesita un texto.",
+      "optionValue": "Cada valor de opción de la pregunta {{number}} debe ser un número entero de hasta cuatro dígitos.",
+      "questionFields": "La pregunta {{number}} necesita una clave y un texto.",
+      "questionRequired": "Añada al menos una pregunta."
+    }
+  },
   "tellerCashierManagement": "Gestión de cajeros",
   "title": "Organización",
   "workingDays": "Días laborables"
