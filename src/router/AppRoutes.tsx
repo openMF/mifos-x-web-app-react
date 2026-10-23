@@ -32,6 +32,8 @@ import NotFound from '@/pages/not-found/NotFound'
 import SearchResults from '@/pages/search/SearchResults'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
+import MigrateOpeningBalances from '@/pages/accounting/MigrateOpeningBalances'
+import ViewJournalEntryTransaction from '@/pages/accounting/ViewJournalEntryTransaction'
 import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
 import AccountingRules from '@/pages/accounting/accounting-rules/AccountingRules'
 import ViewAccountingRules from '@/pages/accounting/accounting-rules/ViewAccountingRules'
@@ -303,6 +305,10 @@ const AppRoutes = () => {
 
           {/* Accounting */}
           <Route path="/accounting" element={<Accounting />} />
+          <Route
+            path="/accounting/opening-balances"
+            element={<MigrateOpeningBalances />}
+          />
 
           {/* Chart of Accounts Routes */}
           <Route
@@ -326,6 +332,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/journal-entries"
             element={<SearchJournalEntry />}
+          />
+          <Route
+            path="/accounting/journal-entries/transactions/view/:id"
+            element={<ViewJournalEntryTransaction />}
           />
           <Route
             path="/accounting/journal-entries/create"
