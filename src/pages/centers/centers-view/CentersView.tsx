@@ -26,6 +26,7 @@ interface ExtendedCenterResponse extends GetCentersCenterIdResponse {
   staffId?: number
 }
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import { Building2, Menu } from 'lucide-react'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
@@ -89,8 +90,17 @@ const CentersView = () => {
   const statusClass = statusColorMap[statusVal ?? ''] ?? 'text-zinc-400'
 
   // Derived flags
-  const isActive = statusVal === 'Active'
-  const isClosed = statusVal === 'Closed'
+  const isActive =
+    Boolean(center.active) ||
+    statusVal === 'groupingStatusType.active' ||
+    center.status?.description === 'Active' ||
+    (center.status as { value?: string } | undefined)?.value === 'Active' ||
+    center.status?.id === 300
+  const isClosed =
+    statusVal === 'groupingStatusType.closed' ||
+    center.status?.description === 'Closed' ||
+    (center.status as { value?: string } | undefined)?.value === 'Closed' ||
+    center.status?.id === 600
   const hasCal = !!center?.collectionMeetingCalendar // calendar check
   const hasStaff = !!center?.staffId // staff check
 
@@ -138,7 +148,12 @@ const CentersView = () => {
 
         // Assign/unassign staff
         ...(!hasStaff
-          ? [{ label: t('view.menu.assignStaff'), path: 'email' }]
+          ? [
+              {
+                label: t('view.menu.assignStaff'),
+                path: `centers/${center.id}/actions/assign-staff`,
+              },
+            ]
           : [{ label: t('view.menu.unassignStaff'), path: 'email' }]),
 
         // Delete only if active
@@ -187,6 +202,8 @@ const CentersView = () => {
           ...(activeTabLabel ? [{ label: activeTabLabel }] : []),
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       {/* Header card with blue background */}
       <div className="bg-[#0e77b7] text-white p-6 mt-6 rounded-t-lg flex justify-between items-start relative">
