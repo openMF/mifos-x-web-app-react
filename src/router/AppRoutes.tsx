@@ -183,6 +183,7 @@ import EditGroups from '@/pages/groups/groups-view/group-actions/EditGroups'
 import TransferClients from '@/pages/groups/groups-view/group-actions/TransferClients'
 import ManageGroupMembers from '@/pages/groups/groups-view/group-actions/ManageGroupMembers'
 import AttachMeeting from '@/pages/groups/groups-view/group-actions/AttachMeeting'
+import ActivateGroup from '@/pages/groups/groups-view/group-actions/ActivateGroup'
 import GroupsAddRoleCommitteeTab from '@/pages/groups/groups-view/commitee-tab/GroupsAddRoleCommiteeTab'
 import GroupsView from '@/pages/groups/groups-view/GroupsView'
 import GroupsGeneralTab from '@/pages/groups/groups-view/general-tab/GroupsGeneralTab'
@@ -1217,6 +1218,10 @@ const AppRoutes = () => {
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/create" element={<CreateGroups />} />
           <Route path="/groups/:id/edit" element={<EditGroups />} />
+          <Route
+            path="/groups/:id/actions/activate"
+            element={<ActivateGroup />}
+          />
           <Route
             path="/groups/:id/actions/transfer-clients"
             element={<TransferClients />}
