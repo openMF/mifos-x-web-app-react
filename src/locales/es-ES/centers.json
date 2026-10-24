@@ -37,6 +37,25 @@
     "labelClosedOn": "Fecha de cierre*",
     "breadcrumb": "Cerrar"
   },
+  "attachMeeting": {
+    "heading": "Adjuntar reunión",
+    "labelStartDate": "Fecha de inicio de la reunión*",
+    "labelRepeats": "¿Se repite?",
+    "labelFrequency": "Frecuencia de repetición",
+    "labelInterval": "Intervalo de repetición",
+    "labelRepeatsOnDay": "Se repite el día*",
+    "placeholderFrequency": "Seleccionar frecuencia",
+    "placeholderInterval": "Seleccionar intervalo",
+    "placeholderRepeatsOnDay": "Seleccionar día",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de inicio de la reunión.",
+      "dayRequired": "Por favor seleccione un día para la repetición semanal.",
+      "failedAttachMeeting": "Error al adjuntar la reunión al centro."
+    }
+  },
+  "success": {
+    "meetingAttached": "Reunión adjuntada exitosamente."
+  },
   "view": {
     "centerName": "Nombre del Centro :",
     "accountNo": "N.º de Cuenta:",
