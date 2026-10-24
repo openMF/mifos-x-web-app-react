@@ -207,6 +207,14 @@ const ClientsView = () => {
                         label: t('view.menu.activate'),
                         path: `clients/${client?.id}/actions/activate`,
                       },
+                      {
+                        label: t('view.menu.reject'),
+                        path: `clients/${client?.id}/actions/reject`,
+                      },
+                      {
+                        label: t('view.menu.withdraw'),
+                        path: `clients/${client?.id}/actions/withdraw`,
+                      },
                     ]
                   : []),
                 {

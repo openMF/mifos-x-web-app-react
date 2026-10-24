@@ -12,6 +12,8 @@
   "errors": {
     "failedActivateClient": "Impossibile attivare il cliente.",
     "failedCloseClient": "Impossibile chiudere il cliente.",
+    "failedRejectClient": "Impossibile rifiutare il cliente.",
+    "failedWithdrawClient": "Impossibile ritirare il cliente.",
     "failedFetchClient": "Impossibile caricare i dettagli del cliente.",
     "failedApproveClients": "Impossibile approvare uno o più clienti.",
     "failedFetchClient": "Impossibile recuperare i dettagli del cliente.",
@@ -40,6 +42,8 @@
     "clientCreated": "Cliente creato con successo.",
     "clientActivated": "Cliente attivato con successo.",
     "clientClosed": "Cliente chiuso con successo.",
+    "clientRejected": "Cliente rifiutato con successo.",
+    "clientWithdrawn": "Cliente ritirato con successo.",
     "clientTransferProposed": "Trasferimento cliente proposto con successo.",
     "staffAssigned": "Personale assegnato con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
@@ -120,6 +124,40 @@
       "failedFetchReasons": "Impossibile recuperare i motivi di chiusura."
     }
   },
+  "reject": {
+    "title": "Rifiuta Cliente",
+    "labelRejectedOnDate": "Data di Rifiuto*",
+    "labelRejectionReason": "Motivo del Rifiuto*",
+    "selectRejectionReason": "Seleziona il motivo del rifiuto",
+    "noReasonsFound": "Nessun motivo di rifiuto disponibile",
+    "noReasonsAvailable": "Nessun motivo di rifiuto configurato. Configurare i motivi di rifiuto nelle Impostazioni.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Si prega di inserire una data di rifiuto.",
+      "dateInFuture": "La data di rifiuto non può essere nel futuro.",
+      "dateBeforeSubmitted": "La data di rifiuto non può essere antecedente alla data di invio.",
+      "reasonRequired": "Si prega di selezionare un motivo di rifiuto.",
+      "failedFetchReasons": "Impossibile recuperare i motivi di rifiuto."
+    }
+  },
+  "withdraw": {
+    "title": "Ritira Cliente",
+    "labelWithdrawnOnDate": "Data di Ritiro*",
+    "labelWithdrawalReason": "Motivo del Ritiro*",
+    "selectWithdrawalReason": "Seleziona il motivo del ritiro",
+    "noReasonsFound": "Nessun motivo di ritiro disponibile",
+    "noReasonsAvailable": "Nessun motivo di ritiro configurato. Configurare i motivi di ritiro nelle Impostazioni.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Si prega di inserire una data di ritiro.",
+      "dateInFuture": "La data di ritiro non può essere nel futuro.",
+      "dateBeforeSubmitted": "La data di ritiro non può essere antecedente alla data di invio.",
+      "reasonRequired": "Si prega di selezionare un motivo di ritiro.",
+      "failedFetchReasons": "Impossibile recuperare i motivi di ritiro."
+    }
+  },
   "view": {
     "status": "Stato:",
     "office": "Ufficio",
@@ -142,6 +180,8 @@
     },
     "menu": {
       "activate": "Attiva",
+      "reject": "Rifiuta",
+      "withdraw": "Ritira",
       "edit": "Modifica",
       "applications": "Domande",
       "newLoanAccount": "Nuovo Conto Prestito",

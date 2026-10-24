@@ -12,6 +12,8 @@
   "errors": {
     "failedActivateClient": "No se pudo activar el cliente.",
     "failedCloseClient": "No se pudo cerrar el cliente.",
+    "failedRejectClient": "Error al rechazar el cliente.",
+    "failedWithdrawClient": "Error al retirar el cliente.",
     "failedFetchClient": "Error al cargar los detalles del cliente.",
     "failedApproveClients": "Error al aprobar uno o más clientes.",
     "failedFetchClient": "Error al obtener los detalles del cliente.",
@@ -40,6 +42,8 @@
     "clientCreated": "Cliente creado exitosamente.",
     "clientActivated": "Cliente activado exitosamente.",
     "clientClosed": "Cliente cerrado exitosamente.",
+    "clientRejected": "Cliente rechazado con éxito.",
+    "clientWithdrawn": "Cliente retirado con éxito.",
     "clientTransferProposed": "Transferencia de cliente propuesta con éxito.",
     "staffAssigned": "Personal asignado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
@@ -120,6 +124,40 @@
       "failedFetchReasons": "Error al obtener los motivos de cierre."
     }
   },
+  "reject": {
+    "title": "Rechazar Cliente",
+    "labelRejectedOnDate": "Fecha de Rechazo*",
+    "labelRejectionReason": "Motivo de Rechazo*",
+    "selectRejectionReason": "Seleccionar motivo de rechazo",
+    "noReasonsFound": "No hay motivos de rechazo disponibles",
+    "noReasonsAvailable": "No hay motivos de rechazo configurados. Por favor configure los motivos de rechazo en Configuración.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de rechazo.",
+      "dateInFuture": "La fecha de rechazo no puede ser en el futuro.",
+      "dateBeforeSubmitted": "La fecha de rechazo no puede ser anterior a la fecha de envío.",
+      "reasonRequired": "Por favor seleccione un motivo de rechazo.",
+      "failedFetchReasons": "Error al obtener los motivos de rechazo."
+    }
+  },
+  "withdraw": {
+    "title": "Retirar Cliente",
+    "labelWithdrawnOnDate": "Fecha de Retiro*",
+    "labelWithdrawalReason": "Motivo de Retiro*",
+    "selectWithdrawalReason": "Seleccionar motivo de retiro",
+    "noReasonsFound": "No hay motivos de retiro disponibles",
+    "noReasonsAvailable": "No hay motivos de retiro configurados. Por favor configure los motivos de retiro en Configuración.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de retiro.",
+      "dateInFuture": "La fecha de retiro no puede ser en el futuro.",
+      "dateBeforeSubmitted": "La fecha de retiro no puede ser anterior a la fecha de envío.",
+      "reasonRequired": "Por favor seleccione un motivo de retiro.",
+      "failedFetchReasons": "Error al obtener los motivos de retiro."
+    }
+  },
   "view": {
     "status": "Estado:",
     "office": "Oficina",
@@ -142,6 +180,8 @@
     },
     "menu": {
       "activate": "Activar",
+      "reject": "Rechazar",
+      "withdraw": "Retirar",
       "edit": "Editar",
       "applications": "Solicitudes",
       "newLoanAccount": "Nueva Cuenta de Préstamo",
