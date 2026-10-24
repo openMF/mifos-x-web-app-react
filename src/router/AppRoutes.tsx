@@ -219,6 +219,12 @@ import SavingProductTransactionTab from '@/pages/saving-product/saving-product-v
 import SavingProductChargesTab from '@/pages/saving-product/saving-product-view/charges-tab/SavingProductChargesTab'
 import SavingsDocumentsTab from '@/pages/saving-product/saving-product-view/savings-documents-tab/SavingsDocumentsTab'
 import SavingsNotesTab from '@/pages/saving-product/saving-product-view/notes-tab/SavingsNotesTab'
+import FixedDepositAccountView from '@/pages/fixed-deposits/fixed-deposit-account-view/FixedDepositAccountView'
+import FixedDepositGeneralTab from '@/pages/fixed-deposits/fixed-deposit-account-view/general-tab/FixedDepositGeneralTab'
+import FixedDepositInterestRateChartTab from '@/pages/fixed-deposits/fixed-deposit-account-view/interest-rate-chart-tab/FixedDepositInterestRateChartTab'
+import FixedDepositTransactionsTab from '@/pages/fixed-deposits/fixed-deposit-account-view/transactions-tab/FixedDepositTransactionsTab'
+import FixedDepositChargesTab from '@/pages/fixed-deposits/fixed-deposit-account-view/charges-tab/FixedDepositChargesTab'
+import FixedDepositStandingInstructionsTab from '@/pages/fixed-deposits/fixed-deposit-account-view/standing-instructions-tab/FixedDepositStandingInstructionsTab'
 import ApproveSavingAccount from '@/pages/saving-product/saving-account-actions/approve-savings-account/ApproveSavingAccount'
 import RejectSavingsAccount from '@/pages/saving-product/saving-account-actions/reject-savings-account/RejectSavingsAccount'
 import AddChargeSavingsAccount from '@/pages/saving-product/saving-account-actions/add-charge-savings-account/AddChargeSavingsAccount'
@@ -1121,6 +1127,27 @@ const AppRoutes = () => {
             <Route path="charges" element={<SavingProductChargesTab />} />
             <Route path="documents" element={<SavingsDocumentsTab />} />
             <Route path="notes" element={<SavingsNotesTab />} />
+          </Route>
+
+          <Route
+            path="/clients/:clientId/fixed-deposits-accounts/:accountId"
+            element={<FixedDepositAccountView />}
+          >
+            <Route index element={<Navigate to="general" replace />} />
+            <Route path="general" element={<FixedDepositGeneralTab />} />
+            <Route
+              path="interest-rate-chart"
+              element={<FixedDepositInterestRateChartTab />}
+            />
+            <Route
+              path="transactions"
+              element={<FixedDepositTransactionsTab />}
+            />
+            <Route path="charges" element={<FixedDepositChargesTab />} />
+            <Route
+              path="standing-instructions"
+              element={<FixedDepositStandingInstructionsTab />}
+            />
           </Route>
 
           <Route
