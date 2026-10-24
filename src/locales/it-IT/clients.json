@@ -45,7 +45,8 @@
     "clientsApproved": "Clienti selezionati approvati con successo.",
     "familyMemberAdded": "Membro della famiglia aggiunto con successo.",
     "familyMemberUpdated": "Membro della famiglia aggiornato con successo.",
-    "familyMemberDeleted": "Membro della famiglia eliminato con successo."
+    "familyMemberDeleted": "Membro della famiglia eliminato con successo.",
+    "chargeAdded": "Commissione del cliente aggiunta con successo."
   },
   "title": "Clienti",
   "unnamedClient": "Cliente senza nome",
@@ -67,6 +68,30 @@
       "dateRequired": "Inserisci una data di attivazione.",
       "dateInFuture": "La data di attivazione non può essere nel futuro.",
       "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
+  "addCharge": {
+    "title": "Aggiungi Commissione Cliente",
+    "charge": "Commissione",
+    "selectCharge": "Seleziona Commissione",
+    "amount": "Importo",
+    "chargeCalculation": "Calcolo della Commissione",
+    "chargeTimeType": "Tipo di tempo della commissione",
+    "dueDate": "Scadenza per la riscossione il",
+    "dueOn": "Scadenza il",
+    "repeatsEvery": "Si ripete ogni",
+    "cancel": "Annulla",
+    "submit": "Invia",
+    "confirm": "Conferma",
+    "errors": {
+      "chargeRequired": "Seleziona una commissione.",
+      "amountRequired": "Inserisci un importo.",
+      "amountPositive": "L'importo deve essere maggiore di zero.",
+      "dueDateRequired": "Seleziona una data di scadenza.",
+      "feeOnMonthDayRequired": "Seleziona una data per la commissione.",
+      "feeIntervalRequired": "Inserisci l'intervallo di ripetizione.",
+      "failedAddCharge": "Impossibile aggiungere la commissione al cliente.",
+      "failedLoadTemplate": "Impossibile caricare le opzioni delle commissioni."
     }
   },
   "assignStaff": {

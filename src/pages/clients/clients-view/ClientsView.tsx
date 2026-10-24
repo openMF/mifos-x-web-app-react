@@ -287,8 +287,7 @@ const ClientsView = () => {
                   children: [
                     {
                       label: t('view.menu.addCharge'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/actions/add-charge`,
                     },
                     {
                       label: t('view.menu.createCollateral'),
