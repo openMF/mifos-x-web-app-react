@@ -9,6 +9,7 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import SavingsAccountDetailsStep from './savings-account-stepper/SavingsAccountDetailsStep'
 import SavingsAccountTermsStep from './savings-account-stepper/SavingsAccountTermsStep'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { inputToFineractDate, todayInputValue } from '@/lib/date-utils'
 import {
   SavingsAccountApi,
   type GetSavingsAccountsTemplateResponse,
@@ -46,7 +47,10 @@ const CreateSavingsAccount = () => {
 
   const handleSubmit = async () => {
     try {
-      await savingsAccountApi.submitApplication2(formData)
+      await savingsAccountApi.submitApplication2({
+        ...formData,
+        submittedOnDate: inputToFineractDate(formData.submittedOnDate),
+      })
       navigate(isGroup ? `/groups/${id}/general` : `/clients/${id}/general`)
     } catch (error) {
       console.error('Error while submitting', error)
@@ -54,15 +58,13 @@ const CreateSavingsAccount = () => {
   }
 
   //some form details are kept manual because they are broken in OpenApi
+  // submittedOnDate is kept as the date input's yyyy-MM-dd value and is
+  // converted to dateFormat on submit
   const [formData, setFormData] = useState<PostSavingsAccountsRequest>({
     locale: 'en',
     dateFormat: 'dd MMMM yyyy',
     ...(isGroup ? { groupId: Number(id) } : { clientId: Number(id) }),
-    submittedOnDate: new Date().toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    }),
+    submittedOnDate: todayInputValue(),
   })
 
   if (!template) {
