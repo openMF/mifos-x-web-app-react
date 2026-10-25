@@ -21,9 +21,21 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch, useAppSelector } from '@/app/hook'
+import { persistDecimalPlaces, setDecimalPlaces } from './settingsSlice'
 
 const Settings = () => {
   const { t } = useTranslation('common')
+  const dispatch = useAppDispatch()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
+
+  const handleDecimalPlacesChange = (value: string) => {
+    const parsed = Number(value)
+    if (!Number.isInteger(parsed) || parsed < 0 || parsed > 8) return
+    dispatch(setDecimalPlaces(parsed))
+    persistDecimalPlaces(parsed)
+  }
+
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
@@ -75,12 +87,21 @@ const Settings = () => {
                 <label className="text-sm font-medium">
                   {t('ui.decimalsToDisplay')}
                 </label>
-                <Select>
+                <Select
+                  value={String(decimalPlaces)}
+                  onValueChange={handleDecimalPlacesChange}
+                >
                   <SelectTrigger>
-                    <SelectValue placeholder={t('ui.selectDecimals')} />
+                    <SelectValue placeholder={t('ui.selectDecimals')}>
+                      {String(decimalPlaces)}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="2">2</SelectItem>
+                    {Array.from({ length: 9 }, (_, value) => (
+                      <SelectItem key={value} value={String(value)}>
+                        {String(value)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

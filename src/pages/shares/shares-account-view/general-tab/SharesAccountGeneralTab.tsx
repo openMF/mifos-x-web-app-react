@@ -7,6 +7,8 @@
  */
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 import {
   Table,
@@ -47,15 +49,9 @@ const fmtDate = (d: unknown) => {
       })
 }
 
-// helper: format number to 2 decimals
-const to2 = (n: unknown) =>
-  new Intl.NumberFormat(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(Number(n ?? 0))
-
 const SharesAccountGeneralTab = () => {
   const { clientId, sharesAccountId } = useParams()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [data, setData] = useState<ShareAccount | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -158,13 +154,21 @@ const SharesAccountGeneralTab = () => {
                 Pending for Approval Shares
               </TableCell>
               <TableCell className="text-right">
-                {to2(summary.totalPendingForApprovalShares)}
+                {formatDisplayNumber(
+                  Number(summary.totalPendingForApprovalShares ?? 0),
+                  undefined,
+                  decimalPlaces
+                )}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="bg-zinc-100">Approved Shares</TableCell>
               <TableCell className="text-right">
-                {to2(summary.totalApprovedShares)}
+                {formatDisplayNumber(
+                  Number(summary.totalApprovedShares ?? 0),
+                  undefined,
+                  decimalPlaces
+                )}
               </TableCell>
             </TableRow>
           </TableBody>
