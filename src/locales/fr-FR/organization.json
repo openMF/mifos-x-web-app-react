@@ -160,6 +160,103 @@
     }
   },
   "manageCodes": "Gérer les codes",
+  "manageDashboards": {
+    "title": "Gérer les tableaux de bord",
+    "autoRefresh": "Mise à jour toutes les 10 minutes",
+    "lastUpdated": "Dernière mise à jour à {{time}}. Mise à jour toutes les 10 minutes.",
+    "office": "Agence",
+    "refresh": "Actualiser",
+    "loadError": "Le tableau de bord n'a pas pu être chargé.",
+    "allOffices": "Toutes les agences",
+    "chartType": "Type de graphique",
+    "activeOfTotal": "{{active}} actifs sur {{total}}",
+    "allHidden": "Tous les widgets sont masqués. Réactivez-les dans l'onglet Configuration des widgets.",
+    "tabs": {
+      "overview": "Aperçu des opérations de l'institution",
+      "widgets": "Configuration des widgets"
+    },
+    "clients": {
+      "title": "Clients",
+      "active": "Actifs",
+      "pending": "En attente",
+      "newThisMonth": "Activés ce mois-ci"
+    },
+    "loans": {
+      "title": "Prêts décaissés",
+      "collectionRate": "Taux de recouvrement"
+    },
+    "deposits": {
+      "title": "Soldes des dépôts",
+      "savings": "Comptes d'épargne",
+      "fixed": "Dépôts à terme",
+      "recurring": "Dépôts récurrents"
+    },
+    "shares": {
+      "title": "Comptes de parts actifs",
+      "total": "Tous les comptes de parts"
+    },
+    "trend": {
+      "title": "Tendance de croissance mensuelle",
+      "description": "Clients activés et prêts décaissés au cours de chacun des 12 derniers mois.",
+      "bar": "Barres",
+      "line": "Lignes"
+    },
+    "mix": {
+      "title": "Comptes actifs par type",
+      "description": "Comptes actifs de chaque type dans toutes les agences.",
+      "ring": "Anneau",
+      "pie": "Secteurs",
+      "empty": "Il n'y a pas encore de comptes actifs.",
+      "loans": "Prêts",
+      "savings": "Épargne",
+      "fixed": "Dépôts à terme",
+      "recurring": "Dépôts récurrents",
+      "shares": "Parts"
+    },
+    "widgets": {
+      "note": "Les widgets masqués n'apparaissent pas dans l'aperçu. Fineract n'a pas de paramètre pour cela, le choix est donc enregistré uniquement dans ce navigateur.",
+      "search": "Filtrer les widgets par nom ou description",
+      "module": "Module",
+      "name": "Widget",
+      "description": "Description",
+      "visible": "Visible",
+      "noMatch": "Aucun widget ne correspond au filtre.",
+      "modules": {
+        "all": "Tous les modules",
+        "global": "Global",
+        "client": "Clients",
+        "loan": "Prêts",
+        "savings": "Épargne",
+        "shares": "Parts"
+      },
+      "items": {
+        "clients": {
+          "name": "Clients",
+          "description": "Clients au total, actifs et en attente, et clients activés ce mois-ci."
+        },
+        "loans": {
+          "name": "Prêts décaissés",
+          "description": "Montants décaissés et en attente de décaissement, et part de l'exigible recouvrée."
+        },
+        "deposits": {
+          "name": "Soldes des dépôts",
+          "description": "Soldes des comptes d'épargne, dépôts à terme et dépôts récurrents actifs."
+        },
+        "shares": {
+          "name": "Comptes de parts",
+          "description": "Comptes de parts actifs et au total."
+        },
+        "trend": {
+          "name": "Tendance de croissance mensuelle",
+          "description": "Clients activés et prêts décaissés au cours de chacun des 12 derniers mois."
+        },
+        "accountMix": {
+          "name": "Comptes actifs par type",
+          "description": "Répartition des comptes actifs de prêts, d'épargne, de dépôts et de parts."
+        }
+      }
+    }
+  },
   "manageDataTables": "Gérer les tables de données",
   "manageEmployees": "Gérer les employés",
   "manageExternalEvents": "Événements externes",
