@@ -5,89 +5,89 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import MifosLogo from '@/assets/images/MifosX_logo.png'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
+import { useTranslation } from 'react-i18next'
+import type { ParseKeys } from 'i18next'
+import MifosLogo from '@/assets/images/MifosX_logo.png'
+import UserPlaceholder from '@/assets/images/user_placeholder.png'
+import { useLogout } from '@/hooks/use-logout'
+import { useAppSelector } from '@/app/hook'
+import { getTenantId } from '@/lib/http-client'
+import { getOidcUserManager } from '@/lib/oidc-config'
+import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useLogout } from '@/hooks/use-logout'
-import { useFrequentlyAccessed } from '@/hooks/use-frequently-accessed'
-import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
-import type { ParseKeys } from 'i18next'
-import { useTranslation } from 'react-i18next'
-import {
-  Gauge,
-  Send,
-  Check,
-  Layers2,
-  Bell,
-  RefreshCcw,
-  Plus,
-  Network,
-  Keyboard,
-  CircleHelp,
-  LogOut,
-  Cog,
-  User,
-  type LucideIcon,
-} from 'lucide-react'
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarGroupLabel,
-} from '@/components/ui/sidebar'
 import {
   GLOBAL_SHORTCUTS,
   type GlobalShortcut,
 } from '@/hooks/use-global-shortcuts'
-import { useEffect, useState } from 'react'
+import { Sidebar, SidebarContent } from '@/components/ui/sidebar'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faTachometerAlt,
+  faLocationArrow,
+  faCheck,
+  faServer,
+  faBell,
+  faSync,
+  faPlus,
+  faSitemap,
+  faKeyboard,
+  faQuestionCircle,
+  faUsers,
+  faUser,
+  faBuilding,
+  faCog,
+  faSignOutAlt,
+  type IconDefinition,
+} from '@fortawesome/free-solid-svg-icons'
 
 type SidebarItem = {
-  icon: LucideIcon
+  icon: IconDefinition
   labelKey: ParseKeys<'common'>
   route: string
 }
 
 const MAIN_ITEMS: SidebarItem[] = [
-  { icon: Gauge, labelKey: 'nav.dashboard', route: 'dashboard' },
-  { icon: Send, labelKey: 'nav.navigation', route: 'navigation' },
+  { icon: faTachometerAlt, labelKey: 'nav.dashboard', route: 'dashboard' },
+  { icon: faLocationArrow, labelKey: 'nav.navigation', route: 'navigation' },
   {
-    icon: Check,
+    icon: faCheck,
     labelKey: 'nav.checkerInboxAndTasks',
     route: 'checker-inbox-and-tasks/checker-inbox',
   },
   {
-    icon: Layers2,
+    icon: faServer,
+    labelKey: 'nav.collectionSheet',
+    route: 'collection-sheet',
+  },
+  {
+    icon: faServer,
     labelKey: 'nav.individualCollectionSheet',
     route: 'individual-collection-sheet',
   },
-  { icon: Bell, labelKey: 'nav.notifications', route: 'notifications' },
+  { icon: faBell, labelKey: 'nav.notifications', route: 'notifications' },
   {
-    icon: RefreshCcw,
+    icon: faSync,
     labelKey: 'nav.frequentPostings',
     route: 'accounting/journal-entries/frequent-postings',
   },
   {
-    icon: Plus,
+    icon: faPlus,
     labelKey: 'nav.createJournalEntry',
     route: 'accounting/journal-entries/create',
   },
   {
-    icon: Network,
+    icon: faSitemap,
     labelKey: 'nav.chartOfAccounts',
     route: 'accounting/chart-of-accounts',
   },
 ]
-
-const MAIN_ROUTES = MAIN_ITEMS.map(item => item.route)
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
@@ -96,6 +96,29 @@ export const AppSidebar = () => {
   const [logoutOpen, setLogoutOpen] = useState(false)
   const { t } = useTranslation('common')
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+
+  const authUser = useAppSelector(state => state.auth.user) as {
+    username?: string
+    userName?: string
+  } | null
+  const [oidcUsername, setOidcUsername] = useState<string | null>(null)
+
+  useEffect(() => {
+    const manager = getOidcUserManager()
+    manager
+      ?.getUser()
+      .then(user => {
+        const name = (user?.profile?.preferred_username ||
+          user?.profile?.name ||
+          user?.profile?.sub) as string | undefined
+        if (name) setOidcUsername(name)
+      })
+      .catch(() => null)
+  }, [])
+
+  const tenant = getTenantId()
+  const username =
+    authUser?.username || authUser?.userName || oidcUsername || 'mifos'
 
   useEffect(() => {
     setShortcutsOpen(false)
@@ -109,134 +132,201 @@ export const AppSidebar = () => {
     navigate(`/${page}`)
   }
 
-  const frequentRoutes = useFrequentlyAccessed(MAIN_ROUTES)
-  const frequentItems = frequentRoutes
-    .map(route => MAIN_ITEMS.find(item => item.route === route))
-    .filter((item): item is SidebarItem => item !== undefined)
-
-  const renderItem = ({ icon: Icon, labelKey, route }: SidebarItem) => (
-    <SidebarMenuItem
-      key={route}
-      className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-    >
-      <SidebarMenuButton asChild>
-        <Button
-          variant="ghost"
-          className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-          onClick={() => handleClick(route)}
-        >
-          <Icon />
-          <span className="min-w-0 whitespace-normal! text-left">
-            {t(labelKey)}
-          </span>
-        </Button>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  )
-
   return (
-    <Sidebar className="h-screen flex flex-col border-r bg-white dark:bg-gray-900 dark:border-gray-800">
-      <SidebarContent className="flex-1 overflow-y-auto">
-        <div className="flex flex-col items-center space-y-3 pt-5">
-          <img
-            src={MifosLogo}
-            alt="Mifos X"
-            className="h-20 cursor-pointer transition-all duration-200 hover:scale-105"
+    <Sidebar
+      className="h-screen flex flex-col border-r border-gray-200 w-[255px] bg-white dark:bg-gray-900 dark:border-gray-800"
+      style={{ fontFamily: "'Roboto', sans-serif" }}
+    >
+      <SidebarContent className="flex-1 overflow-y-auto overflow-x-hidden sidebar-scroll">
+        {/* Navigation Panel Header */}
+        <div className="flex flex-col items-center pt-5 pb-1">
+          {/* app-brand */}
+          <button
+            type="button"
+            className="flex flex-col items-center cursor-pointer select-none rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             onClick={handleHome}
-          />
-          <h1 className="text-3xl font-bold text-gray-700 dark:text-gray-200">
-            Mifos X
-          </h1>
+          >
+            <img
+              src={MifosLogo}
+              alt="app logo"
+              className="h-12 w-12 object-contain transition-transform duration-200 hover:scale-105"
+            />
+            <span className="text-[28px] font-bold text-center text-[#212529] dark:text-gray-100 mt-2.5 leading-tight tracking-tight">
+              Mifos&reg; X
+            </span>
+          </button>
 
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center shadow">
-            <User className="w-6 h-6 text-gray-500 dark:text-gray-300" />
-          </div>
-          <p className="text-base text-gray-500 dark:text-gray-400">
-            default / mifos
-          </p>
+          {/* app-user */}
+          <div className="mt-5 flex flex-col items-center">
+            <div className="w-20 h-20 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden shadow-xs">
+              <img
+                src={UserPlaceholder}
+                alt="app-user-photo"
+                className="w-14 h-14 object-contain"
+              />
+            </div>
+            <p className="mt-3 text-[13.5px] text-[#616161] dark:text-gray-400 font-normal">
+              {tenant} / {username}
+            </p>
 
-          <div className="flex space-x-4 mt-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-transparent"
-              onClick={() => handleClick('settings')}
-              aria-label={t('tooltips.settings')}
-            >
-              <Cog className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
-              onClick={() => setLogoutOpen(true)}
-              aria-label={t('tooltips.signOut')}
-              data-testid="sidebar-logout"
-            >
-              <LogOut className="w-5 h-5" />
-            </Button>
+            {/* Profile Action Icons */}
+            <div className="flex items-center justify-center space-x-7 mt-3.5">
+              <button
+                type="button"
+                className="text-[#212529] dark:text-gray-300 hover:text-primary transition-colors cursor-pointer p-0.5"
+                onClick={() => handleClick('settings')}
+                aria-label={t('tooltips.settings', 'Settings')}
+                title={t('tooltips.settings', 'Settings')}
+              >
+                <FontAwesomeIcon icon={faCog} className="text-[19px]" />
+              </button>
+              <button
+                type="button"
+                className="text-[#212529] dark:text-gray-300 hover:text-red-500 transition-colors cursor-pointer p-0.5"
+                onClick={() => setLogoutOpen(true)}
+                aria-label={t('tooltips.signOut', 'Sign Out')}
+                title={t('tooltips.signOut', 'Sign Out')}
+                data-testid="sidebar-logout"
+              >
+                <FontAwesomeIcon icon={faSignOutAlt} className="text-[19px]" />
+              </button>
+            </div>
           </div>
         </div>
 
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-6 pt-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-            {t('nav.frequentlyAccessed')}
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {frequentItems.length > 0 ? (
-              frequentItems.map(renderItem)
-            ) : (
-              <SidebarMenuItem className="px-6 pb-2 text-sm text-gray-500 dark:text-gray-400">
-                {t('nav.noFrequentlyAccessed')}
-              </SidebarMenuItem>
-            )}
-          </SidebarMenu>
-        </SidebarGroup>
+        {/* nav-item-sep */}
+        <hr className="border-t border-gray-200 dark:border-gray-800 w-full my-5" />
 
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-6 pt-4 pb-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-            {t('nav.mainItems')}
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {MAIN_ITEMS.map(renderItem)}
+        {/* Frequently Accessed (icon-menu) */}
+        <div className="px-4">
+          <div className="text-[13px] font-medium text-[#616161] dark:text-gray-400 mb-3">
+            {t('nav.frequentlyAccessed', 'Frequently Accessed')}
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleClick('clients')}
+              title={t('nav.clients', 'Clients')}
+              aria-label={t('nav.clients', 'Clients')}
+              className="flex items-center justify-center h-12 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-[0_3px_5px_-1px_rgba(0,0,0,0.2),0_2px_4px_-1px_rgba(0,0,0,0.14)] hover:shadow-[0_5px_8px_-1px_rgba(0,0,0,0.25)] hover:border-gray-300 transition-all cursor-pointer"
+            >
+              <FontAwesomeIcon
+                icon={faUser}
+                className="text-[#212529] dark:text-gray-200 text-[18px]"
+              />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleClick('groups')}
+              title={t('nav.groups', 'Groups')}
+              aria-label={t('nav.groups', 'Groups')}
+              className="flex items-center justify-center h-12 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-[0_3px_5px_-1px_rgba(0,0,0,0.2),0_2px_4px_-1px_rgba(0,0,0,0.14)] hover:shadow-[0_5px_8px_-1px_rgba(0,0,0,0.25)] hover:border-gray-300 transition-all cursor-pointer"
+            >
+              <FontAwesomeIcon
+                icon={faUsers}
+                className="text-[#212529] dark:text-gray-200 text-[18px]"
+              />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleClick('centers')}
+              title={t('nav.centers', 'Centers')}
+              aria-label={t('nav.centers', 'Centers')}
+              className="flex items-center justify-center h-12 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-[0_3px_5px_-1px_rgba(0,0,0,0.2),0_2px_4px_-1px_rgba(0,0,0,0.14)] hover:shadow-[0_5px_8px_-1px_rgba(0,0,0,0.25)] hover:border-gray-300 transition-all cursor-pointer"
+            >
+              <FontAwesomeIcon
+                icon={faBuilding}
+                className="text-[#212529] dark:text-gray-200 text-[18px]"
+              />
+            </button>
+          </div>
+        </div>
 
-            <SidebarMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-              <SidebarMenuButton asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                  onClick={() => setShortcutsOpen(true)}
+        {/* nav-item-sep */}
+        <hr className="border-t border-gray-200 dark:border-gray-800 w-full my-5" />
+
+        {/* Main Items Section */}
+        <div className="pb-8">
+          <div className="text-[13px] font-medium text-[#616161] dark:text-gray-400 mb-1.5 px-4">
+            {t('nav.mainItems', 'Main Items')}
+          </div>
+          <div className="flex flex-col">
+            {MAIN_ITEMS.map(({ icon, labelKey, route }) => {
+              const isActive =
+                pathname === `/${route}` || pathname.startsWith(`/${route}/`)
+              return (
+                <button
+                  key={route}
+                  type="button"
+                  onClick={() => handleClick(route)}
+                  className={`w-full h-[48px] px-4 flex items-center text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer ${
+                    isActive ? 'bg-[#0000000a] dark:bg-white/10' : ''
+                  }`}
                 >
-                  <Keyboard />
-                  <span className="min-w-0 whitespace-normal! text-left">
-                    {t('nav.keyboardShortcuts')}
-                  </span>
-                </Button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-
-            <SidebarMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-              <SidebarMenuButton asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                >
-                  <CircleHelp />
-                  <span className="min-w-0 whitespace-normal! text-left">
-                    <a
-                      href="https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manual"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  <span className="w-full h-[24px] flex items-center gap-4">
+                    <span className="w-6 h-6 flex items-center justify-center shrink-0">
+                      <FontAwesomeIcon
+                        icon={icon}
+                        className="text-[19px] text-[#212529] dark:text-gray-200"
+                      />
+                    </span>
+                    <span
+                      className={`text-[14.5px] leading-[24px] whitespace-nowrap ${
+                        isActive
+                          ? 'font-semibold text-black dark:text-white'
+                          : 'font-medium text-[#212529] dark:text-gray-100'
+                      }`}
                     >
-                      {t('nav.help')}
-                    </a>
+                      {t(labelKey)}
+                    </span>
                   </span>
-                </Button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+                </button>
+              )
+            })}
+
+            {/* Keyboard Shortcuts */}
+            <button
+              type="button"
+              onClick={() => setShortcutsOpen(true)}
+              className="w-full h-[48px] px-4 flex items-center text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <span className="w-full h-[24px] flex items-center gap-4">
+                <span className="w-6 h-6 flex items-center justify-center shrink-0">
+                  <FontAwesomeIcon
+                    icon={faKeyboard}
+                    className="text-[19px] text-[#212529] dark:text-gray-200"
+                  />
+                </span>
+                <span className="text-[14.5px] font-medium leading-[24px] text-[#212529] dark:text-gray-100 whitespace-nowrap">
+                  {t('nav.keyboardShortcuts', 'Keyboard Shortcuts')}
+                </span>
+              </span>
+            </button>
+
+            {/* Help */}
+            <a
+              href="https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manual"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full h-[48px] px-4 flex items-center text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <span className="w-full h-[24px] flex items-center gap-4">
+                <span className="w-6 h-6 flex items-center justify-center shrink-0">
+                  <FontAwesomeIcon
+                    icon={faQuestionCircle}
+                    className="text-[19px] text-[#212529] dark:text-gray-200"
+                  />
+                </span>
+                <span className="text-[14.5px] font-medium leading-[24px] text-[#212529] dark:text-gray-100 whitespace-nowrap">
+                  {t('nav.help', 'Help')}
+                </span>
+              </span>
+            </a>
+          </div>
+        </div>
       </SidebarContent>
+
+      {/* Keyboard Shortcuts Dialog */}
       <Dialog open={shortcutsOpen} onOpenChange={setShortcutsOpen}>
         <DialogContent
           className="max-w-3xl"
@@ -273,6 +363,7 @@ export const AppSidebar = () => {
           </div>
         </DialogContent>
       </Dialog>
+
       <LogoutConfirmDialog
         open={logoutOpen}
         onOpenChange={setLogoutOpen}

@@ -338,7 +338,11 @@
     "individualCollectionSheet": "Fiche de collecte individuelle",
     "frequentPostings": "Publications fréquentes",
     "createJournalEntry": "Créer une écriture comptable",
-    "chartOfAccounts": "Plan comptable"
+    "chartOfAccounts": "Plan comptable",
+    "collectionSheet": "Fiche de collecte",
+    "groups": "Groupes",
+    "clients": "Clients",
+    "centers": "Centres"
   },
   "pagination": {
     "itemsPerPage": "Éléments par page",
