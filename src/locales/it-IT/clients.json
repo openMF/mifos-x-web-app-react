@@ -278,7 +278,12 @@
     "labelDue": "Dovuto",
     "labelPaid": "Pagato",
     "labelWaived": "Esonerato",
-    "labelOutstanding": "In Sospeso"
+    "labelOutstanding": "In Sospeso",
+    "transactionsTitle": "Transazioni",
+    "columnId": "ID",
+    "columnOfficeName": "Nome dell'Ufficio",
+    "columnTransactionDate": "Data della Transazione",
+    "columnAmount": "Importo"
   },
   "identities": {
     "heading": "Identità del Cliente",

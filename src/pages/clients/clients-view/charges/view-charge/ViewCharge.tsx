@@ -9,15 +9,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-// import {
-//   Table,
-//   TableBody,
-//   TableCaption,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
@@ -36,6 +35,20 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import { formatDate } from '@/lib/date-utils'
 import { useTranslation } from 'react-i18next'
 
+type ChargeTransaction = {
+  id?: number
+  officeName?: string
+  type?: { value?: string }
+  date?: number[]
+  amount?: number
+  reversed?: boolean
+}
+type ChargeWithTransactions = GetClientsChargesPageItems & {
+  clientTransactionDatas?: ChargeTransaction[]
+}
+
+const strike = (reversed?: boolean) =>
+  reversed ? 'line-through opacity-50' : ''
 const chargeApi = new ClientChargesApi(getConfiguration())
 const ViewCharge = () => {
   const navigate = useNavigate()
@@ -43,18 +56,17 @@ const ViewCharge = () => {
     clientId: string
     chargeId: string
   }>()
-
-  const [charge, setCharge] = useState<GetClientsChargesPageItems>()
-  const { t } = useTranslation('clients')
+  const [charge, setCharge] = useState<ChargeWithTransactions>()
+  const { t, i18n } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
-
   useEffect(() => {
     if (!clientId || !chargeId) return
     const fetchDetails = async () => {
       try {
         const res = await chargeApi.retrieveClientCharge(
           Number(clientId),
-          Number(chargeId)
+          Number(chargeId),
+          { params: { associations: 'all' } }
         )
         setCharge(res.data)
       } catch (err) {
@@ -129,7 +141,10 @@ const ViewCharge = () => {
               <tr>
                 <td className="p-3">{t('charge.labelDueAsOf')}</td>
                 <td className="p-3">
-                  {formatDate(charge?.dueDate as number[] | undefined)}
+                  {formatDate(
+                    charge?.dueDate as number[] | undefined,
+                    i18n.language
+                  )}
                 </td>
               </tr>
               <tr>
@@ -153,43 +168,55 @@ const ViewCharge = () => {
         </div>
 
         {/* transactions */}
-        {/* <div className="px-6 py-4">
-          <h1 className="text-xl font-bold mb-3">Transactions</h1>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Office Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Transaction Date</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {charge?.clientTransactionDatas?.map((tx: any) => (
-                <TableRow key={tx.id}>
-                  <TableCell className={strike(tx.reversed)}>{tx.id}</TableCell>
-                  <TableCell className={strike(tx.reversed)}>{tx.officeName}</TableCell>
-                  <TableCell className={strike(tx.reversed)}>{tx.type?.value}</TableCell>
-                  <TableCell className={strike(tx.reversed)}>{new Date(tx.date).toLocaleDateString()}</TableCell>
-                  <TableCell className={strike(tx.reversed)}>{tx.amount}</TableCell>
-                  <TableCell>
-                    <Button className="bg-red-600 text-white">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </Button>
-                  </TableCell>
+        {charge?.clientTransactionDatas?.length ? (
+          <div className="px-6 py-4">
+            <h1 className="text-xl font-bold mb-3">
+              {t('charge.transactionsTitle')}
+            </h1>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('charge.columnId')}</TableHead>
+                  <TableHead>{t('charge.columnOfficeName')}</TableHead>
+                  <TableHead>{tc('fields.type')}</TableHead>
+                  <TableHead>{t('charge.columnTransactionDate')}</TableHead>
+                  <TableHead>{t('charge.columnAmount')}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {charge.clientTransactionDatas.map(tx => (
+                  <TableRow key={tx.id}>
+                    <TableCell className={strike(tx.reversed)}>
+                      {tx.id}
+                    </TableCell>
+                    <TableCell className={strike(tx.reversed)}>
+                      {tx.officeName}
+                    </TableCell>
+                    <TableCell className={strike(tx.reversed)}>
+                      {tx.type?.value}
+                    </TableCell>
+                    <TableCell className={strike(tx.reversed)}>
+                      {formatDate(tx.date, i18n.language)}
+                    </TableCell>
+                    <TableCell className={strike(tx.reversed)}>
+                      {tx.amount}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
-          <div className="mt-6">
-            <Button type="button" variant="outline" onClick={() => navigate("../../general")}>
-              Back
-            </Button>
+            <div className="mt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate('../../general')}
+              >
+                {tc('actions.back')}
+              </Button>
+            </div>
           </div>
-        </div> */}
+        ) : null}
       </div>
     </div>
   )
