@@ -642,13 +642,16 @@
     "loanAccount": "Loan Account",
     "savingsAccount": "Savings Account",
     "sharesAccount": "Shares Account",
+    "recurringDepositAccount": "Recurring Deposit Account",
     "tabs": {
       "general": "General",
       "accountDetails": "Account Details",
       "transactions": "Transactions",
       "charges": "Charges",
       "documents": "Documents",
-      "notes": "Notes"
+      "notes": "Notes",
+      "interestRateChart": "Interest Rate Chart",
+      "standingInstructions": "Standing Instructions"
     }
   }
 }
