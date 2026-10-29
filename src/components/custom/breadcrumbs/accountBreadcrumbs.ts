@@ -14,13 +14,18 @@ export interface AccountCrumb {
 }
 
 type OwnerSegment = 'clients' | 'groups'
-type AccountSegment = 'loans-accounts' | 'savings-accounts' | 'shares-accounts'
+type AccountSegment =
+  | 'loans-accounts'
+  | 'savings-accounts'
+  | 'shares-accounts'
+  | 'recurring-deposits-accounts'
 
 /** Owner prefixes under which an account view route is registered in AppRoutes. */
 const ACCOUNT_VIEW_OWNERS: Record<AccountSegment, OwnerSegment[]> = {
   'loans-accounts': ['groups'],
   'savings-accounts': ['clients', 'groups'],
   'shares-accounts': ['clients'],
+  'recurring-deposits-accounts': ['clients'],
 }
 
 const OWNER_LABELS: Record<OwnerSegment, { list: string; single: string }> = {
@@ -32,9 +37,10 @@ const ACCOUNT_LABELS: Record<AccountSegment, string> = {
   'loans-accounts': 'Loan Account',
   'savings-accounts': 'Savings Account',
   'shares-accounts': 'Shares Account',
+  'recurring-deposits-accounts': 'Recurring Deposit Account',
 }
 
-/** Tab routes of the loan, savings and shares account views. */
+/** Tab routes of the loan, savings, shares and recurring deposit account views. */
 const ACCOUNT_TAB_LABELS: Record<string, string> = {
   general: 'General',
   accountdetail: 'Account Details',
@@ -47,10 +53,12 @@ const ACCOUNT_TAB_LABELS: Record<string, string> = {
   documents: 'Documents',
   dividends: 'Dividends',
   notes: 'Notes',
+  'interest-rate-chart': 'Interest Rate Chart',
+  'standing-instructions': 'Standing Instructions',
 }
 
 const ACCOUNT_PATH =
-  /^\/(clients|groups)\/([^/]+)\/(loans-accounts|savings-accounts|shares-accounts)\/([^/]+)(?:\/actions\/([^/]+)|\/([^/]+))?/
+  /^\/(clients|groups)\/([^/]+)\/(loans-accounts|savings-accounts|shares-accounts|recurring-deposits-accounts)\/([^/]+)(?:\/actions\/([^/]+)|\/([^/]+))?/
 
 /** Turns a route segment such as `GoodwillCredit` or `Charge-Off` into `Goodwill Credit` / `Charge Off`. */
 export const humanizeSegment = (segment: string) =>
