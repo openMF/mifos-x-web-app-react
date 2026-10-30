@@ -278,7 +278,12 @@
     "labelDue": "Dû",
     "labelPaid": "Payé",
     "labelWaived": "Exonéré",
-    "labelOutstanding": "Restant"
+    "labelOutstanding": "Restant",
+    "transactionsTitle": "Transactions",
+    "columnId": "ID",
+    "columnOfficeName": "Nom de l'agence",
+    "columnTransactionDate": "Date de Transaction",
+    "columnAmount": "Montant"
   },
   "identities": {
     "heading": "Identit\u00e9 du Client",

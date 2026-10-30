@@ -278,7 +278,12 @@
     "labelDue": "Due",
     "labelPaid": "Paid",
     "labelWaived": "Waived",
-    "labelOutstanding": "Outstanding"
+    "labelOutstanding": "Outstanding",
+    "transactionsTitle": "Transactions",
+    "columnId": "ID",
+    "columnOfficeName": "Office Name",
+    "columnTransactionDate": "Transaction Date",
+    "columnAmount": "Amount"
   },
   "identities": {
     "heading": "Client Identity",
