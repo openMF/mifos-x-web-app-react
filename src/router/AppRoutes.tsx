@@ -220,6 +220,12 @@ import SavingProductTransactionTab from '@/pages/saving-product/saving-product-v
 import SavingProductChargesTab from '@/pages/saving-product/saving-product-view/charges-tab/SavingProductChargesTab'
 import SavingsDocumentsTab from '@/pages/saving-product/saving-product-view/savings-documents-tab/SavingsDocumentsTab'
 import SavingsNotesTab from '@/pages/saving-product/saving-product-view/notes-tab/SavingsNotesTab'
+import RecurringDepositAccountView from '@/pages/recurring-deposits/recurring-deposit-account-view/RecurringDepositAccountView'
+import RecurringDepositGeneralTab from '@/pages/recurring-deposits/recurring-deposit-account-view/general-tab/RecurringDepositGeneralTab'
+import RecurringDepositInterestRateChartTab from '@/pages/recurring-deposits/recurring-deposit-account-view/interest-rate-chart-tab/RecurringDepositInterestRateChartTab'
+import RecurringDepositTransactionsTab from '@/pages/recurring-deposits/recurring-deposit-account-view/transactions-tab/RecurringDepositTransactionsTab'
+import RecurringDepositChargesTab from '@/pages/recurring-deposits/recurring-deposit-account-view/charges-tab/RecurringDepositChargesTab'
+import RecurringDepositStandingInstructionsTab from '@/pages/recurring-deposits/recurring-deposit-account-view/standing-instructions-tab/RecurringDepositStandingInstructionsTab'
 import ApproveSavingAccount from '@/pages/saving-product/saving-account-actions/approve-savings-account/ApproveSavingAccount'
 import RejectSavingsAccount from '@/pages/saving-product/saving-account-actions/reject-savings-account/RejectSavingsAccount'
 import AddChargeSavingsAccount from '@/pages/saving-product/saving-account-actions/add-charge-savings-account/AddChargeSavingsAccount'
@@ -1126,6 +1132,27 @@ const AppRoutes = () => {
             <Route path="charges" element={<SavingProductChargesTab />} />
             <Route path="documents" element={<SavingsDocumentsTab />} />
             <Route path="notes" element={<SavingsNotesTab />} />
+          </Route>
+
+          <Route
+            path="/clients/:clientId/recurring-deposits-accounts/:accountId"
+            element={<RecurringDepositAccountView />}
+          >
+            <Route index element={<Navigate to="general" replace />} />
+            <Route path="general" element={<RecurringDepositGeneralTab />} />
+            <Route
+              path="interest-rate-chart"
+              element={<RecurringDepositInterestRateChartTab />}
+            />
+            <Route
+              path="transactions"
+              element={<RecurringDepositTransactionsTab />}
+            />
+            <Route path="charges" element={<RecurringDepositChargesTab />} />
+            <Route
+              path="standing-instructions"
+              element={<RecurringDepositStandingInstructionsTab />}
+            />
           </Route>
 
           <Route
