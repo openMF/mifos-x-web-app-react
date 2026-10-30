@@ -5,7 +5,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import type { GetGroupsGroupIdResponse } from '@/fineract-api'
+import type {
+  GetGroupsGroupIdResponse,
+  PostGroupsGroupIdRequest,
+} from '@/fineract-api'
+
+/**
+ * Request payload for activating a group via POST /groups/{groupId}?command=activate.
+ * The OpenAPI spec only defines `clients` and `destinationGroupId` on `PostGroupsGroupIdRequest`,
+ * omitting command-specific parameters such as `activationDate`.
+ */
+export interface ActivateGroupRequest extends PostGroupsGroupIdRequest {
+  activationDate: string
+  dateFormat: string
+  locale: string
+}
 
 /**
  * The generated `GetGroupsGroupIdResponse` is incomplete — the real API
