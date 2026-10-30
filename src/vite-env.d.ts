@@ -18,3 +18,7 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+/** Version from package.json and short commit hash, set in vite.config.ts */
+declare const __APP_VERSION__: string
+declare const __APP_HASH__: string
