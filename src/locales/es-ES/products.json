@@ -1,6 +1,104 @@
 {
   "addCharge": "Agregar cargo",
   "charges": "Cargos",
+  "createShareProduct": {
+    "heading": "Crear producto de acciones",
+    "breadcrumb": "Crear",
+    "prefix": "Producto de acciones",
+    "submit": "Enviar",
+    "select": "Seleccionar",
+    "created": "Producto de acciones creado correctamente.",
+    "createFailed": "No se pudo crear el producto de acciones.",
+    "templateFailed": "No se pudieron cargar las opciones del producto. Actualice la página.",
+    "steps": {
+      "details": "Detalles",
+      "currency": "Moneda",
+      "terms": "Términos",
+      "settings": "Configuración",
+      "marketPrice": "Precio de mercado",
+      "charges": "Cargos",
+      "accounting": "Contabilidad"
+    },
+    "details": {
+      "name": "Nombre del producto*",
+      "shortName": "Nombre corto*",
+      "description": "Descripción*"
+    },
+    "currency": {
+      "currency": "Moneda*",
+      "decimalPlaces": "Decimales*",
+      "inMultiplesOf": "Moneda en múltiplos de*"
+    },
+    "terms": {
+      "totalShares": "Número total de acciones*",
+      "sharesIssued": "Acciones a emitir",
+      "unitPrice": "Precio nominal/unitario*",
+      "shareCapital": "Valor del capital",
+      "shareCapitalHint": "Acciones a emitir multiplicadas por el precio nominal (calculado automáticamente)."
+    },
+    "settings": {
+      "sharesPerClient": "Acciones por cliente",
+      "minimumShares": "Mínimo",
+      "nominalShares": "Predeterminado*",
+      "maximumShares": "Máximo",
+      "minimumActivePeriod": "Período activo mínimo para dividendos",
+      "lockinPeriod": "Período de bloqueo",
+      "frequency": "Frecuencia",
+      "type": "Tipo",
+      "noLockinPeriod": "Ninguno",
+      "allowDividendsForInactiveClients": "Permitir dividendos para clientes inactivos"
+    },
+    "marketPrice": {
+      "fromDate": "Fecha desde",
+      "shareValue": "Precio nominal/unitario",
+      "add": "Agregar",
+      "remove": "Eliminar período de precio de mercado",
+      "none": "No se han agregado períodos de precio de mercado.",
+      "actions": "Acciones"
+    },
+    "charges": {
+      "charge": "Cargo",
+      "add": "Agregar",
+      "none": "No hay cargos disponibles para esta moneda",
+      "name": "Nombre",
+      "type": "Tipo",
+      "amount": "Monto",
+      "collectedOn": "Cobrado en",
+      "actions": "Acciones",
+      "remove": "Eliminar cargo"
+    },
+    "accounting": {
+      "none": "Ninguna",
+      "cash": "Efectivo",
+      "assets": "Activos",
+      "liabilities": "Pasivos",
+      "equity": "Patrimonio de acciones",
+      "income": "Ingresos",
+      "shareReferenceId": "Referencia de acciones*",
+      "shareSuspenseId": "Control de suspenso de acciones*",
+      "shareEquityId": "Patrimonio*",
+      "incomeFromFeeAccountId": "Ingresos por comisiones*"
+    },
+    "validation": {
+      "nameRequired": "El nombre del producto es obligatorio.",
+      "shortNameRequired": "El nombre corto es obligatorio.",
+      "descriptionRequired": "La descripción es obligatoria.",
+      "currencyRequired": "La moneda es obligatoria.",
+      "decimalPlacesRequired": "Los decimales deben ser cero o más.",
+      "inMultiplesOfInvalid": "La moneda en múltiplos de debe ser un número entero mayor que cero.",
+      "totalSharesRequired": "El número total de acciones debe ser un número entero mayor que cero.",
+      "sharesIssuedInvalid": "Las acciones a emitir deben ser un número entero mayor que cero.",
+      "sharesIssuedTooHigh": "Las acciones a emitir no pueden superar el número total de acciones.",
+      "unitPriceRequired": "El precio nominal/unitario debe ser mayor que cero.",
+      "nominalSharesRequired": "Las acciones predeterminadas por cliente deben ser un número entero mayor que cero.",
+      "sharesPerClientInvalid": "Las acciones mínimas y máximas por cliente deben ser números enteros mayores que cero.",
+      "sharesPerClientOrder": "Las acciones por cliente deben cumplir mínimo ≤ predeterminado ≤ máximo.",
+      "minimumActivePeriodInvalid": "La frecuencia del período activo mínimo debe ser un número entero mayor que cero y requiere un tipo.",
+      "lockinPeriodIncomplete": "Ingrese la frecuencia y el tipo del período de bloqueo, o deje ambos vacíos.",
+      "lockinPeriodInvalid": "La frecuencia del período de bloqueo debe ser un número entero mayor que cero.",
+      "glMappingsRequired": "Seleccione una cuenta contable para cada asignación obligatoria."
+    }
+  },
   "delinquencyBucket": "Cubo de morosidad",
   "fixedDepositProducts": "Productos de depósito a plazo fijo",
   "floatingRates": "Tasas flotantes",
@@ -9,10 +107,165 @@
   "loanProvisioningCriteria": "Criterios de provisión de préstamos",
   "paymentType": "Tipo de pago",
   "product": "Producto",
+  "productMix": {
+    "columns": {
+      "productName": "Nombre del producto",
+      "restrictedProducts": "Productos restringidos"
+    },
+    "created": "Combinación de productos creada correctamente.",
+    "createTitle": "Crear combinación de productos",
+    "errors": {
+      "createFailed": "No se pudo crear la combinación de productos.",
+      "restrictionsFailed": "No se pudieron cargar los productos que se pueden restringir.",
+      "templateFailed": "No se pudieron cargar los productos de préstamo."
+    },
+    "fields": {
+      "productRequired": "Producto *",
+      "restrictedProductsRequired": "Productos restringidos *"
+    },
+    "placeholders": {
+      "noProducts": "Todos los productos de préstamo ya tienen una combinación de productos",
+      "noRestrictedProducts": "No hay otros productos de préstamo disponibles",
+      "selectProduct": "Seleccione un producto de préstamo",
+      "selectRestrictedProducts": "Seleccione los productos que no se pueden combinar"
+    }
+  },
   "productsMix": "Combinación de productos",
   "recurringDepositProducts": "Productos de depósito recurrente",
   "savingsProducts": "Productos de ahorro",
   "shareProduct": "Producto de acciones",
   "shareProducts": "Productos de acciones",
-  "title": "Productos"
+  "title": "Productos",
+  "loanProductAccounting": {
+    "rules": {
+      "none": "Ninguna",
+      "cash": "Efectivo",
+      "accrualPeriodic": "Devengo (periódico)",
+      "accrualUpfront": "Devengo (anticipado)"
+    },
+    "sections": {
+      "assets": "Activos",
+      "income": "Ingresos",
+      "expenses": "Gastos",
+      "liabilities": "Pasivos"
+    },
+    "fields": {
+      "fundSource": "Fuente de fondos",
+      "loanPortfolio": "Cartera de préstamos",
+      "transfersInSuspense": "Transferencias en suspenso",
+      "interestReceivable": "Intereses por cobrar",
+      "feesReceivable": "Comisiones por cobrar",
+      "penaltiesReceivable": "Penalizaciones por cobrar",
+      "incomeFromInterest": "Ingresos por intereses",
+      "incomeFromFees": "Ingresos por comisiones",
+      "incomeFromPenalties": "Ingresos por penalizaciones",
+      "incomeFromRecovery": "Ingresos por pagos recuperados",
+      "incomeFromChargeOffInterest": "Ingresos por intereses castigados",
+      "incomeFromChargeOffFees": "Ingresos por comisiones castigadas",
+      "incomeFromChargeOffPenalty": "Ingresos por penalizaciones castigadas",
+      "incomeFromGoodwillCreditInterest": "Ingresos por intereses de crédito de buena voluntad",
+      "incomeFromGoodwillCreditFees": "Ingresos por comisiones de crédito de buena voluntad",
+      "incomeFromGoodwillCreditPenalty": "Ingresos por penalizaciones de crédito de buena voluntad",
+      "lossesWrittenOff": "Pérdidas por cancelación",
+      "goodwillCreditExpense": "Gastos por crédito de buena voluntad",
+      "chargeOffExpense": "Gasto por castigo",
+      "chargeOffFraudExpense": "Gasto por castigo por fraude",
+      "overpaymentLiability": "Pasivo por sobrepago"
+    },
+    "enableAccrualActivityPosting": "Registrar la actividad de devengo en la fecha de vencimiento de la cuota",
+    "selectAccount": "Seleccione una cuenta",
+    "noAccounts": "No hay cuentas contables de este tipo. Agréguelas en el plan de cuentas.",
+    "missingAccounts": "Seleccione las cuentas contables que requiere esta regla contable: {{accounts}}.",
+    "saveFailed": "No se pudo crear el producto de préstamo.",
+    "type": "Tipo",
+    "notMapped": "Sin asignar",
+    "advanced": {
+      "title": "Reglas contables avanzadas",
+      "add": "Agregar",
+      "remove": "Quitar",
+      "noRows": "Todavía no hay asignaciones. Se usan las cuentas predeterminadas de arriba.",
+      "incompleteRows": "Elija ambos valores en cada fila de las reglas contables avanzadas, o quite la fila: {{tables}}.",
+      "paymentChannels": {
+        "title": "Fuentes de fondos por canal de pago",
+        "value": "Tipo de pago",
+        "selectValue": "Seleccione un tipo de pago",
+        "account": "Fuente de fondos",
+        "noOptions": "No hay tipos de pago. Agréguelos en Organización > Tipos de pago."
+      },
+      "fees": {
+        "title": "Comisiones a cuentas de ingresos específicas",
+        "value": "Comisión",
+        "selectValue": "Seleccione una comisión",
+        "account": "Cuenta de ingresos",
+        "noOptions": "No hay comisiones de préstamo. Agréguelas en Productos > Cargos."
+      },
+      "penalties": {
+        "title": "Penalizaciones a cuentas de ingresos específicas",
+        "value": "Penalización",
+        "selectValue": "Seleccione una penalización",
+        "account": "Cuenta de ingresos",
+        "noOptions": "No hay penalizaciones de préstamo. Agréguelas en Productos > Cargos."
+      },
+      "chargeOffReasons": {
+        "title": "Motivos de castigo a cuentas de gastos",
+        "value": "Motivo de castigo",
+        "selectValue": "Seleccione un motivo de castigo",
+        "account": "Cuenta de gastos",
+        "noOptions": "No hay motivos de castigo. Agregue valores al código ChargeOffReasons en Sistema > Administrar códigos."
+      },
+      "writeOffReasons": {
+        "title": "Motivos de cancelación a cuentas de gastos",
+        "value": "Motivo de cancelación",
+        "selectValue": "Seleccione un motivo de cancelación",
+        "account": "Cuenta de gastos",
+        "noOptions": "No hay motivos de cancelación. Agregue valores al código WriteOffReasons en Sistema > Administrar códigos."
+      }
+    }
+  },
+  "viewShareProduct": {
+    "sections": {
+      "details": "Detalles",
+      "currency": "Moneda",
+      "terms": "Términos",
+      "settings": "Configuración",
+      "marketPrice": "Períodos de precio de mercado",
+      "charges": "Cargos",
+      "accounting": "Contabilidad"
+    },
+    "fields": {
+      "name": "Nombre",
+      "shortName": "Nombre corto",
+      "description": "Descripción",
+      "currency": "Moneda",
+      "decimalPlaces": "Decimales",
+      "inMultiplesOf": "Moneda en múltiplos de",
+      "totalShares": "Número total de acciones",
+      "sharesIssued": "Acciones a emitir",
+      "unitPrice": "Precio nominal/unitario",
+      "capitalValue": "Valor del capital",
+      "sharesPerClient": "Acciones por cliente",
+      "minimumActivePeriod": "Período activo mínimo",
+      "lockinPeriod": "Período de bloqueo",
+      "allowDividendsForInactive": "Permitir dividendos para clientes inactivos",
+      "fromDate": "Fecha desde",
+      "type": "Tipo",
+      "amount": "Monto",
+      "collectedOn": "Cobrado en"
+    },
+    "accounting": {
+      "none": "Ninguna",
+      "cashBased": "Basada en efectivo",
+      "shareReference": "Referencia de acciones",
+      "shareSuspense": "Control de suspenso de acciones",
+      "equity": "Patrimonio",
+      "incomeFromFees": "Ingresos por comisiones"
+    },
+    "sharesPerClient": "{{value}} (Mín.: {{min}}, Máx.: {{max}})",
+    "noMarketPrice": "No se han definido períodos de precio de mercado para este producto.",
+    "noCharges": "Este producto no tiene cargos asociados.",
+    "errors": {
+      "load": "No se pudo cargar el producto de acciones.",
+      "invalidId": "El ID de este producto de acciones no es válido."
+    }
+  }
 }

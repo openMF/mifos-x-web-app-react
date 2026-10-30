@@ -33,6 +33,7 @@ const clientsApi = new ClientApi(getConfiguration())
  */
 type ClientWithLegalForm = GetClientsClientIdResponse & {
   legalForm?: { id?: number } | null
+  staffId?: number | null
   staffName?: string | null
   mobileNo?: string | null
   groups?: Array<{ id?: number; name?: string }> | null
@@ -92,8 +93,9 @@ const ClientsView = () => {
     .filter(Boolean)
     .join(', ')
 
-  /** Fineract client status 100 = pending (300 = active) */
+  /** Fineract client status 100 = pending, 300 = active */
   const isPending = client?.status?.id === 100
+  const isActive = client?.status?.id === 300
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -128,6 +130,9 @@ const ClientsView = () => {
             : []),
           ...(tabSegment === 'family-members' && subSegment === 'add'
             ? [{ label: t('familyMembers.addButton') }]
+            : []),
+          ...(tabSegment === 'family-members' && pathname.endsWith('/edit')
+            ? [{ label: t('familyMembers.editButton') }]
             : []),
         ]}
       />
@@ -239,22 +244,44 @@ const ClientsView = () => {
                 {
                   label: t('view.menu.actions'),
                   children: [
-                    {
-                      label: t('view.menu.close'),
-                      path: 'signature',
-                      disabled: true,
-                    },
-                    {
-                      label: t('view.menu.transferClients'),
-                      path: 'signature',
-                      disabled: true,
-                    },
+                    ...(isActive
+                      ? [
+                          {
+                            label: t('view.menu.close'),
+                            path: `clients/${client?.id}/actions/close`,
+                          },
+                        ]
+                      : []),
+                    ...(isActive
+                      ? [
+                          {
+                            label: t('view.menu.transferClients'),
+                            path: `clients/${client?.id}/actions/transfer-client`,
+                          },
+                        ]
+                      : [
+                          {
+                            label: t('view.menu.transferClients'),
+                            path: 'signature',
+                            disabled: true,
+                          },
+                        ]),
                   ],
                 },
-                {
-                  label: t('view.menu.unassignStaff'),
-                  path: `clients/${client?.id}/edit`,
-                },
+                ...(client
+                  ? [
+                      {
+                        label:
+                          client.staffId != null
+                            ? t('view.menu.unassignStaff')
+                            : t('view.menu.assignStaff'),
+                        path:
+                          client.staffId != null
+                            ? `clients/${client.id}/edit`
+                            : `clients/${client.id}/actions/assign-staff`,
+                      },
+                    ]
+                  : []),
                 {
                   label: t('view.menu.more'),
                   children: [

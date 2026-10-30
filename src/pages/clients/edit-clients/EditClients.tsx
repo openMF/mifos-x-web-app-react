@@ -18,6 +18,7 @@ import {
 } from '@/fineract-api'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const clientApi = new ClientApi(getConfiguration())
 
@@ -29,24 +30,30 @@ const StaticField = ({
   label: string
   value?: string | number
   missing?: boolean
-}) => (
-  <div className="w-full md:w-[48%] space-y-2">
-    <Label>{label}</Label>
-    <div
-      className={`w-full rounded-md border border-input px-3 py-2 text-sm bg-muted/40 ${
-        missing
-          ? 'italic text-muted-foreground'
-          : 'text-zinc-700 dark:text-zinc-300'
-      }`}
-    >
-      {missing ? 'Missing in OpenAPI' : (value ?? '—')}
+}) => {
+  const { t } = useTranslation('clients')
+
+  return (
+    <div className="w-full md:w-[48%] space-y-2">
+      <Label>{label}</Label>
+      <div
+        className={`w-full rounded-md border border-input px-3 py-2 text-sm bg-muted/40 ${
+          missing
+            ? 'italic text-muted-foreground'
+            : 'text-zinc-700 dark:text-zinc-300'
+        }`}
+      >
+        {missing ? t('view.missingInOpenAPI') : (value ?? '—')}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const EditClients = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
   const clientId = Number(id)
 
   const [client, setClient] = useState<GetClientsClientIdResponse>()
@@ -75,7 +82,7 @@ const EditClients = () => {
   }
 
   if (!client) {
-    return <div className="text-center py-10">Loading client...</div>
+    return <div className="text-center py-10">{t('form.loadingClient')}</div>
   }
 
   return (
@@ -83,29 +90,35 @@ const EditClients = () => {
       <div className="mb-8">
         <AppBreadCrumbs
           items={[
-            { label: 'Home', href: '/home' },
-            { label: 'Clients', href: '/clients' },
+            { label: tc('nav.home'), href: '/home' },
+            { label: t('title'), href: '/clients' },
             {
-              label: client.displayName ?? 'Client',
+              label: client.displayName ?? t('client'),
               href: `/clients/${clientId}`,
             },
-            { label: 'Edit', current: true },
+            { label: tc('actions.edit'), current: true },
           ]}
         />
       </div>
 
       <div className="bg-white dark:bg-zinc-900 border rounded-md shadow-sm p-6">
-        <h1 className="text-2xl font-semibold mb-10">Edit Client</h1>
+        <h1 className="text-2xl font-semibold mb-10">{t('form.editTitle')}</h1>
 
         <div className="flex flex-col gap-8">
           {/*Office, Legal Form, Account No, External Id */}
           <div className="flex flex-wrap gap-6">
-            <StaticField label="Office*" value={client.officeName} />
+            <StaticField
+              label={`${t('form.labelOffice')}*`}
+              value={client.officeName}
+            />
             {/* Missing in OpenAPI */}
-            <StaticField label="Legal Form" missing />
-            <StaticField label="Account No." value={client.accountNo} />
+            <StaticField label={t('form.labelLegalForm')} missing />
+            <StaticField
+              label={t('form.labelAccountNo')}
+              value={client.accountNo}
+            />
             <div className="w-full md:w-[48%] space-y-2">
-              <Label htmlFor="externalId">External Id</Label>
+              <Label htmlFor="externalId">{t('form.labelExternalId')}</Label>
               <Input
                 id="externalId"
                 value={formData.externalId ?? ''}
@@ -121,31 +134,37 @@ const EditClients = () => {
 
           {/* First, Middle, Last Name */}
           <div className="flex flex-wrap gap-6">
-            <StaticField label="First Name*" value={client.firstname} />
+            <StaticField
+              label={`${t('form.labelFirstName')}*`}
+              value={client.firstname}
+            />
             {/* Missing in OpenAPI */}
-            <StaticField label="Middle Name" missing />
-            <StaticField label="Last Name*" value={client.lastname} />
+            <StaticField label={t('form.labelMiddleName')} missing />
+            <StaticField
+              label={`${t('form.labelLastName')}*`}
+              value={client.lastname}
+            />
           </div>
 
           {/* Date of Birth, Gender */}
           <div className="flex flex-wrap gap-6">
             {/* Missing in OpenAPI */}
-            <StaticField label="Date of Birth" missing />
+            <StaticField label={t('form.labelDateOfBirth')} missing />
             {/* Missing in OpenAPI */}
-            <StaticField label="Gender" missing />
+            <StaticField label={t('form.labelGender')} missing />
           </div>
 
           {/* Staff, Is staff? */}
           <div className="flex flex-wrap gap-6 items-end">
             {/* Missing in OpenAPI */}
-            <StaticField label="Staff" missing />
+            <StaticField label={t('form.labelStaff')} missing />
             <div className="w-full md:w-[48%] flex items-center gap-2">
               <Checkbox id="isStaff" disabled />
               <Label
                 htmlFor="isStaff"
                 className="text-muted-foreground font-normal"
               >
-                Is staff?
+                {t('form.labelIsStaff')}
               </Label>
             </div>
           </div>
@@ -153,23 +172,29 @@ const EditClients = () => {
           {/*Mobile No, Email Address */}
           <div className="flex flex-wrap gap-6">
             {/* Missing in OpenAPI */}
-            <StaticField label="Mobile No" missing />
-            <StaticField label="Email Address" value={client.emailAddress} />
+            <StaticField label={t('form.labelMobileNo')} missing />
+            <StaticField
+              label={t('form.labelEmailAddress')}
+              value={client.emailAddress}
+            />
           </div>
 
           {/*Client Type, Client Classification */}
           <div className="flex flex-wrap gap-6">
             {/* Missing in OpenAPI */}
-            <StaticField label="Client Type" missing />
+            <StaticField label={t('form.labelClientType')} missing />
             {/* Missing in OpenAPI */}
-            <StaticField label="Client Classification" missing />
+            <StaticField label={t('form.labelClientClassification')} missing />
           </div>
 
           {/* Submitted On, Activated On */}
           <div className="flex flex-wrap gap-6">
             {/* Missing in OpenAPI */}
-            <StaticField label="Submitted On*" missing />
-            <StaticField label="Activated On" value={client.activationDate} />
+            <StaticField label={`${t('form.labelSubmittedOn')}*`} missing />
+            <StaticField
+              label={t('form.labelActivatedOn')}
+              value={client.activationDate}
+            />
           </div>
         </div>
 
@@ -178,9 +203,9 @@ const EditClients = () => {
             variant="outline"
             onClick={() => navigate(`/clients/${clientId}`)}
           >
-            Cancel
+            {tc('actions.cancel')}
           </Button>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit}>{tc('actions.submit')}</Button>
         </div>
       </div>
     </div>

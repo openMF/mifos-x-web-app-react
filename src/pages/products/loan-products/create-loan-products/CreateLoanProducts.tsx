@@ -19,13 +19,17 @@ import {
   type PostLoanProductsRequest,
 } from '@/fineract-api'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
 import { useNavigate } from 'react-router-dom'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { incompleteMappings, missingAccounts } from '../loanProductAccounting'
 
 const loanProductApi = new LoanProductsApi(getConfiguration())
 
 const CreateLoanProducts = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('products')
   const [loanProducts, setLoanProducts] =
     useState<GetLoanProductsTemplateResponse>()
 
@@ -48,6 +52,10 @@ const CreateLoanProducts = () => {
       navigate(`/products/loan-products`)
     } catch (error) {
       console.error('Error while submitting', error)
+      // MultiStepForm shows a thrown error; without it a refused product looked like nothing happened
+      throw new Error(
+        datatableErrorMessage(error) ?? t('loanProductAccounting.saveFailed')
+      )
     }
   }
 
@@ -118,8 +126,34 @@ const CreateLoanProducts = () => {
     {
       title: 'ACCOUNTING',
       component: (
-        <LoanProductAccountingStep formData={formData} onChange={setFormData} />
+        <LoanProductAccountingStep
+          formData={formData}
+          onChange={setFormData}
+          template={loanProducts}
+        />
       ),
+      validate: () => {
+        const missing = missingAccounts(
+          formData.accountingRule,
+          formData as Record<string, unknown>
+        )
+        if (missing.length)
+          return t('loanProductAccounting.missingAccounts', {
+            accounts: missing
+              .map(f => t(`loanProductAccounting.fields.${f.label}`))
+              .join(', '),
+          })
+        const incomplete = incompleteMappings(
+          formData as Record<string, unknown>
+        )
+        return incomplete.length
+          ? t('loanProductAccounting.advanced.incompleteRows', {
+              tables: incomplete
+                .map(m => t(`loanProductAccounting.advanced.${m.label}.title`))
+                .join(', '),
+            })
+          : null
+      },
     },
   ]
 

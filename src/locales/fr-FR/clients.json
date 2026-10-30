@@ -11,10 +11,14 @@
   "createGuarantor": "Créer un garant",
   "errors": {
     "failedActivateClient": "Échec de l'activation du client.",
+    "failedCloseClient": "Échec de la fermeture du client.",
+    "failedFetchClient": "Échec du chargement des détails du client.",
     "failedApproveClients": "Échec de l'approbation d'un ou plusieurs clients.",
+    "failedFetchClient": "Échec de la récupération des détails du client.",
     "failedLoadCenters": "Échec du chargement des centres. Veuillez réessayer.",
     "failedLoadClients": "Échec du chargement des clients. Veuillez réessayer.",
     "failedLoadGroups": "Échec du chargement des groupes. Veuillez réessayer.",
+    "failedTransferClient": "Échec du transfert du client.",
     "noClientsSelected": "Aucun client sélectionné pour approbation."
   },
   "groups": "Groupes",
@@ -35,8 +39,13 @@
   "success": {
     "clientCreated": "Client créé avec succès.",
     "clientActivated": "Client activé avec succès.",
+    "clientClosed": "Client fermé avec succès.",
+    "clientTransferProposed": "Transfert de client proposé avec succès.",
+    "staffAssigned": "Personnel assigné avec succès.",
     "clientsApproved": "Clients sélectionnés approuvés avec succès.",
-    "familyMemberAdded": "Membre de la famille ajouté avec succès."
+    "familyMemberAdded": "Membre de la famille ajouté avec succès.",
+    "familyMemberUpdated": "Membre de la famille mis à jour avec succès.",
+    "familyMemberDeleted": "Membre de la famille supprimé avec succès."
   },
   "title": "Clients",
   "unnamedClient": "Client sans nom",
@@ -58,6 +67,57 @@
       "dateRequired": "Veuillez saisir une date d'activation.",
       "dateInFuture": "La date d'activation ne peut pas être dans le futur.",
       "dateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission."
+    }
+  },
+  "assignStaff": {
+    "title": "Assigner du Personnel",
+    "labelStaff": "Personnel*",
+    "selectStaff": "Sélectionner du Personnel",
+    "loadingStaff": "Chargement du personnel...",
+    "noStaffFound": "Aucun personnel disponible",
+    "noStaffAvailable": "Aucun membre du personnel disponible pour ce bureau.",
+    "confirm": "Confirmer",
+    "errors": {
+      "failedFetchClient": "Échec de la récupération des détails du client.",
+      "staffRequired": "Veuillez sélectionner un membre du personnel.",
+      "failedFetchStaff": "Échec du chargement des options de personnel.",
+      "failedAssignStaff": "Échec de l'assignation du personnel."
+    }
+  },
+  "transfer": {
+    "title": "Transférer le Client",
+    "office": "Bureau*",
+    "selectOffice": "Sélectionner le bureau de destination",
+    "noOfficesFound": "Aucun bureau de destination disponible",
+    "noOfficesAvailable": "Aucun autre bureau disponible pour le transfert.",
+    "transferDate": "Date de Transfert*",
+    "note": "Note",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "officeRequired": "Veuillez sélectionner un bureau de destination.",
+      "destinationSameAsCurrent": "Le bureau de destination ne peut pas être le même que le bureau actuel du client.",
+      "dateRequired": "Veuillez entrer une date de transfert.",
+      "dateInFuture": "La date de transfert ne peut pas être dans le futur.",
+      "dateBeforeActivated": "La date de transfert ne peut pas être antérieure à la date d'activation.",
+      "failedFetchOffices": "Échec du chargement des bureaux."
+    }
+  },
+  "close": {
+    "title": "Fermer le Client",
+    "labelClosedOnDate": "Date de Fermeture*",
+    "labelClosureReason": "Motif de Fermeture*",
+    "selectClosureReason": "Sélectionner un motif de fermeture",
+    "noReasonsFound": "Aucun motif de fermeture disponible",
+    "noReasonsAvailable": "Aucun motif de fermeture n'est configuré. Veuillez configurer les motifs de fermeture dans les Paramètres.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "dateRequired": "Veuillez entrer une date de fermeture.",
+      "dateInFuture": "La date de fermeture ne peut pas être dans le futur.",
+      "dateBeforeActivated": "La date de fermeture ne peut pas être antérieure à la date d'activation.",
+      "reasonRequired": "Veuillez sélectionner un motif de fermeture.",
+      "failedFetchReasons": "Échec de la récupération des motifs de fermeture."
     }
   },
   "view": {
@@ -92,6 +152,7 @@
       "actions": "Actions",
       "close": "Fermer",
       "transferClients": "Transférer des Clients",
+      "assignStaff": "Assigner du Personnel",
       "unassignStaff": "Désattribuer du Personnel",
       "more": "Plus",
       "addCharge": "Ajouter des Frais",
@@ -252,7 +313,14 @@
     "loadFailed": "Impossible de charger les membres de la famille.",
     "empty": "Aucun membre de la famille n'a encore \u00e9t\u00e9 ajout\u00e9.",
     "templateFailed": "Impossible de charger les options de ce formulaire.",
-    "addFailed": "Impossible d'ajouter le membre de la famille."
+    "addFailed": "Impossible d'ajouter le membre de la famille.",
+    "columnActions": "Actions",
+    "editButton": "Modifier",
+    "deleteButton": "Supprimer",
+    "confirmDelete": "Voulez-vous vraiment supprimer ce membre de la famille ?",
+    "memberFailed": "Impossible de charger ce membre de la famille.",
+    "updateFailed": "Impossible de mettre à jour le membre de la famille.",
+    "deleteFailed": "Impossible de supprimer le membre de la famille."
   },
   "generalData": {
     "headings": {
@@ -389,6 +457,52 @@
       "closedDate": "Date de fermeture",
       "clientStatus": "Statut du client",
       "subStatus": "Sous-statut"
+    }
+  },
+  "form": {
+    "createTitle": "Créer un client",
+    "editTitle": "Modifier le client",
+    "stepGeneral": "Général",
+    "loadingTemplate": "Chargement du modèle client...",
+    "loadingClient": "Chargement du client...",
+    "none": "Aucun",
+    "labelOffice": "Bureau",
+    "selectOffice": "Sélectionner un bureau",
+    "labelLegalForm": "Forme juridique",
+    "selectLegalForm": "Sélectionner une forme juridique",
+    "legalFormPerson": "Personne",
+    "legalFormEntity": "Entité",
+    "labelAccountNo": "N° de compte",
+    "labelExternalId": "Id externe",
+    "labelFirstName": "Prénom",
+    "labelMiddleName": "Deuxième prénom",
+    "labelLastName": "Nom",
+    "labelDateOfBirth": "Date de naissance",
+    "labelGender": "Genre",
+    "selectGender": "Sélectionner un genre",
+    "labelStaff": "Personnel",
+    "selectStaff": "Sélectionner un membre du personnel",
+    "labelIsStaff": "Membre du personnel ?",
+    "labelMobileNo": "N° de mobile",
+    "labelEmailAddress": "Adresse e-mail",
+    "labelClientType": "Type de client",
+    "selectClientType": "Sélectionner un type de client",
+    "labelClientClassification": "Classification du client",
+    "selectClientClassification": "Sélectionner une classification",
+    "labelSubmittedOn": "Soumis le",
+    "labelActive": "Actif ?",
+    "labelActivationDate": "Date d'activation",
+    "labelActivatedOn": "Activé le",
+    "errors": {
+      "officeRequired": "Veuillez sélectionner un bureau.",
+      "entityNameRequired": "Veuillez saisir le nom de l'entité.",
+      "namesRequired": "Veuillez saisir un prénom et un nom.",
+      "submittedOnRequired": "Veuillez saisir la date de soumission.",
+      "submittedOnInFuture": "La date de soumission ne peut pas être dans le futur.",
+      "activationDateRequired": "Veuillez saisir une date d'activation ou décocher Actif.",
+      "activationDateInFuture": "La date d'activation ne peut pas être dans le futur.",
+      "activationDateBeforeSubmitted": "La date d'activation ne peut pas être antérieure à la date de soumission.",
+      "createFailed": "Impossible de créer le client."
     }
   }
 }

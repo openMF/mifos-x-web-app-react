@@ -44,6 +44,9 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `holdGuaranteeFunds`
 - More missing fields in description/code
 - Unnecessary fields also present
+- `GetLoanProductsAccountingRule` has `description`, but the response sends the rule name as `value` (e.g. `CASH BASED`)
+- `penaltyToIncomeAccountMappings` and `writeOffReasonsToExpenseMappings` missing
+- `GetChargeOffReasonToExpenseAccountMappings` has `chargeOffReasonCodeValue`, but the response sends `reasonCodeValue`
 
 ### `/products/loan-products/create`
 
@@ -55,6 +58,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `interestFreePeriodOptions` missing
 - `overAppliedCalculationTypeOptions` missing
 - `floatingRateOptions` missing
+- `penaltyOptions` and `writeOffReasonOptions` missing (the advanced accounting rules read them)
+
+**Missing in `PostLoanProductsRequest`:**
+
+- `writeOffReasonsToExpenseMappings` (Fineract reads it with the other advanced accounting mappings)
+- `paymentChannelToFundSourceMappings`, `feeToIncomeAccountMappings` and `penaltyToIncomeAccountMappings` are typed with the response rows; Fineract reads `paymentTypeId` / `fundSourceAccountId` and `chargeId` / `incomeAccountId`
 
 ### `/products/saving-products/{id}/general`
 
@@ -84,6 +93,14 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/products/share`
 
 - Not present in OpenAPI
+
+### `/products/share-products/{id}`
+
+**Mistyped in `GetProductsTypeProductIdResponse`** (`GET /products/share/{productId}`):
+
+- `accountingRule`, `lockPeriodTypeEnum`, `minimumActivePeriodForDividendsTypeEnum` and the charges' `chargeCalculationType`/`chargeTimeType` are typed with `description`, but Fineract sends `value`
+- `charges` and `marketPrice` are typed as `Set`, but Fineract sends JSON arrays
+- `marketPrice[].fromDate` is typed as a string, but Fineract sends a `[year, month, day]` array
 
 ### `/products/products-mix` [TO BE FIXED] (Schema didn't exist before)
 
@@ -294,6 +311,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/clients/{id}` (PUT)
 
 - `PutClientsClientIdRequest` only has `externalId`, `resourceExternalId` [TO BE FIXED] (firstname, lastname added)
+
+### `/clients/{id}?command=proposeTransfer` (POST)
+
+- `PostClientsClientIdRequest` only declares `activationDate`, `dateFormat`, and `locale`. Missing `destinationOfficeId`, `transferDate`, and `note`.
 
 ### `/savingsaccounts/template`
 

@@ -1,4 +1,37 @@
 {
+  "aboutUs": {
+    "ecosystem": "L'Iniziativa Mifos è il custode della piattaforma, ma la vera magia avviene nell'ecosistema:",
+    "ecosystemParts": {
+      "community": "La Comunità",
+      "communityDescription": "Centinaia di sviluppatori e implementatori che contribuiscono con codice, traduzioni e supporto.",
+      "foundation": "La Fondazione",
+      "foundationDescription": "L'ente senza scopo di lucro che garantisce la sostenibilità e la governance a lungo termine del progetto.",
+      "partners": "Partner Certificati",
+      "partnersDescription": "Una rete globale di partner di implementazione che personalizzano e distribuiscono Mifos per le istituzioni locali.",
+      "platform": "La Piattaforma Mifos X",
+      "platformDescription": "Il robusto motore bancario centrale."
+    },
+    "ecosystemTitle": "L'Ecosistema",
+    "introduction": "L'Iniziativa Mifos è un'organizzazione senza scopo di lucro 501(c)(3) e una comunità globale di sviluppatori, istituzioni finanziarie e imprenditori sociali. Crediamo che l'accesso ai servizi finanziari sia un diritto umano fondamentale, eppure miliardi di persone rimangono escluse dal sistema finanziario formale.",
+    "mission": "Accelerare l'inclusione finanziaria catalizzando un ecosistema di tecnologia open source, comunità e condivisione delle conoscenze.",
+    "missionTitle": "La Nostra Missione",
+    "openSource": "Abbiamo scelto il modello Open Source perché crediamo che l'infrastruttura finanziaria debba essere:",
+    "openSourceTitle": "Perché l'Open Source",
+    "platform": "Colmiamo questo divario fornendo la <mifosLink>Piattaforma Mifos X</mifosLink>—il sistema bancario centrale open source leader nel mondo. Rendendo la tecnologia bancaria di livello enterprise gratuita e accessibile, abbassiamo le barriere all'ingresso per le Istituzioni di Microfinanza (IMF), le Fintech e le ONG, consentendo loro di ampliare il proprio impatto e servire l'\"ultimo miglio\" in modo efficiente.",
+    "title": "Chi Siamo",
+    "values": {
+      "affordable": "Accessibile",
+      "affordableDescription": "L'eliminazione dei costi di licenza consente ai partner di investire di più nei propri clienti.",
+      "innovative": "Innovativo",
+      "innovativeDescription": "Una comunità globale di sviluppatori garantisce che la piattaforma si evolva più velocemente di quanto qualsiasi singolo fornitore potrebbe gestire.",
+      "secure": "Sicuro",
+      "secureDescription": "Con occhi puntati sul codice da tutto il mondo, la sicurezza e la stabilità sono fondamentali.",
+      "transparent": "Trasparente",
+      "transparentDescription": "Nessuna commissione nascosta né algoritmi a scatola chiusa."
+    },
+    "vision": "Un mondo in cui ogni individuo e piccola impresa abbia accesso agli strumenti finanziari di cui ha bisogno per prosperare, indipendentemente dalla propria posizione o livello di reddito.",
+    "visionTitle": "La Nostra Visione"
+  },
   "adhocQuery": "Query ad hoc",
   "auditTrails": "Audit trail",
   "bulkLoanReassignment": "Riassegnazione massiva dei prestiti",
@@ -127,6 +160,103 @@
     }
   },
   "manageCodes": "Gestisci codici",
+  "manageDashboards": {
+    "title": "Gestisci dashboard",
+    "autoRefresh": "Si aggiorna ogni 10 minuti",
+    "lastUpdated": "Ultimo aggiornamento alle {{time}}. Si aggiorna ogni 10 minuti.",
+    "office": "Filiale",
+    "refresh": "Aggiorna",
+    "loadError": "Impossibile caricare la dashboard.",
+    "allOffices": "Tutte le filiali",
+    "chartType": "Tipo di grafico",
+    "activeOfTotal": "{{active}} attivi su {{total}}",
+    "allHidden": "Tutti i widget sono nascosti. Riattivali nella scheda Configurazione widget.",
+    "tabs": {
+      "overview": "Panoramica delle operazioni dell'istituto",
+      "widgets": "Configurazione widget"
+    },
+    "clients": {
+      "title": "Clienti",
+      "active": "Attivi",
+      "pending": "In attesa",
+      "newThisMonth": "Attivati questo mese"
+    },
+    "loans": {
+      "title": "Prestiti erogati",
+      "collectionRate": "Tasso di incasso"
+    },
+    "deposits": {
+      "title": "Saldi dei depositi",
+      "savings": "Conti di risparmio",
+      "fixed": "Depositi vincolati",
+      "recurring": "Depositi ricorrenti"
+    },
+    "shares": {
+      "title": "Conti azionari attivi",
+      "total": "Tutti i conti azionari"
+    },
+    "trend": {
+      "title": "Andamento mensile della crescita",
+      "description": "Clienti attivati e prestiti erogati in ciascuno degli ultimi 12 mesi.",
+      "bar": "Barre",
+      "line": "Linee"
+    },
+    "mix": {
+      "title": "Conti attivi per tipo",
+      "description": "Conti attivi di ogni tipo in tutte le filiali.",
+      "ring": "Anello",
+      "pie": "Torta",
+      "empty": "Non ci sono ancora conti attivi.",
+      "loans": "Prestiti",
+      "savings": "Risparmio",
+      "fixed": "Depositi vincolati",
+      "recurring": "Depositi ricorrenti",
+      "shares": "Azioni"
+    },
+    "widgets": {
+      "note": "I widget nascosti non compaiono nella panoramica. Fineract non ha un'impostazione per questo, quindi la scelta viene salvata solo in questo browser.",
+      "search": "Filtra i widget per nome o descrizione",
+      "module": "Modulo",
+      "name": "Widget",
+      "description": "Descrizione",
+      "visible": "Visibile",
+      "noMatch": "Nessun widget corrisponde al filtro.",
+      "modules": {
+        "all": "Tutti i moduli",
+        "global": "Globale",
+        "client": "Clienti",
+        "loan": "Prestiti",
+        "savings": "Risparmio",
+        "shares": "Azioni"
+      },
+      "items": {
+        "clients": {
+          "name": "Clienti",
+          "description": "Clienti totali, attivi e in attesa, e clienti attivati questo mese."
+        },
+        "loans": {
+          "name": "Prestiti erogati",
+          "description": "Importi erogati e in attesa di erogazione, e quanto del dovuto è stato incassato."
+        },
+        "deposits": {
+          "name": "Saldi dei depositi",
+          "description": "Saldi dei conti di risparmio, depositi vincolati e depositi ricorrenti attivi."
+        },
+        "shares": {
+          "name": "Conti azionari",
+          "description": "Conti azionari attivi e totali."
+        },
+        "trend": {
+          "name": "Andamento mensile della crescita",
+          "description": "Clienti attivati e prestiti erogati in ciascuno degli ultimi 12 mesi."
+        },
+        "accountMix": {
+          "name": "Conti attivi per tipo",
+          "description": "Come si suddividono i conti attivi di prestiti, risparmio, depositi e azioni."
+        }
+      }
+    }
+  },
   "manageDataTables": "Gestisci tabelle dati",
   "manageEmployees": "Gestisci dipendenti",
   "manageExternalEvents": "Gestisci eventi esterni",

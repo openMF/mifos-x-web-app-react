@@ -98,6 +98,7 @@ import Tellers from '@/pages/organization/tellers/Tellers'
 import CreateTellers from '@/pages/organization/tellers/CreateTellers'
 import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
+import ViewCashiers from '@/pages/organization/tellers/cashiers/viewCashiers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
@@ -114,6 +115,8 @@ import SavingsProducts from '@/pages/products/savings-products/SavingsProducts'
 import CreateSavingsProducts from '@/pages/products/savings-products/create-saving-products/CreateSavingsProducts'
 import ViewSavingsProducts from '@/pages/products/savings-products/ViewSavingsProducts'
 import ShareProducts from '@/pages/products/share-products/ShareProducts'
+import CreateShareProduct from '@/pages/products/share-products/create-share-product/CreateShareProduct'
+import ViewShareProduct from '@/pages/products/share-products/ViewShareProduct'
 import Charges from '@/pages/products/charges/Charges'
 import ViewCharges from '@/pages/products/charges/ViewCharges'
 import EditCharges from '@/pages/products/charges/EditCharges'
@@ -131,6 +134,7 @@ import CreateDelinquencyBucket from '@/pages/products/manage-delinquency-buckets
 import ViewDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/ViewDelinquencyBucket'
 import EditDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/EditDelinquencyBucket'
 import ProductsMix from '@/pages/products/products-mix/ProductsMix'
+import CreateProductMix from '@/pages/products/products-mix/CreateProductMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
@@ -165,6 +169,8 @@ import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHisto
 import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
+import AboutUs from '@/pages/system/about-us/AboutUs'
+import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -236,6 +242,9 @@ import Clients from '@/pages/clients/Clients'
 import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
+import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
+import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
+import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
@@ -615,6 +624,10 @@ const AppRoutes = () => {
           />
           <Route path="/organization/tellers/:id" element={<ViewTellers />} />
           <Route
+            path="/organization/tellers/:id/cashiers"
+            element={<ViewCashiers />}
+          />
+          <Route
             path="/organization/tellers/:id/edit"
             element={<EditTellers />}
           />
@@ -679,6 +692,14 @@ const AppRoutes = () => {
 
           {/* Share Products */}
           <Route path="/products/share-products" element={<ShareProducts />} />
+          <Route
+            path="/products/share-products/create"
+            element={<CreateShareProduct />}
+          />
+          <Route
+            path="/products/share-products/:id"
+            element={<ViewShareProduct />}
+          />
 
           {/* Charges */}
           <Route path="/products/charges" element={<Charges />} />
@@ -743,6 +764,10 @@ const AppRoutes = () => {
 
           {/* Products Mix */}
           <Route path="/products/products-mix" element={<ProductsMix />} />
+          <Route
+            path="/products/products-mix/create"
+            element={<CreateProductMix />}
+          />
 
           {/* Fixed Deposit Products */}
           <Route
@@ -892,6 +917,15 @@ const AppRoutes = () => {
           <Route path="/system/audit-trails" element={<AuditTrails />} />
           <Route path="/system/audit-trails/:id" element={<ViewAuditTrail />} />
 
+          {/* About Us */}
+          <Route path="/system/about-us" element={<AboutUs />} />
+
+          {/* Manage Dashboards */}
+          <Route
+            path="/system/manage-dashboards"
+            element={<ManageDashboards />}
+          />
+
           {/* Institution */}
 
           {/* Loans list */}
@@ -904,6 +938,15 @@ const AppRoutes = () => {
             path="/clients/:id/actions/activate"
             element={<ActivateClient />}
           />
+          <Route
+            path="/clients/:id/actions/assign-staff"
+            element={<ClientAssignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/transfer-client"
+            element={<TransferClient />}
+          />
+          <Route path="/clients/:id/actions/close" element={<CloseClient />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="personal-data" element={<ClientsPersonalDataTab />} />
@@ -916,6 +959,10 @@ const AppRoutes = () => {
             />
             <Route
               path="family-members/add"
+              element={<ClientsFamilyMembersAddTab />}
+            />
+            <Route
+              path="family-members/:familyMemberId/edit"
               element={<ClientsFamilyMembersAddTab />}
             />
             <Route path="documents" element={<ClientsDocumentsTab />} />

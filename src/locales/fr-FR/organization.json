@@ -1,4 +1,37 @@
 {
+  "aboutUs": {
+    "ecosystem": "L'Initiative Mifos est le gardien de la plateforme, mais la vraie magie se produit dans l'écosystème :",
+    "ecosystemParts": {
+      "community": "La Communauté",
+      "communityDescription": "Des centaines de développeurs et d'implémenteurs contribuant au code, aux traductions et au support.",
+      "foundation": "La Fondation",
+      "foundationDescription": "L'organisme à but non lucratif assurant la durabilité et la gouvernance à long terme du projet.",
+      "partners": "Partenaires Certifiés",
+      "partnersDescription": "Un réseau mondial de partenaires d'implémentation qui personnalisent et déploient Mifos pour les institutions locales.",
+      "platform": "La Plateforme Mifos X",
+      "platformDescription": "Le moteur bancaire de base robuste."
+    },
+    "ecosystemTitle": "L'Écosystème",
+    "introduction": "L'Initiative Mifos est une organisation à but non lucratif 501(c)(3) et une communauté mondiale de développeurs, d'institutions financières et d'entrepreneurs sociaux. Nous croyons que l'accès aux services financiers est un droit humain fondamental, mais des milliards de personnes restent exclues du système financier formel.",
+    "mission": "Accélérer l'inclusion financière en catalysant un écosystème de technologie open source, de communauté et de partage des connaissances.",
+    "missionTitle": "Notre Mission",
+    "openSource": "Nous avons choisi le modèle Open Source parce que nous croyons que l'infrastructure financière devrait être :",
+    "openSourceTitle": "Pourquoi l'Open Source",
+    "platform": "Nous comblons cette lacune en fournissant la <mifosLink>Plateforme Mifos X</mifosLink>—le système bancaire de base open source le plus avancé au monde. En rendant la technologie bancaire de niveau entreprise gratuite et accessible, nous abaissons les barrières à l'entrée pour les Institutions de Microfinance (IMF), les Fintechs et les ONG, leur permettant d'augmenter leur impact et de servir le \"dernier kilomètre\" efficacement.",
+    "title": "À Propos de Nous",
+    "values": {
+      "affordable": "Abordable",
+      "affordableDescription": "L'élimination des coûts de licence permet aux partenaires d'investir davantage dans leurs clients.",
+      "innovative": "Innovant",
+      "innovativeDescription": "Une communauté mondiale de développeurs garantit que la plateforme évolue plus rapidement que n'importe quel fournisseur unique ne pourrait le gérer.",
+      "secure": "Sécurisé",
+      "secureDescription": "Avec des regards sur le code du monde entier, la sécurité et la stabilité sont primordiales.",
+      "transparent": "Transparent",
+      "transparentDescription": "Pas de frais cachés ni d'algorithmes opaques."
+    },
+    "vision": "Un monde où chaque individu et chaque petite entreprise a accès aux outils financiers dont ils ont besoin pour prospérer, indépendamment de leur localisation ou de leur niveau de revenu.",
+    "visionTitle": "Notre Vision"
+  },
   "adhocQuery": "Requête ad hoc",
   "auditTrails": "Journaux d'audit",
   "bulkLoanReassignment": "Réaffectation massive des prêts",
@@ -127,6 +160,103 @@
     }
   },
   "manageCodes": "Gérer les codes",
+  "manageDashboards": {
+    "title": "Gérer les tableaux de bord",
+    "autoRefresh": "Mise à jour toutes les 10 minutes",
+    "lastUpdated": "Dernière mise à jour à {{time}}. Mise à jour toutes les 10 minutes.",
+    "office": "Agence",
+    "refresh": "Actualiser",
+    "loadError": "Le tableau de bord n'a pas pu être chargé.",
+    "allOffices": "Toutes les agences",
+    "chartType": "Type de graphique",
+    "activeOfTotal": "{{active}} actifs sur {{total}}",
+    "allHidden": "Tous les widgets sont masqués. Réactivez-les dans l'onglet Configuration des widgets.",
+    "tabs": {
+      "overview": "Aperçu des opérations de l'institution",
+      "widgets": "Configuration des widgets"
+    },
+    "clients": {
+      "title": "Clients",
+      "active": "Actifs",
+      "pending": "En attente",
+      "newThisMonth": "Activés ce mois-ci"
+    },
+    "loans": {
+      "title": "Prêts décaissés",
+      "collectionRate": "Taux de recouvrement"
+    },
+    "deposits": {
+      "title": "Soldes des dépôts",
+      "savings": "Comptes d'épargne",
+      "fixed": "Dépôts à terme",
+      "recurring": "Dépôts récurrents"
+    },
+    "shares": {
+      "title": "Comptes de parts actifs",
+      "total": "Tous les comptes de parts"
+    },
+    "trend": {
+      "title": "Tendance de croissance mensuelle",
+      "description": "Clients activés et prêts décaissés au cours de chacun des 12 derniers mois.",
+      "bar": "Barres",
+      "line": "Lignes"
+    },
+    "mix": {
+      "title": "Comptes actifs par type",
+      "description": "Comptes actifs de chaque type dans toutes les agences.",
+      "ring": "Anneau",
+      "pie": "Secteurs",
+      "empty": "Il n'y a pas encore de comptes actifs.",
+      "loans": "Prêts",
+      "savings": "Épargne",
+      "fixed": "Dépôts à terme",
+      "recurring": "Dépôts récurrents",
+      "shares": "Parts"
+    },
+    "widgets": {
+      "note": "Les widgets masqués n'apparaissent pas dans l'aperçu. Fineract n'a pas de paramètre pour cela, le choix est donc enregistré uniquement dans ce navigateur.",
+      "search": "Filtrer les widgets par nom ou description",
+      "module": "Module",
+      "name": "Widget",
+      "description": "Description",
+      "visible": "Visible",
+      "noMatch": "Aucun widget ne correspond au filtre.",
+      "modules": {
+        "all": "Tous les modules",
+        "global": "Global",
+        "client": "Clients",
+        "loan": "Prêts",
+        "savings": "Épargne",
+        "shares": "Parts"
+      },
+      "items": {
+        "clients": {
+          "name": "Clients",
+          "description": "Clients au total, actifs et en attente, et clients activés ce mois-ci."
+        },
+        "loans": {
+          "name": "Prêts décaissés",
+          "description": "Montants décaissés et en attente de décaissement, et part de l'exigible recouvrée."
+        },
+        "deposits": {
+          "name": "Soldes des dépôts",
+          "description": "Soldes des comptes d'épargne, dépôts à terme et dépôts récurrents actifs."
+        },
+        "shares": {
+          "name": "Comptes de parts",
+          "description": "Comptes de parts actifs et au total."
+        },
+        "trend": {
+          "name": "Tendance de croissance mensuelle",
+          "description": "Clients activés et prêts décaissés au cours de chacun des 12 derniers mois."
+        },
+        "accountMix": {
+          "name": "Comptes actifs par type",
+          "description": "Répartition des comptes actifs de prêts, d'épargne, de dépôts et de parts."
+        }
+      }
+    }
+  },
   "manageDataTables": "Gérer les tables de données",
   "manageEmployees": "Gérer les employés",
   "manageExternalEvents": "Événements externes",
