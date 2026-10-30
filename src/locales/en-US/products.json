@@ -101,6 +101,39 @@
   },
   "delinquencyBucket": "Delinquency Bucket",
   "fixedDepositProducts": "Fixed Deposit Products",
+  "floatingRate": {
+    "created": "Floating rate created successfully.",
+    "createTitle": "Create Floating Rate",
+    "errors": {
+      "createFailed": "Failed to create the floating rate."
+    },
+    "fields": {
+      "active": "Active",
+      "isBaseLendingRate": "Is Base Lending Rate",
+      "nameRequired": "Floating Rate Name *"
+    },
+    "periods": {
+      "add": "Add Rate Period",
+      "baseRateNote": "Periods of a base lending rate cannot be differential to the base lending rate.",
+      "empty": "No rate periods added yet. Add at least one period.",
+      "fieldForRow": "{{field}} for period {{row}}",
+      "fromDate": "From Date",
+      "fromDateRequired": "From Date *",
+      "interestRate": "Interest Rate",
+      "interestRateRequired": "Interest Rate (%) *",
+      "isDifferential": "Is Differential",
+      "remove": "Remove period {{row}}",
+      "title": "Rate Periods"
+    },
+    "validation": {
+      "duplicateFromDate": "Two rate periods cannot have the same From Date.",
+      "fillEveryField": "Enter the From Date and Interest Rate for period {{row}}.",
+      "fromDateInFuture": "The From Date for period {{row}} must be in the future.",
+      "nameRequired": "Floating Rate Name is required.",
+      "periodRequired": "Add at least one rate period.",
+      "rateNotNumber": "The Interest Rate for period {{row}} must be a number."
+    }
+  },
   "floatingRates": "Floating Rates",
   "loanProduct": "Loan Product",
   "loanProducts": "Loan Products",
