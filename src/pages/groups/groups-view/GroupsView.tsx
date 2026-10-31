@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
@@ -78,6 +79,7 @@ const GroupsView = () => {
   }, [id])
 
   const isActive = group?.status?.value === 'Active' || Boolean(group?.active)
+  const isPending = group?.status?.value === 'Pending'
   const hasMembers =
     Array.isArray(group?.clientMembers) && group.clientMembers.length > 0
   const hasCalendar = Boolean(group?.collectionMeetingCalendar)
@@ -92,7 +94,7 @@ const GroupsView = () => {
       children?: { label: string; path: string; onClick?: () => void }[]
     }[] = []
 
-    if (!isActive && hasPerm('UPDATE_GROUP')) {
+    if (isPending && hasPerm('UPDATE_GROUP')) {
       opts.push({
         label: t('view.menu.activate'),
         path: `groups/${group?.id}/actions/activate`,
@@ -201,7 +203,16 @@ const GroupsView = () => {
     }
 
     return opts
-  }, [group, isActive, hasMembers, hasCalendar, hasStaff, inCenter, t])
+  }, [
+    group,
+    isActive,
+    isPending,
+    hasMembers,
+    hasCalendar,
+    hasStaff,
+    inCenter,
+    t,
+  ])
 
   // status value for tooltip + color
   const statusVal = group?.status?.value
@@ -229,6 +240,8 @@ const GroupsView = () => {
           ...(activeTabLabel ? [{ label: activeTabLabel }] : []),
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       <div className="bg-[#0e77b7] text-white p-6 mt-6 rounded-t-lg flex justify-between items-start relative">
         <div className="space-y-2">
