@@ -144,6 +144,7 @@ import ManageTaxComponents from '@/pages/products/manage-tax-configurations/mana
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
 import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
+import CreateFloatingRate from '@/pages/products/floating-rates/CreateFloatingRate'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
 import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
@@ -829,6 +830,10 @@ const AppRoutes = () => {
 
           {/* Floating Rates */}
           <Route path="/products/floating-rates" element={<FloatingRates />} />
+          <Route
+            path="/products/floating-rates/create"
+            element={<CreateFloatingRate />}
+          />
           <Route
             path="/products/floating-rates/:id"
             element={<ViewFloatingRates />}
