@@ -15,6 +15,7 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { inputToFineractDate } from '@/lib/date-utils'
 import {
   AccountingClosureApi,
   OfficesApi,
@@ -63,14 +64,7 @@ const CreateClosure = () => {
       return
     }
 
-    const formattedDate = new Date(formData.closingDate).toLocaleDateString(
-      'en-GB',
-      {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      }
-    )
+    const formattedDate = inputToFineractDate(formData.closingDate)
 
     try {
       await closureApi.createGLClosure({

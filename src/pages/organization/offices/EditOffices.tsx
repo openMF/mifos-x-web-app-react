@@ -20,7 +20,7 @@ import {
   type PutOfficesOfficeIdRequest,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
-import { dateArrayToInputValue } from '@/lib/date-utils'
+import { dateArrayToInputValue, inputToFineractDate } from '@/lib/date-utils'
 
 const officesApi = new OfficesApi(getConfiguration())
 
@@ -77,14 +77,7 @@ const EditOffices = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const formattedDate = new Date(formData.openedOn).toLocaleDateString(
-      'en-GB',
-      {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      }
-    )
+    const formattedDate = inputToFineractDate(formData.openedOn)
 
     try {
       // PUT /offices/{id} accepts parentId; the generated type leaves it out
