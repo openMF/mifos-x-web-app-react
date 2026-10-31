@@ -278,7 +278,12 @@
     "labelDue": "A Pagar",
     "labelPaid": "Pagado",
     "labelWaived": "Exonerado",
-    "labelOutstanding": "Pendiente"
+    "labelOutstanding": "Pendiente",
+    "transactionsTitle": "Transacciones",
+    "columnId": "ID",
+    "columnOfficeName": "Nombre de la Oficina",
+    "columnTransactionDate": "Fecha de Transacción",
+    "columnAmount": "Monto"
   },
   "identities": {
     "heading": "Identidad del Cliente",
