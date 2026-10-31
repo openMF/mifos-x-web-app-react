@@ -410,7 +410,11 @@ const AppRoutes = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
 
-          {/* Individual Collection Sheet Route */}
+          {/* Collection Sheet Routes */}
+          <Route
+            path="/collection-sheet"
+            element={<IndividualCollectionSheet />}
+          />
           <Route
             path="/individual-collection-sheet"
             element={<IndividualCollectionSheet />}

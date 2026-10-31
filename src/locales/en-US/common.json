@@ -335,10 +335,14 @@
     "workingWithCode": "Working with code",
     "welcomeHome": "Welcome to Mifos Home!",
     "checkerInboxAndTasks": "Checker Inbox and Tasks",
+    "collectionSheet": "Collection Sheet",
     "individualCollectionSheet": "Individual Collection Sheet",
     "frequentPostings": "Frequent Postings",
     "createJournalEntry": "Create Journal Entry",
-    "chartOfAccounts": "Chart of Accounts"
+    "chartOfAccounts": "Chart of Accounts",
+    "groups": "Groups",
+    "clients": "Clients",
+    "centers": "Centers"
   },
   "pagination": {
     "itemsPerPage": "Items per page",
