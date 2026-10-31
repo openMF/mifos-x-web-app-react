@@ -172,6 +172,7 @@ import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
 import AboutUs from '@/pages/system/about-us/AboutUs'
 import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
+import SystemInformation from '@/pages/system/system-information/SystemInformation'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -929,6 +930,12 @@ const AppRoutes = () => {
           <Route
             path="/system/manage-dashboards"
             element={<ManageDashboards />}
+          />
+
+          {/* System Information */}
+          <Route
+            path="/system/system-information"
+            element={<SystemInformation />}
           />
 
           {/* Institution */}

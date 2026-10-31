@@ -20,12 +20,17 @@ import {
   renewOidcSession,
 } from '@/lib/oidc-session'
 
-const getBaseURL = () => {
-  const rawServer =
-    localStorage.getItem('mifosServer') || 'https://localhost:8443'
-  const server = rawServer.trim().replace(/\/+$/, '')
-  return `${server}/fineract-provider/api/`
+/**
+ * The Fineract server the app talks to. Behind the Docker/nginx or Vite
+ * reverse-proxy (empty envConfig.apiUrl) that is this page's own origin.
+ */
+export const getServerUrl = (): string => {
+  if (!envConfig.apiUrl) return window.location.origin
+  const rawServer = localStorage.getItem('mifosServer') || envConfig.apiUrl
+  return rawServer.trim().replace(/\/+$/, '')
 }
+
+const getBaseURL = () => `${getServerUrl()}/fineract-provider/api/`
 
 const fineract = axios.create({
   baseURL: getApiBaseUrl(),

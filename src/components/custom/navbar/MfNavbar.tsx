@@ -348,6 +348,10 @@ const MfNavbar = () => {
               label: t('common:nav.help'),
               path: 'https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manualsers',
             },
+            {
+              label: t('common:nav.systemInformation'),
+              path: 'system/system-information',
+            },
             { label: t('common:nav.profile'), path: 'profile' },
             { label: t('common:nav.settings'), path: 'settings' },
             { label: t('common:actions.signOut'), path: 'signout' },
