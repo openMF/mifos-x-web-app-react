@@ -24,6 +24,7 @@ import {
   faCogs,
   faTools,
   faUsers,
+  faTachometerAlt,
   faArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -79,6 +80,11 @@ const systemItems = [
     path: '/system/external-events',
   },
   { icon: faUsers, name: 'About Us', path: '/system/about-us' },
+  {
+    icon: faTachometerAlt,
+    name: 'Manage Dashboards',
+    path: '/system/manage-dashboards',
+  },
 ]
 
 const System = () => {

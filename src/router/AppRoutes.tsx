@@ -134,6 +134,7 @@ import CreateDelinquencyBucket from '@/pages/products/manage-delinquency-buckets
 import ViewDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/ViewDelinquencyBucket'
 import EditDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/EditDelinquencyBucket'
 import ProductsMix from '@/pages/products/products-mix/ProductsMix'
+import CreateProductMix from '@/pages/products/products-mix/CreateProductMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
@@ -143,6 +144,7 @@ import ManageTaxComponents from '@/pages/products/manage-tax-configurations/mana
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
 import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
+import CreateFloatingRate from '@/pages/products/floating-rates/CreateFloatingRate'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
 import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
@@ -169,6 +171,7 @@ import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
 import AboutUs from '@/pages/system/about-us/AboutUs'
+import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -763,6 +766,10 @@ const AppRoutes = () => {
 
           {/* Products Mix */}
           <Route path="/products/products-mix" element={<ProductsMix />} />
+          <Route
+            path="/products/products-mix/create"
+            element={<CreateProductMix />}
+          />
 
           {/* Fixed Deposit Products */}
           <Route
@@ -824,6 +831,10 @@ const AppRoutes = () => {
 
           {/* Floating Rates */}
           <Route path="/products/floating-rates" element={<FloatingRates />} />
+          <Route
+            path="/products/floating-rates/create"
+            element={<CreateFloatingRate />}
+          />
           <Route
             path="/products/floating-rates/:id"
             element={<ViewFloatingRates />}
@@ -914,6 +925,12 @@ const AppRoutes = () => {
 
           {/* About Us */}
           <Route path="/system/about-us" element={<AboutUs />} />
+
+          {/* Manage Dashboards */}
+          <Route
+            path="/system/manage-dashboards"
+            element={<ManageDashboards />}
+          />
 
           {/* Institution */}
 

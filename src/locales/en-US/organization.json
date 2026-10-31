@@ -160,6 +160,103 @@
     }
   },
   "manageCodes": "Manage Codes",
+  "manageDashboards": {
+    "title": "Manage Dashboards",
+    "autoRefresh": "Updates every 10 minutes",
+    "lastUpdated": "Last updated at {{time}}. Updates every 10 minutes.",
+    "office": "Office",
+    "refresh": "Refresh",
+    "loadError": "The dashboard could not be loaded.",
+    "allOffices": "All offices",
+    "chartType": "Chart type",
+    "activeOfTotal": "{{active}} active of {{total}}",
+    "allHidden": "All widgets are hidden. Turn them back on in the Widget Configuration tab.",
+    "tabs": {
+      "overview": "Institutional Operations Overview",
+      "widgets": "Widget Configuration"
+    },
+    "clients": {
+      "title": "Clients",
+      "active": "Active",
+      "pending": "Pending",
+      "newThisMonth": "Activated this month"
+    },
+    "loans": {
+      "title": "Loans Disbursed",
+      "collectionRate": "Collection rate"
+    },
+    "deposits": {
+      "title": "Deposit Balances",
+      "savings": "Savings accounts",
+      "fixed": "Fixed deposits",
+      "recurring": "Recurring deposits"
+    },
+    "shares": {
+      "title": "Active Share Accounts",
+      "total": "All share accounts"
+    },
+    "trend": {
+      "title": "Monthly Growth Trend",
+      "description": "Clients activated and loans disbursed in each of the last 12 months.",
+      "bar": "Bar",
+      "line": "Line"
+    },
+    "mix": {
+      "title": "Active Accounts by Type",
+      "description": "Active accounts of each type across all offices.",
+      "ring": "Ring",
+      "pie": "Pie",
+      "empty": "There are no active accounts yet.",
+      "loans": "Loans",
+      "savings": "Savings",
+      "fixed": "Fixed deposits",
+      "recurring": "Recurring deposits",
+      "shares": "Shares"
+    },
+    "widgets": {
+      "note": "Hidden widgets are left out of the overview. Fineract has no setting for this, so the choice is saved in this browser only.",
+      "search": "Filter widgets by name or description",
+      "module": "Module",
+      "name": "Widget",
+      "description": "Description",
+      "visible": "Visible",
+      "noMatch": "No widgets match the filter.",
+      "modules": {
+        "all": "All modules",
+        "global": "Global",
+        "client": "Clients",
+        "loan": "Loans",
+        "savings": "Savings",
+        "shares": "Shares"
+      },
+      "items": {
+        "clients": {
+          "name": "Clients",
+          "description": "Total, active and pending clients, and clients activated this month."
+        },
+        "loans": {
+          "name": "Loans Disbursed",
+          "description": "Amounts disbursed and awaiting disbursement, and how much of the demand has been collected."
+        },
+        "deposits": {
+          "name": "Deposit Balances",
+          "description": "Balances of active savings, fixed deposit and recurring deposit accounts."
+        },
+        "shares": {
+          "name": "Share Accounts",
+          "description": "Active and total share accounts."
+        },
+        "trend": {
+          "name": "Monthly Growth Trend",
+          "description": "Clients activated and loans disbursed in each of the last 12 months."
+        },
+        "accountMix": {
+          "name": "Active Accounts by Type",
+          "description": "How the active loan, savings, deposit and share accounts are split."
+        }
+      }
+    }
+  },
   "manageDataTables": "Manage Data tables",
   "manageEmployees": "Manage Employees",
   "manageExternalEvents": "Manage External Events",

@@ -30,6 +30,10 @@ const EditAccountingRules = () => {
   const { id } = useParams()
 
   const [rule, setRule] = useState<AccountingRuleData | null>(null)
+  const [template, setTemplate] = useState<AccountingRuleData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [debitRuleType, setDebitRuleType] = useState('fixedAccount')
   const [creditRuleType, setCreditRuleType] = useState('fixedAccount')
 
@@ -39,45 +43,134 @@ const EditAccountingRules = () => {
   })
 
   useEffect(() => {
-    const fetchRule = async () => {
-      try {
-        const response = await accountingRulesApi.retreiveAccountingRule(
-          Number(id)
-        )
-        setRule(response.data)
-        setFormData({
-          name: response.data.name ?? '',
-          officeId: response.data.officeId,
-          accountToDebit: response.data.debitAccounts?.[0]?.id,
-          accountToCredit: response.data.creditAccounts?.[0]?.id,
-          description: response.data.description ?? '',
-        })
-      } catch (err) {
-        console.error('Failed to fetch accounting rule', err)
+    let isCurrent = true
+    const numericId = Number(id)
+    if (!id || isNaN(numericId)) {
+      setError('Invalid accounting rule ID.')
+      setIsLoading(false)
+      return () => {
+        isCurrent = false
       }
     }
-    fetchRule()
+
+    const fetchRuleAndTemplate = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const [ruleResult, templateResult] = await Promise.allSettled([
+          accountingRulesApi.retreiveAccountingRule(numericId),
+          accountingRulesApi.retrieveTemplate1(),
+        ])
+
+        if (ruleResult.status === 'rejected') {
+          throw ruleResult.reason
+        }
+
+        if (!isCurrent) return
+        const ruleRes = ruleResult.value
+        setRule(ruleRes.data)
+
+        if (templateResult.status === 'fulfilled') {
+          setTemplate(templateResult.value.data)
+        } else {
+          console.error(
+            'Failed to fetch accounting rule template',
+            templateResult.reason
+          )
+        }
+        setFormData({
+          name: ruleRes.data.name ?? '',
+          officeId: ruleRes.data.officeId,
+          accountToDebit: ruleRes.data.debitAccounts?.[0]?.id,
+          accountToCredit: ruleRes.data.creditAccounts?.[0]?.id,
+          description: ruleRes.data.description ?? '',
+        })
+
+        if (
+          ruleRes.data.debitAccounts &&
+          ruleRes.data.debitAccounts.length > 0
+        ) {
+          setDebitRuleType('fixedAccount')
+        } else if (
+          ruleRes.data.debitTags &&
+          ruleRes.data.debitTags.length > 0
+        ) {
+          setDebitRuleType('listOfAccounts')
+        }
+
+        if (
+          ruleRes.data.creditAccounts &&
+          ruleRes.data.creditAccounts.length > 0
+        ) {
+          setCreditRuleType('fixedAccount')
+        } else if (
+          ruleRes.data.creditTags &&
+          ruleRes.data.creditTags.length > 0
+        ) {
+          setCreditRuleType('listOfAccounts')
+        }
+      } catch (err) {
+        if (!isCurrent) return
+        console.error(
+          'Failed to fetch accounting rule details or template',
+          err
+        )
+        setError('Failed to fetch accounting rule details.')
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
+      }
+    }
+    fetchRuleAndTemplate()
+
+    return () => {
+      isCurrent = false
+    }
   }, [id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (isSubmitting) return
+
     try {
+      setIsSubmitting(true)
       await accountingRulesApi.updateAccountingRule(Number(id), formData)
       navigate('/accounting/accounting-rules')
     } catch (err) {
       console.error('Failed to update accounting rule', err)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  if (!rule) {
+  if (error) {
+    return (
+      <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900 flex flex-col items-center justify-center">
+        <p className="text-destructive font-medium mb-4">{error}</p>
+        <Button
+          variant="outline"
+          onClick={() => navigate('/accounting/accounting-rules')}
+        >
+          Back to Accounting Rules
+        </Button>
+      </div>
+    )
+  }
+
+  if (isLoading || !rule) {
     return <div className="text-center py-10">Loading accounting rule...</div>
   }
 
-  const officeOptions = (rule.allowedOffices ?? [])
+  const officeOptions = (template?.allowedOffices ?? rule.allowedOffices ?? [])
     .filter(o => o.id !== undefined)
     .map(o => ({ id: o.id!.toString(), name: o.name! }))
 
-  const accountOptions = (rule.allowedAccounts ?? [])
+  const accountOptions = (
+    template?.allowedAccounts ??
+    rule.allowedAccounts ??
+    []
+  )
     .filter(a => a.id !== undefined)
     .map(a => ({ id: a.id!.toString(), name: a.name! }))
 
@@ -228,9 +321,10 @@ const EditAccountingRules = () => {
             </Button>
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </div>
         </form>
