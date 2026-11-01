@@ -139,6 +139,7 @@ import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedD
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
+import CreateRecurringDepositProducts from '@/pages/products/recurring-deposit-products/create-recurring-deposit-products/CreateRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
 import ManageTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ManageTaxComponents'
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
@@ -785,6 +786,10 @@ const AppRoutes = () => {
           <Route
             path="/products/recurring-deposit-products"
             element={<RecurringDepositProducts />}
+          />
+          <Route
+            path="/products/recurring-deposit-products/create"
+            element={<CreateRecurringDepositProducts />}
           />
           <Route
             path="/products/recurring-deposit-products/:id/general"
