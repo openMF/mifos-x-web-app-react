@@ -73,6 +73,8 @@ import CreateEmployees from '@/pages/organization/employees/CreateEmployees'
 import ViewEmployees from '@/pages/organization/employees/ViewEmployees'
 import EditEmployees from '@/pages/organization/employees/EditEmployees'
 import BulkLoanReassignment from '@/pages/organization/bulk-loan-reassignmnet/BulkLoanReassignmnet'
+import BulkImport from '@/pages/organization/bulk-import/BulkImport'
+import ViewBulkImport from '@/pages/organization/bulk-import/ViewBulkImport'
 import Funds from '@/pages/organization/manage-funds/ManageFunds'
 import CreateFunds from '@/pages/organization/manage-funds/CreateFunds'
 import ViewFunds from '@/pages/organization/manage-funds/ViewFunds'
@@ -520,6 +522,13 @@ const AppRoutes = () => {
           <Route
             path="/organization/bulkloan"
             element={<BulkLoanReassignment />}
+          />
+
+          {/* Bulk Import */}
+          <Route path="/organization/bulk-import" element={<BulkImport />} />
+          <Route
+            path="/organization/bulk-import/:importName"
+            element={<ViewBulkImport />}
           />
 
           {/* Standing Instructions History */}
