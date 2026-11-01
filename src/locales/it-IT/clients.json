@@ -42,6 +42,7 @@
     "clientClosed": "Cliente chiuso con successo.",
     "clientTransferProposed": "Trasferimento cliente proposto con successo.",
     "staffAssigned": "Personale assegnato con successo.",
+    "staffUnassigned": "Assegnazione del personale rimossa con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
     "familyMemberAdded": "Membro della famiglia aggiunto con successo.",
     "familyMemberUpdated": "Membro della famiglia aggiornato con successo.",
@@ -82,6 +83,15 @@
       "staffRequired": "Seleziona un membro del personale.",
       "failedFetchStaff": "Impossibile caricare le opzioni del personale.",
       "failedAssignStaff": "Impossibile assegnare il personale."
+    }
+  },
+  "unassignStaff": {
+    "title": "Rimuovi Assegnazione Personale",
+    "confirmMessage": "Sei sicuro di voler rimuovere {{staff}} da questo cliente?",
+    "confirm": "Conferma",
+    "errors": {
+      "failedFetchClient": "Impossibile recuperare i dettagli del cliente.",
+      "failedUnassignStaff": "Impossibile rimuovere l'assegnazione del personale."
     }
   },
   "transfer": {

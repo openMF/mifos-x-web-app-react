@@ -101,12 +101,69 @@
   },
   "delinquencyBucket": "Delinquency Bucket",
   "fixedDepositProducts": "Fixed Deposit Products",
+  "floatingRate": {
+    "created": "Floating rate created successfully.",
+    "createTitle": "Create Floating Rate",
+    "errors": {
+      "createFailed": "Failed to create the floating rate."
+    },
+    "fields": {
+      "active": "Active",
+      "isBaseLendingRate": "Is Base Lending Rate",
+      "nameRequired": "Floating Rate Name *"
+    },
+    "periods": {
+      "add": "Add Rate Period",
+      "baseRateNote": "Periods of a base lending rate cannot be differential to the base lending rate.",
+      "empty": "No rate periods added yet. Add at least one period.",
+      "fieldForRow": "{{field}} for period {{row}}",
+      "fromDate": "From Date",
+      "fromDateRequired": "From Date *",
+      "interestRate": "Interest Rate",
+      "interestRateRequired": "Interest Rate (%) *",
+      "isDifferential": "Is Differential",
+      "remove": "Remove period {{row}}",
+      "title": "Rate Periods"
+    },
+    "validation": {
+      "duplicateFromDate": "Two rate periods cannot have the same From Date.",
+      "fillEveryField": "Enter the From Date and Interest Rate for period {{row}}.",
+      "fromDateInFuture": "The From Date for period {{row}} must be after the business date.",
+      "nameRequired": "Floating Rate Name is required.",
+      "periodRequired": "Add at least one rate period.",
+      "rateNegative": "The Interest Rate for period {{row}} cannot be negative.",
+      "rateNotNumber": "The Interest Rate for period {{row}} must be a number."
+    }
+  },
   "floatingRates": "Floating Rates",
   "loanProduct": "Loan Product",
   "loanProducts": "Loan Products",
   "loanProvisioningCriteria": "Loan Provisioning Criteria",
   "paymentType": "Payment Type",
   "product": "Product",
+  "productMix": {
+    "columns": {
+      "productName": "Product Name",
+      "restrictedProducts": "Restricted Products"
+    },
+    "created": "Product mix created successfully.",
+    "createTitle": "Create Product Mix",
+    "errors": {
+      "createFailed": "Failed to create the product mix.",
+      "restrictionsFailed": "Failed to load the products that can be restricted.",
+      "templateFailed": "Failed to load the loan products."
+    },
+    "fields": {
+      "productRequired": "Product *",
+      "restrictedProductsRequired": "Restricted Products *"
+    },
+    "placeholders": {
+      "noProducts": "Every loan product already has a product mix",
+      "noRestrictedProducts": "No other loan products available",
+      "selectProduct": "Select a loan product",
+      "selectRestrictedProducts": "Select products that cannot be combined"
+    }
+  },
   "productsMix": "Products Mix",
   "recurringDepositProducts": "Recurring Deposit Products",
   "savingsProducts": "Savings Products",
