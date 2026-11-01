@@ -286,6 +286,7 @@ import CreateClients from '@/pages/clients/create-clients/CreateClients'
 import EditClients from '@/pages/clients/edit-clients/EditClients'
 import CreateSavingsAccount from '@/pages/savings/CreateSavingsAccount'
 import CreateSharesAccount from '@/pages/shares/create-shares-account/CreateSharesAccount'
+import CreateRecurringDepositAccount from '@/pages/recurring-deposits/create-recurring-deposit-account/CreateRecurringDepositAccount'
 import CreateAccountingRule from '@/pages/accounting/accounting-rules/CreateAccountingRules'
 import EditAccountingRules from '@/pages/accounting/accounting-rules/EditAccountingRules'
 
@@ -1161,6 +1162,11 @@ const AppRoutes = () => {
           <Route
             path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
             element={<SavingsAccountTransactions />}
+          />
+
+          <Route
+            path="/clients/:clientId/recurring-deposits-accounts/create"
+            element={<CreateRecurringDepositAccount />}
           />
 
           <Route
