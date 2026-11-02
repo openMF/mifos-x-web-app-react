@@ -42,6 +42,7 @@
     "clientClosed": "Client closed successfully.",
     "clientTransferProposed": "Client transfer proposed successfully.",
     "staffAssigned": "Staff assigned successfully.",
+    "staffUnassigned": "Staff unassigned successfully.",
     "clientsApproved": "Selected clients approved successfully.",
     "familyMemberAdded": "Family member added successfully.",
     "familyMemberUpdated": "Family member updated successfully.",
@@ -82,6 +83,15 @@
       "staffRequired": "Please select a staff member.",
       "failedFetchStaff": "Failed to load staff options.",
       "failedAssignStaff": "Failed to assign staff."
+    }
+  },
+  "unassignStaff": {
+    "title": "Unassign Staff",
+    "confirmMessage": "Are you sure you want to unassign {{staff}} from this client?",
+    "confirm": "Confirm",
+    "errors": {
+      "failedFetchClient": "Failed to fetch client details.",
+      "failedUnassignStaff": "Failed to unassign staff."
     }
   },
   "transfer": {
