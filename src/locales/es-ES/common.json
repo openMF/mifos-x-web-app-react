@@ -550,6 +550,32 @@
     "shareAccounts": "Cuentas de acciones",
     "groupMemberships": "Membresías de grupos"
   },
+  "documents": {
+    "heading": "Documentos",
+    "add": "Agregar",
+    "name": "Nombre",
+    "namePlaceholder": "Nombre del documento",
+    "description": "Descripción",
+    "optional": "Opcional",
+    "file": "Archivo",
+    "fileName": "Nombre del archivo",
+    "actions": "Acciones",
+    "upload": "Subir",
+    "uploading": "Subiendo...",
+    "cancel": "Cancelar",
+    "download": "Descargar",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar este documento?",
+    "loading": "Cargando...",
+    "empty": "No hay documentos",
+    "preview": "Vista previa",
+    "previewFailed": "No se pudo mostrar la vista previa de este documento.",
+    "openInNewTab": "Abrir en una pestaña nueva",
+    "close": "Cerrar",
+    "identifier": "Identificador",
+    "noIdentifiers": "No hay identificadores",
+    "identifiersLoadFailed": "No se pudieron cargar los identificadores. Inténtelo de nuevo."
+  },
   "search": {
     "enterQuery": "Introduzca un término de búsqueda en la barra de navegación para encontrar clientes, grupos, centros y cuentas.",
     "noResultsHint": "Busque por nombre, número de cuenta o identificador externo. Es posible que los nombres deban coincidir con las mayúsculas usadas al guardarlos, por ejemplo \"Ada\" en lugar de \"ada\".",
@@ -573,5 +599,56 @@
     "matchCount": "{{shown}} / {{total}}",
     "other": "Otros",
     "run": "Ejecutar"
+  },
+  "session": {
+    "timeoutTitle": "Tiempo de sesión agotado",
+    "timeoutMessage": "No ha habido actividad durante un tiempo. Se cerrará su sesión en <1>{{seconds}}</1> segundos.",
+    "signOutNow": "Cerrar sesión ahora",
+    "staySignedIn": "Mantener la sesión"
+  },
+  "shortcuts": {
+    "shortcutColumn": "Atajos",
+    "pageOrActionColumn": "Página o acción",
+    "descriptions": {
+      "toggleSidebar": "Mostrar u ocultar la barra lateral",
+      "navigation": "Página de navegación",
+      "runReport": "Ejecutar informe",
+      "checkerInbox": "Bandeja de entrada y tareas pendientes del revisor",
+      "createClient": "Crear cliente",
+      "createGroup": "Crear grupo",
+      "createCenter": "Crear centro",
+      "frequentPosting": "Publicación frecuente",
+      "closureEntries": "Asientos de cierre",
+      "journalEntry": "Asiento contable",
+      "reports": "Informes",
+      "accounting": "Contabilidad",
+      "saveForm": "Guardar/enviar formularios",
+      "cancelForm": "Cancelar",
+      "help": "Ayuda",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Inicio",
+    "clients": "Clientes",
+    "client": "Cliente",
+    "groups": "Grupos",
+    "group": "Grupo",
+    "loanAccount": "Cuenta de préstamo",
+    "savingsAccount": "Cuenta de ahorros",
+    "sharesAccount": "Cuenta de acciones",
+    "tabs": {
+      "general": "General",
+      "accountDetails": "Detalles de cuenta",
+      "repaymentSchedule": "Calendario de pagos",
+      "transactions": "Transacciones",
+      "loanCollateral": "Detalles de la garantía del préstamo",
+      "termVariations": "Variaciones de plazo",
+      "loanDocuments": "Documentos del préstamo",
+      "charges": "Cargos",
+      "documents": "Documentos",
+      "dividends": "Dividendos",
+      "notes": "Notas"
+    }
   }
 }

@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Check, Pencil, Loader2, ArrowLeft, ArrowRight } from 'lucide-react'
@@ -84,9 +85,10 @@ export function MultiStepForm({
   onSubmit,
   onCancel,
   isLoading = false,
-  submitLabel = 'Submit',
+  submitLabel,
   className,
 }: MultiStepFormProps) {
+  const { t } = useTranslation('common')
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
   const [stepError, setStepError] = useState<string | null>(null)
@@ -151,9 +153,7 @@ export function MultiStepForm({
       setStepError(null)
     } catch (error) {
       // Without this a rejected submit leaves the form looking untouched
-      setStepError(
-        error instanceof Error ? error.message : 'Something went wrong'
-      )
+      setStepError(error instanceof Error ? error.message : t('errors.generic'))
     } finally {
       setSubmitting(false)
     }
@@ -226,7 +226,7 @@ export function MultiStepForm({
                       disabled={submitting || isLoading}
                       className="min-w-[100px]"
                     >
-                      Cancel
+                      {t('actions.cancel')}
                     </Button>
                   )}
 
@@ -240,7 +240,7 @@ export function MultiStepForm({
                       style={{ borderColor: '#2081C3', color: '#2081C3' }}
                     >
                       <ArrowLeft className="w-4 h-4 mr-1" />
-                      Previous
+                      {t('actions.previous')}
                     </Button>
                   )}
 
@@ -258,7 +258,7 @@ export function MultiStepForm({
                       {(submitting || isLoading) && (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       )}
-                      {submitLabel}
+                      {submitLabel ?? t('actions.submit')}
                     </Button>
                   ) : (
                     <Button
@@ -271,7 +271,7 @@ export function MultiStepForm({
                         borderColor: '#2081C3',
                       }}
                     >
-                      Next
+                      {t('actions.next')}
                       <ArrowRight className="w-4 h-4 ml-1" />
                     </Button>
                   )}
