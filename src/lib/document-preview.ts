@@ -39,8 +39,13 @@ const IMAGE_EXTENSIONS: Record<string, string> = {
 /** Image MIME types that must never be previewed as active content. */
 const ACTIVE_IMAGE_MIME_TYPES = ['image/svg+xml', 'image/svg']
 
-const getExtension = (fileName?: string) =>
-  (fileName || '').split('.').pop()?.toLowerCase() ?? ''
+const getExtension = (fileName?: string) => {
+  if (!fileName || !fileName.includes('.')) return ''
+  return fileName.split('.').pop()?.toLowerCase() ?? ''
+}
+
+const normalizeMime = (mimeType?: string) =>
+  (mimeType || '').split(';')[0].trim().toLowerCase()
 
 /**
  * Classify a document from its file name and, as a fallback, its declared MIME type.
@@ -49,14 +54,36 @@ export const detectPreviewType = (
   fileName?: string,
   mimeType?: string
 ): DocumentPreviewType => {
-  const normalizedMime = (mimeType || '').toLowerCase()
-  if (ACTIVE_IMAGE_MIME_TYPES.includes(normalizedMime)) return 'other'
-  if (!GENERIC_MIME_TYPES.includes(normalizedMime)) {
-    if (normalizedMime.includes('pdf')) return 'pdf'
-    if (normalizedMime.startsWith('image/')) return 'image'
+  const extension = getExtension(fileName)
+  // Explicitly reject SVG filenames regardless of declared MIME type
+  if (extension === 'svg') return 'other'
+
+  const normalizedMime = normalizeMime(mimeType)
+  // Explicitly reject active image MIME types (SVG) regardless of parameters
+  if (
+    ACTIVE_IMAGE_MIME_TYPES.includes(normalizedMime) ||
+    normalizedMime.includes('svg')
+  ) {
+    return 'other'
   }
 
-  const extension = getExtension(fileName)
+  if (!GENERIC_MIME_TYPES.includes(normalizedMime)) {
+    if (normalizedMime.includes('pdf')) {
+      if (!extension || extension === 'pdf') return 'pdf'
+      return 'other'
+    }
+    if (normalizedMime.startsWith('image/')) {
+      if (
+        (!extension &&
+          Object.values(IMAGE_EXTENSIONS).includes(normalizedMime)) ||
+        (extension && IMAGE_EXTENSIONS[extension] === normalizedMime)
+      ) {
+        return 'image'
+      }
+      return 'other'
+    }
+  }
+
   if (extension === 'pdf') return 'pdf'
   if (IMAGE_EXTENSIONS[extension]) return 'image'
 
@@ -78,10 +105,17 @@ export const resolveMimeType = (
   fileName?: string,
   blobMimeType?: string
 ): string | undefined => {
-  const normalizedMime = (blobMimeType || '').toLowerCase()
+  if (type === 'other') return undefined
+  const normalizedMime = normalizeMime(blobMimeType)
   if (type === 'pdf') return PDF_MIME_TYPE
   if (type === 'image') {
-    if (normalizedMime.startsWith('image/')) return normalizedMime
+    if (
+      normalizedMime.startsWith('image/') &&
+      !ACTIVE_IMAGE_MIME_TYPES.includes(normalizedMime) &&
+      !normalizedMime.includes('svg')
+    ) {
+      return normalizedMime
+    }
     return IMAGE_EXTENSIONS[getExtension(fileName)]
   }
   return undefined
@@ -96,8 +130,9 @@ export const toPreviewBlob = (
   declaredMimeType?: string
 ): { blob: Blob; type: DocumentPreviewType } => {
   const source = data instanceof Blob ? data : new Blob([data])
+  const normalizedDeclaredMime = normalizeMime(declaredMimeType)
   let type = detectPreviewType(fileName, declaredMimeType)
-  if (type === 'other') {
+  if (type === 'other' && GENERIC_MIME_TYPES.includes(normalizedDeclaredMime)) {
     type = detectPreviewType(fileName, source.type)
   }
 

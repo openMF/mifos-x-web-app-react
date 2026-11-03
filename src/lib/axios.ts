@@ -47,6 +47,15 @@ fineract.interceptors.request.use(config => {
 
   Object.assign(config.headers, authHeaders)
 
+  if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+    if (typeof config.headers?.delete === 'function') {
+      config.headers.delete('Content-Type')
+    } else {
+      delete config.headers['Content-Type']
+      delete config.headers['content-type']
+    }
+  }
+
   const authorization = String(
     suppliedAuth ?? authHeaders['Authorization'] ?? ''
   )
