@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
 import { useNavigate } from 'react-router-dom'
 import { datatableErrorMessage } from '@/lib/datatables-api'
-import { missingAccounts } from '../loanProductAccounting'
+import { incompleteMappings, missingAccounts } from '../loanProductAccounting'
 
 const loanProductApi = new LoanProductsApi(getConfiguration())
 
@@ -137,10 +137,19 @@ const CreateLoanProducts = () => {
           formData.accountingRule,
           formData as Record<string, unknown>
         )
-        return missing.length
-          ? t('loanProductAccounting.missingAccounts', {
-              accounts: missing
-                .map(f => t(`loanProductAccounting.fields.${f.label}`))
+        if (missing.length)
+          return t('loanProductAccounting.missingAccounts', {
+            accounts: missing
+              .map(f => t(`loanProductAccounting.fields.${f.label}`))
+              .join(', '),
+          })
+        const incomplete = incompleteMappings(
+          formData as Record<string, unknown>
+        )
+        return incomplete.length
+          ? t('loanProductAccounting.advanced.incompleteRows', {
+              tables: incomplete
+                .map(m => t(`loanProductAccounting.advanced.${m.label}.title`))
                 .join(', '),
             })
           : null
