@@ -166,5 +166,23 @@
     "placeholderDestinationGroup": "Select destination group",
     "placeholderInputGroup": "Enter destination group ID",
     "groupFallback": "Group {{id}}"
+  },
+  "activate": {
+    "title": "Activate Group",
+    "labelActivationDate": "Activation Date*",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter an activation date.",
+      "dateInFuture": "The activation date cannot be in the future.",
+      "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
+  },
+  "errors": {
+    "failedActivateGroup": "Failed to activate group.",
+    "failedFetchGroup": "Failed to load group details."
+  },
+  "success": {
+    "groupActivated": "Group activated successfully."
   }
 }
