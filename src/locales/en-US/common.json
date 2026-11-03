@@ -576,6 +576,25 @@
     "noIdentifiers": "No identifiers",
     "identifiersLoadFailed": "Could not load identifiers. Please try again."
   },
+  "notes": {
+    "heading": "Notes",
+    "placeholder": "Write a note ....",
+    "addButton": "+ Add",
+    "adding": "Adding...",
+    "createdBy": "Created By: {{name}}",
+    "date": "Date: {{date}}",
+    "editButton": "Edit",
+    "saveButton": "Save",
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete",
+    "confirmDelete": "Delete this note?",
+    "loading": "Loading notes...",
+    "empty": "No notes have been added.",
+    "loadFailed": "Could not load notes.",
+    "addFailed": "Could not add the note. Please try again.",
+    "updateFailed": "Could not update the note. Please try again.",
+    "deleteFailed": "Could not delete the note. Please try again."
+  },
   "search": {
     "enterQuery": "Enter a search term in the navbar to find clients, groups, centers and accounts.",
     "noResultsHint": "Search by name, account number or external ID. Names may need to match the capital letters used when they were saved, for example \"Ada\" instead of \"ada\".",
