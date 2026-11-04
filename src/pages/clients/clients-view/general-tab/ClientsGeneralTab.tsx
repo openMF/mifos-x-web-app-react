@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import {
   Table,
@@ -191,18 +191,21 @@ const shownDate = (value: unknown) =>
   Array.isArray(value) ? formatDate(value) : String(value ?? '—')
 
 /**
- * The client's fixed or recurring deposit accounts. The rows do not link
- * anywhere yet, as the app has no deposit account view.
+ * The client's fixed or recurring deposit accounts. Rows open the account when
+ * `accountPath` is given; fixed deposits have no account view yet.
  */
 const DepositAccounts = ({
   title,
   accounts,
   money,
+  accountPath,
 }: {
   title: string
   accounts: AccountRecord[]
   money: (value: unknown, currency?: AccountCurrency) => string
+  accountPath?: (acc: AccountRecord) => string
 }) => {
+  const navigate = useNavigate()
   const { t } = useTranslation('clients')
   const [showClosed, setShowClosed] = useState(false)
   const shown = accounts.filter(a => !!a.status?.closed === showClosed)
@@ -237,10 +240,27 @@ const DepositAccounts = ({
           </TableHeader>
           <TableBody>
             {shown.map(acc => (
-              <TableRow key={String(acc.id ?? '')}>
+              <TableRow
+                key={String(acc.id ?? '')}
+                {...(accountPath && {
+                  onClick: () => navigate(accountPath(acc)),
+                  className:
+                    'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700',
+                })}
+              >
                 <TableCell className="px-6 py-4 flex items-center gap-2">
                   <StatusDot acc={acc} />
-                  <span>{acc.accountNo ?? '—'}</span>
+                  {accountPath ? (
+                    <Link
+                      to={accountPath(acc)}
+                      onClick={e => e.stopPropagation()}
+                      className="underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-[#1074b9]"
+                    >
+                      {acc.accountNo ?? '—'}
+                    </Link>
+                  ) : (
+                    <span>{acc.accountNo ?? '—'}</span>
+                  )}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {acc.productName ?? '—'}
@@ -891,6 +911,9 @@ const ClientsGeneralTab = () => {
           title={t('general.recurringDepositAccounts')}
           accounts={recurringDeposits}
           money={money}
+          accountPath={acc =>
+            `/clients/${id}/recurring-deposits-accounts/${acc.id}/general`
+          }
         />
       )}
 
