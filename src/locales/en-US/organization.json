@@ -364,6 +364,41 @@
   "searchByMaker": "Search by maker",
   "searchEvents": "Search events…",
   "searchReports": "Search reports...",
+  "serviceSettings": {
+    "editTitle": "Edit {{service}}",
+    "errors": {
+      "loadServices": "Failed to load the external services.",
+      "loadSettings": "Failed to load the settings.",
+      "saveSettings": "Failed to save the settings."
+    },
+    "fields": {
+      "accessKey": "Access Key",
+      "bucketName": "Bucket Name",
+      "endPoint": "End Point",
+      "fcmEndPoint": "FCM End Point",
+      "fromEmail": "From Email",
+      "fromName": "From Name",
+      "gcmEndPoint": "GCM End Point",
+      "host": "Host",
+      "password": "Password",
+      "port": "Port",
+      "secretKey": "Secret Key",
+      "serverKey": "Server Key",
+      "tenantAppKey": "Tenant App Key",
+      "useTls": "Use TLS",
+      "username": "Username"
+    },
+    "notSet": "Not set",
+    "secretPlaceholder": "Set. Leave empty to keep it",
+    "secretSet": "Set (hidden)",
+    "services": {
+      "amazonS3": "Amazon S3",
+      "email": "Email (SMTP)",
+      "pushNotification": "Push Notification",
+      "smsGateway": "SMS Gateway"
+    },
+    "unknownService": "Unknown external service \"{{slug}}\"."
+  },
   "smsCampaign": {
     "title": "SMS Campaigns",
     "create": "Create SMS Campaign",
