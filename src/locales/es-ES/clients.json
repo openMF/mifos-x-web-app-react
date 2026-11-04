@@ -42,6 +42,7 @@
     "clientClosed": "Cliente cerrado exitosamente.",
     "clientTransferProposed": "Transferencia de cliente propuesta con éxito.",
     "staffAssigned": "Personal asignado exitosamente.",
+    "staffUnassigned": "Personal desasignado exitosamente.",
     "clientsApproved": "Clientes seleccionados aprobados exitosamente.",
     "familyMemberAdded": "Miembro de familia agregado exitosamente.",
     "familyMemberUpdated": "Miembro de familia actualizado exitosamente.",
@@ -82,6 +83,15 @@
       "staffRequired": "Por favor seleccione un miembro del personal.",
       "failedFetchStaff": "Error al cargar las opciones de personal.",
       "failedAssignStaff": "Error al asignar personal."
+    }
+  },
+  "unassignStaff": {
+    "title": "Desasignar Personal",
+    "confirmMessage": "¿Está seguro de que desea desasignar a {{staff}} de este cliente?",
+    "confirm": "Confirmar",
+    "errors": {
+      "failedFetchClient": "Error al obtener los detalles del cliente.",
+      "failedUnassignStaff": "Error al desasignar personal."
     }
   },
   "transfer": {
