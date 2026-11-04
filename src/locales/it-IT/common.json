@@ -338,7 +338,11 @@
     "individualCollectionSheet": "Foglio di raccolta individuale",
     "frequentPostings": "Registrazioni frequenti",
     "createJournalEntry": "Crea voce di giornale",
-    "chartOfAccounts": "Piano dei conti"
+    "chartOfAccounts": "Piano dei conti",
+    "collectionSheet": "Foglio di raccolta",
+    "groups": "Gruppi",
+    "clients": "Clienti",
+    "centers": "Centri"
   },
   "pagination": {
     "itemsPerPage": "Elementi per pagina",

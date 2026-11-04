@@ -338,7 +338,11 @@
     "individualCollectionSheet": "Hoja de cobro individual",
     "frequentPostings": "Publicaciones frecuentes",
     "createJournalEntry": "Crear asiento contable",
-    "chartOfAccounts": "Plan de cuentas"
+    "chartOfAccounts": "Plan de cuentas",
+    "collectionSheet": "Hoja de cobro",
+    "groups": "Grupos",
+    "clients": "Clientes",
+    "centers": "Centros"
   },
   "pagination": {
     "itemsPerPage": "Elementos por página",
