@@ -503,6 +503,64 @@
     "officeCreated": "Office created successfully!",
     "officeSaved": "Office saved successfully."
   },
+  "surveys": {
+    "addOption": "Add Option",
+    "addQuestion": "Add Question",
+    "create": "Create Survey",
+    "createButton": "Create Survey",
+    "deactivate": "Deactivate",
+    "edit": "Edit Survey",
+    "fields": {
+      "action": "Action",
+      "countryCode": "Country Code",
+      "countryCodeHint": "e.g. IN",
+      "countryCodeRequired": "Country Code *",
+      "description": "Description",
+      "key": "Key",
+      "keyRequired": "Key *",
+      "name": "Name",
+      "nameRequired": "Name *",
+      "option": "Option",
+      "optionRequired": "Option *",
+      "questionRequired": "Question *",
+      "questions": "Questions",
+      "status": "Status",
+      "value": "Value",
+      "valueRequired": "Value *"
+    },
+    "messages": {
+      "createError": "The survey could not be created.",
+      "loadError": "The survey could not be loaded.",
+      "loadListError": "The surveys could not be loaded.",
+      "statusError": "The survey status could not be changed.",
+      "updateError": "The survey could not be updated."
+    },
+    "moveOptionDown": "Move option {{option}} of question {{number}} down",
+    "moveOptionUp": "Move option {{option}} of question {{number}} up",
+    "moveQuestionDown": "Move question {{number}} down",
+    "moveQuestionUp": "Move question {{number}} up",
+    "noQuestions": "No questions have been added yet.",
+    "optionText": "Question {{number}}, option {{option}} text",
+    "optionValue": "Question {{number}}, option {{option}} value",
+    "questionNumber": "Question {{number}}",
+    "removeOption": "Remove option {{option}} of question {{number}}",
+    "removeQuestion": "Remove question {{number}}",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "title": "Manage Surveys",
+    "validation": {
+      "countryCode": "Country code must be two letters, for example IN.",
+      "keyRequired": "Key is required.",
+      "nameRequired": "Name is required.",
+      "optionRequired": "Question {{number}} needs at least one option.",
+      "optionText": "Every option of question {{number}} needs a text.",
+      "optionValue": "Every option value of question {{number}} must be a whole number of up to four digits.",
+      "questionFields": "Question {{number}} needs a key and a question text.",
+      "questionRequired": "Add at least one question."
+    }
+  },
   "tellerCashierManagement": "Teller / Cashier Management",
   "title": "Organization",
   "workingDays": "Working Days"

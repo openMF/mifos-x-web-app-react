@@ -503,6 +503,64 @@
     "officeCreated": "Agence créée avec succès.",
     "officeSaved": "Agence enregistrée avec succès."
   },
+  "surveys": {
+    "addOption": "Ajouter une option",
+    "addQuestion": "Ajouter une question",
+    "create": "Créer une enquête",
+    "createButton": "Créer une enquête",
+    "deactivate": "Désactiver",
+    "edit": "Modifier l'enquête",
+    "fields": {
+      "action": "Action",
+      "countryCode": "Code pays",
+      "countryCodeHint": "ex. FR",
+      "countryCodeRequired": "Code pays *",
+      "description": "Description",
+      "key": "Clé",
+      "keyRequired": "Clé *",
+      "name": "Nom",
+      "nameRequired": "Nom *",
+      "option": "Option",
+      "optionRequired": "Option *",
+      "questionRequired": "Question *",
+      "questions": "Questions",
+      "status": "Statut",
+      "value": "Valeur",
+      "valueRequired": "Valeur *"
+    },
+    "messages": {
+      "createError": "L'enquête n'a pas pu être créée.",
+      "loadError": "L'enquête n'a pas pu être chargée.",
+      "loadListError": "Les enquêtes n'ont pas pu être chargées.",
+      "statusError": "Le statut de l'enquête n'a pas pu être modifié.",
+      "updateError": "L'enquête n'a pas pu être mise à jour."
+    },
+    "moveOptionDown": "Descendre l'option {{option}} de la question {{number}}",
+    "moveOptionUp": "Monter l'option {{option}} de la question {{number}}",
+    "moveQuestionDown": "Descendre la question {{number}}",
+    "moveQuestionUp": "Monter la question {{number}}",
+    "noQuestions": "Aucune question n'a encore été ajoutée.",
+    "optionText": "Question {{number}}, texte de l'option {{option}}",
+    "optionValue": "Question {{number}}, valeur de l'option {{option}}",
+    "questionNumber": "Question {{number}}",
+    "removeOption": "Supprimer l'option {{option}} de la question {{number}}",
+    "removeQuestion": "Supprimer la question {{number}}",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "title": "Gérer les enquêtes",
+    "validation": {
+      "countryCode": "Le code pays doit comporter deux lettres, par exemple FR.",
+      "keyRequired": "La clé est obligatoire.",
+      "nameRequired": "Le nom est obligatoire.",
+      "optionRequired": "La question {{number}} doit avoir au moins une option.",
+      "optionText": "Chaque option de la question {{number}} doit avoir un texte.",
+      "optionValue": "Chaque valeur d'option de la question {{number}} doit être un nombre entier de quatre chiffres au plus.",
+      "questionFields": "La question {{number}} doit avoir une clé et un texte.",
+      "questionRequired": "Ajoutez au moins une question."
+    }
+  },
   "tellerCashierManagement": "Gestion des caissiers",
   "title": "Organisation",
   "workingDays": "Jours ouvrables"
