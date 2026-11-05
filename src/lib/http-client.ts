@@ -10,6 +10,8 @@ import { envConfig } from './env-config'
 import { isSecureUrl } from './secure-url'
 
 const TOKEN_KEY = 'mifosToken'
+/** Tenant chosen on the sign-in page. */
+const TENANT_KEY = 'mifosTenant'
 /**
  * Access token from the OIDC flow. Kept in localStorage so the session
  * survives a reload, matching how oidc-client-ts persists the User object.
@@ -22,6 +24,34 @@ const OIDC_EXPIRES_AT_KEY = 'mifosOidcExpiresAt'
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem(TOKEN_KEY)
+}
+
+/**
+ * Tenants the sign-in page offers: the configured tenant first, then the
+ * others listed in FINERACT_PLATFORM_TENANTS_IDENTIFIER, without blanks or
+ * repeats.
+ */
+export const getTenantOptions = (): string[] => {
+  const tenants = [envConfig.tenantId, ...envConfig.tenantIds.split(',')]
+    .map(tenant => tenant.trim())
+    .filter(Boolean)
+  return tenants.length > 0 ? [...new Set(tenants)] : ['default']
+}
+
+/**
+ * The tenant every Fineract request is made in: the one chosen at sign-in,
+ * otherwise the configured one.
+ *
+ * Fineract checks the credential against that tenant's users, so the
+ * generated clients, the axios instance and the Copilot must all send the
+ * same one. A request that sent another tenant would be refused with a 401.
+ */
+export const getTenantId = (): string => {
+  return localStorage.getItem(TENANT_KEY) || getTenantOptions()[0]
+}
+
+export const setTenantId = (tenant: string): void => {
+  localStorage.setItem(TENANT_KEY, tenant)
 }
 
 /**
@@ -72,7 +102,7 @@ export const hasSession = (): boolean => {
 
 export const getAuthHeaders = (): Record<string, string> => {
   const headers: Record<string, string> = {
-    'Fineract-Platform-TenantId': envConfig.tenantId,
+    'Fineract-Platform-TenantId': getTenantId(),
   }
 
   // The two credentials are kept mutually exclusive at sign-in, so at most

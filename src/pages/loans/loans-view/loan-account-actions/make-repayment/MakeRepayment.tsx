@@ -20,6 +20,7 @@ import {
   type GetLoansLoanIdTransactionsTemplateResponse,
   type PostLoansLoanIdTransactionsRequest,
 } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 const loanTransactionsApi = new LoanTransactionsApi(getConfiguration())
@@ -48,10 +49,26 @@ const toFineractDate = (iso: string) => {
 
 type PaymentType = { id: number; name: string }
 
-const MakeRepayment = () => {
+/** Loan transaction commands that share this page (template and transaction use the same command). */
+export type RepaymentCommand =
+  | 'repayment'
+  | 'goodwillCredit'
+  | 'interestPaymentWaiver'
+  | 'payoutRefund'
+  | 'merchantIssuedRefund'
+
+interface MakeRepaymentProps {
+  command?: RepaymentCommand
+  title?: string
+}
+
+const MakeRepayment = ({
+  command = 'repayment',
+  title = 'Make Repayment',
+}: MakeRepaymentProps) => {
   const breadcrumbs = useAccountBreadcrumbs()
   const navigate = useNavigate()
-  const { groupId, loanId } = useParams()
+  const { clientId, groupId, loanId } = useParams()
 
   // simple form state
   const [transactionDate, setTransactionDate] = useState(toInputDate())
@@ -77,6 +94,7 @@ const MakeRepayment = () => {
   const [penalties, setPenalties] = useState(0)
 
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // load repayment template
   const loadTemplate = useCallback(
@@ -85,7 +103,7 @@ const MakeRepayment = () => {
       try {
         const res = await loanTransactionsApi.retrieveTransactionTemplate(
           Number(loanId),
-          'repayment',
+          command,
           'dd MMMM yyyy',
           toFineractDate(isoDate) as unknown as object,
           'en'
@@ -111,7 +129,7 @@ const MakeRepayment = () => {
         console.error('repayment template failed', e)
       }
     },
-    [loanId]
+    [loanId, command]
   )
 
   useEffect(() => {
@@ -123,6 +141,7 @@ const MakeRepayment = () => {
   const onSubmit = async () => {
     if (!loanId || !canSubmit) return
     setSaving(true)
+    setError(null)
     try {
       const payload: PostLoansLoanIdTransactionsRequest = {
         dateFormat: 'dd MMMM yyyy',
@@ -146,12 +165,18 @@ const MakeRepayment = () => {
       await loanTransactionsApi.executeLoanTransaction(
         Number(loanId),
         payload,
-        'repayment'
+        command
       )
 
-      navigate(`/groups/${groupId}/loans-accounts/${loanId}/general`)
+      // A client's loan has no account view yet, so go back to the client.
+      navigate(
+        groupId
+          ? `/groups/${groupId}/loans-accounts/${loanId}/general`
+          : `/clients/${clientId}/general`
+      )
     } catch (e) {
       console.error('repayment failed', e)
+      setError(datatableErrorMessage(e) ?? `${title} failed. Please try again.`)
     } finally {
       setSaving(false)
     }
@@ -162,7 +187,7 @@ const MakeRepayment = () => {
       <AppBreadCrumbs items={breadcrumbs} />
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-3xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">Make Repayment</h2>
+        <h2 className="text-2xl font-semibold mb-6">{title}</h2>
 
         <div className="space-y-6">
           {/* date */}
@@ -298,6 +323,12 @@ const MakeRepayment = () => {
               onChange={e => setNote(e.target.value)}
             />
           </div>
+
+          {error && (
+            <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+              {error}
+            </div>
+          )}
 
           {/* actions */}
           <div className="flex gap-4 pt-2">

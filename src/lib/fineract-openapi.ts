@@ -11,11 +11,15 @@ import { Configuration } from '@/fineract-api'
 import { getAllHeaders, getApiBaseUrl } from '@/lib/http-client'
 
 export const getConfiguration = () => {
-  return new Configuration({
-    basePath: getApiBaseUrl(),
-    baseOptions: {
-      headers: getAllHeaders(),
-      withCredentials: true,
-    },
+  const configuration = new Configuration({ basePath: getApiBaseUrl() })
+
+  // The generated clients read baseOptions on every request. Most pages build
+  // their client once, when the module loads, and every route is imported
+  // before sign-in; reading the headers here keeps those clients on the
+  // current credential and tenant instead of whatever existed at load time.
+  Object.defineProperty(configuration, 'baseOptions', {
+    get: () => ({ headers: getAllHeaders(), withCredentials: true }),
   })
+
+  return configuration
 }

@@ -5,10 +5,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react'
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Download,
+  Search,
+  Settings2,
+} from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -33,6 +47,34 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
 import { LoanProductsApi, LoansApi, OfficesApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { formatDate } from '@/lib/date-utils'
+
+import {
+  toRow,
+  type LoanCurrency,
+  type LoanRow,
+  type LoansListItem,
+  type Severity,
+} from './loans-list/loan-row'
+import {
+  BORROWER_COLUMN_ID,
+  DEFAULT_COLUMN_IDS,
+  loadVisibleColumns,
+  loanFieldColumns,
+  saveVisibleColumns,
+  type CellFormat,
+  type ColumnDef,
+} from './loans-list/columns'
+import {
+  isFilterSet,
+  matchesFilter,
+  newFilter,
+  type ActiveFilter,
+} from './loans-list/filters'
+import { useLoanDatatables } from './loans-list/use-loan-datatables'
+import { buildCsv, downloadCsv, exportFileName } from './loans-list/export-csv'
+import ColumnsSheet from './loans-list/ColumnsSheet'
+import AdditionalFilters from './loans-list/AdditionalFilters'
 
 const loansApi = new LoansApi(getConfiguration())
 const officesApi = new OfficesApi(getConfiguration())
@@ -50,109 +92,17 @@ const NEXT_CHUNK = 500
 /** Select value standing for "no filter", since Radix rejects an empty one */
 const ALL = 'all'
 
-/** Loan status ids Fineract reports for rejected, withdrawn and closed loans */
-const STATUS_WITHDRAWN = 400
-const STATUS_REJECTED = 500
-const CLOSED_STATUS_IDS = [600, 601, 602]
-
-type Severity = 'active' | 'arrears' | 'pending' | 'closed' | 'neutral'
-type SortKey = 'borrower' | 'status' | 'accountNo' | 'principal' | 'product'
-
-/**
- * Shape the loans list endpoint returns at runtime. The generated type
- * declares pageItems as a Set of the single-loan response, which carries
- * neither the client's office nor the loan type.
- */
-interface LoansListItem {
-  id?: number
-  accountNo?: string
-  clientId?: number
-  clientName?: string
-  clientOfficeId?: number
-  group?: { id?: number; name?: string; officeId?: number }
-  loanProductId?: number
-  loanProductName?: string
-  loanType?: { value?: string }
-  principal?: number
-  currency?: { code?: string; decimalPlaces?: number }
-  inArrears?: boolean
-  status?: {
-    id?: number
-    value?: string
-    active?: boolean
-    closed?: boolean
-    overpaid?: boolean
-    pendingApproval?: boolean
-    waitingForDisbursal?: boolean
-  }
-}
+/** Fields the search always covers, whether or not their column is shown */
+const ALWAYS_SEARCHED = ['status', 'accountNo', 'product']
 
 interface LoansListPage {
   pageItems?: LoansListItem[]
   totalFilteredRecords?: number
 }
 
-/** Row shape the table renders */
-interface LoanRow {
-  id: number
-  accountNo: string
-  borrowerName: string
-  loanType: string
-  clientId?: number
-  groupId?: number
-  officeId?: number
-  productId?: number
-  productName: string
-  principal?: number
-  currency?: { code?: string; decimalPlaces?: number }
-  statusValue: string
-  severity: Severity
-  isClosed: boolean
-}
-
 interface Option {
   id: number
   name: string
-}
-
-/** Groups Fineract's loan states into the colours the list distinguishes */
-const severityOf = (loan: LoansListItem): Severity => {
-  const s = loan.status ?? {}
-  // overpaid is its own state, not one waiting on approval or disbursal
-  if (s.overpaid) return 'neutral'
-  // an active loan that is overdue needs attention rather than looking healthy
-  if (s.active) return loan.inArrears ? 'arrears' : 'active'
-  if (s.pendingApproval || s.waitingForDisbursal) return 'pending'
-  if (
-    s.closed ||
-    s.id === STATUS_WITHDRAWN ||
-    s.id === STATUS_REJECTED ||
-    CLOSED_STATUS_IDS.includes(s.id ?? -1)
-  ) {
-    return 'closed'
-  }
-  return 'neutral'
-}
-
-const toRow = (loan: LoansListItem): LoanRow => {
-  const severity = severityOf(loan)
-  return {
-    id: loan.id ?? 0,
-    accountNo: loan.accountNo ?? '',
-    borrowerName: (loan.clientName || loan.group?.name || '').trim(),
-    loanType: loan.loanType?.value ?? '',
-    clientId: loan.clientId,
-    groupId: loan.group?.id,
-    // client loans carry the office at the top level, group loans only nested
-    officeId: loan.clientOfficeId ?? loan.group?.officeId,
-    productId: loan.loanProductId,
-    productName: loan.loanProductName ?? '',
-    principal: loan.principal,
-    currency: loan.currency,
-    statusValue: loan.status?.value ?? '',
-    severity,
-    isClosed: severity === 'closed',
-  }
 }
 
 // A stable sort keeps offset paging consistent across chunks, so no loan is
@@ -172,6 +122,34 @@ const fetchChunk = async (offset: number, limit: number) => {
   }
 }
 
+/**
+ * Loads the loans from `start` up to `total` one chunk at a time. A failed
+ * chunk is skipped and its offset returned, so the loans already loaded stay
+ * usable.
+ */
+const fetchRest = async (
+  start: number,
+  total: number,
+  onRows: (rows: LoanRow[]) => void,
+  isCancelled: () => boolean
+) => {
+  const failed: number[] = []
+  for (
+    let offset = start;
+    offset < total && !isCancelled();
+    offset += NEXT_CHUNK
+  ) {
+    try {
+      const next = await fetchChunk(offset, NEXT_CHUNK)
+      if (!isCancelled()) onRows(next.rows)
+    } catch (e) {
+      console.error('Failed to load a chunk of loans', e)
+      failed.push(offset)
+    }
+  }
+  return failed
+}
+
 const initials = (name: string) =>
   name
     .split(/\s+/)
@@ -179,6 +157,10 @@ const initials = (name: string) =>
     .slice(0, 2)
     .map(part => part[0]?.toUpperCase())
     .join('') || '?'
+
+/** The datatable a datatable column id ("dt:table:column") belongs to */
+const tableOf = (columnId: string) =>
+  columnId.startsWith('dt:') ? columnId.split(':')[1] : undefined
 
 const BADGE_CLASSES: Record<Severity, string> = {
   active:
@@ -211,7 +193,10 @@ const Loans = () => {
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState(false)
-  const [partial, setPartial] = useState(false)
+  // offsets of the later chunks that failed, so they can be loaded again
+  const [failedChunks, setFailedChunks] = useState<number[]>([])
+  const [retryingChunks, setRetryingChunks] = useState(false)
+  const unmounted = useRef(false)
   const [offices, setOffices] = useState<Option[]>([])
   const [products, setProducts] = useState<Option[]>([])
 
@@ -220,7 +205,12 @@ const Loans = () => {
   const [officeId, setOfficeId] = useState(ALL)
   const [productId, setProductId] = useState(ALL)
   const [showClosed, setShowClosed] = useState(false)
-  const [sortKey, setSortKey] = useState<SortKey | null>(null)
+  const [filters, setFilters] = useState<ActiveFilter[]>([])
+  const nextFilterUid = useRef(1)
+  const [visibleIds, setVisibleIds] = useState(loadVisibleColumns)
+  const [columnsOpen, setColumnsOpen] = useState(false)
+  const [filterPickerUsed, setFilterPickerUsed] = useState(false)
+  const [sortColumn, setSortColumn] = useState<string | null>(null)
   const [sortAsc, setSortAsc] = useState(true)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [page, setPage] = useState(1)
@@ -241,20 +231,16 @@ const Loans = () => {
 
         if (first.total <= FIRST_CHUNK) return
         setLoadingMore(true)
-        for (
-          let offset = FIRST_CHUNK;
-          offset < first.total && !cancelled;
-          offset += NEXT_CHUNK
-        ) {
-          try {
-            const next = await fetchChunk(offset, NEXT_CHUNK)
-            if (!cancelled) setLoans(prev => [...prev, ...next.rows])
-          } catch (e) {
-            console.error('Failed to load a chunk of loans', e)
-            if (!cancelled) setPartial(true)
-          }
+        const failed = await fetchRest(
+          FIRST_CHUNK,
+          first.total,
+          rows => setLoans(prev => [...prev, ...rows]),
+          () => cancelled
+        )
+        if (!cancelled) {
+          setFailedChunks(failed)
+          setLoadingMore(false)
         }
-        if (!cancelled) setLoadingMore(false)
       } catch (e) {
         console.error('Failed to load loans', e)
         if (!cancelled) {
@@ -268,6 +254,39 @@ const Loans = () => {
       cancelled = true
     }
   }, [])
+
+  useEffect(() => {
+    unmounted.current = false
+    return () => {
+      unmounted.current = true
+    }
+  }, [])
+
+  // Loans added or removed since the first attempt shift every later offset,
+  // so loading only the failed offsets again could skip a loan. The whole list
+  // is loaded again instead, with a fresh total, and replaces the current one
+  // once it is complete. A loan moved across a chunk boundary meanwhile is
+  // kept once rather than shown twice.
+  const retryChunks = async () => {
+    setRetryingChunks(true)
+    try {
+      const first = await fetchChunk(0, NEXT_CHUNK)
+      const reloaded = new Map(first.rows.map(loan => [loan.id, loan]))
+      const stillFailed = await fetchRest(
+        NEXT_CHUNK,
+        first.total,
+        rows => rows.forEach(loan => reloaded.set(loan.id, loan)),
+        () => unmounted.current
+      )
+      if (unmounted.current) return
+      setLoans([...reloaded.values()])
+      setFailedChunks(stillFailed)
+    } catch (e) {
+      // the current list and its failed chunks stay as they were
+      console.error('Failed to load loans', e)
+    }
+    if (!unmounted.current) setRetryingChunks(false)
+  }
 
   // filter options load independently of the loans themselves
   useEffect(() => {
@@ -289,44 +308,186 @@ const Loans = () => {
       .catch(e => console.error('Failed to load loan products', e))
   }, [])
 
+  useEffect(() => saveVisibleColumns(visibleIds), [visibleIds])
+
+  // Datatable rows are only loaded for the tables a shown or filtered column
+  // comes from, and the list of tables only once something needs it.
+  const neededTables = useMemo(
+    () => [
+      ...new Set(
+        [...visibleIds, ...filters.map(filter => filter.columnId)]
+          .map(tableOf)
+          .filter((name): name is string => !!name)
+      ),
+    ],
+    [visibleIds, filters]
+  )
+  const datatables = useLoanDatatables(
+    columnsOpen || filterPickerUsed || neededTables.length > 0,
+    neededTables
+  )
+
+  const statusOptions = useMemo(
+    () =>
+      [...new Set(loans.map(loan => loan.statusValue).filter(Boolean))].sort(),
+    [loans]
+  )
+  const loanFields = useMemo(
+    () => loanFieldColumns(key => t(key), statusOptions),
+    [t, statusOptions]
+  )
+  const columnsById = useMemo(() => {
+    const all = [
+      ...loanFields,
+      ...(datatables.tables ?? []).flatMap(table => table.columns),
+    ]
+    return new Map(all.map(column => [column.id, column]))
+  }, [loanFields, datatables.tables])
+  const resolve = useCallback(
+    (id: string) => columnsById.get(id),
+    [columnsById]
+  )
+
+  // Drop saved columns, and filters, that no longer exist: a loan field that
+  // was renamed, or a datatable column once the table list shows it is gone.
+  useEffect(() => {
+    const known = (id: string) =>
+      columnsById.has(id) || (!!tableOf(id) && datatables.tables === null)
+    setVisibleIds(prev => (prev.every(known) ? prev : prev.filter(known)))
+    setFilters(prev =>
+      prev.every(f => known(f.columnId))
+        ? prev
+        : prev.filter(f => known(f.columnId))
+    )
+  }, [columnsById, datatables.tables])
+
+  const visibleColumns = useMemo(
+    () =>
+      visibleIds
+        .map(id => columnsById.get(id))
+        .filter((column): column is ColumnDef => !!column),
+    [visibleIds, columnsById]
+  )
+
+  const officeNames = useMemo(
+    () => new Map(offices.map(office => [office.id, office.name])),
+    [offices]
+  )
+
+  const format = useMemo<CellFormat>(() => {
+    const language = i18n.language
+    return {
+      money: (value?: number, currency?: LoanCurrency) => {
+        if (typeof value !== 'number') return ''
+        const digits = currency?.decimalPlaces ?? 2
+        const options = {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits,
+        }
+        try {
+          return new Intl.NumberFormat(language, {
+            ...options,
+            style: 'currency',
+            currency: currency?.code,
+          }).format(value)
+        } catch {
+          // no currency, or a code Intl does not know
+          return new Intl.NumberFormat(language, options).format(value)
+        }
+      },
+      // a decimal datatable column holds up to six places, so none are cut
+      number: value =>
+        new Intl.NumberFormat(language, { maximumFractionDigits: 20 }).format(
+          value
+        ),
+      date: (value, withTime) => {
+        const date = formatDate(value, language, '')
+        if (!withTime) return date
+        const pad = (n: number) => String(n).padStart(2, '0')
+        return `${date} ${pad(value.getHours())}:${pad(value.getMinutes())}`
+      },
+      yesNo: value => tc(value ? 'actions.yes' : 'actions.no'),
+      officeName: id => (id === undefined ? '' : (officeNames.get(id) ?? '')),
+      datatableRow: (table, loanId) => datatables.rows[table]?.get(loanId),
+    }
+  }, [i18n.language, tc, officeNames, datatables.rows])
+
+  // a sort on a column that has since been hidden no longer applies
+  const activeSort =
+    sortColumn === BORROWER_COLUMN_ID ||
+    (sortColumn && visibleIds.includes(sortColumn))
+      ? sortColumn
+      : null
+
   const visibleRows = useMemo(() => {
     const term = deferredSearch.trim().toLowerCase()
+
+    // A filter on a datatable column waits for that table's rows, so it does
+    // not hide every loan while they load.
+    const appliedFilters = filters
+      .filter(isFilterSet)
+      .map(filter => ({ filter, column: columnsById.get(filter.columnId) }))
+      .filter(
+        (entry): entry is { filter: ActiveFilter; column: ColumnDef } =>
+          !!entry.column &&
+          (!entry.column.table || !!datatables.rows[entry.column.table])
+      )
+    const searchedColumns = [
+      ...ALWAYS_SEARCHED.map(id => columnsById.get(id)),
+      ...visibleColumns.filter(column => !ALWAYS_SEARCHED.includes(column.id)),
+    ].filter((column): column is ColumnDef => !!column)
+
     const filtered = loans.filter(
       loan =>
         (showClosed || !loan.isClosed) &&
         (officeId === ALL || String(loan.officeId) === officeId) &&
         (productId === ALL || String(loan.productId) === productId) &&
+        appliedFilters.every(({ filter, column }) =>
+          matchesFilter(column.cell(loan, format), filter)
+        ) &&
         (!term ||
-          [loan.accountNo, loan.borrowerName, loan.productName].some(field =>
-            field.toLowerCase().includes(term)
+          loan.borrowerName.toLowerCase().includes(term) ||
+          searchedColumns.some(column =>
+            column.cell(loan, format).text.toLowerCase().includes(term)
           ))
     )
-    if (!sortKey) return filtered
+    if (!activeSort) return filtered
 
-    const value = (loan: LoanRow): string | number => {
-      switch (sortKey) {
-        case 'borrower':
-          return loan.borrowerName.toLowerCase()
-        case 'status':
-          return loan.statusValue.toLowerCase()
-        case 'accountNo':
-          return loan.accountNo
-        case 'principal':
-          return loan.principal ?? -Infinity
-        case 'product':
-          return loan.productName.toLowerCase()
+    const sortBy = columnsById.get(activeSort)
+    const keyed = filtered.map(loan => ({
+      loan,
+      value: sortBy
+        ? sortBy.cell(loan, format).value
+        : loan.borrowerName.toLowerCase() || null,
+    }))
+    keyed.sort((a, b) => {
+      // empty cells stay at the end whichever way the column is sorted
+      if (a.value === null || b.value === null) {
+        return a.value === b.value ? 0 : a.value === null ? 1 : -1
       }
-    }
-    return [...filtered].sort((a, b) => {
-      const av = value(a)
-      const bv = value(b)
       const order =
-        typeof av === 'number' && typeof bv === 'number'
-          ? av - bv
-          : String(av).localeCompare(String(bv), undefined, { numeric: true })
+        typeof a.value === 'number' && typeof b.value === 'number'
+          ? a.value - b.value
+          : String(a.value).localeCompare(String(b.value), undefined, {
+              numeric: true,
+            })
       return sortAsc ? order : -order
     })
-  }, [loans, deferredSearch, showClosed, officeId, productId, sortKey, sortAsc])
+    return keyed.map(entry => entry.loan)
+  }, [
+    loans,
+    deferredSearch,
+    showClosed,
+    officeId,
+    productId,
+    filters,
+    columnsById,
+    visibleColumns,
+    datatables.rows,
+    format,
+    activeSort,
+    sortAsc,
+  ])
 
   const total = visibleRows.length
   const totalPages = Math.max(1, Math.ceil(total / itemsPerPage))
@@ -337,10 +498,10 @@ const Loans = () => {
     currentPage * itemsPerPage
   )
 
-  const setSort = (key: SortKey) => {
-    if (sortKey === key) setSortAsc(asc => !asc)
+  const setSort = (columnId: string) => {
+    if (activeSort === columnId) setSortAsc(asc => !asc)
     else {
-      setSortKey(key)
+      setSortColumn(columnId)
       setSortAsc(true)
     }
   }
@@ -349,27 +510,50 @@ const Loans = () => {
     setOfficeId(ALL)
     setProductId(ALL)
     setShowClosed(false)
+    setFilters([])
     setPage(1)
   }
 
-  /** An amount in the loan's currency, e.g. $10,000.00, or "—" */
-  const money = (value?: number, currency?: LoanRow['currency']) => {
-    if (typeof value !== 'number') return '—'
-    const digits = currency?.decimalPlaces ?? 2
-    const options = {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits,
-    }
-    try {
-      return new Intl.NumberFormat(i18n.language, {
-        ...options,
-        style: 'currency',
-        currency: currency?.code,
-      }).format(value)
-    } catch {
-      // no currency, or a code Intl does not know
-      return new Intl.NumberFormat(i18n.language, options).format(value)
-    }
+  const addFilter = (column: ColumnDef) => {
+    const filter = newFilter(
+      nextFilterUid.current++,
+      column.id,
+      column.filterType
+    )
+    setFilters(prev => [...prev, filter])
+    setPage(1)
+  }
+
+  const changeFilter = (changed: ActiveFilter) => {
+    setFilters(prev => prev.map(f => (f.uid === changed.uid ? changed : f)))
+    setPage(1)
+  }
+
+  const removeFilter = (uid: number) => {
+    setFilters(prev => prev.filter(f => f.uid !== uid))
+    setPage(1)
+  }
+
+  // Every matching loan is written, not only the current page, so the file
+  // waits until all loans and every shown or filtered datatable have loaded.
+  // A failed chunk or table keeps it disabled until a retry succeeds, since
+  // the file would otherwise miss loans or include ones a filter excludes.
+  const canExport =
+    !loading &&
+    !error &&
+    !loadingMore &&
+    failedChunks.length === 0 &&
+    !retryingChunks &&
+    neededTables.every(name => !!datatables.rows[name]) &&
+    total > 0
+
+  const exportLoans = () => {
+    const header = [t('list.borrower'), ...visibleColumns.map(c => c.label)]
+    const rows = visibleRows.map(loan => [
+      loan.borrowerName,
+      ...visibleColumns.map(column => column.cell(loan, format).text),
+    ])
+    downloadCsv(exportFileName(), buildCsv(header, rows))
   }
 
   // The loan account view is only routed under /groups, so a client's loan
@@ -393,28 +577,88 @@ const Loans = () => {
         ? `/groups/${loan.groupId}/general`
         : undefined
 
-  const sortableHead = (column: SortKey, label: string) => {
+  const sortableHead = (columnId: string, label: string) => {
     const Icon =
-      sortKey !== column ? ArrowUpDown : sortAsc ? ArrowUp : ArrowDown
+      activeSort !== columnId ? ArrowUpDown : sortAsc ? ArrowUp : ArrowDown
     return (
       <TableHead
-        key={column}
+        key={columnId}
         className="px-3 py-3"
         aria-sort={
-          sortKey !== column ? 'none' : sortAsc ? 'ascending' : 'descending'
+          activeSort !== columnId
+            ? 'none'
+            : sortAsc
+              ? 'ascending'
+              : 'descending'
         }
       >
         <button
           type="button"
-          onClick={() => setSort(column)}
+          onClick={() => setSort(columnId)}
           className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer"
         >
           {label}
           <Icon
-            className={`h-3.5 w-3.5 ${sortKey === column ? '' : 'opacity-40'}`}
+            className={`h-3.5 w-3.5 ${activeSort === columnId ? '' : 'opacity-40'}`}
           />
         </button>
       </TableHead>
+    )
+  }
+
+  const renderCell = (loan: LoanRow, column: ColumnDef) => {
+    if (column.id === 'status') {
+      return (
+        <TableCell key={column.id} className="px-3 py-3 min-w-[11rem]">
+          <span
+            className={`inline-flex max-w-[13rem] items-center gap-1.5 rounded-2xl border px-2.5 py-0.5 text-xs font-semibold uppercase whitespace-normal ${BADGE_CLASSES[loan.severity]}`}
+          >
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
+            {loan.severity === 'arrears'
+              ? `${loan.statusValue} · ${tc('status.inArrears')}`
+              : loan.statusValue || '—'}
+          </span>
+        </TableCell>
+      )
+    }
+
+    if (column.id === 'accountNo') {
+      const accountPath = loanPath(loan)
+      return (
+        <TableCell key={column.id} className="px-3 py-3 font-mono text-sm">
+          {/* the row click is mouse-only, so the account number is the
+              keyboard route to the loan */}
+          {accountPath && loan.accountNo ? (
+            <Link
+              to={accountPath}
+              onClick={e => e.stopPropagation()}
+              className="hover:underline"
+            >
+              {loan.accountNo}
+            </Link>
+          ) : (
+            loan.accountNo || '—'
+          )}
+        </TableCell>
+      )
+    }
+
+    const pending =
+      !!column.table &&
+      !datatables.rows[column.table] &&
+      datatables.loadingTables.includes(column.table)
+    const { text } = column.cell(loan, format)
+    return (
+      <TableCell
+        key={column.id}
+        className={`px-3 py-3 ${column.mono ? 'font-mono text-sm' : ''}`}
+      >
+        {pending ? (
+          <span className="text-zinc-400">…</span>
+        ) : (
+          text || <span className="text-zinc-400">—</span>
+        )}
+      </TableCell>
     )
   }
 
@@ -454,12 +698,60 @@ const Loans = () => {
                   {t('list.loanCount', { count: total })}
                 </span>
               )}
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={!canExport}
+                onClick={exportLoans}
+                aria-label={t('list.export')}
+                title={
+                  canExport ? t('list.exportHint') : t('list.exportWaiting')
+                }
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setColumnsOpen(true)}
+                aria-label={t('list.customiseColumns')}
+                title={t('list.customiseColumns')}
+              >
+                <Settings2 className="h-4 w-4" />
+              </Button>
             </div>
           </div>
 
-          {partial && (
+          {failedChunks.length > 0 && (
             <p className="px-4 pt-4 text-sm text-amber-600 dark:text-amber-400">
               {t('list.partialLoad')}
+              {!loadingMore && (
+                <>
+                  {' '}
+                  <button
+                    type="button"
+                    onClick={retryChunks}
+                    disabled={retryingChunks}
+                    className="underline cursor-pointer disabled:cursor-default disabled:opacity-60"
+                  >
+                    {t('list.retry')}
+                  </button>
+                </>
+              )}
+            </p>
+          )}
+
+          {(datatables.failedTables.length > 0 ||
+            (datatables.tablesFailed && neededTables.length > 0)) && (
+            <p className="px-4 pt-4 text-sm text-amber-600 dark:text-amber-400">
+              {t('list.datatableColumnsFailed')}{' '}
+              <button
+                type="button"
+                onClick={datatables.retry}
+                className="underline cursor-pointer"
+              >
+                {t('list.retry')}
+              </button>
             </p>
           )}
 
@@ -480,18 +772,16 @@ const Loans = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    {sortableHead('borrower', t('list.borrower'))}
-                    {sortableHead('status', t('list.status'))}
-                    {sortableHead('accountNo', t('list.loanAccount'))}
-                    {sortableHead('principal', t('list.principal'))}
-                    {sortableHead('product', t('list.loanProduct'))}
+                    {sortableHead(BORROWER_COLUMN_ID, t('list.borrower'))}
+                    {visibleColumns.map(column =>
+                      sortableHead(column.id, column.label)
+                    )}
                   </TableRow>
                 </TableHeader>
 
                 <TableBody>
                   {pageRows.map(loan => {
                     const ownerPath = borrowerPath(loan)
-                    const accountPath = loanPath(loan)
                     return (
                       <TableRow
                         key={loan.id}
@@ -529,37 +819,7 @@ const Loans = () => {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="px-3 py-3 min-w-[11rem]">
-                          <span
-                            className={`inline-flex max-w-[13rem] items-center gap-1.5 rounded-2xl border px-2.5 py-0.5 text-xs font-semibold uppercase whitespace-normal ${BADGE_CLASSES[loan.severity]}`}
-                          >
-                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
-                            {loan.severity === 'arrears'
-                              ? `${loan.statusValue} · ${tc('status.inArrears')}`
-                              : loan.statusValue || '—'}
-                          </span>
-                        </TableCell>
-                        <TableCell className="px-3 py-3 font-mono text-sm">
-                          {/* the row click is mouse-only, so the account
-                              number is the keyboard route to the loan */}
-                          {accountPath && loan.accountNo ? (
-                            <Link
-                              to={accountPath}
-                              onClick={e => e.stopPropagation()}
-                              className="hover:underline"
-                            >
-                              {loan.accountNo}
-                            </Link>
-                          ) : (
-                            loan.accountNo || '—'
-                          )}
-                        </TableCell>
-                        <TableCell className="px-3 py-3 font-mono text-sm">
-                          {money(loan.principal, loan.currency)}
-                        </TableCell>
-                        <TableCell className="px-3 py-3">
-                          {loan.productName || '—'}
-                        </TableCell>
+                        {visibleColumns.map(column => renderCell(loan, column))}
                       </TableRow>
                     )
                   })}
@@ -567,7 +827,7 @@ const Loans = () => {
                   {pageRows.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={5}
+                        colSpan={visibleColumns.length + 1}
                         className="px-6 py-6 text-center text-zinc-500"
                       >
                         {tc('status.noResults')}
@@ -710,8 +970,38 @@ const Loans = () => {
               </Label>
             </div>
           </div>
+
+          <div className="border-t border-zinc-200 dark:border-zinc-700 p-4">
+            <AdditionalFilters
+              filters={filters}
+              resolve={resolve}
+              loanFields={loanFields}
+              datatables={datatables.tables}
+              datatablesFailed={datatables.tablesFailed}
+              loadingTables={datatables.loadingTables}
+              onRetry={datatables.retry}
+              onPickerOpen={() => setFilterPickerUsed(true)}
+              onAdd={addFilter}
+              onChange={changeFilter}
+              onRemove={removeFilter}
+            />
+          </div>
         </aside>
       </div>
+
+      <ColumnsSheet
+        open={columnsOpen}
+        onOpenChange={setColumnsOpen}
+        visibleIds={visibleIds}
+        onChange={setVisibleIds}
+        onReset={() => setVisibleIds([...DEFAULT_COLUMN_IDS])}
+        resolve={resolve}
+        loanFields={loanFields}
+        datatables={datatables.tables}
+        datatablesFailed={datatables.tablesFailed}
+        onRetry={datatables.retry}
+        borrowerLabel={t('list.borrower')}
+      />
     </div>
   )
 }

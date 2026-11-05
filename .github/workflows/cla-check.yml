@@ -54,13 +54,13 @@ jobs:
                 issue_number: context.payload.pull_request.number,
                 body:
                   `👋 Hi @${author} — thank you for your pull request.\n\n` +
-                  `**Note:** We do not have a Contributor License Agreement (CLA) on file for your GitHub account. ` +
-                  `Merging is **not blocked** at this time — this repository is in a CLA grace period. ` +
-                  `However, a signed CLA will be required once enforcement is enabled.\n\n` +
-                  `To get your CLA on file:\n` +
+                  `**This PR is currently blocked** because we do not have a Contributor License Agreement (CLA) on file for your GitHub account.\n\n` +
+                  `To get unblocked:\n` +
                   `1. Complete the form at https://mifos.org/about-us/financial-legal/mifos-contributor-agreement\n` +
                   `2. Complete the CLA signing process\n` +
-                  `3. Once verified you will be added to the approved contributors list`
+                  `3. Once verified (this can take up to 48 working hours) you will be invited to the approved contributors list\n` +
+                  `4. You will receive an email from GitHub at your registered email address for the account with a link you must accept (this may go into your Junk folder, so please check it)\n` +
+                  `5. Once accepted, you will be added to the approved contributors list and this PR check will be cleared`
               });
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
@@ -68,9 +68,9 @@ jobs:
                 issue_number: context.payload.pull_request.number,
                 labels: ['cla-required'],
               });
-              core.warning(
-                `@${author} is not a member of the 'contributors' or 'contracted-contributors' team — ` +
-                `CLA required (grace period active, merge not blocked).`
+              core.setFailed(
+                `@${author} is not a member of the 'contributors' or 'contracted-contributors' team. ` +
+                `CLA signature required before this PR can be merged.`
               );
             } else {
               console.log(`@${author} is verified via '${matchedTeam}' team ✓`);

@@ -13,6 +13,11 @@ import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBr
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { SavingsAccountApi } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+const savingsApi = new SavingsAccountApi(getConfiguration())
 
 const UndoApprovalSavingsAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Undo Approval' })
@@ -20,6 +25,9 @@ const UndoApprovalSavingsAccount = () => {
   const navigate = useNavigate()
 
   const [note, setNote] = useState('')
+
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const backToTransactions = () => {
     if (groupId && accountId) {
@@ -29,8 +37,28 @@ const UndoApprovalSavingsAccount = () => {
     }
   }
 
-  const onSubmit = () => {
-    backToTransactions()
+  const onSubmit = async () => {
+    if (!accountId) return
+
+    setSaving(true)
+    setError(null)
+    try {
+      await savingsApi.handleCommands6(
+        Number(accountId),
+        {
+          note: note || undefined,
+        } as Record<string, unknown>,
+        'undoapproval'
+      )
+      backToTransactions()
+    } catch (e) {
+      console.error('undoapproval failed', e)
+      setError(
+        datatableErrorMessage(e) ?? 'Undo approval failed. Please try again.'
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -50,18 +78,32 @@ const UndoApprovalSavingsAccount = () => {
               <Input
                 className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent px-3 py-2"
                 value={note}
-                onChange={e => setNote(e.target.value)}
+                onChange={e => {
+                  setNote(e.target.value)
+                  setError(null)
+                }}
               />
             </div>
 
             {/* Actions */}
+            {error && (
+              <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+                {error}
+              </div>
+            )}
+
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={backToTransactions}>
+              <Button
+                variant="outline"
+                onClick={backToTransactions}
+                disabled={saving}
+              >
                 Cancel
               </Button>
               <Button
                 className="bg-[#0e77b7] hover:bg-[#0662a3]"
                 onClick={onSubmit}
+                disabled={saving}
               >
                 Confirm
               </Button>

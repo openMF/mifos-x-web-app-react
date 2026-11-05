@@ -189,9 +189,10 @@ const Tellers = () => {
                   {/* action: go to cashiers */}
                   <Button
                     variant="link"
-                    onClick={() =>
+                    onClick={event => {
+                      event.stopPropagation()
                       navigate(`/organization/tellers/${teller.id}/cashiers`)
-                    }
+                    }}
                     className="text-blue-600 hover:underline"
                   >
                     <FontAwesomeIcon icon={faEye} className="mr-2" />

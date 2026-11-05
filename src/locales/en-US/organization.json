@@ -1,4 +1,37 @@
 {
+  "aboutUs": {
+    "ecosystem": "The Mifos Initiative is the steward of the platform, but the real magic happens in the ecosystem:",
+    "ecosystemParts": {
+      "community": "The Community",
+      "communityDescription": "Hundreds of developers and implementers contributing code, translations, and support.",
+      "foundation": "The Foundation",
+      "foundationDescription": "The non-profit body ensuring the long-term sustainability and governance of the project.",
+      "partners": "Certified Partners",
+      "partnersDescription": "A global network of implementation partners who customize and deploy Mifos for local institutions.",
+      "platform": "The Mifos X Platform",
+      "platformDescription": "The robust core banking engine."
+    },
+    "ecosystemTitle": "The Ecosystem",
+    "introduction": "The Mifos Initiative is a 501(c)(3) non-profit organization and a global community of developers, financial institutions, and social entrepreneurs. We believe that access to financial services is a fundamental human right, yet billions of people remain excluded from the formal financial system.",
+    "mission": "To accelerate financial inclusion by catalyzing an ecosystem of open-source technology, community, and knowledge sharing.",
+    "missionTitle": "Our Mission",
+    "openSource": "We chose the Open Source model because we believe financial infrastructure should be:",
+    "openSourceTitle": "Why Open Source",
+    "platform": "We bridge this gap by providing the <mifosLink>Mifos X Platform</mifosLink>—the world's leading open-source core banking system. By making enterprise-grade banking technology free and accessible, we lower the barrier to entry for Microfinance Institutions (MFIs), Fintechs, and NGOs, allowing them to scale their impact and serve the \"last mile\" efficiently.",
+    "title": "About Us",
+    "values": {
+      "affordable": "Affordable",
+      "affordableDescription": "Eliminating licensing costs allows partners to invest more in their clients.",
+      "innovative": "Innovative",
+      "innovativeDescription": "A global community of developers ensures the platform evolves faster than any single vendor could manage.",
+      "secure": "Secure",
+      "secureDescription": "With eyes on the code from around the world, security and stability are paramount.",
+      "transparent": "Transparent",
+      "transparentDescription": "No hidden fees or black-box algorithms."
+    },
+    "vision": "A world where every individual and small business has access to the financial tools they need to thrive, regardless of their location or income level.",
+    "visionTitle": "Our Vision"
+  },
   "adhocQuery": "AdHocQuery",
   "auditTrails": "Audit Trails",
   "bulkLoanReassignment": "Bulk Loan Reassignment",
@@ -6,6 +39,42 @@
   "configurations": "Configurations",
   "configureMakerCheckerTasks": "Configure Maker Checker Tasks",
   "currencyConfiguration": "Currency Configuration",
+  "entityChecks": {
+    "actions": "Actions",
+    "allProducts": "All products",
+    "confirm": "Confirm",
+    "confirmDelete": "Are you sure you want to delete the check for data table \"{{name}}\"?",
+    "createTitle": "Create Entity Data Table Check",
+    "deleteCheck": "Delete the {{name}} check",
+    "deleting": "Deleting...",
+    "entities": {
+      "client": "Client",
+      "group": "Group",
+      "loan": "Loan",
+      "savingsAccount": "Savings Account"
+    },
+    "errors": {
+      "createFailed": "Failed to create the entity data table check.",
+      "deleteFailed": "Failed to delete the entity data table check.",
+      "loadFailed": "Failed to load entity data table checks.",
+      "templateFailed": "Failed to load the entity data table check template."
+    },
+    "fields": {
+      "dataTable": "Data Table",
+      "dataTableRequired": "Data Table*",
+      "entityRequired": "Entity*",
+      "product": "Product",
+      "productName": "Product Name",
+      "statusRequired": "Status*",
+      "systemDefined": "System Defined"
+    },
+    "placeholders": {
+      "noDataTables": "No data tables for this entity",
+      "selectDataTable": "Select a data table",
+      "selectEntity": "Select an entity",
+      "selectStatus": "Select a status"
+    }
+  },
   "entityDataTableChecks": "Entity Data Table Checks",
   "entityToEntityMapping": "Entity to Entity Mapping",
   "errors": {
@@ -34,13 +103,183 @@
     "title": "Manage Funds"
   },
   "investors": "Investors",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Cron Expression*",
+      "cronHelp": "Quartz format: seconds minutes hours day-of-month month day-of-week [year], e.g. <code>0 1 0 1/1 * ? *</code> runs every day at 00:01.",
+      "jobName": "Job Name*",
+      "title": "Edit Job"
+    },
+    "errors": {
+      "changeStatus": "Failed to change the scheduler status.",
+      "cronRequired": "Please enter a cron expression.",
+      "loadHistory": "Failed to load the run history.",
+      "loadJob": "Failed to load the job.",
+      "loadJobs": "Failed to load the scheduler jobs.",
+      "nameRequired": "Please enter a job name.",
+      "notStarted": "could not be started",
+      "updateJob": "Failed to update the job."
+    },
+    "history": {
+      "caption_one": "{{count}} run • Page {{page}} of {{pages}}",
+      "caption_other": "{{count}} runs • Page {{page}} of {{pages}}",
+      "columns": {
+        "ended": "Ended",
+        "error": "Error",
+        "started": "Started",
+        "trigger": "Trigger"
+      },
+      "title": "Run History: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Activate Scheduler",
+      "activeHint": "Active: jobs run on their schedule",
+      "caption": "{{shown}} of {{total}} jobs",
+      "columns": {
+        "actions": "Actions",
+        "job": "Job",
+        "nextRun": "Next Run",
+        "previousRun": "Previous Run",
+        "running": "Running"
+      },
+      "editJob": "Edit {{name}}",
+      "filterPlaceholder": "Filter by job name",
+      "runHistoryOf": "Run history of {{name}}",
+      "runSelected": "Run Selected Jobs",
+      "runSelectedCount": "Run Selected Jobs ({{count}})",
+      "scheduler": "Scheduler:",
+      "selectAll": "Select all jobs",
+      "selectJob": "Select {{name}}",
+      "started_one": "Started {{count}} job. Use Refresh to see the result.",
+      "started_other": "Started {{count}} jobs. Use Refresh to see the result.",
+      "starting": "Starting...",
+      "success": "Success",
+      "suspendScheduler": "Suspend Scheduler",
+      "suspended": "Suspended",
+      "suspendedHint": "Suspended: no job runs on its schedule"
+    }
+  },
   "manageCodes": "Manage Codes",
+  "manageDashboards": {
+    "title": "Manage Dashboards",
+    "autoRefresh": "Updates every 10 minutes",
+    "lastUpdated": "Last updated at {{time}}. Updates every 10 minutes.",
+    "office": "Office",
+    "refresh": "Refresh",
+    "loadError": "The dashboard could not be loaded.",
+    "allOffices": "All offices",
+    "chartType": "Chart type",
+    "activeOfTotal": "{{active}} active of {{total}}",
+    "allHidden": "All widgets are hidden. Turn them back on in the Widget Configuration tab.",
+    "tabs": {
+      "overview": "Institutional Operations Overview",
+      "widgets": "Widget Configuration"
+    },
+    "clients": {
+      "title": "Clients",
+      "active": "Active",
+      "pending": "Pending",
+      "newThisMonth": "Activated this month"
+    },
+    "loans": {
+      "title": "Loans Disbursed",
+      "collectionRate": "Collection rate"
+    },
+    "deposits": {
+      "title": "Deposit Balances",
+      "savings": "Savings accounts",
+      "fixed": "Fixed deposits",
+      "recurring": "Recurring deposits"
+    },
+    "shares": {
+      "title": "Active Share Accounts",
+      "total": "All share accounts"
+    },
+    "trend": {
+      "title": "Monthly Growth Trend",
+      "description": "Clients activated and loans disbursed in each of the last 12 months.",
+      "bar": "Bar",
+      "line": "Line"
+    },
+    "mix": {
+      "title": "Active Accounts by Type",
+      "description": "Active accounts of each type across all offices.",
+      "ring": "Ring",
+      "pie": "Pie",
+      "empty": "There are no active accounts yet.",
+      "loans": "Loans",
+      "savings": "Savings",
+      "fixed": "Fixed deposits",
+      "recurring": "Recurring deposits",
+      "shares": "Shares"
+    },
+    "widgets": {
+      "note": "Hidden widgets are left out of the overview. Fineract has no setting for this, so the choice is saved in this browser only.",
+      "search": "Filter widgets by name or description",
+      "module": "Module",
+      "name": "Widget",
+      "description": "Description",
+      "visible": "Visible",
+      "noMatch": "No widgets match the filter.",
+      "modules": {
+        "all": "All modules",
+        "global": "Global",
+        "client": "Clients",
+        "loan": "Loans",
+        "savings": "Savings",
+        "shares": "Shares"
+      },
+      "items": {
+        "clients": {
+          "name": "Clients",
+          "description": "Total, active and pending clients, and clients activated this month."
+        },
+        "loans": {
+          "name": "Loans Disbursed",
+          "description": "Amounts disbursed and awaiting disbursement, and how much of the demand has been collected."
+        },
+        "deposits": {
+          "name": "Deposit Balances",
+          "description": "Balances of active savings, fixed deposit and recurring deposit accounts."
+        },
+        "shares": {
+          "name": "Share Accounts",
+          "description": "Active and total share accounts."
+        },
+        "trend": {
+          "name": "Monthly Growth Trend",
+          "description": "Clients activated and loans disbursed in each of the last 12 months."
+        },
+        "accountMix": {
+          "name": "Active Accounts by Type",
+          "description": "How the active loan, savings, deposit and share accounts are split."
+        }
+      }
+    }
+  },
   "manageDataTables": "Manage Data tables",
   "manageEmployees": "Manage Employees",
   "manageExternalEvents": "Manage External Events",
   "manageHolidays": "Manage Holidays",
   "manageHooks": "Manage Hooks",
   "manageJobs": "Manage Jobs",
+  "manageMakerChecker": {
+    "clearAll": "Clear all",
+    "errors": {
+      "loadFailed": "Failed to load the maker checker tasks.",
+      "saveFailed": "Failed to save the maker checker tasks."
+    },
+    "noTasksMatch": "No tasks match.",
+    "saveWithCount": "Save ({{count}})",
+    "savedChanges_one": "Saved {{count}} change.",
+    "savedChanges_other": "Saved {{count}} changes.",
+    "searchPlaceholder": "Search all tasks",
+    "selectAll": "Select all",
+    "statusOff": "Maker checker is <strong>off</strong>, so none of the tasks below need approval yet. Turn on <code>maker-checker</code> in <link>Global Configurations</link> for them to take effect.",
+    "statusOn": "Maker checker is <strong>on</strong>: the tasks ticked below wait for a checker's approval.",
+    "taskGroups": "Task groups",
+    "tasksMatching": "Tasks matching \"{{term}}\""
+  },
   "manageReports": "Manage Reports",
   "manageRolesAndPermissions": "Manage Roles and Permissions",
   "manageSurveys": "Manage Surveys",
@@ -71,9 +310,192 @@
     "title": "Offices",
     "unnamedOffice": "Unnamed Office"
   },
+  "provisioningCriteria": {
+    "title": "Loan Provisioning Criteria",
+    "create": "Create Loan Provisioning Criteria",
+    "createButton": "Create Provisioning Criteria",
+    "edit": "Edit Loan Provisioning Criteria",
+    "fields": {
+      "criteriaName": "Criteria Name",
+      "criteriaNameRequired": "Criteria Name*",
+      "createdBy": "Created By",
+      "loanProducts": "Loan Products",
+      "loanProductsRequired": "Loan Products*",
+      "selectLoanProducts": "Select loan products",
+      "minAge": "Min Age",
+      "maxAge": "Max Age",
+      "percentage": "Percentage",
+      "minAgeDays": "Min Age (days)",
+      "minAgeDaysRequired": "Min Age (days)*",
+      "maxAgeDays": "Max Age (days)",
+      "maxAgeDaysRequired": "Max Age (days)*",
+      "percentageColumn": "Percentage (%)",
+      "percentageColumnRequired": "Percentage (%)*",
+      "liabilityAccount": "Liability Account",
+      "liabilityAccountRequired": "Liability Account*",
+      "expenseAccount": "Expense Account",
+      "expenseAccountRequired": "Expense Account*",
+      "selectAccount": "Select an account",
+      "noAccounts": "No accounts",
+      "fieldForCategory": "{{field}} for {{category}}"
+    },
+    "validation": {
+      "nameRequired": "Please enter a criteria name.",
+      "productRequired": "Select at least one loan product.",
+      "fillEveryField": "Fill in every field for {{category}}.",
+      "notNegative": "{{category}}: ages and percentage must be 0 or more.",
+      "minAboveMax": "{{category}}: Min Age cannot be more than Max Age.",
+      "percentageAbove100": "{{category}}: the percentage cannot be more than 100."
+    },
+    "messages": {
+      "loadListError": "Failed to load provisioning criteria.",
+      "loadError": "Failed to load the provisioning criteria.",
+      "loadTemplateError": "Failed to load the criteria template.",
+      "createError": "Failed to create the provisioning criteria.",
+      "updateError": "Failed to update the provisioning criteria.",
+      "deleteError": "Failed to delete the provisioning criteria."
+    },
+    "delete": {
+      "confirm": "Confirm",
+      "deleting": "Deleting...",
+      "message": "Are you sure you want to delete the provisioning criteria \"{{name}}\"?"
+    }
+  },
   "searchByMaker": "Search by maker",
   "searchEvents": "Search events…",
   "searchReports": "Search reports...",
+  "smsCampaign": {
+    "title": "SMS Campaigns",
+    "create": "Create SMS Campaign",
+    "edit": "Edit SMS Campaign",
+    "empty": "No SMS campaigns yet",
+    "reactivate": "Reactivate",
+    "confirm": "Confirm",
+    "unassigned": "Unassigned",
+    "notification": "Notification (no SMS provider)",
+    "noProviders": "No SMS providers configured",
+    "noBusinessRules": "No business rules for this trigger type",
+    "noParameters": "This business rule has no parameters.",
+    "noColumns": "Fill in the business rule parameters and choose \"Get parameters\" to list the placeholders.",
+    "businessRuleParameters": "Business Rule Parameters",
+    "templateParameters": "Template Parameters",
+    "getParameters": "Get parameters",
+    "previewMessage": "Preview message",
+    "previewEmpty": "No matching record to preview.",
+    "recipients_one": "{{count}} message would be sent",
+    "recipients_other": "{{count}} messages would be sent",
+    "steps": {
+      "campaign": "Campaign",
+      "message": "Message",
+      "preview": "Preview"
+    },
+    "fields": {
+      "name": "Name",
+      "templateMessage": "Template Message",
+      "campaignType": "Campaign Type",
+      "triggerType": "Trigger Type",
+      "status": "Status",
+      "submittedBy": "Submitted By",
+      "campaignName": "Campaign Name",
+      "smsProvider": "SMS Provider",
+      "isNotification": "Is notification?",
+      "scheduleDate": "Schedule Date",
+      "repeats": "Repeats",
+      "repetitionInterval": "Repetition Interval",
+      "repeatsOnDay": "Repeats on Day",
+      "recurrence": "Recurrence",
+      "businessRule": "Business Rule",
+      "campaignMessage": "Campaign Message",
+      "submittedOn": "Submitted On",
+      "activatedOn": "Activated On",
+      "closedOn": "Closed On"
+    },
+    "placeholders": {
+      "smsProvider": "Select an SMS provider",
+      "triggerType": "Select a trigger type",
+      "businessRule": "Select a business rule",
+      "triggerFirst": "Select a trigger type first"
+    },
+    "hints": {
+      "checkStart": "Shown in your browser's time zone. Check it before saving, since the server may use another.",
+      "startInPast": "Choose a time in the future."
+    },
+    "frequency": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "closed": "Closed"
+    },
+    "errors": {
+      "loadList": "Failed to load the SMS campaigns.",
+      "load": "Failed to load the SMS campaign.",
+      "loadTemplate": "Failed to load the SMS campaign options.",
+      "loadParameters": "Failed to load the business rule parameters.",
+      "runReport": "Failed to get the business rule parameters.",
+      "preview": "Failed to preview the message.",
+      "create": "Failed to create the SMS campaign.",
+      "update": "Failed to update the SMS campaign.",
+      "delete": "Failed to delete the SMS campaign.",
+      "activate": "Failed to activate the SMS campaign.",
+      "close": "Failed to close the SMS campaign.",
+      "reactivate": "Failed to reactivate the SMS campaign.",
+      "messages": "Failed to load the messages."
+    },
+    "messages": {
+      "title": "Messages",
+      "selectStatus": "Select a status",
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "message": "Message",
+      "mobileNo": "Mobile No.",
+      "count_one": "{{count}} message",
+      "count_other": "{{count}} messages",
+      "empty": "No messages found",
+      "status": {
+        "pending": "Pending SMS",
+        "waiting": "Waiting for Delivery Report",
+        "sent": "Sent SMS",
+        "delivered": "Delivered SMS",
+        "failed": "Failed SMS"
+      },
+      "bothDates": "Set both dates to filter by date."
+    },
+    "commands": {
+      "activate": {
+        "title": "Activate SMS Campaign",
+        "description": "The campaign is activated on this date. Direct campaigns send their messages right away; scheduled campaigns follow their schedule.",
+        "date": "Activation Date"
+      },
+      "close": {
+        "title": "Close SMS Campaign",
+        "description": "The campaign stops sending messages from this date.",
+        "date": "Closure Date"
+      },
+      "reactivate": {
+        "title": "Reactivate SMS Campaign",
+        "description": "The campaign sends messages again from this date.",
+        "date": "Reactivation Date"
+      }
+    },
+    "deleteDialog": {
+      "confirm": "Are you sure you want to delete the SMS campaign \"{{name}}\"?",
+      "deleting": "Deleting..."
+    }
+  },
   "smsCampaigns": "SMS Campaigns",
   "standingInstructionsHistory": "Standing Instructions History",
   "success": {

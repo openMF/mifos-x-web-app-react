@@ -566,5 +566,12 @@
       "saving": "Ahorros",
       "share": "Acciones"
     }
+  },
+  "reports": {
+    "allEngines": "Todos",
+    "filterByEngine": "Filtrar por motor",
+    "matchCount": "{{shown}} / {{total}}",
+    "other": "Otros",
+    "run": "Ejecutar"
   }
 }

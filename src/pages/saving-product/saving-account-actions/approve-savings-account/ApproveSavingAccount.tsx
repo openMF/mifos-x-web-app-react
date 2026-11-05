@@ -13,14 +13,24 @@ import { Input } from '@/components/ui/input'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Label } from '@/components/ui/label'
+import { SavingsAccountApi } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { useBusinessDateState } from '@/lib/business-date'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+const savingsApi = new SavingsAccountApi(getConfiguration())
 
 const ApproveSavingAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Approve' })
   const { groupId, accountId } = useParams()
   const navigate = useNavigate()
 
-  const [approvedOnDate, setApprovedOnDate] = useState('')
+  // Defaults to the business date, like the Angular web app.
+  const [approvedOnDate, setApprovedOnDate] = useBusinessDateState()
   const [note, setNote] = useState('')
+
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const backToAccount = () => {
     if (groupId && accountId) {
@@ -30,8 +40,29 @@ const ApproveSavingAccount = () => {
     }
   }
 
-  const onSubmit = () => {
-    backToAccount()
+  const onSubmit = async () => {
+    if (!accountId) return
+
+    setSaving(true)
+    setError(null)
+    try {
+      await savingsApi.handleCommands6(
+        Number(accountId),
+        {
+          locale: 'en',
+          dateFormat: 'yyyy-MM-dd',
+          approvedOnDate,
+          note: note || undefined,
+        } as Record<string, unknown>,
+        'approve'
+      )
+      backToAccount()
+    } catch (e) {
+      console.error('approve failed', e)
+      setError(datatableErrorMessage(e) ?? 'Approval failed. Please try again.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -50,7 +81,10 @@ const ApproveSavingAccount = () => {
               <Input
                 type="date"
                 value={approvedOnDate}
-                onChange={e => setApprovedOnDate(e.target.value)}
+                onChange={e => {
+                  setApprovedOnDate(e.target.value)
+                  setError(null)
+                }}
                 placeholder="YYYY-MM-DD"
               />
             </div>
@@ -60,18 +94,31 @@ const ApproveSavingAccount = () => {
               <Input
                 placeholder="Optional note…"
                 value={note}
-                onChange={e => setNote(e.target.value)}
+                onChange={e => {
+                  setNote(e.target.value)
+                  setError(null)
+                }}
               />
             </div>
 
+            {error && (
+              <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+                {error}
+              </div>
+            )}
+
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={backToAccount}>
+              <Button
+                variant="outline"
+                onClick={backToAccount}
+                disabled={saving}
+              >
                 Cancel
               </Button>
               <Button
                 className="bg-[#0e77b7] hover:bg-[#0662a3]"
                 onClick={onSubmit}
-                disabled={!approvedOnDate}
+                disabled={!approvedOnDate || saving}
               >
                 Confirm
               </Button>

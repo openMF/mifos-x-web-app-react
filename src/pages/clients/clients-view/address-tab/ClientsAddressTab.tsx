@@ -5,8 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from 'react'
-// import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { ClientsAddressApi, type AddressData } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -28,13 +30,52 @@ import {
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+// Built per call so it picks up the current credentials; see EntityDocumentsTab.
+const addressApi = () => new ClientsAddressApi(getConfiguration())
+
+/** Joins the parts of an address that are filled in, skipping empty ones. */
+const joinParts = (parts: (string | undefined)[]) =>
+  parts.filter(part => part && part.trim()).join(', ')
+
 const ClientsAddressTab = () => {
-  // const { id } = useParams();
+  const { id } = useParams()
 
   // modal open/close
   const [open, setOpen] = useState(false)
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+
+  const [addresses, setAddresses] = useState<AddressData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [loadFailed, setLoadFailed] = useState(false)
+
+  /** Identifies the newest request, so a response for a previous client is discarded. */
+  const loadIdRef = useRef(0)
+
+  useEffect(() => {
+    const requestId = ++loadIdRef.current
+    if (!id) {
+      setAddresses([])
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    setLoadFailed(false)
+    addressApi()
+      .getAddresses1(Number(id))
+      .then(res => {
+        if (requestId === loadIdRef.current) setAddresses(res?.data ?? [])
+      })
+      .catch(e => {
+        if (requestId !== loadIdRef.current) return
+        console.error('Failed to load client addresses', e)
+        setAddresses([])
+        setLoadFailed(true)
+      })
+      .finally(() => {
+        if (requestId === loadIdRef.current) setLoading(false)
+      })
+  }, [id])
 
   const [form, setForm] = useState({
     addressType: '',
@@ -184,6 +225,54 @@ const ClientsAddressTab = () => {
             </form>
           </DialogContent>
         </Dialog>
+      </div>
+
+      {/* address list */}
+      <div className="px-4 pb-4">
+        {loading ? (
+          <p className="text-sm text-zinc-500">{t('address.loading')}</p>
+        ) : loadFailed ? (
+          <p className="text-sm text-red-600">{t('address.loadFailed')}</p>
+        ) : addresses.length === 0 ? (
+          <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            {t('address.empty')}
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {addresses.map((address, index) => (
+              <div
+                key={address.addressId ?? index}
+                className="rounded-md border border-gray-200 p-4 text-black dark:border-gray-700 dark:text-white"
+              >
+                <div className="mb-1 flex items-center justify-between gap-4">
+                  <span className="font-medium">
+                    {address.addressType || '—'}
+                  </span>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {address.isActive === false
+                      ? t('address.statusInactive')
+                      : t('address.statusActive')}
+                  </span>
+                </div>
+                <p className="text-sm">
+                  {joinParts([
+                    address.addressLine1,
+                    address.addressLine2,
+                    address.addressLine3,
+                  ]) || '—'}
+                </p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                  {joinParts([
+                    address.city,
+                    address.stateName,
+                    address.postalCode,
+                    address.countryName,
+                  ])}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

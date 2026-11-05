@@ -13,13 +13,22 @@ import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBr
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { SavingsAccountApi } from '@/fineract-api'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { useBusinessDateState } from '@/lib/business-date'
+import { getConfiguration } from '@/lib/fineract-openapi'
+
+const savingsApi = new SavingsAccountApi(getConfiguration())
 
 const ActivateSavingsAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Activate' })
   const { groupId, accountId } = useParams()
   const navigate = useNavigate()
 
-  const [activatedOnDate, setActivatedOnDate] = useState<string>('')
+  // Defaults to the business date, like the Angular web app.
+  const [activatedOnDate, setActivatedOnDate] = useBusinessDateState()
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const backToAccount = () => {
     if (groupId && accountId) {
@@ -29,8 +38,30 @@ const ActivateSavingsAccount = () => {
     }
   }
 
-  const onSubmit = () => {
-    backToAccount()
+  const onSubmit = async () => {
+    if (!accountId) return
+
+    setSaving(true)
+    setError(null)
+    try {
+      await savingsApi.handleCommands6(
+        Number(accountId),
+        {
+          locale: 'en',
+          dateFormat: 'yyyy-MM-dd',
+          activatedOnDate,
+        } as Record<string, unknown>,
+        'activate'
+      )
+      backToAccount()
+    } catch (e) {
+      console.error('activate failed', e)
+      setError(
+        datatableErrorMessage(e) ?? 'Activation failed. Please try again.'
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -49,18 +80,31 @@ const ActivateSavingsAccount = () => {
               <Input
                 type="date"
                 value={activatedOnDate}
-                onChange={e => setActivatedOnDate(e.target.value)}
+                onChange={e => {
+                  setActivatedOnDate(e.target.value)
+                  setError(null)
+                }}
               />
             </div>
 
+            {error && (
+              <div className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+                {error}
+              </div>
+            )}
+
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={backToAccount}>
+              <Button
+                variant="outline"
+                onClick={backToAccount}
+                disabled={saving}
+              >
                 Cancel
               </Button>
               <Button
                 className="bg-[#0e77b7] hover:bg-[#0662a3]"
                 onClick={onSubmit}
-                disabled={!activatedOnDate}
+                disabled={!activatedOnDate || saving}
               >
                 Confirm
               </Button>

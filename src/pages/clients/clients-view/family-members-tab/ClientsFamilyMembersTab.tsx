@@ -17,6 +17,8 @@ import {
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { formatDate } from '@/lib/date-utils'
 
+import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
+
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -47,6 +49,10 @@ const ClientsFamilyMembersTab = () => {
   const [members, setMembers] = useState<ClientFamilyMembersData[]>([])
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
+  /** The member being deleted; Delete stays disabled until the request settles. */
+  const [deletingId, setDeletingId] = useState<number>()
+  const deletingRef = useRef(false)
   /** Identifies the newest request, so a response for a previous client is discarded. */
   const loadIdRef = useRef(0)
 
@@ -74,8 +80,31 @@ const ClientsFamilyMembersTab = () => {
   }, [id])
 
   useEffect(() => {
+    setDeleteError('')
     load()
   }, [load])
+
+  const deleteMember = async (memberId?: number) => {
+    if (!id || memberId === undefined || deletingRef.current) return
+    if (!confirm(t('familyMembers.confirmDelete'))) return
+    deletingRef.current = true
+    setDeletingId(memberId)
+    setDeleteError('')
+    try {
+      await familyMemberApi().deleteClientFamilyMembers(memberId, Number(id))
+      const state: RouteSuccessState = {
+        successMessage: t('success.familyMemberDeleted'),
+      }
+      navigate(`/clients/${id}/family-members`, { replace: true, state })
+      await load()
+    } catch (e) {
+      console.error('Failed to delete client family member', e)
+      setDeleteError(t('familyMembers.deleteFailed'))
+    } finally {
+      deletingRef.current = false
+      setDeletingId(undefined)
+    }
+  }
 
   return (
     <div className="bg-transparent space-y-6">
@@ -90,6 +119,10 @@ const ClientsFamilyMembersTab = () => {
           <Plus /> {t('familyMembers.addButton')}
         </Button>
       </div>
+
+      {deleteError && (
+        <p className="px-4 text-sm text-red-600">{deleteError}</p>
+      )}
 
       {loading ? (
         <p className="px-4 text-sm text-zinc-500">
@@ -111,6 +144,9 @@ const ClientsFamilyMembersTab = () => {
               <TableHead>{t('familyMembers.columnAge')}</TableHead>
               <TableHead>{t('familyMembers.columnDateOfBirth')}</TableHead>
               <TableHead>{t('familyMembers.columnIsDependent')}</TableHead>
+              <TableHead className="text-right">
+                {t('familyMembers.columnActions')}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -132,6 +168,29 @@ const ClientsFamilyMembersTab = () => {
                 </TableCell>
                 <TableCell>
                   {member.isDependent ? tc('actions.yes') : tc('actions.no')}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="inline-flex gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-[#0e77b7] hover:bg-[#0662a3] text-white"
+                      onClick={() =>
+                        navigate(
+                          `/clients/${id}/family-members/${member.id}/edit`
+                        )
+                      }
+                    >
+                      {t('familyMembers.editButton')}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      disabled={deletingId !== undefined}
+                      onClick={() => deleteMember(member.id)}
+                    >
+                      {t('familyMembers.deleteButton')}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

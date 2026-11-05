@@ -47,6 +47,16 @@ export const envConfig = {
     'default'
   ),
 
+  /**
+   * More tenants to offer on the sign-in page, comma separated. Same variable
+   * as the Angular web-app.
+   */
+  tenantIds: env(
+    'FINERACT_PLATFORM_TENANTS_IDENTIFIER',
+    'VITE_FINERACT_PLATFORM_TENANTS_IDENTIFIER',
+    ''
+  ),
+
   /** Whether OIDC authentication is enabled */
   oidcEnabled:
     env(

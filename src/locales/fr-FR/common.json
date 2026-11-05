@@ -566,5 +566,12 @@
       "saving": "Épargne",
       "share": "Parts sociales"
     }
+  },
+  "reports": {
+    "allEngines": "Tous",
+    "filterByEngine": "Filtrer par moteur",
+    "matchCount": "{{shown}} / {{total}}",
+    "other": "Autres",
+    "run": "Exécuter"
   }
 }
