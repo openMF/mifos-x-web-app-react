@@ -9,9 +9,10 @@ import MfNavbar from '@/components/custom/navbar/MfNavbar'
 import { AppSidebar } from '@/components/custom/sidebar/AppSidebar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useLayoutEffect, type CSSProperties } from 'react'
+import { type CSSProperties } from 'react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { useGlobalShortcuts } from '@/hooks/use-global-shortcuts'
+import { useTheme } from '@/hooks/use-theme'
 import { useLogout } from '@/hooks/use-logout'
 import SessionTimeout from '@/components/custom/session/SessionTimeout'
 
@@ -30,14 +31,7 @@ const LayoutShortcuts = () => {
 }
 
 const Layout = () => {
-  useLayoutEffect(() => {
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [])
+  useTheme()
   return (
     <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
       <LayoutShortcuts />
