@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
 import {
@@ -82,12 +83,13 @@ const FixedDepositProducts = () => {
           { label: 'Fixed Deposit Products', current: true },
         ]}
       />
+      <RouteSuccessMessage className="mb-4" />
 
       {/* Create button */}
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate('/products/fixed-deposits/create')}
+          onClick={() => navigate('/products/fixed-deposit-products/create')}
         >
           <Plus className="mr-2" /> Create Fixed Deposit Product
         </Button>

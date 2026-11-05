@@ -45,16 +45,6 @@ fineract.interceptors.request.use(config => {
     delete authHeaders.Authorization
   }
 
-  // Ensure tenant header is set if an Authorization header is present
-  const hasAuthorizationHeader = !!(
-    suppliedAuth || authHeaders['Authorization']
-  )
-
-  if (hasAuthorizationHeader) {
-    const tenant = localStorage.getItem('mifosTenant') || 'default'
-    authHeaders['Fineract-Platform-TenantId'] = tenant
-  }
-
   Object.assign(config.headers, authHeaders)
 
   const authorization = String(

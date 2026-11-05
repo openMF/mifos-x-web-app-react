@@ -42,6 +42,7 @@
     "clientClosed": "Cliente chiuso con successo.",
     "clientTransferProposed": "Trasferimento cliente proposto con successo.",
     "staffAssigned": "Personale assegnato con successo.",
+    "staffUnassigned": "Assegnazione del personale rimossa con successo.",
     "clientsApproved": "Clienti selezionati approvati con successo.",
     "familyMemberAdded": "Membro della famiglia aggiunto con successo.",
     "familyMemberUpdated": "Membro della famiglia aggiornato con successo.",
@@ -82,6 +83,15 @@
       "staffRequired": "Seleziona un membro del personale.",
       "failedFetchStaff": "Impossibile caricare le opzioni del personale.",
       "failedAssignStaff": "Impossibile assegnare il personale."
+    }
+  },
+  "unassignStaff": {
+    "title": "Rimuovi Assegnazione Personale",
+    "confirmMessage": "Sei sicuro di voler rimuovere {{staff}} da questo cliente?",
+    "confirm": "Conferma",
+    "errors": {
+      "failedFetchClient": "Impossibile recuperare i dettagli del cliente.",
+      "failedUnassignStaff": "Impossibile rimuovere l'assegnazione del personale."
     }
   },
   "transfer": {
@@ -457,6 +467,52 @@
       "closedDate": "Data di chiusura",
       "clientStatus": "Stato del cliente",
       "subStatus": "Sotto-stato"
+    }
+  },
+  "form": {
+    "createTitle": "Crea cliente",
+    "editTitle": "Modifica cliente",
+    "stepGeneral": "Generale",
+    "loadingTemplate": "Caricamento del modello cliente...",
+    "loadingClient": "Caricamento del cliente...",
+    "none": "Nessuno",
+    "labelOffice": "Ufficio",
+    "selectOffice": "Seleziona ufficio",
+    "labelLegalForm": "Forma giuridica",
+    "selectLegalForm": "Seleziona forma giuridica",
+    "legalFormPerson": "Persona",
+    "legalFormEntity": "Ente",
+    "labelAccountNo": "N. conto",
+    "labelExternalId": "Id esterno",
+    "labelFirstName": "Nome",
+    "labelMiddleName": "Secondo nome",
+    "labelLastName": "Cognome",
+    "labelDateOfBirth": "Data di nascita",
+    "labelGender": "Genere",
+    "selectGender": "Seleziona genere",
+    "labelStaff": "Personale",
+    "selectStaff": "Seleziona personale",
+    "labelIsStaff": "È personale?",
+    "labelMobileNo": "N. cellulare",
+    "labelEmailAddress": "Indirizzo e-mail",
+    "labelClientType": "Tipo di cliente",
+    "selectClientType": "Seleziona tipo di cliente",
+    "labelClientClassification": "Classificazione cliente",
+    "selectClientClassification": "Seleziona classificazione cliente",
+    "labelSubmittedOn": "Inserito il",
+    "labelActive": "Attivo?",
+    "labelActivationDate": "Data di attivazione",
+    "labelActivatedOn": "Attivato il",
+    "errors": {
+      "officeRequired": "Seleziona un ufficio.",
+      "entityNameRequired": "Inserisci il nome dell'ente.",
+      "namesRequired": "Inserisci un nome e un cognome.",
+      "submittedOnRequired": "Inserisci la data d'inserimento.",
+      "submittedOnInFuture": "La data d'inserimento non può essere nel futuro.",
+      "activationDateRequired": "Inserisci una data di attivazione o deseleziona Attivo.",
+      "activationDateInFuture": "La data di attivazione non può essere nel futuro.",
+      "activationDateBeforeSubmitted": "La data di attivazione non può essere precedente alla data d'inserimento.",
+      "createFailed": "Impossibile creare il cliente."
     }
   }
 }

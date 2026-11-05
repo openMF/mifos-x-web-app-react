@@ -98,6 +98,7 @@ import Tellers from '@/pages/organization/tellers/Tellers'
 import CreateTellers from '@/pages/organization/tellers/CreateTellers'
 import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
+import ViewCashiers from '@/pages/organization/tellers/cashiers/viewCashiers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
 import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
@@ -133,8 +134,10 @@ import CreateDelinquencyBucket from '@/pages/products/manage-delinquency-buckets
 import ViewDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/ViewDelinquencyBucket'
 import EditDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/EditDelinquencyBucket'
 import ProductsMix from '@/pages/products/products-mix/ProductsMix'
+import CreateProductMix from '@/pages/products/products-mix/CreateProductMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
+import CreateFixedDepositProduct from '@/pages/products/fixed-deposit-products/create-fixed-deposit-product/CreateFixedDepositProduct'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
@@ -142,6 +145,7 @@ import ManageTaxComponents from '@/pages/products/manage-tax-configurations/mana
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
 import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
+import CreateFloatingRate from '@/pages/products/floating-rates/CreateFloatingRate'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
 import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
@@ -167,6 +171,8 @@ import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHisto
 import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
+import AboutUs from '@/pages/system/about-us/AboutUs'
+import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -239,6 +245,7 @@ import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
+import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
 import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
@@ -620,6 +627,10 @@ const AppRoutes = () => {
           />
           <Route path="/organization/tellers/:id" element={<ViewTellers />} />
           <Route
+            path="/organization/tellers/:id/cashiers"
+            element={<ViewCashiers />}
+          />
+          <Route
             path="/organization/tellers/:id/edit"
             element={<EditTellers />}
           />
@@ -756,11 +767,19 @@ const AppRoutes = () => {
 
           {/* Products Mix */}
           <Route path="/products/products-mix" element={<ProductsMix />} />
+          <Route
+            path="/products/products-mix/create"
+            element={<CreateProductMix />}
+          />
 
           {/* Fixed Deposit Products */}
           <Route
             path="/products/fixed-deposit-products"
             element={<FixedDepositProducts />}
+          />
+          <Route
+            path="/products/fixed-deposit-products/create"
+            element={<CreateFixedDepositProduct />}
           />
           <Route
             path="/products/fixed-deposit-products/:id/general"
@@ -817,6 +836,10 @@ const AppRoutes = () => {
 
           {/* Floating Rates */}
           <Route path="/products/floating-rates" element={<FloatingRates />} />
+          <Route
+            path="/products/floating-rates/create"
+            element={<CreateFloatingRate />}
+          />
           <Route
             path="/products/floating-rates/:id"
             element={<ViewFloatingRates />}
@@ -905,6 +928,15 @@ const AppRoutes = () => {
           <Route path="/system/audit-trails" element={<AuditTrails />} />
           <Route path="/system/audit-trails/:id" element={<ViewAuditTrail />} />
 
+          {/* About Us */}
+          <Route path="/system/about-us" element={<AboutUs />} />
+
+          {/* Manage Dashboards */}
+          <Route
+            path="/system/manage-dashboards"
+            element={<ManageDashboards />}
+          />
+
           {/* Institution */}
 
           {/* Loans list */}
@@ -920,6 +952,10 @@ const AppRoutes = () => {
           <Route
             path="/clients/:id/actions/assign-staff"
             element={<ClientAssignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/unassign-staff"
+            element={<ClientUnassignStaff />}
           />
           <Route
             path="/clients/:id/actions/transfer-client"

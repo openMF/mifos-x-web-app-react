@@ -153,13 +153,14 @@ For Docker environment variables, see `.env.docker.sample`.
 
 The application uses environment variables for configuration. Copy `.env.sample` to `.env` or `.env.development.local` and adjust the values as needed.
 
-| Variable                                   | Description                                               | Default                  |
-| ------------------------------------------ | --------------------------------------------------------- | ------------------------ |
-| `VITE_FINERACT_API_URL`                    | Base URL for the Fineract server (protocol + host + port) | `https://localhost:3000` |
-| `VITE_FINERACT_API_PROVIDER`               | API path prefix                                           | `/fineract-provider`     |
-| `VITE_FINERACT_API_VERSION`                | API version path                                          | `/api`                   |
-| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments            | `default`                |
-| `VITE_MIFOS_SESSION_IDLE_TIMEOUT`          | Sign out after this many ms without activity (0 = off)    | `300000`                 |
+| Variable                                    | Description                                                | Default                  |
+| ------------------------------------------- | ---------------------------------------------------------- | ------------------------ |
+| `VITE_FINERACT_API_URL`                     | Base URL for the Fineract server (protocol + host + port)  | `https://localhost:3000` |
+| `VITE_FINERACT_API_PROVIDER`                | API path prefix                                            | `/fineract-provider`     |
+| `VITE_FINERACT_API_VERSION`                 | API version path                                           | `/api`                   |
+| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER`  | Tenant identifier for multi-tenant deployments             | `default`                |
+| `VITE_FINERACT_PLATFORM_TENANTS_IDENTIFIER` | More tenants to offer on the sign-in page, comma separated | (empty)                  |
+| `VITE_MIFOS_SESSION_IDLE_TIMEOUT`           | Sign out after this many ms without activity (0 = off)     | `300000`                 |
 
 > **Note:** In development, `.env.development` intentionally leaves
 > `VITE_FINERACT_API_URL` empty so requests use relative URLs and go through the

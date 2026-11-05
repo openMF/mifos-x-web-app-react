@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import {
   Table,
@@ -28,18 +29,27 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
-import { LoanProductsApi, type GetLoanProductsResponse } from '@/fineract-api'
+import { LoanProductsApi } from '@/fineract-api'
 
 // API client instance for Loan Products
 const productMixApi = new LoanProductsApi(getConfiguration())
 
+/** The real shape of GET /loanproducts?associations=productMixes */
+type ProductMix = {
+  productId?: number
+  productName?: string
+  restrictedProducts?: Array<{ id?: number; name?: string }>
+}
+
 const ProductsMix = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('products')
 
   // state for storing product mixes
-  const [mixes, setMixes] = useState<GetLoanProductsResponse[]>([])
+  const [mixes, setMixes] = useState<ProductMix[]>([])
   const [searchTerm, setSearchTerm] = useState('') // filter input
   const [page, setPage] = useState(1) // pagination current page
   const [itemsPerPage, setItemsPerPage] = useState(10) // rows per page
@@ -51,7 +61,9 @@ const ProductsMix = () => {
         const res = await productMixApi.retrieveAllLoanProducts({
           params: { associations: 'productMixes' },
         })
-        setMixes(res.data || [])
+        // Without any mixes, Fineract returns a single entry with no productId
+        const data = (res.data ?? []) as unknown as ProductMix[]
+        setMixes(data.filter(mix => mix.productId != null))
       } catch (err) {
         console.error('Failed to fetch product mixes', err)
       }
@@ -61,7 +73,7 @@ const ProductsMix = () => {
 
   // search filtering
   const filtered = mixes.filter(mix =>
-    mix.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    mix.productName?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   // pagination logic
@@ -87,6 +99,8 @@ const ProductsMix = () => {
           { label: 'Products Mix', current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mb-6" />
 
       {/* Add new product mix button */}
       <div className="mb-6">
@@ -157,17 +171,25 @@ const ProductsMix = () => {
           </TableCaption>
           <TableHeader>
             <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Product Name</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('productMix.columns.productName')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('productMix.columns.restrictedProducts')}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginated.map(mix => (
               <TableRow
-                key={mix.id}
+                key={mix.productId}
                 className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
               >
                 <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
-                  {mix.name}
+                  {mix.productName}
+                </TableCell>
+                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-300">
+                  {mix.restrictedProducts?.map(p => p.name).join(', ')}
                 </TableCell>
               </TableRow>
             ))}
