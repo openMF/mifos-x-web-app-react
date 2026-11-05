@@ -37,6 +37,25 @@
     "labelClosedOn": "Data di chiusura*",
     "breadcrumb": "Chiudi"
   },
+  "attachMeeting": {
+    "heading": "Collega riunione",
+    "labelStartDate": "Data di inizio riunione*",
+    "labelRepeats": "Ripete?",
+    "labelFrequency": "Frequenza di ripetizione",
+    "labelInterval": "Intervallo di ripetizione",
+    "labelRepeatsOnDay": "Ripete il giorno*",
+    "placeholderFrequency": "Seleziona frequenza",
+    "placeholderInterval": "Seleziona intervallo",
+    "placeholderRepeatsOnDay": "Seleziona giorno",
+    "errors": {
+      "dateRequired": "Inserisci una data di inizio riunione.",
+      "dayRequired": "Seleziona un giorno per la ripetizione settimanale.",
+      "failedAttachMeeting": "Impossibile collegare la riunione al centro."
+    }
+  },
+  "success": {
+    "meetingAttached": "Riunione collegata con successo."
+  },
   "view": {
     "centerName": "Nome Centro :",
     "accountNo": "N. Conto:",

@@ -37,6 +37,25 @@
     "labelClosedOn": "Closed on date*",
     "breadcrumb": "Close"
   },
+  "attachMeeting": {
+    "heading": "Attach Meeting",
+    "labelStartDate": "Meeting Start Date*",
+    "labelRepeats": "Repeats?",
+    "labelFrequency": "Repetition Frequency",
+    "labelInterval": "Repetition Interval",
+    "labelRepeatsOnDay": "Repeats on Day*",
+    "placeholderFrequency": "Select frequency",
+    "placeholderInterval": "Select interval",
+    "placeholderRepeatsOnDay": "Select day",
+    "errors": {
+      "dateRequired": "Please enter a meeting start date.",
+      "dayRequired": "Please select a day for weekly repetition.",
+      "failedAttachMeeting": "Failed to attach meeting to center."
+    }
+  },
+  "success": {
+    "meetingAttached": "Meeting attached successfully."
+  },
   "view": {
     "centerName": "Center Name :",
     "accountNo": "Account #:",
