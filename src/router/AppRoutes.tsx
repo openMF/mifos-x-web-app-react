@@ -158,6 +158,7 @@ import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
 import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
+import EditRolesAndPermissions from '@/pages/system/roles-and-permissions/EditRolesAndPermissions'
 import AccountNumberPreferences from '@/pages/system/account-number-preferences/AccountNumberPreferences'
 import CreateAccountNumberPreferences from '@/pages/system/account-number-preferences/CreateAccountNumberPreferences'
 import ViewAccountNumberPreferences from '@/pages/system/account-number-preferences/ViewAccountNumberPreferences'
@@ -877,6 +878,10 @@ const AppRoutes = () => {
           <Route
             path="/system/roles-and-permissions/add"
             element={<CreateRolesAndPermissions />}
+          />
+          <Route
+            path="/system/roles-and-permissions/:id/edit"
+            element={<EditRolesAndPermissions />}
           />
 
           {/*  Account Number Preferences */}
