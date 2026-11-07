@@ -21,6 +21,7 @@ import {
 } from '@/fineract-api'
 import type { AxiosError } from 'axios'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { inputToFineractDate } from '@/lib/date-utils'
 
 const provisioningEntriesApi = new ProvisioningEntriesApi(getConfiguration())
 const provisioningCriteriaApi = new ProvisioningCriteriaApi(getConfiguration())
@@ -76,11 +77,7 @@ const CreateProvisioningEntry = () => {
       return
     }
 
-    const formattedDate = new Date(formData.date).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    })
+    const formattedDate = inputToFineractDate(formData.date)
 
     try {
       await provisioningEntriesApi.createProvisioningEntries({
