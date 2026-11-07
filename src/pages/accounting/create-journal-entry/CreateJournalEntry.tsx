@@ -190,7 +190,7 @@ const CreateJournalEntry = () => {
         items={[
           { label: 'Home', href: '/home' },
           { label: 'Accounting', href: '/accounting' },
-          { label: 'Journal Entries' },
+          { label: 'Journal Entries', href: '/accounting/journal-entries' },
           { label: 'Create', current: true },
         ]}
       />

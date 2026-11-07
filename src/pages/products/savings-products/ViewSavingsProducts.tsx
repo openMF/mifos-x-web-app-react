@@ -44,8 +44,8 @@ const ViewSavingsProducts = () => {
         items={[
           { label: 'Home', href: '/home' },
           { label: 'Products', href: '/products' },
-          { label: 'Loan Products', href: '/products/loan-products' },
-          { label: savingsProducts?.name ?? 'Loan', current: true },
+          { label: 'Saving Products', href: '/products/saving-products' },
+          { label: savingsProducts?.name ?? 'View', current: true },
         ]}
       />
 

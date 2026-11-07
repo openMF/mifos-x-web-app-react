@@ -6,10 +6,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import MifosLogo from '@/assets/images/MifosX_logo.png'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { useAppDispatch } from '@/app/hook'
-import { logout } from '@/pages/login/loginSlice'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { useLogout } from '@/hooks/use-logout'
+import { useFrequentlyAccessed } from '@/hooks/use-frequently-accessed'
+import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
+import type { ParseKeys } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import {
   Gauge,
@@ -25,6 +33,7 @@ import {
   LogOut,
   Cog,
   User,
+  type LucideIcon,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -35,11 +44,62 @@ import {
   SidebarMenuItem,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar'
+import {
+  GLOBAL_SHORTCUTS,
+  type GlobalShortcut,
+} from '@/hooks/use-global-shortcuts'
+import { useEffect, useState } from 'react'
+
+type SidebarItem = {
+  icon: LucideIcon
+  labelKey: ParseKeys<'common'>
+  route: string
+}
+
+const MAIN_ITEMS: SidebarItem[] = [
+  { icon: Gauge, labelKey: 'nav.dashboard', route: 'dashboard' },
+  { icon: Send, labelKey: 'nav.navigation', route: 'navigation' },
+  {
+    icon: Check,
+    labelKey: 'nav.checkerInboxAndTasks',
+    route: 'checker-inbox-and-tasks/checker-inbox',
+  },
+  {
+    icon: Layers2,
+    labelKey: 'nav.individualCollectionSheet',
+    route: 'individual-collection-sheet',
+  },
+  { icon: Bell, labelKey: 'nav.notifications', route: 'notifications' },
+  {
+    icon: RefreshCcw,
+    labelKey: 'nav.frequentPostings',
+    route: 'accounting/journal-entries/frequent-postings',
+  },
+  {
+    icon: Plus,
+    labelKey: 'nav.createJournalEntry',
+    route: 'accounting/journal-entries/create',
+  },
+  {
+    icon: Network,
+    labelKey: 'nav.chartOfAccounts',
+    route: 'accounting/chart-of-accounts',
+  },
+]
+
+const MAIN_ROUTES = MAIN_ITEMS.map(item => item.route)
 
 export const AppSidebar = () => {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const { pathname } = useLocation()
+  const handleLogout = useLogout()
+  const [logoutOpen, setLogoutOpen] = useState(false)
   const { t } = useTranslation('common')
+  const [shortcutsOpen, setShortcutsOpen] = useState(false)
+
+  useEffect(() => {
+    setShortcutsOpen(false)
+  }, [pathname])
 
   const handleHome = () => {
     navigate('/home')
@@ -49,13 +109,33 @@ export const AppSidebar = () => {
     navigate(`/${page}`)
   }
 
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate('/login', { replace: true })
-  }
+  const frequentRoutes = useFrequentlyAccessed(MAIN_ROUTES)
+  const frequentItems = frequentRoutes
+    .map(route => MAIN_ITEMS.find(item => item.route === route))
+    .filter((item): item is SidebarItem => item !== undefined)
+
+  const renderItem = ({ icon: Icon, labelKey, route }: SidebarItem) => (
+    <SidebarMenuItem
+      key={route}
+      className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+    >
+      <SidebarMenuButton asChild>
+        <Button
+          variant="ghost"
+          className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+          onClick={() => handleClick(route)}
+        >
+          <Icon />
+          <span className="min-w-0 whitespace-normal! text-left">
+            {t(labelKey)}
+          </span>
+        </Button>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  )
 
   return (
-    <Sidebar className="w-64 h-screen flex flex-col border-r bg-white dark:bg-gray-900 dark:border-gray-800">
+    <Sidebar className="h-screen flex flex-col border-r bg-white dark:bg-gray-900 dark:border-gray-800">
       <SidebarContent className="flex-1 overflow-y-auto">
         <div className="flex flex-col items-center space-y-3 pt-5">
           <img
@@ -89,8 +169,9 @@ export const AppSidebar = () => {
               variant="ghost"
               size="icon"
               className="p-0 h-auto w-auto text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-transparent"
-              onClick={handleLogout}
+              onClick={() => setLogoutOpen(true)}
               aria-label={t('tooltips.signOut')}
+              data-testid="sidebar-logout"
             >
               <LogOut className="w-5 h-5" />
             </Button>
@@ -101,7 +182,15 @@ export const AppSidebar = () => {
           <SidebarGroupLabel className="px-6 pt-4 text-base font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
             {t('nav.frequentlyAccessed')}
           </SidebarGroupLabel>
-          <SidebarMenu></SidebarMenu>
+          <SidebarMenu>
+            {frequentItems.length > 0 ? (
+              frequentItems.map(renderItem)
+            ) : (
+              <SidebarMenuItem className="px-6 pb-2 text-sm text-gray-500 dark:text-gray-400">
+                {t('nav.noFrequentlyAccessed')}
+              </SidebarMenuItem>
+            )}
+          </SidebarMenu>
         </SidebarGroup>
 
         <SidebarGroup>
@@ -109,73 +198,19 @@ export const AppSidebar = () => {
             {t('nav.mainItems')}
           </SidebarGroupLabel>
           <SidebarMenu>
-            {[
-              {
-                icon: <Gauge />,
-                label: t('nav.dashboard'),
-                route: 'dashboard',
-              },
-              {
-                icon: <Send />,
-                label: t('nav.navigation'),
-                route: 'navigation',
-              },
-              {
-                icon: <Check />,
-                label: t('nav.checkerInboxAndTasks'),
-                route: 'checker-inbox-and-tasks/checker-inbox',
-              },
-              {
-                icon: <Layers2 />,
-                label: t('nav.individualCollectionSheet'),
-                route: 'individual-collection-sheet',
-              },
-              {
-                icon: <Bell />,
-                label: t('nav.notifications'),
-                route: 'notifications',
-              },
-              {
-                icon: <RefreshCcw />,
-                label: t('nav.frequentPostings'),
-                route: 'accounting/journal-entries/frequent-postings',
-              },
-              {
-                icon: <Plus />,
-                label: t('nav.createJournalEntry'),
-                route: 'accounting/journal-entries/create',
-              },
-              {
-                icon: <Network />,
-                label: t('nav.chartOfAccounts'),
-                route: 'accounting/chart-of-accounts',
-              },
-            ].map(({ icon, label, route }) => (
-              <SidebarMenuItem
-                key={label}
-                className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <SidebarMenuButton asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
-                    onClick={() => handleClick(route)}
-                  >
-                    {icon}
-                    <p>{label}</p>
-                  </Button>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {MAIN_ITEMS.map(renderItem)}
 
             <SidebarMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
               <SidebarMenuButton asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  onClick={() => setShortcutsOpen(true)}
                 >
                   <Keyboard />
-                  <p>{t('nav.keyboardShortcuts')}</p>
+                  <span className="min-w-0 whitespace-normal! text-left">
+                    {t('nav.keyboardShortcuts')}
+                  </span>
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -184,10 +219,10 @@ export const AppSidebar = () => {
               <SidebarMenuButton asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-lg font-medium text-black dark:text-white hover:text-primary cursor-pointer"
+                  className="w-full h-auto! justify-start gap-3 py-2 text-base font-medium text-black dark:text-white hover:text-primary cursor-pointer"
                 >
                   <CircleHelp />
-                  <p>
+                  <span className="min-w-0 whitespace-normal! text-left">
                     <a
                       href="https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manual"
                       target="_blank"
@@ -195,13 +230,54 @@ export const AppSidebar = () => {
                     >
                       {t('nav.help')}
                     </a>
-                  </p>
+                  </span>
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <Dialog open={shortcutsOpen} onOpenChange={setShortcutsOpen}>
+        <DialogContent
+          className="max-w-3xl"
+          closeButtonClassName="flex size-8 items-center justify-center [&_svg]:size-5"
+        >
+          <DialogHeader>
+            <DialogTitle>{t('nav.keyboardShortcuts')}</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[70vh] overflow-y-auto">
+            <div className="grid grid-cols-[minmax(145px,0.7fr)_1fr] border-b px-3 py-2 text-sm font-semibold text-muted-foreground">
+              <span>Shortcuts</span>
+              <span>Page or action</span>
+            </div>
+            {GLOBAL_SHORTCUTS.map((shortcut: GlobalShortcut) => (
+              <div
+                key={shortcut.id}
+                className="grid grid-cols-[minmax(145px,0.7fr)_1fr] items-center gap-4 border-b px-3 py-3 text-sm last:border-b-0"
+              >
+                <div className="flex items-center gap-1">
+                  {shortcut.keys.map((key, index) => (
+                    <span key={`${shortcut.id}-${key}`}>
+                      {index > 0 && <span className="mr-1">+</span>}
+                      <kbd className="rounded border bg-muted px-2 py-1 font-mono text-xs">
+                        {index === shortcut.keys.length - 1
+                          ? key.toLowerCase()
+                          : key}
+                      </kbd>
+                    </span>
+                  ))}
+                </div>
+                <span>{shortcut.description}</span>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+      <LogoutConfirmDialog
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        onConfirm={() => void handleLogout()}
+      />
     </Sidebar>
   )
 }

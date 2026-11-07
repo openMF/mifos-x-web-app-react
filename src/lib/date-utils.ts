@@ -54,10 +54,42 @@ export function formatDate(
 /**
  * Converts a date array [year, month, day] to an HTML date input value "YYYY-MM-DD".
  */
+/** Today as yyyy-MM-dd in local time, for a date input's value, min or max. */
+export function todayInputValue(): string {
+  const d = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
 export function dateArrayToInputValue(arr?: number[] | null): string {
   if (!arr || arr.length < 3) return ''
   const [y, m, d] = arr
   return `${y}-${String(m ?? 1).padStart(2, '0')}-${String(d ?? 1).padStart(2, '0')}`
+}
+
+/**
+ * Converts a datetime array [year, month, day, hour, minute, second] to an
+ * HTML datetime-local input value "YYYY-MM-DDTHH:mm:ss".
+ */
+export function dateArrayToDatetimeInputValue(arr?: number[] | null): string {
+  const date = dateArrayToInputValue(arr)
+  if (!date) return ''
+  const [, , , hour = 0, minute = 0, second = 0] = arr ?? []
+  return `${date}T${[hour, minute, second].map(part => String(part).padStart(2, '0')).join(':')}`
+}
+
+/**
+ * Normalizes a datetime string to "YYYY-MM-DDTHH:mm:ss".
+ *
+ * `datetime-local` drops the seconds when they are zero and may add
+ * fractions, and Fineract may send a space instead of the `T`; a single
+ * fixed shape lets the value be parsed against one declared format.
+ */
+export function toDatetimeSecondsValue(value?: string | null): string {
+  if (!value) return ''
+  const [date, time = ''] = value.trim().replace(' ', 'T').split('T')
+  const [hour = '00', minute = '00', second = '00'] = time.split(':')
+  return `${date}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:${second.slice(0, 2).padStart(2, '0')}`
 }
 
 /**

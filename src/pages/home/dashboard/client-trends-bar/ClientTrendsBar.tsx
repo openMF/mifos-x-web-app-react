@@ -6,12 +6,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { LineChart, Line, XAxis, CartesianGrid, YAxis } from 'recharts'
+import { BarChart, Bar, XAxis, CartesianGrid, YAxis } from 'recharts'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -21,20 +20,14 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart'
-import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import {
-  OfficesApi,
-  RunReportsApi,
-  type GetOfficesResponse,
-} from '@/fineract-api'
+import { RunReportsApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { format, subDays, subWeeks, subMonths } from 'date-fns'
-import AppSelect from '@/components/custom/select/AppSelect'
 import { useTranslation } from 'react-i18next'
 
-const officeApi = new OfficesApi(getConfiguration())
 const runReportApi = new RunReportsApi(getConfiguration())
 
 //generates labels for the client trends graph
@@ -54,43 +47,31 @@ const generateLabels = (scale: string): string[] => {
   })
 }
 
-const ClientTrendsLine = () => {
+const ClientTrendsLine = ({ officeId }: { officeId: number }) => {
   //state for storing the data
-  const [officeId, setOfficeId] = useState<number>(1)
-  const [officeData, setOfficeData] = useState<GetOfficesResponse[]>()
   const [timescale, setTimescale] = useState('Day')
   const [chartData, setChartData] = useState<
     { label: string; onboarded: number; loaned: number }[]
   >([])
-  const { t } = useTranslation('common')
+  const { t, i18n } = useTranslation('common')
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [attempt, setAttempt] = useState(0)
 
   const chartConfig: ChartConfig = {
     onboarded: {
       label: t('dashboard.newClients'),
-      color: 'var(--chart-3)',
+      color: '#3674b0',
     },
     loaned: {
       label: t('dashboard.loansDisbursed'),
-      color: 'var(--chart-1)',
+      color: '#94a3b8',
     },
   }
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await officeApi.retrieveOffices()
-        const data = res.data ?? []
-        setOfficeData(
-          data.map(option => ({ id: option.id!, name: option.name! }))
-        )
-      } catch (err) {
-        console.error('Failed to fetch office data', err)
-      }
-    })()
-  }, [])
-
   //api fetch to get the chart data
   useEffect(() => {
+    let active = true
+    setStatus('loading')
     ;(async () => {
       try {
         const [clientRes, loanRes] = await Promise.all([
@@ -150,90 +131,159 @@ const ClientTrendsLine = () => {
           }
         })
 
-        setChartData(formatted)
+        if (active) {
+          setChartData(formatted)
+          setStatus('ready')
+        }
       } catch (err) {
         console.error('Failed to fetch client trends', err)
-        setChartData([])
+        if (active) {
+          setChartData([])
+          setStatus('error')
+        }
       }
     })()
-  }, [officeId, timescale])
+    return () => {
+      active = false
+    }
+  }, [officeId, timescale, attempt])
+
+  const totals = chartData.reduce(
+    (sum, row) => ({
+      onboarded: sum.onboarded + Number(row.onboarded),
+      loaned: sum.loaned + Number(row.loaned),
+    }),
+    { onboarded: 0, loaned: 0 }
+  )
+  const number = new Intl.NumberFormat(i18n.language)
 
   return (
-    //main chart card
-    <Card className="h-full">
-      <CardHeader className="space-y-2">
-        <CardTitle className="text-xl">{t('dashboard.clientTrends')}</CardTitle>
-        <CardDescription>
-          {t('dashboard.trackClientOnboarding')}
-        </CardDescription>
-        <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mt-2">
-          <div className="flex flex-col gap-1 flex-1">
-            <AppSelect
-              selectLabel={t('fields.office')}
-              selectValue={officeId.toString()}
-              selectOnChange={value => setOfficeId(Number(value))}
-              selectPlaceholder={t('ui.selectOffice')}
-              selectOptions={(officeData || [])
-                .filter(option => option.id !== undefined)
-                .map(option => ({
-                  id: option.id!,
-                  name: option.name!,
-                }))}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="timescale">{t('dashboard.timescale')}</Label>
-            <ToggleGroup
-              type="single"
-              value={timescale}
-              onValueChange={v => v && setTimescale(v)}
-              className="mt-1"
-            >
-              <ToggleGroupItem value="Day">
-                {t('dashboard.day')}
-              </ToggleGroupItem>
-              <ToggleGroupItem value="Week">
-                {t('dashboard.week')}
-              </ToggleGroupItem>
-              <ToggleGroupItem value="Month">
-                {t('dashboard.month')}
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </div>
+    <Card
+      className="gap-0 rounded-xl border-border/70 py-0 shadow-none"
+      aria-busy={status === 'loading'}
+    >
+      <CardHeader className="flex flex-col gap-4 border-b border-border/60 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-2">
+          <CardTitle className="text-base">
+            {t('dashboard.clientTrends')}
+          </CardTitle>
+          <CardDescription className="text-xs">
+            {t('dashboard.clientTrendsDescription')}
+          </CardDescription>
         </div>
+        <ToggleGroup
+          type="single"
+          aria-label={t('dashboard.timescale')}
+          value={timescale}
+          onValueChange={value => value && setTimescale(value)}
+          className="w-fit rounded-lg border bg-muted/40 p-1"
+        >
+          {(['Day', 'Week', 'Month'] as const).map(value => (
+            <ToggleGroupItem
+              key={value}
+              value={value}
+              className="h-8 rounded-md px-4 text-xs font-medium data-[state=on]:bg-background data-[state=on]:shadow-sm"
+            >
+              {t(
+                value === 'Day'
+                  ? 'dashboard.day'
+                  : value === 'Week'
+                    ? 'dashboard.week'
+                    : 'dashboard.month'
+              )}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </CardHeader>
-
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <LineChart data={chartData} margin={{ left: 12, right: 12 }}>
-            <CartesianGrid vertical horizontal strokeDasharray="3 3" />
-            <XAxis
-              dataKey="label"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-            />
-            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
-            <Line
-              type="monotone"
-              dataKey="onboarded"
-              stroke="var(--chart-3)"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="loaned"
-              stroke="var(--chart-1)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ChartContainer>
+      <CardContent className="space-y-6 py-6">
+        <div className="flex flex-wrap gap-8">
+          {(['onboarded', 'loaned'] as const).map(key => (
+            <div key={key} className="space-y-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span
+                  className="h-2 w-2 rounded-sm"
+                  style={{ backgroundColor: chartConfig[key].color }}
+                />
+                {chartConfig[key].label}
+              </div>
+              <p className="text-2xl font-semibold tabular-nums">
+                {status === 'ready' ? number.format(totals[key]) : '—'}
+              </p>
+            </div>
+          ))}
+        </div>
+        {status === 'error' ? (
+          <div
+            role="alert"
+            className="flex h-48 items-center justify-center gap-4 text-sm text-muted-foreground"
+          >
+            <p>{t('dashboard.loadError')}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setAttempt(value => value + 1)}
+            >
+              {t('dashboard.retry')}
+            </Button>
+          </div>
+        ) : status === 'loading' ? (
+          <div
+            role="status"
+            aria-label={t('dashboard.loading')}
+            className="h-48 rounded-lg bg-muted/40"
+          />
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="h-[200px] w-full sm:h-[240px]"
+          >
+            <BarChart
+              data={chartData}
+              margin={{ left: -24, right: 0, top: 8 }}
+              barGap={4}
+            >
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                dataKey="label"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={12}
+                minTickGap={8}
+                tickFormatter={value =>
+                  timescale === 'Month' ? String(value).slice(0, 3) : value
+                }
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                allowDecimals={false}
+              />
+              <ChartTooltip
+                cursor={{ fill: 'var(--muted)', opacity: 0.5 }}
+                content={<ChartTooltipContent className="[&_.flex-1]:gap-4" />}
+              />
+              <Bar
+                dataKey="onboarded"
+                fill="#3674b0"
+                radius={[4, 4, 0, 0]}
+                maxBarSize={24}
+                isAnimationActive={false}
+              />
+              <Bar
+                dataKey="loaned"
+                fill="#94a3b8"
+                radius={[4, 4, 0, 0]}
+                maxBarSize={24}
+                isAnimationActive={false}
+              />
+            </BarChart>
+          </ChartContainer>
+        )}
+        <p className="border-t border-border/60 pt-4 text-xs text-muted-foreground">
+          {t('dashboard.periodNote')}
+        </p>
       </CardContent>
-      <CardFooter />
     </Card>
   )
 }

@@ -5,37 +5,78 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { AccountNumberFormatApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import AppSelect from '@/components/custom/select/AppSelect'
 
-const ACCOUNT_TYPES = [
-  { id: 'CLIENT', name: 'Client' },
-  { id: 'GROUP', name: 'Group' },
-  { id: 'CENTER', name: 'Center' },
-  { id: 'LOAN', name: 'Loan' },
-  { id: 'SAVINGS', name: 'Savings' },
-  { id: 'SHARE', name: 'Share' },
-]
+const accountNumberFormatApi = new AccountNumberFormatApi(getConfiguration())
 
 const CreateAccountNumberPreferences = () => {
   const navigate = useNavigate()
+  const [accountTypeOptions, setAccountTypeOptions] = useState<
+    Array<{ id?: number; code?: string; value?: string }>
+  >([])
+  const [prefixTypeOptions, setPrefixTypeOptions] = useState<{
+    [key: string]: Array<{ id?: number; code?: string; value?: string }>
+  }>({})
 
-  const [form, setForm] = useState({
+  // form state
+  const [formData, setFormData] = useState({
     accountType: '',
+    accountTypeCode: '',
     prefix: '',
   })
 
-  const handleChange = (field: 'accountType' | 'prefix', value: string) =>
-    setForm(prev => ({ ...prev, [field]: value }))
+  // template for dropdowns
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      try {
+        const response = await accountNumberFormatApi.retrieveTemplate2()
+        setAccountTypeOptions(response.data?.accountTypeOptions || [])
+        setPrefixTypeOptions(response.data?.prefixTypeOptions || {})
+      } catch (err) {
+        console.error('Failed to fetch account number format template', err)
+      }
+    }
+    fetchTemplate()
+  }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const availablePrefixOptions = formData.accountTypeCode
+    ? prefixTypeOptions[formData.accountTypeCode] || []
+    : []
+
+  // submit form
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!formData.accountType) {
+      alert('Please select an account type.')
+      return
+    }
+    if (!formData.prefix) {
+      alert('Please select a prefix.')
+      return
+    }
+
+    try {
+      await accountNumberFormatApi.create({
+        accountType: Number(formData.accountType),
+        prefixType: Number(formData.prefix),
+      })
+      alert('Account Number Preference created successfully!')
+      navigate('/system/account-number-preferences')
+    } catch (err) {
+      console.error('Failed to create account number preference', err)
+      alert('Failed to create account number preference')
+    }
   }
 
   return (
@@ -52,34 +93,52 @@ const CreateAccountNumberPreferences = () => {
         ]}
       />
 
-      <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-3xl mx-auto">
+      <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">Create</h2>
 
-        <form className="space-y-8 max-w-2xl mx-auto" onSubmit={handleSubmit}>
-          {/* Account Type* */}
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          {/* Account Type Select */}
           <div className="w-full space-y-2">
             <AppSelect
               selectLabel="Account Type*"
-              selectPlaceholder="Select"
-              selectValue={form.accountType}
-              selectOnChange={val => handleChange('accountType', val)}
-              selectClassname="w-full"
-              selectOptions={ACCOUNT_TYPES}
+              selectPlaceholder="Select Account Type"
+              selectValue={formData.accountType}
+              selectOnChange={val => {
+                const selected = accountTypeOptions.find(
+                  o => o.id?.toString() === val
+                )
+                setFormData(prev => ({
+                  ...prev,
+                  accountType: val,
+                  accountTypeCode: selected?.code || '',
+                  prefix: '',
+                }))
+              }}
+              selectClassname="w-full space-y-2"
+              selectOptions={accountTypeOptions.map(o => ({
+                id: o.id?.toString() || '',
+                name: o.value || '',
+              }))}
             />
           </div>
 
-          {/* Prefix Field */}
+          {/* Prefix Field Select */}
           <div className="w-full space-y-2">
-            <Label>Prefix Field</Label>
-            <Input
-              value={form.prefix}
-              onChange={e => handleChange('prefix', e.target.value)}
-              placeholder=""
+            <AppSelect
+              selectLabel="Prefix Field"
+              selectPlaceholder="Select Prefix"
+              selectValue={formData.prefix}
+              selectOnChange={val => handleChange('prefix', val)}
+              selectClassname="w-full space-y-2"
+              selectOptions={availablePrefixOptions.map(o => ({
+                id: o.id?.toString() || '',
+                name: o.value || '',
+              }))}
             />
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-center gap-4 pt-2">
+          {/* Action Buttons */}
+          <div className="flex justify-center gap-4 pt-6">
             <Button
               type="button"
               variant="outline"

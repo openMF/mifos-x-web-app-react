@@ -35,15 +35,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
 import { envConfig } from '@/lib/env-config'
+import { getTenantId, getTenantOptions, setTenantId } from '@/lib/http-client'
+import { isOidcUsable } from '@/lib/oidc-config'
+import OidcLoginButton from '@/pages/login/OidcLoginButton'
+import { useTheme } from '@/hooks/use-theme'
 
 const Login = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  // Set by the OIDC callback route when the code exchange fails.
+  const oidcError = (location.state as { oidcError?: boolean } | null)
+    ?.oidcError
   const { t } = useTranslation(['auth', 'common'])
   const { user } = useSelector((state: RootState) => state.auth)
+
+  // Fineract enforces exactly one authentication scheme per server
+  // (SecurityValidationConfig refuses to start with both basicauth and oauth2
+  // enabled), so a deployment configured for OIDC cannot accept a password
+  // sign-in at all. Offer one or the other, never both.
+  const oidcOnly = isOidcUsable()
 
   useEffect(() => {
     if (user) {
@@ -60,8 +74,11 @@ const Login = () => {
     if (isDockerProxy) return ''
     return localStorage.getItem('mifosServer') || 'https://localhost:8443'
   })
+  const tenantOptions = getTenantOptions()
   const [tenant, setTenant] = useState(() => {
-    return localStorage.getItem('mifosTenant') || 'default'
+    // The tenant last signed in to, unless this deployment no longer offers it.
+    const stored = getTenantId()
+    return tenantOptions.includes(stored) ? stored : tenantOptions[0]
   })
   const [showPassword, setShowPassword] = useState(false)
 
@@ -74,7 +91,7 @@ const Login = () => {
     if (!isDockerProxy) {
       localStorage.setItem('mifosServer', server)
     }
-    localStorage.setItem('mifosTenant', tenant)
+    setTenantId(tenant)
     dispatch(loginUser(form))
   }
 
@@ -86,18 +103,10 @@ const Login = () => {
     setTenant(value)
   }
 
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const savedTheme = localStorage.getItem('theme')
-    return (savedTheme as 'light' | 'dark') || 'light'
-  })
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('theme', theme)
-  }, [theme])
+  const { isDark: darkThemeActive, setTheme } = useTheme()
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
+    setTheme(darkThemeActive ? 'light' : 'dark')
   }
 
   return (
@@ -169,7 +178,7 @@ const Login = () => {
           <LanguageSwitcher className="w-[140px] dark:bg-zinc-800 dark:text-white" />
 
           <Button onClick={toggleTheme} variant="outline">
-            {theme === 'light' ? (
+            {!darkThemeActive ? (
               <Moon className="w-5 h-5" />
             ) : (
               <Sun className="w-5 h-5" />
@@ -179,7 +188,7 @@ const Login = () => {
 
         <div className="lg:h-[90%] flex flex-col items-center w-full max-w-md mx-auto">
           <img
-            src={theme === 'dark' ? mifosLogoDark : mifosLogoLight}
+            src={darkThemeActive ? mifosLogoDark : mifosLogoLight}
             alt="mifosLogo"
             className="h-[130px] m-6"
           />
@@ -193,77 +202,92 @@ const Login = () => {
             </SelectTrigger>
             <SelectContent className="dark:bg-zinc-800 dark:text-white">
               <SelectGroup>
-                <SelectItem value="default">Default</SelectItem>
+                {tenantOptions.map(option => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
 
-          <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-xs flex flex-col items-center mt-6"
-          >
-            <Input
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              type="text"
-              placeholder={t('auth:login.username')}
-              className="dark:bg-zinc-800 dark:text-white mb-4"
-            />
-
-            <div className="relative w-full mb-4">
-              <Input
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-                placeholder={t('auth:login.password')}
-                className="dark:bg-zinc-800 dark:text-white pr-10"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                onClick={() => setShowPassword(!showPassword)}
-                onMouseDown={e => e.preventDefault()}
-                aria-label={
-                  showPassword
-                    ? t('auth:login.hidePassword')
-                    : t('auth:login.showPassword')
-                }
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-zinc-500" />
-                ) : (
-                  <Eye className="h-4 w-4 text-zinc-500" />
-                )}
-              </Button>
-            </div>
-
-            <div className="flex items-center space-x-2 mb-4">
-              <Checkbox id="terms" />
-              <label htmlFor="terms" className="text-base dark:text-white">
-                {t('auth:login.rememberMe')}
-              </label>
-            </div>
-
-            {error && (
-              <p className="text-red-500 text-sm">{t('auth:login.error')}</p>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full text-base bg-sky-600 hover:bg-sky-700 cursor-pointer"
-              disabled={loading}
+          {!oidcOnly && (
+            <form
+              onSubmit={handleSubmit}
+              className="w-full max-w-xs flex flex-col items-center mt-6"
             >
-              {loading ? t('auth:login.submitting') : t('auth:login.submit')}
-            </Button>
-          </form>
+              <Input
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                type="text"
+                placeholder={t('auth:login.username')}
+                className="dark:bg-zinc-800 dark:text-white mb-4"
+              />
 
-          <Button variant="ghost" className="m-6 text-base cursor-pointer">
-            {t('auth:login.forgotPassword')}
-          </Button>
+              <div className="relative w-full mb-4">
+                <Input
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={t('auth:login.password')}
+                  className="dark:bg-zinc-800 dark:text-white pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  onMouseDown={e => e.preventDefault()}
+                  aria-label={
+                    showPassword
+                      ? t('auth:login.hidePassword')
+                      : t('auth:login.showPassword')
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-zinc-500" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-zinc-500" />
+                  )}
+                </Button>
+              </div>
+
+              <div className="flex items-center space-x-2 mb-4">
+                <Checkbox id="terms" />
+                <label htmlFor="terms" className="text-base dark:text-white">
+                  {t('auth:login.rememberMe')}
+                </label>
+              </div>
+
+              {error && (
+                <p className="text-red-500 text-sm">{t('auth:login.error')}</p>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full text-base bg-sky-600 hover:bg-sky-700 cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? t('auth:login.submitting') : t('auth:login.submit')}
+              </Button>
+            </form>
+          )}
+
+          {oidcOnly && (
+            <div className="w-full max-w-xs flex flex-col items-center">
+              <OidcLoginButton callbackFailed={oidcError} />
+            </div>
+          )}
+
+          {/* Password recovery belongs to the identity provider in OIDC mode. */}
+          {!oidcOnly && (
+            <Button variant="ghost" className="m-6 text-base cursor-pointer">
+              {t('auth:login.forgotPassword')}
+            </Button>
+          )}
 
           <div className="flex flex-wrap justify-center gap-3">
             <DropdownMenu>

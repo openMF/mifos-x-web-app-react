@@ -6,18 +6,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPen,
-  faDollarSign,
-  faCalendarAlt,
-  faSlidersH,
-  faTag,
-  faBook,
-} from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
-import AppStepper from '@/components/custom/stepper/AppStepper'
+import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
 import SavingsProductDetailsStep from './create-saving-products-stepper/SavingsProductDetailsStep'
 import SavingsProductCurrencyStep from './create-saving-products-stepper/SavingsProductCurrencyStep'
 import SavingsProductTermsStep from './create-saving-products-stepper/SavingsProductTermsStep'
@@ -27,339 +19,105 @@ import SavingsProductAccountingStep from './create-saving-products-stepper/Savin
 import {
   SavingsProductApi,
   type GetSavingsProductsTemplateResponse,
+  type PostSavingsProductsRequest,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const savingProductApi = new SavingsProductApi(getConfiguration())
+const savingsProductApi = new SavingsProductApi(getConfiguration())
 
 const CreateSavingsProducts = () => {
-  const [savingProductTemplate, setSavingProductTemplate] =
-    useState<GetSavingsProductsTemplateResponse>()
+  const navigate = useNavigate()
+  const [template, setTemplate] = useState<GetSavingsProductsTemplateResponse>()
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchSavingProductTemplateDetails = async () => {
-      try {
-        const response = await savingProductApi.retrieveTemplate20()
-        setSavingProductTemplate(response.data)
-      } catch (err) {
-        console.error('Failed to fetch Saving Product Response', err)
-      }
-    }
-    fetchSavingProductTemplateDetails()
-  }, [])
-
-  const mapDropdownOptions = <T,>(
-    set: Set<T> | undefined,
-    mapper: (item: T) => { id: string; name: string }
-  ): { id: string; name: string }[] => {
-    return Array.from(set ?? []).map(mapper)
-  }
-
-  const currencyOptions = Array.from(
-    savingProductTemplate?.currencyOptions ?? []
-  ).map(c => ({
-    id: c.code!,
-    name: c.name!,
-    decimalPlaces: c.decimalPlaces!,
-  }))
-
-  const compoundingPeriodOptions = mapDropdownOptions(
-    savingProductTemplate?.interestCompoundingPeriodTypeOptions,
-    o => ({ id: o.id!.toString(), name: o.value! })
-  )
-
-  const postingPeriodOptions = mapDropdownOptions(
-    savingProductTemplate?.interestPostingPeriodTypeOptions,
-    o => ({ id: o.id!.toString(), name: o.value! })
-  )
-
-  const interestCalculationOptions = mapDropdownOptions(
-    savingProductTemplate?.interestCalculationTypeOptions,
-    o => ({ id: o.id!.toString(), name: o.value! })
-  )
-
-  const daysInYearOptions = mapDropdownOptions(
-    savingProductTemplate?.interestCalculationDaysInYearTypeOptions,
-    o => ({ id: o.id!.toString(), name: o.value! })
-  )
-
-  const chargeOptions = Array.from(
-    savingProductTemplate?.chargeOptions ?? []
-  ).map(o => ({
-    id: o.id!.toString(),
-    name: o.name!,
-    chargeTimeType: o.chargeTimeType?.description ?? '',
-    amount: o.amount!,
-    chargeCalculationType: o.chargeCalculationType?.description ?? '',
-  }))
-
-  const [formData, setFormData] = useState<Record<string, unknown>>({
-    name: '',
-    shortName: '',
-    description: '',
-    currency: {
-      code: 'USD',
-      name: 'US Dollar',
-      decimalPlaces: 2,
-    },
-    decimalPlaces: 2,
-    currencyMultiples: '',
-
-    nominalAnnualInterestRate: 0,
-    interestCompoundingPeriod: '',
-    interestPostingPeriod: '',
-    interestCalculationType: '',
-    interestCalculationDaysInYearType: '',
-
-    // Settings
-    minOpeningBalance: 0,
-    balanceRequiredForInterestCalculation: 0,
-    lockinPeriodFrequency: 0,
-    minBalance: 0,
-    withdrawalFeeForTransfers: false,
-    enforceMinRequiredBalance: false,
-    withHoldTax: false,
-    allowOverdraft: false,
-    trackDormancy: false,
-
-    // Charges
-    charges: [],
-
-    // Accounting
-    accountingRule: '',
+  //form req for submitting savings product
+  const [formData, setFormData] = useState<PostSavingsProductsRequest>({
+    locale: 'en',
+    accountingRule: 1,
   })
 
-  // Each step component defines its own narrower FormData interface, but they all
-  // share a single flat state object. We cast through unknown to bridge the types.
-  const formDataBridge: unknown = formData
-  const setFormDataBridge: unknown = setFormData
+  //fetch initial data
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      try {
+        const response = await savingsProductApi.retrieveTemplate20()
+        setTemplate(response.data)
+      } catch (err) {
+        console.error('Failed to fetch Savings Product template', err)
+      }
+    }
+    fetchTemplate()
+  }, [])
 
-  const pages = [
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    try {
+      await savingsProductApi.create13(formData)
+      navigate('/products/saving-products')
+    } catch (err) {
+      console.error('Failed to create Savings Product', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const steps = [
     {
-      icon: <FontAwesomeIcon icon={faPen} className="text-base" />,
-      label: 'DETAILS',
+      title: 'Details',
+      prefix: 'SAVINGS PRODUCT',
       component: (
         <SavingsProductDetailsStep
-          formData={
-            formDataBridge as {
-              name: string
-              shortName: string
-              description: string
-              [key: string]: unknown
-            }
-          }
-          setFormData={
-            setFormDataBridge as (
-              updater: (prev: {
-                name: string
-                shortName: string
-                description: string
-                [key: string]: unknown
-              }) => {
-                name: string
-                shortName: string
-                description: string
-                [key: string]: unknown
-              }
-            ) => void
-          }
+          formData={formData}
+          onChange={data => setFormData(data)}
         />
       ),
     },
     {
-      icon: <FontAwesomeIcon icon={faDollarSign} className="text-base" />,
-      label: 'CURRENCY',
+      title: 'Currency',
+      prefix: 'SAVINGS PRODUCT',
       component: (
         <SavingsProductCurrencyStep
-          formData={
-            formDataBridge as {
-              currency: {
-                id: string
-                name: string
-                decimalPlaces: number
-              } | null
-              decimalPlaces: number
-              currencyMultiples: string
-              [key: string]: unknown
-            }
-          }
-          setFormData={
-            setFormDataBridge as (
-              updater: (prev: {
-                currency: {
-                  id: string
-                  name: string
-                  decimalPlaces: number
-                } | null
-                decimalPlaces: number
-                currencyMultiples: string
-                [key: string]: unknown
-              }) => {
-                currency: {
-                  id: string
-                  name: string
-                  decimalPlaces: number
-                } | null
-                decimalPlaces: number
-                currencyMultiples: string
-                [key: string]: unknown
-              }
-            ) => void
-          }
-          currencyOptions={currencyOptions}
+          formData={formData}
+          onChange={data => setFormData(data)}
+          template={template}
         />
       ),
     },
     {
-      icon: <FontAwesomeIcon icon={faCalendarAlt} className="text-base" />,
-      label: 'TERMS',
+      title: 'Terms',
+      prefix: 'SAVINGS PRODUCT',
       component: (
         <SavingsProductTermsStep
-          formData={
-            formDataBridge as {
-              nominalAnnualInterestRate: number
-              interestCompoundingPeriod: string
-              interestPostingPeriod: string
-              interestCalculationType: string
-              interestCalculationDaysInYearType: string
-              [key: string]: unknown
-            }
-          }
-          setFormData={
-            setFormDataBridge as (
-              updater: (prev: {
-                nominalAnnualInterestRate: number
-                interestCompoundingPeriod: string
-                interestPostingPeriod: string
-                interestCalculationType: string
-                interestCalculationDaysInYearType: string
-                [key: string]: unknown
-              }) => {
-                nominalAnnualInterestRate: number
-                interestCompoundingPeriod: string
-                interestPostingPeriod: string
-                interestCalculationType: string
-                interestCalculationDaysInYearType: string
-                [key: string]: unknown
-              }
-            ) => void
-          }
-          compoundingPeriodOptions={compoundingPeriodOptions}
-          postingPeriodOptions={postingPeriodOptions}
-          interestCalculationOptions={interestCalculationOptions}
-          daysInYearOptions={daysInYearOptions}
+          formData={formData}
+          onChange={data => setFormData(data)}
+          template={template}
         />
       ),
     },
     {
-      icon: <FontAwesomeIcon icon={faSlidersH} className="text-base" />,
-      label: 'SETTINGS',
-      component: (
-        <SavingsProductSettingsStep
-          formData={
-            formDataBridge as {
-              minOpeningBalance: number
-              balanceRequiredForInterestCalculation: number
-              lockinPeriodFrequency: number
-              minBalance: number
-              withdrawalFeeForTransfers: boolean
-              enforceMinRequiredBalance: boolean
-              withHoldTax: boolean
-              allowOverdraft: boolean
-              trackDormancy: boolean
-              [key: string]: unknown
-            }
-          }
-          setFormData={
-            setFormDataBridge as (
-              updater: (prev: {
-                minOpeningBalance: number
-                balanceRequiredForInterestCalculation: number
-                lockinPeriodFrequency: number
-                minBalance: number
-                withdrawalFeeForTransfers: boolean
-                enforceMinRequiredBalance: boolean
-                withHoldTax: boolean
-                allowOverdraft: boolean
-                trackDormancy: boolean
-                [key: string]: unknown
-              }) => {
-                minOpeningBalance: number
-                balanceRequiredForInterestCalculation: number
-                lockinPeriodFrequency: number
-                minBalance: number
-                withdrawalFeeForTransfers: boolean
-                enforceMinRequiredBalance: boolean
-                withHoldTax: boolean
-                allowOverdraft: boolean
-                trackDormancy: boolean
-                [key: string]: unknown
-              }
-            ) => void
-          }
-        />
-      ),
+      title: 'Settings',
+      prefix: 'SAVINGS PRODUCT',
+      component: <SavingsProductSettingsStep />,
     },
     {
-      icon: <FontAwesomeIcon icon={faTag} className="text-base" />,
-      label: 'CHARGES',
+      title: 'Charges',
+      prefix: 'SAVINGS PRODUCT',
       component: (
         <SavingsProductChargesStep
-          formData={
-            formDataBridge as {
-              charges: {
-                id: string
-                name: string
-                chargeTimeType: string
-                amount: number
-                chargeCalculationType: string
-              }[]
-              [key: string]: unknown
-            }
-          }
-          setFormData={
-            setFormDataBridge as (
-              updater: (prev: {
-                charges: {
-                  id: string
-                  name: string
-                  chargeTimeType: string
-                  amount: number
-                  chargeCalculationType: string
-                }[]
-                [key: string]: unknown
-              }) => {
-                charges: {
-                  id: string
-                  name: string
-                  chargeTimeType: string
-                  amount: number
-                  chargeCalculationType: string
-                }[]
-                [key: string]: unknown
-              }
-            ) => void
-          }
-          chargeOptions={chargeOptions}
+          formData={formData}
+          onChange={data => setFormData(data)}
+          template={template}
         />
       ),
     },
     {
-      icon: <FontAwesomeIcon icon={faBook} className="text-base" />,
-      label: 'ACCOUNTING',
+      title: 'Accounting',
+      prefix: 'SAVINGS PRODUCT',
       component: (
         <SavingsProductAccountingStep
-          formData={
-            formDataBridge as { accountingRule: string; [key: string]: unknown }
-          }
-          setFormData={
-            setFormDataBridge as (
-              updater: (prev: {
-                accountingRule: string
-                [key: string]: unknown
-              }) => { accountingRule: string; [key: string]: unknown }
-            ) => void
-          }
+          formData={formData}
+          onChange={data => setFormData(data)}
+          template={template}
         />
       ),
     },
@@ -380,7 +138,15 @@ const CreateSavingsProducts = () => {
 
       <div className="bg-white dark:bg-zinc-900 border rounded-md shadow-sm p-6">
         <h1 className="text-2xl font-semibold mb-10">Create Savings Product</h1>
-        <AppStepper steps={pages} />
+        {/* Multistep form component */}
+        <MultiStepForm
+          prefix="SAVINGS PRODUCT"
+          steps={steps}
+          onSubmit={handleSubmit}
+          onCancel={() => navigate('/products/saving-products')}
+          isLoading={isLoading}
+          submitLabel="Submit"
+        />
       </div>
     </div>
   )

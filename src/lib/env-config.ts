@@ -47,22 +47,89 @@ export const envConfig = {
     'default'
   ),
 
+  /**
+   * More tenants to offer on the sign-in page, comma separated. Same variable
+   * as the Angular web-app.
+   */
+  tenantIds: env(
+    'FINERACT_PLATFORM_TENANTS_IDENTIFIER',
+    'VITE_FINERACT_PLATFORM_TENANTS_IDENTIFIER',
+    ''
+  ),
+
   /** Whether OIDC authentication is enabled */
   oidcEnabled:
-    env('FINERACT_PLUGIN_OIDC_ENABLED', '', 'false').toLowerCase() === 'true',
+    env(
+      'FINERACT_PLUGIN_OIDC_ENABLED',
+      'VITE_FINERACT_PLUGIN_OIDC_ENABLED',
+      'false'
+    ).toLowerCase() === 'true',
 
   /** OIDC provider base URL */
-  oidcBaseUrl: env('FINERACT_PLUGIN_OIDC_BASE_URL', '', ''),
+  oidcBaseUrl: env(
+    'FINERACT_PLUGIN_OIDC_BASE_URL',
+    'VITE_FINERACT_PLUGIN_OIDC_BASE_URL',
+    ''
+  ),
 
   /** OIDC client ID */
-  oidcClientId: env('FINERACT_PLUGIN_OIDC_CLIENT_ID', '', ''),
+  oidcClientId: env(
+    'FINERACT_PLUGIN_OIDC_CLIENT_ID',
+    'VITE_FINERACT_PLUGIN_OIDC_CLIENT_ID',
+    ''
+  ),
 
-  /** OIDC API URL */
-  oidcApiUrl: env('FINERACT_PLUGIN_OIDC_API_URL', '', ''),
+  /** Base URL of the Mifos security plugin's /authentication endpoints */
+  oidcApiUrl: env(
+    'FINERACT_PLUGIN_OIDC_API_URL',
+    'VITE_FINERACT_PLUGIN_OIDC_API_URL',
+    ''
+  ),
 
   /** OIDC frontend URL */
-  oidcFrontendUrl: env('FINERACT_PLUGIN_OIDC_FRONTEND_URL', '', ''),
+  oidcFrontendUrl: env(
+    'FINERACT_PLUGIN_OIDC_FRONTEND_URL',
+    'VITE_FINERACT_PLUGIN_OIDC_FRONTEND_URL',
+    ''
+  ),
 
   /** Default UI language */
   defaultLanguage: env('MIFOS_DEFAULT_LANGUAGE', '', 'en-US'),
+
+  /**
+   * Master switch for the Copilot AI assistant. Off by default, so a
+   * deployment opts in. Same variable name as the Angular web-app, so one
+   * deployment's configuration serves both.
+   */
+  copilotEnabled:
+    env(
+      'MIFOS_ENABLE_COPILOT',
+      'VITE_MIFOS_ENABLE_COPILOT',
+      'false'
+    ).toLowerCase() === 'true',
+
+  /**
+   * Base URL of the Copilot gateway (openMF/mcp-mifosx/gateway). The literal
+   * value 'mock', or an empty value, serves recorded responses so the
+   * assistant can be developed without a gateway.
+   */
+  copilotGatewayUrl: env(
+    'MIFOS_COPILOT_MCP_BASE_URL',
+    'VITE_MIFOS_COPILOT_MCP_BASE_URL',
+    'mock'
+  ),
+
+  /**
+   * Sign the user out after this many milliseconds without activity in any
+   * tab; 0 turns it off. Same variable and 5 minute default as the Angular
+   * web-app.
+   */
+  sessionIdleTimeout:
+    Number(
+      env(
+        'MIFOS_SESSION_IDLE_TIMEOUT',
+        'VITE_MIFOS_SESSION_IDLE_TIMEOUT',
+        '300000'
+      )
+    ) || 0,
 } as const

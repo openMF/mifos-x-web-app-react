@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import { Separator } from '@/components/ui/separator'
 import { FloatingRatesApi, type FloatingRateData } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -44,6 +45,8 @@ const ViewFloatingRates = () => {
           { label: rates?.name ?? 'View', current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mb-6" />
 
       <div className="bg-white dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-700 shadow-sm">
         {/* Details section */}

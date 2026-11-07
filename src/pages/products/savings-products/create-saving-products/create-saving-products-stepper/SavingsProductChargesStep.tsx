@@ -17,79 +17,94 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import type {
+  PostSavingsProductsRequest,
+  GetSavingsProductsTemplateResponse,
+  PostSavingsCharges,
+} from '@/fineract-api'
 
-type ChargeOption = {
-  id: string
-  name: string
-  amount: number
-  chargeTimeType: string
-  chargeCalculationType: string
-}
-
-interface SavingsProductChargesFormData {
-  charges: ChargeOption[]
-  [key: string]: unknown
+interface SavingsProductChargesStepProps {
+  formData: PostSavingsProductsRequest
+  onChange: (data: PostSavingsProductsRequest) => void
+  template: GetSavingsProductsTemplateResponse | undefined
 }
 
 const SavingsProductChargesStep = ({
   formData,
-  setFormData,
-  chargeOptions,
-}: {
-  formData: SavingsProductChargesFormData
-  setFormData: (
-    updater: (
-      prev: SavingsProductChargesFormData
-    ) => SavingsProductChargesFormData
-  ) => void
-  chargeOptions: ChargeOption[]
-}) => {
+  onChange,
+  template,
+}: SavingsProductChargesStepProps) => {
   const [selectedChargeId, setSelectedChargeId] = useState('')
 
+  const chargeOptions = Array.from(template?.chargeOptions ?? []).map(
+    option => ({
+      id: option.id!.toString(),
+      name: option.name!,
+      chargeTimeType: option.chargeTimeType?.code ?? '',
+      amount: option.amount!,
+      chargeCalculationType: option.chargeCalculationType?.code ?? '',
+    })
+  )
+
+  const addedCharges = Array.from(formData.charges ?? [])
+
   const handleAdd = () => {
-    const selectedCharge = chargeOptions.find(c => c.id === selectedChargeId)
-    if (selectedCharge) {
-      setFormData(prev => ({
-        ...prev,
-        charges: [...(prev.charges || []), selectedCharge],
-      }))
-      setSelectedChargeId('')
-    }
+    const selected = chargeOptions.find(c => c.id === selectedChargeId)
+    if (!selected) return
+    const alreadyAdded = addedCharges.some(
+      c => (c as PostSavingsCharges).id === +selected.id
+    )
+    if (alreadyAdded) return
+    onChange({
+      ...formData,
+      charges: new Set([...addedCharges, { id: +selected.id }]),
+    })
+    setSelectedChargeId('')
   }
 
   const handleRemove = (id: string) => {
-    setFormData(prev => ({
-      ...prev,
-      charges: prev.charges.filter((c: ChargeOption) => c.id !== id),
-    }))
+    onChange({
+      ...formData,
+      charges: new Set(
+        addedCharges.filter((c: PostSavingsCharges) => c.id?.toString() !== id)
+      ),
+    })
   }
+
+  const displayedCharges = addedCharges.map((c: PostSavingsCharges) => {
+    const match = chargeOptions.find(o => o.id === c.id?.toString())
+    return (
+      match ?? {
+        id: c.id?.toString(),
+        name: '',
+        chargeTimeType: '',
+        amount: 0,
+        chargeCalculationType: '',
+      }
+    )
+  })
 
   return (
     <div className="space-y-6">
-      {/* Dropdown + Add */}
       <div className="flex flex-col md:flex-row items-end gap-4">
-        <div className="flex-1">
-          <AppSelect
-            selectLabel="Charge"
-            selectPlaceholder="Select Charge"
-            selectValue={selectedChargeId}
-            selectOnChange={setSelectedChargeId}
-            selectOptions={chargeOptions.map(c => ({
-              id: c.id,
-              name: c.name,
-            }))}
-          />
-        </div>
-
-        <div>
-          <Button variant="outline" onClick={handleAdd}>
-            + Add
-          </Button>
-        </div>
+        <AppSelect
+          selectLabel="Charge"
+          selectPlaceholder="Select Charge"
+          selectValue={selectedChargeId}
+          selectOnChange={setSelectedChargeId}
+          selectOptions={chargeOptions.map(c => ({ id: c.id, name: c.name }))}
+          selectClassname="flex-1"
+        />
+        <Button
+          variant="outline"
+          onClick={handleAdd}
+          disabled={!selectedChargeId}
+        >
+          + Add
+        </Button>
       </div>
 
-      {/* Table of added charges */}
-      {(formData.charges || []).length > 0 && (
+      {displayedCharges.length > 0 && (
         <Table>
           <TableHeader>
             <TableRow>
@@ -101,7 +116,7 @@ const SavingsProductChargesStep = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {formData.charges.map((charge: ChargeOption) => (
+            {displayedCharges.map(charge => (
               <TableRow key={charge.id}>
                 <TableCell>{charge.name}</TableCell>
                 <TableCell>{charge.chargeCalculationType}</TableCell>
@@ -111,7 +126,7 @@ const SavingsProductChargesStep = ({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleRemove(charge.id)}
+                    onClick={() => handleRemove(charge.id ?? '')}
                   >
                     <Trash className="h-4 w-4 text-red-600" />
                   </Button>

@@ -8,73 +8,110 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { default as _AppSelect } from '@/components/custom/select/AppSelect' // Reserved for future use
+import { Textarea } from '@/components/ui/textarea'
+import type { PostLoanProductsRequest } from '@/fineract-api'
 
-// interface LoanProductDetailProps {
-//     fund: string;
-//     setFund: (value: string) => void;
-//     fundOptions?: { id: number; name: string }[];
-// }
+interface LoanProductDetailsStepProps {
+  formData: PostLoanProductsRequest
+  onChange: (data: PostLoanProductsRequest) => void
+}
 
-const LoanProductDetailsStep = () => {
+const LoanProductDetailsStep = ({
+  formData,
+  onChange,
+}: LoanProductDetailsStepProps) => {
   return (
     <div className="flex flex-col gap-6">
+      {/* Loan Product details */}
+      <div className="space-y-2">
+        <Label>Loan Product Name*</Label>
+        <Input
+          maxLength={100}
+          placeholder="Loan Product Name"
+          value={formData.name ?? ''}
+          onChange={e => {
+            onChange({ ...formData, name: e.target.value })
+          }}
+        />
+      </div>
+
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 space-y-2">
-          <Label>Product Name*</Label>
-          <Input />
+          <Label>Short Name*</Label>
+          <Input
+            maxLength={4}
+            placeholder="Short Name"
+            value={formData.shortName ?? ''}
+            onChange={e => {
+              onChange({ ...formData, shortName: e.target.value })
+            }}
+          />
         </div>
-
         <div className="flex-1 space-y-2">
           <Label>External Id</Label>
-          <Input />
+          <Input
+            maxLength={100}
+            placeholder="External Id"
+            value={formData.externalId ?? ''}
+            onChange={e =>
+              onChange({ ...formData, externalId: e.target.value })
+            }
+          />
         </div>
       </div>
 
-      {/* Row 2: Short Name */}
-      <div className="flex-1 space-y-2">
-        <Label>Short Name*</Label>
-        <Input />
+      <div className="space-y-2">
+        <Label>Description</Label>
+        <Textarea
+          maxLength={500}
+          placeholder="Description"
+          className="min-h-[100px]"
+          value={formData.description ?? ''}
+          onChange={e => onChange({ ...formData, description: e.target.value })}
+        />
       </div>
 
-      {/* Row 3: Fund + Include Checkbox */}
-      <div className="flex flex-col md:flex-row gap-6 items-end">
-        <div className="flex-1 space-y-2">
-          <Label>Fund</Label>
-          {/* <AppSelect
-                        selectLabel="Fund"
-                        selectValue={fund}
-                        selectPlaceholder="Select Fund"
-                        selectOnChange={setFund}
-                        selectOptions={fundOptions || []}
-                    /> */}
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex">
-            <Checkbox className="mr-4" />
-            <Label className="text-sm">Include in Customer Loan Counter</Label>
-          </div>
-        </div>
-      </div>
-
-      {/* Row 4: Start Date + Close Date */}
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 space-y-2">
           <Label>Start Date</Label>
-          <Input type="date" />
+          <Input
+            type="date"
+            value={formData.startDate ?? ''}
+            onChange={e => onChange({ ...formData, startDate: e.target.value })}
+          />
         </div>
-
         <div className="flex-1 space-y-2">
           <Label>Close Date</Label>
-          <Input type="date" />
+          <Input
+            type="date"
+            value={formData.closeDate ?? ''}
+            onChange={e => onChange({ ...formData, closeDate: e.target.value })}
+          />
         </div>
       </div>
 
-      {/* Row 5: Description */}
-      <div className="space-y-2">
-        <Label>Description</Label>
-        <Input />
+      <div className="flex flex-col md:flex-row gap-6 items-center">
+        <div className="flex-1 space-y-2">
+          <Label>Fund</Label>
+          <div className="w-full rounded-md border border-input px-3 py-2 text-sm text-muted-foreground bg-muted/40">
+            Missing in OpenAPI
+          </div>
+        </div>
+        <div className="flex items-center gap-3 pb-1">
+          <Checkbox
+            id="includeInBorrowerCycle"
+            checked={formData.includeInBorrowerCycle ?? false}
+            onCheckedChange={v =>
+              onChange({ ...formData, includeInBorrowerCycle: !!v })
+            }
+          />
+          <Label
+            htmlFor="includeInBorrowerCycle"
+            className="cursor-pointer font-normal"
+          >
+            Include in Customer Loan Counter
+          </Label>
+        </div>
       </div>
     </div>
   )

@@ -94,7 +94,7 @@ const ManageTaxComponents = () => {
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
           onClick={() =>
-            navigate('/products/tax-configurations/components/create')
+            navigate('/products/tax-configurations/tax-components/create')
           }
         >
           <Plus className="mr-2" /> Create Tax Component
@@ -174,6 +174,11 @@ const ManageTaxComponents = () => {
               <TableRow
                 key={c.id}
                 className="text-base hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                onClick={() =>
+                  navigate(
+                    `/products/tax-configurations/tax-components/${c.id}`
+                  )
+                }
               >
                 <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
                   {c.name}

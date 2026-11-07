@@ -9,8 +9,10 @@ import { useEffect, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
 
 import type {
   GetLoansLoanIdResponse,
@@ -403,6 +405,12 @@ const LoansView = () => {
   const productName = loan?.loanProductName ?? '—'
   const accountNo = loan?.accountNo ?? '—'
   const borrowerName = loan?.group?.name ?? loan?.clientName ?? '—'
+  const breadcrumbs = useAccountBreadcrumbs({
+    ownerLabel: loan?.group?.name ?? loan?.clientName,
+    accountLabel: loan?.accountNo,
+  })
+
+  const datatables = useEntityDatatables('m_loan')
 
   // build actions + tabs
   const actions = loan ? buildLoanMenu(loan, groupId, loanId) : []
@@ -416,19 +424,16 @@ const LoansView = () => {
     { label: 'Term Variations', href: `${base}/term-variations` },
     { label: 'Loan Documents', href: `${base}/loan-documents` },
     { label: 'Notes', href: `${base}/notes` },
+    ...datatables.map(datatable => ({
+      label: datatable.label,
+      href: `${base}/datatables/${encodeURIComponent(datatable.name)}`,
+    })),
   ]
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       {/* breadcrumbs */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: borrowerName, href: `/groups/${groupId}/general` },
-          { label: 'Loans', href: `/groups/${groupId}/loans-accounts` },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* loan header card */}
       <div className="bg-[#0e77b7] text-white p-6 mt-6 rounded-t-lg flex justify-between items-start relative">

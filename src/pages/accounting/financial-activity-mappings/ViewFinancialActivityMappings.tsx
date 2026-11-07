@@ -60,7 +60,7 @@ const ViewFinancialActivityMappings = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Accounting' },
+          { label: 'Accounting', href: '/accounting' },
           {
             label: 'Financial Activity Mappings',
             href: '/accounting/financial-activity-mappings',

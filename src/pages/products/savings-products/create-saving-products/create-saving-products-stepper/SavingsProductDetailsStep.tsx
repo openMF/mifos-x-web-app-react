@@ -7,70 +7,51 @@
  */
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import type { PostSavingsProductsRequest } from '@/fineract-api'
 
-interface SavingsProductDetailsFormData {
-  name: string
-  shortName: string
-  description: string
-  [key: string]: unknown
+interface SavingsProductDetailsStepProps {
+  formData: PostSavingsProductsRequest
+  onChange: (data: PostSavingsProductsRequest) => void
 }
 
 const SavingsProductDetailsStep = ({
   formData,
-  setFormData,
-}: {
-  formData: SavingsProductDetailsFormData
-  setFormData: (
-    updater: (
-      prev: SavingsProductDetailsFormData
-    ) => SavingsProductDetailsFormData
-  ) => void
-}) => {
+  onChange,
+}: SavingsProductDetailsStepProps) => {
   return (
     <div className="flex flex-col gap-6">
-      {/* Row 1: Product Name & Short Name */}
+      {/* Saving Product details step */}
+      <div className="space-y-2">
+        <Label>Product Name*</Label>
+        <Input
+          maxLength={100}
+          placeholder="Product Name"
+          value={formData.name ?? ''}
+          onChange={e => onChange({ ...formData, name: e.target.value })}
+        />
+      </div>
+
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 space-y-2">
-          <Label htmlFor="productName">Product Name*</Label>
+          <Label>Short Name*</Label>
           <Input
-            id="productName"
-            value={formData.name}
-            onChange={e =>
-              setFormData(prev => ({
-                ...prev,
-                name: e.target.value,
-              }))
-            }
-          />
-        </div>
-
-        <div className="flex-1 space-y-2">
-          <Label htmlFor="shortName">Short Name*</Label>
-          <Input
-            id="shortName"
-            value={formData.shortName}
-            onChange={e =>
-              setFormData(prev => ({
-                ...prev,
-                shortName: e.target.value,
-              }))
-            }
+            maxLength={4}
+            placeholder="Short Name"
+            value={formData.shortName ?? ''}
+            onChange={e => onChange({ ...formData, shortName: e.target.value })}
           />
         </div>
       </div>
 
-      {/* Row 2: Description */}
-      <div className="flex-1 space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Input
-          id="description"
-          value={formData.description}
-          onChange={e =>
-            setFormData(prev => ({
-              ...prev,
-              description: e.target.value,
-            }))
-          }
+      <div className="space-y-2">
+        <Label>Description</Label>
+        <Textarea
+          maxLength={500}
+          placeholder="Description"
+          className="min-h-[100px]"
+          value={formData.description ?? ''}
+          onChange={e => onChange({ ...formData, description: e.target.value })}
         />
       </div>
     </div>

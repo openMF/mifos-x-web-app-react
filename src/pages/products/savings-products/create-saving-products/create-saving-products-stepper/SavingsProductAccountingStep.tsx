@@ -7,47 +7,44 @@
  */
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import type {
+  PostSavingsProductsRequest,
+  GetSavingsProductsTemplateResponse,
+} from '@/fineract-api'
 
-interface SavingsProductAccountingFormData {
-  accountingRule: string
-  [key: string]: unknown
+interface SavingsProductAccountingStepProps {
+  formData: PostSavingsProductsRequest
+  onChange: (data: PostSavingsProductsRequest) => void
+  template: GetSavingsProductsTemplateResponse | undefined
 }
+
+const accountingRules = [
+  { value: '1', label: 'None' },
+  { value: '2', label: 'Cash' },
+  { value: '3', label: 'Accrual (Periodic)' },
+  { value: '4', label: 'Accrual (Upfront)' },
+]
 
 const SavingsProductAccountingStep = ({
   formData,
-  setFormData,
-}: {
-  formData: SavingsProductAccountingFormData
-  setFormData: (
-    updater: (
-      prev: SavingsProductAccountingFormData
-    ) => SavingsProductAccountingFormData
-  ) => void
-}) => {
+  onChange,
+}: SavingsProductAccountingStepProps) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <RadioGroup
-        value={formData.accountingRule}
-        onValueChange={val =>
-          setFormData(prev => ({
-            ...prev,
-            accountingRule: val,
-          }))
-        }
+        value={formData.accountingRule?.toString() ?? '1'}
+        onValueChange={val => onChange({ ...formData, accountingRule: +val })}
         className="flex gap-6"
       >
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="none" id="none" />
-          <Label htmlFor="none">None</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="cash" id="cash" />
-          <Label htmlFor="cash">Cash</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="accrual" id="accrual" />
-          <Label htmlFor="accrual">Accrual (periodic)</Label>
-        </div>
+        {accountingRules.map(rule => (
+          <div key={rule.value} className="flex items-center space-x-2">
+            <RadioGroupItem
+              value={rule.value}
+              id={`accounting-${rule.value}`}
+            />
+            <Label htmlFor={`accounting-${rule.value}`}>{rule.label}</Label>
+          </div>
+        ))}
       </RadioGroup>
     </div>
   )

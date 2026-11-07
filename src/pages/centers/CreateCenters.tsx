@@ -48,6 +48,8 @@ const CreateCenters = () => {
     externalId: '',
     submittedOnDate: '',
     activationDate: '',
+    dateFormat: 'dd MMMM yyyy',
+    locale: 'en',
   })
 
   // Fetch offices + staff on mount
@@ -161,13 +163,26 @@ const CreateCenters = () => {
               <Label>{t('create.labelActivationDate')}</Label>
               <Input
                 type="date"
-                value={formData.activationDate}
-                onChange={e =>
+                value={
+                  formData.activationDate
+                    ? new Date(formData.activationDate)
+                        .toISOString()
+                        .split('T')[0]
+                    : ''
+                }
+                onChange={e => {
+                  const val = e.target.value
                   setFormData(prev => ({
                     ...prev,
-                    activationDate: e.target.value,
+                    activationDate: val
+                      ? new Date(val).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                        })
+                      : '',
                   }))
-                }
+                }}
               />
             </div>
           )}
@@ -188,13 +203,26 @@ const CreateCenters = () => {
             <Label>{t('create.labelSubmittedOn')}</Label>
             <Input
               type="date"
-              value={formData.submittedOnDate}
-              onChange={e =>
+              value={
+                formData.submittedOnDate
+                  ? new Date(formData.submittedOnDate)
+                      .toISOString()
+                      .split('T')[0]
+                  : ''
+              }
+              onChange={e => {
+                const val = e.target.value
                 setFormData(prev => ({
                   ...prev,
-                  submittedOnDate: e.target.value,
+                  submittedOnDate: val
+                    ? new Date(val).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    : '',
                 }))
-              }
+              }}
               required
             />
           </div>

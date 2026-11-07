@@ -99,7 +99,6 @@ const ViewUsers = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Accounting' },
           { label: 'Users', href: '/appusers' },
           { label: `${users?.id}`, current: true },
         ]}

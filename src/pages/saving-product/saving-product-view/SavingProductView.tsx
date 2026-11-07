@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 
@@ -174,6 +175,10 @@ const SavingsAccountView = () => {
   const productName = acct?.savingsProductName ?? '—'
   const accountNo = acct?.accountNo ?? '—'
   const holderName = acct?.groupName ?? acct?.clientName ?? '—'
+  const breadcrumbs = useAccountBreadcrumbs({
+    ownerLabel: acct?.groupName ?? acct?.clientName,
+    accountLabel: acct?.accountNo,
+  })
 
   // Build action menu items
   const actions = buildSavingsMenu(s || {}, groupId, accountId)
@@ -191,14 +196,7 @@ const SavingsAccountView = () => {
   return (
     <div className="min-h-screen px-6 py-10">
       {/* Breadcrumb navigation at the top */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: holderName, href: `/groups/${groupId}/general` },
-          { label: 'Savings', href: `/groups/${groupId}/savings` },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* Outer card container with blue header and tabs */}
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-hidden max-w-7xl mx-auto mt-6">

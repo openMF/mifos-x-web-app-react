@@ -1,0 +1,221 @@
+/**
+ * Copyright since 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import ClientGeneralStep from './create-clients-stepper/ClientGeneralStep'
+import { todayInputValue } from '@/lib/date-utils'
+import { getConfiguration } from '@/lib/fineract-openapi'
+import { ClientApi } from '@/fineract-api'
+import type {
+  ExtendedClientTemplate,
+  ExtendedPostClientsRequest,
+} from '@/pages/clients/types'
+import { useEffect, useState } from 'react'
+import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
+import type { AxiosError } from 'axios'
+
+const clientApi = new ClientApi(getConfiguration())
+
+/** Fineract legal form ids, from the clientLegalFormOptions template */
+const LEGAL_FORM_ENTITY = 2
+
+type ClientApiErrorResponse = {
+  defaultUserMessage?: string
+  errors?: Array<{
+    defaultUserMessage?: string
+  }>
+}
+
+const getClientErrorMessage = (error: unknown, fallback: string) => {
+  const axiosError = error as AxiosError<ClientApiErrorResponse>
+  const responseData = axiosError.response?.data
+
+  return (
+    responseData?.errors?.[0]?.defaultUserMessage ||
+    responseData?.defaultUserMessage ||
+    fallback
+  )
+}
+
+/**
+ * Fineract stores an entity's name in fullname and a person's in
+ * firstname/middlename/lastname, and rejects a request that carries both. The
+ * form collects a first and last name either way, so join them for an entity.
+ */
+const buildClientRequest = (
+  formData: ExtendedPostClientsRequest
+): ExtendedPostClientsRequest => {
+  if (formData.legalFormId !== LEGAL_FORM_ENTITY) {
+    return formData
+  }
+
+  const { firstname, middlename: _middlename, lastname, ...rest } = formData
+  return {
+    ...rest,
+    fullname:
+      [firstname?.trim(), lastname?.trim()].filter(Boolean).join(' ') ||
+      undefined,
+  }
+}
+
+const CreateClients = () => {
+  const navigate = useNavigate()
+  const { t } = useTranslation('clients')
+  const { t: tc } = useTranslation('common')
+  const [clientTemplate, setClientTemplate] = useState<ExtendedClientTemplate>()
+
+  const [formData, setFormData] = useState<ExtendedPostClientsRequest>({
+    locale: 'en',
+    dateFormat: 'yyyy-MM-dd',
+    legalFormId: 1,
+    active: false,
+    // Fineract requires it and the Angular app defaults it to today
+    submittedOnDate: todayInputValue(),
+  })
+
+  // Fetch the template, and refetch it when the office changes so the Staff
+  // dropdown lists that office's staff (Fineract only returns staffOptions
+  // for a given officeId)
+  useEffect(() => {
+    // Drop the previous office's staff while the new list loads, and ignore a
+    // late response for an office the user has already moved away from
+    let stale = false
+    setClientTemplate(prev =>
+      prev ? { ...prev, staffOptions: undefined } : prev
+    )
+    const fetchTemplate = async () => {
+      try {
+        const response = await clientApi.retrieveTemplate5(
+          formData.officeId,
+          undefined,
+          formData.officeId ? true : undefined
+        )
+        if (stale) return
+        // The generated type lacks the code value option lists the API returns
+        setClientTemplate(response.data as ExtendedClientTemplate)
+      } catch (err) {
+        console.log('Failed to fetch initial data: ', err)
+      }
+    }
+    fetchTemplate()
+    return () => {
+      stale = true
+    }
+  }, [formData.officeId])
+
+  const handleSubmit = async () => {
+    try {
+      const response = await clientApi.create6(buildClientRequest(formData))
+      // Land on the new client rather than the list, which hides a pending
+      // client, and carry a message so the create is confirmed either way
+      const clientId = response.data?.clientId ?? response.data?.resourceId
+      const state: RouteSuccessState = {
+        successMessage: t('success.clientCreated'),
+      }
+      navigate(clientId ? `/clients/${clientId}` : '/clients', { state })
+    } catch (error) {
+      // Surfaced by the stepper, which shows the message above the buttons
+      throw new Error(
+        getClientErrorMessage(error, t('form.errors.createFailed'))
+      )
+    }
+  }
+
+  // Fineract rejects these outright, so catch them before the request goes out
+  const validateGeneral = (): string | null => {
+    if (!formData.officeId) {
+      return t('form.errors.officeRequired')
+    }
+    // Fineract treats a name of only spaces as blank
+    const firstname = formData.firstname?.trim()
+    const lastname = formData.lastname?.trim()
+    // An entity's name is one fullname, so either field is enough
+    if (formData.legalFormId === LEGAL_FORM_ENTITY) {
+      if (!firstname && !lastname) {
+        return t('form.errors.entityNameRequired')
+      }
+    } else if (!firstname || !lastname) {
+      return t('form.errors.namesRequired')
+    }
+    if (!formData.submittedOnDate) {
+      return t('form.errors.submittedOnRequired')
+    }
+    if (formData.submittedOnDate > todayInputValue()) {
+      return t('form.errors.submittedOnInFuture')
+    }
+    if (formData.active && !formData.activationDate) {
+      return t('form.errors.activationDateRequired')
+    }
+    // The date input's max is not enforced: the stepper submits with a button
+    if (
+      formData.active &&
+      formData.activationDate &&
+      formData.activationDate > todayInputValue()
+    ) {
+      return t('form.errors.activationDateInFuture')
+    }
+    // Fineract rejects an activation date before the submitted on date
+    if (
+      formData.active &&
+      formData.activationDate &&
+      formData.activationDate < formData.submittedOnDate
+    ) {
+      return t('form.errors.activationDateBeforeSubmitted')
+    }
+    return null
+  }
+
+  if (!clientTemplate) {
+    return <div className="text-center py-10">{t('form.loadingTemplate')}</div>
+  }
+
+  //stepper forms
+  const steps = [
+    {
+      title: t('form.stepGeneral'),
+      validate: validateGeneral,
+      component: (
+        <ClientGeneralStep
+          formData={formData}
+          onChange={setFormData}
+          template={clientTemplate}
+        />
+      ),
+    },
+  ]
+
+  return (
+    <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px] text-zinc-800 dark:text-zinc-200">
+      <div className="mb-8">
+        <AppBreadCrumbs
+          items={[
+            { label: tc('nav.home'), href: '/home' },
+            { label: t('title'), href: '/clients' },
+            { label: t('form.createTitle'), current: true },
+          ]}
+        />
+      </div>
+
+      <div className="bg-white dark:bg-zinc-900 border rounded-md shadow-sm p-6">
+        <h1 className="text-2xl font-semibold mb-10">
+          {t('form.createTitle')}
+        </h1>
+        <MultiStepForm
+          prefix={t('client')}
+          steps={steps}
+          onSubmit={handleSubmit}
+          onCancel={() => navigate('/clients')}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default CreateClients

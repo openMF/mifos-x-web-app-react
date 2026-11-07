@@ -8,11 +8,34 @@
 import MfNavbar from '@/components/custom/navbar/MfNavbar'
 import { AppSidebar } from '@/components/custom/sidebar/AppSidebar'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { type CSSProperties } from 'react'
+import { useSidebar } from '@/components/ui/sidebar'
+import { useGlobalShortcuts } from '@/hooks/use-global-shortcuts'
+import { useTheme } from '@/hooks/use-theme'
+import { useLogout } from '@/hooks/use-logout'
+import SessionTimeout from '@/components/custom/session/SessionTimeout'
+
+const LayoutShortcuts = () => {
+  const navigate = useNavigate()
+  const logout = useLogout()
+  const { toggleSidebar } = useSidebar()
+
+  useGlobalShortcuts({
+    navigate,
+    toggleSidebar,
+    logout,
+  })
+
+  return null
+}
 
 const Layout = () => {
+  useTheme()
   return (
-    <SidebarProvider>
+    <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
+      <LayoutShortcuts />
+      <SessionTimeout />
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-col flex-1 w-full">

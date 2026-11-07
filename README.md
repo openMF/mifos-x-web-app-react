@@ -107,6 +107,14 @@ For production with security hardening and resource limits:
 docker compose -f docker-compose-zitadel.yml -f docker-compose.prod.yml up -d
 ```
 
+The production overlay requires TLS on both database connections
+(`sslmode=verify-full`). Before starting it, place `ca.crt`, `server.crt`,
+`server.key` and a `pg_hba.conf` in the directory given by `POSTGRES_TLS_DIR`,
+and the same `ca.crt` in `FINERACT_TLS_DIR`. The server certificate must carry a
+subject alternative name of `fineractpostgres`. A starting point for the hba
+file is provided at `fineract-db/tls/pg_hba.conf.sample`, which refuses any
+connection that is not encrypted.
+
 ### Using Pre-built Docker Image
 
 Pull and run the latest image from Docker Hub:
@@ -145,12 +153,24 @@ For Docker environment variables, see `.env.docker.sample`.
 
 The application uses environment variables for configuration. Copy `.env.sample` to `.env` or `.env.development.local` and adjust the values as needed.
 
-| Variable                                   | Description                                               | Default                  |
-| ------------------------------------------ | --------------------------------------------------------- | ------------------------ |
-| `VITE_FINERACT_API_URL`                    | Base URL for the Fineract server (protocol + host + port) | `https://localhost:8443` |
-| `VITE_FINERACT_API_PROVIDER`               | API path prefix                                           | `/fineract-provider`     |
-| `VITE_FINERACT_API_VERSION`                | API version path                                          | `/api`                   |
-| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER` | Tenant identifier for multi-tenant deployments            | `default`                |
+| Variable                                    | Description                                                | Default                  |
+| ------------------------------------------- | ---------------------------------------------------------- | ------------------------ |
+| `VITE_FINERACT_API_URL`                     | Base URL for the Fineract server (protocol + host + port)  | `https://localhost:3000` |
+| `VITE_FINERACT_API_PROVIDER`                | API path prefix                                            | `/fineract-provider`     |
+| `VITE_FINERACT_API_VERSION`                 | API version path                                           | `/api`                   |
+| `VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER`  | Tenant identifier for multi-tenant deployments             | `default`                |
+| `VITE_FINERACT_PLATFORM_TENANTS_IDENTIFIER` | More tenants to offer on the sign-in page, comma separated | (empty)                  |
+| `VITE_MIFOS_SESSION_IDLE_TIMEOUT`           | Sign out after this many ms without activity (0 = off)     | `300000`                 |
+
+> **Note:** In development, `.env.development` intentionally leaves
+> `VITE_FINERACT_API_URL` empty so requests use relative URLs and go through the
+> Vite dev proxy, which forwards `/fineract-provider/*` to the value above (see
+> `vite.config.ts`). `3000` is the host port the Docker Compose stack publishes
+> for Fineract. Only override this if you run Fineract yourself on another port.
+>
+> `.env.development` also sets `VITE_MIFOS_SESSION_IDLE_TIMEOUT=0`, so the dev
+> server never signs you out for inactivity. To test the idle timeout locally,
+> set a value such as `60000` in `.env.development.local`.
 
 ### Manual Fineract Setup (Without Docker)
 

@@ -7,9 +7,11 @@
  */
 import { Outlet, Navigate } from 'react-router-dom'
 
+import { hasSession } from '@/lib/http-client'
+
 const ProtectedRoutes = () => {
-  const token = localStorage.getItem('mifosToken')
-  return token ? <Outlet /> : <Navigate to="/login" />
+  // Either sign-in flow (Basic password login or OIDC) counts as a session.
+  return hasSession() ? <Outlet /> : <Navigate to="/login" />
 }
 
 export default ProtectedRoutes

@@ -20,6 +20,7 @@ i18next
       'auth',
       'accounting',
       'clients',
+      'datatables',
       'centers',
       'groups',
       'organization',

@@ -7,16 +7,120 @@
  */
 
 import { envConfig } from './env-config'
+import { isSecureUrl } from './secure-url'
 
 const TOKEN_KEY = 'mifosToken'
+/** Tenant chosen on the sign-in page. */
+const TENANT_KEY = 'mifosTenant'
+/**
+ * Access token from the OIDC flow. Kept in localStorage so the session
+ * survives a reload, matching how oidc-client-ts persists the User object.
+ * Mutually exclusive with mifosToken: whichever sign-in ran last clears the
+ * other, so the app never holds two identities at once.
+ */
+const OIDC_TOKEN_KEY = 'mifosOidcAccessToken'
+/** Expiry of the OIDC token, epoch seconds, as reported by the provider. */
+const OIDC_EXPIRES_AT_KEY = 'mifosOidcExpiresAt'
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem(TOKEN_KEY)
 }
 
+/**
+ * Tenants the sign-in page offers: the configured tenant first, then the
+ * others listed in FINERACT_PLATFORM_TENANTS_IDENTIFIER, without blanks or
+ * repeats.
+ */
+export const getTenantOptions = (): string[] => {
+  const tenants = [envConfig.tenantId, ...envConfig.tenantIds.split(',')]
+    .map(tenant => tenant.trim())
+    .filter(Boolean)
+  return tenants.length > 0 ? [...new Set(tenants)] : ['default']
+}
+
+/**
+ * The tenant every Fineract request is made in: the one chosen at sign-in,
+ * otherwise the configured one.
+ *
+ * Fineract checks the credential against that tenant's users, so the
+ * generated clients, the axios instance and the Copilot must all send the
+ * same one. A request that sent another tenant would be refused with a 401.
+ */
+export const getTenantId = (): string => {
+  return localStorage.getItem(TENANT_KEY) || getTenantOptions()[0]
+}
+
+export const setTenantId = (tenant: string): void => {
+  localStorage.setItem(TENANT_KEY, tenant)
+}
+
+/**
+ * The stored OIDC access token, or null once it has expired.
+ *
+ * Renewal normally replaces the token before this matters. This remains the
+ * backstop for when it does not — a renewal that failed, or a tab restored
+ * long after the session lapsed — because an expired token left in storage
+ * would keep both the route guard and the request interceptor believing the
+ * session is live, turning every screen into a wall of 401s. Dropping it here
+ * sends the user back to sign-in instead.
+ */
+export const getOidcToken = (): string | null => {
+  const token = localStorage.getItem(OIDC_TOKEN_KEY)
+  if (!token) return null
+
+  const expiresAt = Number(localStorage.getItem(OIDC_EXPIRES_AT_KEY))
+  if (expiresAt && expiresAt * 1000 <= Date.now()) {
+    clearOidcToken()
+    return null
+  }
+
+  return token
+}
+
+export const setOidcToken = (token: string, expiresAt?: number): void => {
+  localStorage.setItem(OIDC_TOKEN_KEY, token)
+  if (expiresAt) {
+    localStorage.setItem(OIDC_EXPIRES_AT_KEY, String(expiresAt))
+  } else {
+    localStorage.removeItem(OIDC_EXPIRES_AT_KEY)
+  }
+}
+
+export const clearOidcToken = (): void => {
+  localStorage.removeItem(OIDC_TOKEN_KEY)
+  localStorage.removeItem(OIDC_EXPIRES_AT_KEY)
+}
+
+export const clearAuthToken = (): void => {
+  localStorage.removeItem(TOKEN_KEY)
+}
+
+/** True when either sign-in flow has produced a credential for Fineract. */
+export const hasSession = (): boolean => {
+  return !!(getOidcToken() || getAuthToken())
+}
+
 export const getAuthHeaders = (): Record<string, string> => {
   const headers: Record<string, string> = {
-    'Fineract-Platform-TenantId': envConfig.tenantId,
+    'Fineract-Platform-TenantId': getTenantId(),
+  }
+
+  // The two credentials are kept mutually exclusive at sign-in, so at most
+  // one is present; OIDC still wins here as a belt-and-braces guard against
+  // ever authenticating as a previous user.
+  const oidcToken = getOidcToken()
+  if (oidcToken) {
+    // Fail closed rather than put a reusable bearer credential on the wire in
+    // cleartext. This lives here, not only in the Axios interceptor, because
+    // the generated clients take these headers directly via getAllHeaders().
+    if (!isSecureUrl(getApiBaseUrl())) {
+      console.error(
+        'Refusing to attach the OIDC bearer token: the Fineract API URL is not https.'
+      )
+      return headers
+    }
+    headers.Authorization = `Bearer ${oidcToken}`
+    return headers
   }
 
   const token = getAuthToken()
@@ -38,6 +142,30 @@ export const getAllHeaders = (): Record<string, string> => {
   return {
     ...getDefaultHeaders(),
     ...getAuthHeaders(),
+  }
+}
+
+/**
+ * Base URL of the Mifos security plugin's /authentication endpoints
+ * (FINERACT_PLUGIN_OIDC_API_URL), with a trailing slash. Null when OIDC is off
+ * or no plugin URL is configured.
+ *
+ * This is only for the plugin's user administration calls. Fineract's own REST
+ * API keeps its normal base URL in OIDC mode and just carries the bearer
+ * token, which is how the Angular client uses the same setting.
+ */
+export const getOidcPluginBaseUrl = (): string | null => {
+  if (!envConfig.oidcEnabled || !envConfig.oidcApiUrl) return null
+
+  // Resolved to an absolute URL because Axios joins any non-absolute request
+  // URL onto the Fineract baseURL, even one starting with "/". A same-origin
+  // value such as "/fineract-provider/" would otherwise be requested under
+  // "/fineract-provider/api/".
+  try {
+    const resolved = new URL(envConfig.oidcApiUrl, window.location.origin).href
+    return `${resolved.replace(/\/+$/, '')}/`
+  } catch {
+    return null
   }
 }
 

@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { Building2, Menu } from 'lucide-react'
@@ -14,18 +14,90 @@ import { Building2, Menu } from 'lucide-react'
 import { ClientApi, type GetClientsClientIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import AppTabs from '@/components/custom/tabs/AppTabs'
+import {
+  useEntityDatatables,
+  type EntityDatatable,
+} from '@/components/datatables/useEntityDatatables'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import { useTranslation } from 'react-i18next'
 import { formatDate } from '@/lib/date-utils'
+import { isLegalEntity } from './general-data-tab/generalDataUtils'
 
 const clientsApi = new ClientApi(getConfiguration())
 
+/**
+ * Fineract sends the client's legal form, staff name, mobile number, the
+ * groups it belongs to and the status label; the generated type leaves them
+ * out (see ISSUES.md).
+ */
+type ClientWithLegalForm = GetClientsClientIdResponse & {
+  status?: GetClientsClientIdResponse['status'] & { value?: string }
+  legalForm?: { id?: number } | null
+  staffId?: number | null
+  staffName?: string | null
+  mobileNo?: string | null
+  groups?: Array<{ id?: number; name?: string }> | null
+}
+
+/** Fineract's legal form id for a person; any other legal form is an entity. */
+const LEGAL_FORM_PERSON = 1
+
+/**
+ * The data tables that apply to this client. A client data table can be
+ * limited to persons or to entities, and is then hidden for the other kind, as
+ * in the Angular web app. Until the client has loaded only the unrestricted
+ * tables are listed, so a tab cannot appear and then vanish.
+ */
+const datatablesForClient = (
+  datatables: EntityDatatable[],
+  client?: ClientWithLegalForm
+): EntityDatatable[] => {
+  if (!client) return datatables.filter(table => !table.entitySubType)
+  const legalFormId = client.legalForm?.id
+  // A client without a legal form sees every table, as in the Angular app.
+  if (!legalFormId) return datatables
+  const subtype = legalFormId === LEGAL_FORM_PERSON ? 'person' : 'entity'
+  return datatables.filter(
+    table =>
+      !table.entitySubType || table.entitySubType.toLowerCase() === subtype
+  )
+}
+
 const ClientsView = () => {
   const { id } = useParams()
-  const [client, setClient] = useState<GetClientsClientIdResponse>()
+  const [client, setClient] = useState<ClientWithLegalForm>()
   const { t } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
+  const datatables = useEntityDatatables('m_client')
+  const { pathname } = useLocation()
+
+  // Derive the active tab from the URL segment after /clients/:id
+  const [tabSegment, subSegment] = pathname
+    .split(`/clients/${id}/`)[1]
+    ?.split('/') ?? ['', '']
+  const tabLabels: Record<string, string> = {
+    general: t('view.tabs.general'),
+    'personal-data': t('view.tabs.personalData'),
+    'general-data': t('view.tabs.generalData'),
+    address: t('view.tabs.address'),
+    'family-members': t('view.tabs.familyMembers'),
+    identities: t('view.tabs.identities'),
+    documents: t('view.tabs.documents'),
+    notes: t('view.tabs.notes'),
+  }
+  const activeTabLabel = tabLabels[tabSegment ?? '']
+
+  /** The groups the client belongs to, as the Angular app's "Member Of" */
+  const memberOf = (client?.groups ?? [])
+    .map(group => group.name)
+    .filter(Boolean)
+    .join(', ')
+
+  /** Fineract client status 100 = pending, 300 = active */
+  const isPending = client?.status?.id === 100
+  const isActive = client?.status?.id === 300
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -46,10 +118,28 @@ const ClientsView = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/clients' },
-          { label: String(client?.displayName), href: `/clients/${id}` },
-          { label: t('view.tabs.general'), current: true },
+          {
+            label: client?.displayName ?? '',
+            href: `/clients/${id}/general`,
+          },
+          ...(activeTabLabel
+            ? [
+                {
+                  label: activeTabLabel,
+                  href: `/clients/${id}/${tabSegment}`,
+                },
+              ]
+            : []),
+          ...(tabSegment === 'family-members' && subSegment === 'add'
+            ? [{ label: t('familyMembers.addButton') }]
+            : []),
+          ...(tabSegment === 'family-members' && pathname.endsWith('/edit')
+            ? [{ label: t('familyMembers.editButton') }]
+            : []),
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       {/* Header */}
       <div className="bg-[#0e77b7] text-white p-6 mt-6 rounded-t-lg flex justify-between items-start relative">
@@ -72,7 +162,7 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.memberOf')}</div>
-              <div>{t('view.missingInOpenAPI')}</div>
+              <div>{memberOf || '—'}</div>
             </div>
             <div>
               <div className="font-semibold">{t('client')}</div>
@@ -80,7 +170,7 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.mobileNumber')}</div>
-              <div>{t('view.missingInOpenAPI')}</div>
+              <div>{client?.mobileNo || '—'}</div>
             </div>
             <div>
               <div className="font-semibold">{t('view.externalId')}</div>
@@ -98,7 +188,7 @@ const ClientsView = () => {
             </div>
             <div>
               <div className="font-semibold">{t('view.staff')}</div>
-              <div>{t('view.missingInOpenAPI')}</div>
+              <div>{client?.staffName || '—'}</div>
             </div>
           </div>
         </div>
@@ -112,6 +202,15 @@ const ClientsView = () => {
                 </span>
               }
               options={[
+                // A pending client is activated from here, as in the Angular app
+                ...(isPending
+                  ? [
+                      {
+                        label: t('view.menu.activate'),
+                        path: `clients/${client?.id}/actions/activate`,
+                      },
+                    ]
+                  : []),
                 {
                   label: t('view.menu.edit'),
                   path: `clients/${client?.id}/edit`,
@@ -126,13 +225,11 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.newSavingsAccount'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/savings-accounts/create`,
                     },
                     {
                       label: t('view.menu.newShareAccount'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/shares-accounts/create`,
                     },
                     {
                       label: t('view.menu.newRecurringDepositAccount'),
@@ -141,30 +238,51 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.newFixedDepositAccount'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/fixed-deposits-accounts/create`,
                     },
                   ],
                 },
                 {
                   label: t('view.menu.actions'),
                   children: [
-                    {
-                      label: t('view.menu.close'),
-                      path: 'signature',
-                      disabled: true,
-                    },
-                    {
-                      label: t('view.menu.transferClients'),
-                      path: 'signature',
-                      disabled: true,
-                    },
+                    ...(isActive
+                      ? [
+                          {
+                            label: t('view.menu.close'),
+                            path: `clients/${client?.id}/actions/close`,
+                          },
+                        ]
+                      : []),
+                    ...(isActive
+                      ? [
+                          {
+                            label: t('view.menu.transferClients'),
+                            path: `clients/${client?.id}/actions/transfer-client`,
+                          },
+                        ]
+                      : [
+                          {
+                            label: t('view.menu.transferClients'),
+                            path: 'signature',
+                            disabled: true,
+                          },
+                        ]),
                   ],
                 },
-                {
-                  label: t('view.menu.unassignStaff'),
-                  path: `clients/${client?.id}/edit`,
-                },
+                ...(client
+                  ? [
+                      {
+                        label:
+                          client.staffId != null
+                            ? t('view.menu.unassignStaff')
+                            : t('view.menu.assignStaff'),
+                        path:
+                          client.staffId != null
+                            ? `clients/${client.id}/actions/unassign-staff`
+                            : `clients/${client.id}/actions/assign-staff`,
+                      },
+                    ]
+                  : []),
                 {
                   label: t('view.menu.more'),
                   children: [
@@ -221,7 +339,7 @@ const ClientsView = () => {
 
           <div className="mt-30 bg-[#0662a3] px-4 py-2 rounded-md text-sm font-medium text-white">
             <div>
-              {t('view.status')} {client?.status?.code ?? '—'}
+              {t('view.status')} {client?.status?.value ?? '—'}
             </div>
           </div>
         </div>
@@ -234,6 +352,19 @@ const ClientsView = () => {
             label: t('view.tabs.general'),
             href: `clients/${client?.id}/general`,
           },
+          {
+            label: t('view.tabs.personalData'),
+            href: `clients/${client?.id}/personal-data`,
+          },
+          // Only legal entities have the KYC data this tab shows.
+          ...(isLegalEntity(client)
+            ? [
+                {
+                  label: t('view.tabs.generalData'),
+                  href: `clients/${client?.id}/general-data`,
+                },
+              ]
+            : []),
           {
             label: t('view.tabs.address'),
             href: `clients/${client?.id}/address`,
@@ -251,6 +382,12 @@ const ClientsView = () => {
             href: `clients/${client?.id}/documents`,
           },
           { label: t('view.tabs.notes'), href: `clients/${client?.id}/notes` },
+          // Built from the route id: the registrations can arrive before the
+          // client does, and `client?.id` would put `undefined` in the link.
+          ...datatablesForClient(datatables, client).map(datatable => ({
+            label: datatable.label,
+            href: `clients/${id}/datatables/${encodeURIComponent(datatable.name)}`,
+          })),
         ]}
       />
 
