@@ -236,8 +236,7 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.newFixedDepositAccount'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/fixed-deposits-accounts/create`,
                     },
                   ],
                 },
