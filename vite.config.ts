@@ -1,14 +1,31 @@
-﻿/**
+/**
  * Copyright since 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { execSync } from 'child_process'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
-import { defineConfig, loadEnv } from 'vite'
+import { loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config'
+import { version } from './package.json'
+
+// Short commit hash of the build, shown on System Information. Empty when the
+// build runs without git, as in the Docker image.
+const gitHash = () => {
+  try {
+    return execSync('git rev-parse --short HEAD', {
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+      .toString()
+      .trim()
+  } catch {
+    return ''
+  }
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -19,6 +36,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
+    define: {
+      __APP_VERSION__: JSON.stringify(version),
+      __APP_HASH__: JSON.stringify(gitHash()),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -32,6 +53,16 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false, // allow self-signed certs
         },
+      },
+    },
+    test: {
+      globals: true,
+      environment: 'node',
+      include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'lcov'],
+        include: ['src/lib/**'],
       },
     },
   }

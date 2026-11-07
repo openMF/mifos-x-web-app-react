@@ -54,8 +54,8 @@ const ViewAccountingRules = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Accounting' },
-          { label: 'Closing Entries', href: '/accounting/closing-entries' },
+          { label: 'Accounting', href: '/accounting' },
+          { label: 'Accounting Rules', href: '/accounting/accounting-rules' },
           { label: `${accountingRule?.id}`, current: true },
         ]}
       />
@@ -65,7 +65,9 @@ const ViewAccountingRules = () => {
           <Button
             className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer text-white"
             onClick={() =>
-              navigate(`/accounting/accounting-rules${accountingRule?.id}/edit`)
+              navigate(
+                `/accounting/accounting-rules/view/${accountingRule?.id}/edit`
+              )
             }
           >
             <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />

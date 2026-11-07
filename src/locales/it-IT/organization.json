@@ -1,4 +1,37 @@
 {
+  "aboutUs": {
+    "ecosystem": "L'Iniziativa Mifos è il custode della piattaforma, ma la vera magia avviene nell'ecosistema:",
+    "ecosystemParts": {
+      "community": "La Comunità",
+      "communityDescription": "Centinaia di sviluppatori e implementatori che contribuiscono con codice, traduzioni e supporto.",
+      "foundation": "La Fondazione",
+      "foundationDescription": "L'ente senza scopo di lucro che garantisce la sostenibilità e la governance a lungo termine del progetto.",
+      "partners": "Partner Certificati",
+      "partnersDescription": "Una rete globale di partner di implementazione che personalizzano e distribuiscono Mifos per le istituzioni locali.",
+      "platform": "La Piattaforma Mifos X",
+      "platformDescription": "Il robusto motore bancario centrale."
+    },
+    "ecosystemTitle": "L'Ecosistema",
+    "introduction": "L'Iniziativa Mifos è un'organizzazione senza scopo di lucro 501(c)(3) e una comunità globale di sviluppatori, istituzioni finanziarie e imprenditori sociali. Crediamo che l'accesso ai servizi finanziari sia un diritto umano fondamentale, eppure miliardi di persone rimangono escluse dal sistema finanziario formale.",
+    "mission": "Accelerare l'inclusione finanziaria catalizzando un ecosistema di tecnologia open source, comunità e condivisione delle conoscenze.",
+    "missionTitle": "La Nostra Missione",
+    "openSource": "Abbiamo scelto il modello Open Source perché crediamo che l'infrastruttura finanziaria debba essere:",
+    "openSourceTitle": "Perché l'Open Source",
+    "platform": "Colmiamo questo divario fornendo la <mifosLink>Piattaforma Mifos X</mifosLink>—il sistema bancario centrale open source leader nel mondo. Rendendo la tecnologia bancaria di livello enterprise gratuita e accessibile, abbassiamo le barriere all'ingresso per le Istituzioni di Microfinanza (IMF), le Fintech e le ONG, consentendo loro di ampliare il proprio impatto e servire l'\"ultimo miglio\" in modo efficiente.",
+    "title": "Chi Siamo",
+    "values": {
+      "affordable": "Accessibile",
+      "affordableDescription": "L'eliminazione dei costi di licenza consente ai partner di investire di più nei propri clienti.",
+      "innovative": "Innovativo",
+      "innovativeDescription": "Una comunità globale di sviluppatori garantisce che la piattaforma si evolva più velocemente di quanto qualsiasi singolo fornitore potrebbe gestire.",
+      "secure": "Sicuro",
+      "secureDescription": "Con occhi puntati sul codice da tutto il mondo, la sicurezza e la stabilità sono fondamentali.",
+      "transparent": "Trasparente",
+      "transparentDescription": "Nessuna commissione nascosta né algoritmi a scatola chiusa."
+    },
+    "vision": "Un mondo in cui ogni individuo e piccola impresa abbia accesso agli strumenti finanziari di cui ha bisogno per prosperare, indipendentemente dalla propria posizione o livello di reddito.",
+    "visionTitle": "La Nostra Visione"
+  },
   "adhocQuery": "Query ad hoc",
   "auditTrails": "Audit trail",
   "bulkLoanReassignment": "Riassegnazione massiva dei prestiti",
@@ -6,6 +39,42 @@
   "configurations": "Configurazioni",
   "configureMakerCheckerTasks": "Configura attività di verifica",
   "currencyConfiguration": "Configurazione valuta",
+  "entityChecks": {
+    "actions": "Azioni",
+    "allProducts": "Tutti i prodotti",
+    "confirm": "Conferma",
+    "confirmDelete": "Sei sicuro di voler eliminare il controllo per la tabella dati \"{{name}}\"?",
+    "createTitle": "Crea controllo tabella dati entità",
+    "deleteCheck": "Elimina il controllo {{name}}",
+    "deleting": "Eliminazione...",
+    "entities": {
+      "client": "Cliente",
+      "group": "Gruppo",
+      "loan": "Prestito",
+      "savingsAccount": "Conto risparmio"
+    },
+    "errors": {
+      "createFailed": "Impossibile creare il controllo tabella dati entità.",
+      "deleteFailed": "Impossibile eliminare il controllo tabella dati entità.",
+      "loadFailed": "Impossibile caricare i controlli tabella dati entità.",
+      "templateFailed": "Impossibile caricare il modello del controllo tabella dati entità."
+    },
+    "fields": {
+      "dataTable": "Tabella dati",
+      "dataTableRequired": "Tabella dati*",
+      "entityRequired": "Entità*",
+      "product": "Prodotto",
+      "productName": "Nome prodotto",
+      "statusRequired": "Stato*",
+      "systemDefined": "Definito dal sistema"
+    },
+    "placeholders": {
+      "noDataTables": "Nessuna tabella dati per questa entità",
+      "selectDataTable": "Seleziona una tabella dati",
+      "selectEntity": "Seleziona un'entità",
+      "selectStatus": "Seleziona uno stato"
+    }
+  },
   "entityDataTableChecks": "Controlli tabella dati entità",
   "entityToEntityMapping": "Mappatura da entità a entità",
   "errors": {
@@ -34,13 +103,183 @@
     "title": "Gestisci fondi"
   },
   "investors": "Investitori",
+  "jobs": {
+    "edit": {
+      "cronExpression": "Espressione cron*",
+      "cronHelp": "Formato Quartz: secondi minuti ore giorno-del-mese mese giorno-della-settimana [anno], ad es. <code>0 1 0 1/1 * ? *</code> viene eseguito ogni giorno alle 00:01.",
+      "jobName": "Nome del lavoro*",
+      "title": "Modifica lavoro"
+    },
+    "errors": {
+      "changeStatus": "Impossibile modificare lo stato dello scheduler.",
+      "cronRequired": "Inserisci un'espressione cron.",
+      "loadHistory": "Impossibile caricare la cronologia delle esecuzioni.",
+      "loadJob": "Impossibile caricare il lavoro.",
+      "loadJobs": "Impossibile caricare i lavori dello scheduler.",
+      "nameRequired": "Inserisci un nome per il lavoro.",
+      "notStarted": "non è stato possibile avviarlo",
+      "updateJob": "Impossibile aggiornare il lavoro."
+    },
+    "history": {
+      "caption_one": "{{count}} esecuzione • Pagina {{page}} di {{pages}}",
+      "caption_other": "{{count}} esecuzioni • Pagina {{page}} di {{pages}}",
+      "columns": {
+        "ended": "Terminato",
+        "error": "Errore",
+        "started": "Avviato",
+        "trigger": "Attivazione"
+      },
+      "title": "Cronologia esecuzioni: {{name}}"
+    },
+    "list": {
+      "activateScheduler": "Attiva scheduler",
+      "activeHint": "Attivo: i lavori vengono eseguiti secondo la loro pianificazione",
+      "caption": "{{shown}} di {{total}} lavori",
+      "columns": {
+        "actions": "Azioni",
+        "job": "Lavoro",
+        "nextRun": "Prossima esecuzione",
+        "previousRun": "Esecuzione precedente",
+        "running": "In esecuzione"
+      },
+      "editJob": "Modifica {{name}}",
+      "filterPlaceholder": "Filtra per nome del lavoro",
+      "runHistoryOf": "Cronologia esecuzioni di {{name}}",
+      "runSelected": "Esegui lavori selezionati",
+      "runSelectedCount": "Esegui lavori selezionati ({{count}})",
+      "scheduler": "Scheduler:",
+      "selectAll": "Seleziona tutti i lavori",
+      "selectJob": "Seleziona {{name}}",
+      "started_one": "{{count}} lavoro avviato. Usa Aggiorna per vedere il risultato.",
+      "started_other": "{{count}} lavori avviati. Usa Aggiorna per vedere il risultato.",
+      "starting": "Avvio in corso...",
+      "success": "Riuscito",
+      "suspendScheduler": "Sospendi scheduler",
+      "suspended": "Sospeso",
+      "suspendedHint": "Sospeso: nessun lavoro viene eseguito secondo la pianificazione"
+    }
+  },
   "manageCodes": "Gestisci codici",
+  "manageDashboards": {
+    "title": "Gestisci dashboard",
+    "autoRefresh": "Si aggiorna ogni 10 minuti",
+    "lastUpdated": "Ultimo aggiornamento alle {{time}}. Si aggiorna ogni 10 minuti.",
+    "office": "Filiale",
+    "refresh": "Aggiorna",
+    "loadError": "Impossibile caricare la dashboard.",
+    "allOffices": "Tutte le filiali",
+    "chartType": "Tipo di grafico",
+    "activeOfTotal": "{{active}} attivi su {{total}}",
+    "allHidden": "Tutti i widget sono nascosti. Riattivali nella scheda Configurazione widget.",
+    "tabs": {
+      "overview": "Panoramica delle operazioni dell'istituto",
+      "widgets": "Configurazione widget"
+    },
+    "clients": {
+      "title": "Clienti",
+      "active": "Attivi",
+      "pending": "In attesa",
+      "newThisMonth": "Attivati questo mese"
+    },
+    "loans": {
+      "title": "Prestiti erogati",
+      "collectionRate": "Tasso di incasso"
+    },
+    "deposits": {
+      "title": "Saldi dei depositi",
+      "savings": "Conti di risparmio",
+      "fixed": "Depositi vincolati",
+      "recurring": "Depositi ricorrenti"
+    },
+    "shares": {
+      "title": "Conti azionari attivi",
+      "total": "Tutti i conti azionari"
+    },
+    "trend": {
+      "title": "Andamento mensile della crescita",
+      "description": "Clienti attivati e prestiti erogati in ciascuno degli ultimi 12 mesi.",
+      "bar": "Barre",
+      "line": "Linee"
+    },
+    "mix": {
+      "title": "Conti attivi per tipo",
+      "description": "Conti attivi di ogni tipo in tutte le filiali.",
+      "ring": "Anello",
+      "pie": "Torta",
+      "empty": "Non ci sono ancora conti attivi.",
+      "loans": "Prestiti",
+      "savings": "Risparmio",
+      "fixed": "Depositi vincolati",
+      "recurring": "Depositi ricorrenti",
+      "shares": "Azioni"
+    },
+    "widgets": {
+      "note": "I widget nascosti non compaiono nella panoramica. Fineract non ha un'impostazione per questo, quindi la scelta viene salvata solo in questo browser.",
+      "search": "Filtra i widget per nome o descrizione",
+      "module": "Modulo",
+      "name": "Widget",
+      "description": "Descrizione",
+      "visible": "Visibile",
+      "noMatch": "Nessun widget corrisponde al filtro.",
+      "modules": {
+        "all": "Tutti i moduli",
+        "global": "Globale",
+        "client": "Clienti",
+        "loan": "Prestiti",
+        "savings": "Risparmio",
+        "shares": "Azioni"
+      },
+      "items": {
+        "clients": {
+          "name": "Clienti",
+          "description": "Clienti totali, attivi e in attesa, e clienti attivati questo mese."
+        },
+        "loans": {
+          "name": "Prestiti erogati",
+          "description": "Importi erogati e in attesa di erogazione, e quanto del dovuto è stato incassato."
+        },
+        "deposits": {
+          "name": "Saldi dei depositi",
+          "description": "Saldi dei conti di risparmio, depositi vincolati e depositi ricorrenti attivi."
+        },
+        "shares": {
+          "name": "Conti azionari",
+          "description": "Conti azionari attivi e totali."
+        },
+        "trend": {
+          "name": "Andamento mensile della crescita",
+          "description": "Clienti attivati e prestiti erogati in ciascuno degli ultimi 12 mesi."
+        },
+        "accountMix": {
+          "name": "Conti attivi per tipo",
+          "description": "Come si suddividono i conti attivi di prestiti, risparmio, depositi e azioni."
+        }
+      }
+    }
+  },
   "manageDataTables": "Gestisci tabelle dati",
   "manageEmployees": "Gestisci dipendenti",
   "manageExternalEvents": "Gestisci eventi esterni",
   "manageHolidays": "Gestisci festivi",
   "manageHooks": "Gestisci hook",
   "manageJobs": "Gestisci lavori",
+  "manageMakerChecker": {
+    "clearAll": "Deseleziona tutto",
+    "errors": {
+      "loadFailed": "Impossibile caricare le attività di verifica.",
+      "saveFailed": "Impossibile salvare le attività di verifica."
+    },
+    "noTasksMatch": "Nessuna attività corrisponde.",
+    "saveWithCount": "Salva ({{count}})",
+    "savedChanges_one": "{{count}} modifica salvata.",
+    "savedChanges_other": "{{count}} modifiche salvate.",
+    "searchPlaceholder": "Cerca in tutte le attività",
+    "selectAll": "Seleziona tutto",
+    "statusOff": "Il controllo creatore-verificatore è <strong>disattivato</strong>, quindi nessuna delle attività seguenti richiede ancora l'approvazione. Attiva <code>maker-checker</code> in <link>Configurazioni globali</link> perché abbiano effetto.",
+    "statusOn": "Il controllo creatore-verificatore è <strong>attivo</strong>: le attività selezionate qui sotto attendono l'approvazione di un verificatore.",
+    "taskGroups": "Gruppi di attività",
+    "tasksMatching": "Attività corrispondenti a \"{{term}}\""
+  },
   "manageReports": "Gestisci report",
   "manageRolesAndPermissions": "Gestisci ruoli e autorizzazioni",
   "manageSurveys": "Gestisci sondaggi",
@@ -71,15 +310,222 @@
     "title": "Uffici",
     "unnamedOffice": "Ufficio senza nome"
   },
+  "provisioningCriteria": {
+    "title": "Criteri di accantonamento prestiti",
+    "create": "Crea criteri di accantonamento prestiti",
+    "createButton": "Crea criteri di accantonamento",
+    "edit": "Modifica criteri di accantonamento prestiti",
+    "fields": {
+      "criteriaName": "Nome dei criteri",
+      "criteriaNameRequired": "Nome dei criteri*",
+      "createdBy": "Creato da",
+      "loanProducts": "Prodotti di prestito",
+      "loanProductsRequired": "Prodotti di prestito*",
+      "selectLoanProducts": "Seleziona i prodotti di prestito",
+      "minAge": "Anzianità minima",
+      "maxAge": "Anzianità massima",
+      "percentage": "Percentuale",
+      "minAgeDays": "Anzianità minima (giorni)",
+      "minAgeDaysRequired": "Anzianità minima (giorni)*",
+      "maxAgeDays": "Anzianità massima (giorni)",
+      "maxAgeDaysRequired": "Anzianità massima (giorni)*",
+      "percentageColumn": "Percentuale (%)",
+      "percentageColumnRequired": "Percentuale (%)*",
+      "liabilityAccount": "Conto del passivo",
+      "liabilityAccountRequired": "Conto del passivo*",
+      "expenseAccount": "Conto di costo",
+      "expenseAccountRequired": "Conto di costo*",
+      "selectAccount": "Seleziona un conto",
+      "noAccounts": "Nessun conto",
+      "fieldForCategory": "{{field}} per {{category}}"
+    },
+    "validation": {
+      "nameRequired": "Inserisci un nome per i criteri.",
+      "productRequired": "Seleziona almeno un prodotto di prestito.",
+      "fillEveryField": "Compila tutti i campi per {{category}}.",
+      "notNegative": "{{category}}: le anzianità e la percentuale devono essere pari o superiori a 0.",
+      "minAboveMax": "{{category}}: l'anzianità minima non può superare l'anzianità massima.",
+      "percentageAbove100": "{{category}}: la percentuale non può superare 100."
+    },
+    "messages": {
+      "loadListError": "Impossibile caricare i criteri di accantonamento.",
+      "loadError": "Impossibile caricare i criteri di accantonamento.",
+      "loadTemplateError": "Impossibile caricare il modello dei criteri.",
+      "createError": "Impossibile creare i criteri di accantonamento.",
+      "updateError": "Impossibile aggiornare i criteri di accantonamento.",
+      "deleteError": "Impossibile eliminare i criteri di accantonamento."
+    },
+    "delete": {
+      "confirm": "Conferma",
+      "deleting": "Eliminazione...",
+      "message": "Sei sicuro di voler eliminare i criteri di accantonamento \"{{name}}\"?"
+    }
+  },
   "searchByMaker": "Cerca per creatore",
   "searchEvents": "Cerca eventi",
   "searchReports": "Cerca report",
+  "smsCampaign": {
+    "title": "Campagne SMS",
+    "create": "Crea campagna SMS",
+    "edit": "Modifica campagna SMS",
+    "empty": "Nessuna campagna SMS",
+    "reactivate": "Riattiva",
+    "confirm": "Conferma",
+    "unassigned": "Non assegnato",
+    "notification": "Notifica (senza fornitore SMS)",
+    "noProviders": "Nessun fornitore SMS configurato",
+    "noBusinessRules": "Nessuna regola di business per questo tipo di attivazione",
+    "noParameters": "Questa regola di business non ha parametri.",
+    "noColumns": "Compila i parametri della regola di business e scegli \"Ottieni parametri\" per vedere i segnaposto.",
+    "businessRuleParameters": "Parametri della regola di business",
+    "templateParameters": "Parametri del modello",
+    "getParameters": "Ottieni parametri",
+    "previewMessage": "Anteprima del messaggio",
+    "previewEmpty": "Nessun record per l'anteprima.",
+    "recipients_one": "Verrebbe inviato {{count}} messaggio",
+    "recipients_other": "Verrebbero inviati {{count}} messaggi",
+    "steps": {
+      "campaign": "Campagna",
+      "message": "Messaggio",
+      "preview": "Anteprima"
+    },
+    "fields": {
+      "name": "Nome",
+      "templateMessage": "Messaggio modello",
+      "campaignType": "Tipo di campagna",
+      "triggerType": "Tipo di attivazione",
+      "status": "Stato",
+      "submittedBy": "Inviato da",
+      "campaignName": "Nome della campagna",
+      "smsProvider": "Fornitore SMS",
+      "isNotification": "È una notifica?",
+      "scheduleDate": "Data pianificata",
+      "repeats": "Ripetizione",
+      "repetitionInterval": "Intervallo di ripetizione",
+      "repeatsOnDay": "Si ripete il giorno",
+      "recurrence": "Ricorrenza",
+      "businessRule": "Regola di business",
+      "campaignMessage": "Messaggio della campagna",
+      "submittedOn": "Inviata il",
+      "activatedOn": "Attivata il",
+      "closedOn": "Chiusa il"
+    },
+    "placeholders": {
+      "smsProvider": "Seleziona un fornitore SMS",
+      "triggerType": "Seleziona un tipo di attivazione",
+      "businessRule": "Seleziona una regola di business",
+      "triggerFirst": "Seleziona prima un tipo di attivazione"
+    },
+    "hints": {
+      "checkStart": "Mostrata nel fuso orario del browser. Controllala prima di salvare, perché il server potrebbe usarne un altro.",
+      "startInPast": "Scegli un orario nel futuro."
+    },
+    "frequency": {
+      "daily": "Giornaliera",
+      "weekly": "Settimanale",
+      "monthly": "Mensile",
+      "yearly": "Annuale"
+    },
+    "weekdays": {
+      "monday": "Lunedì",
+      "tuesday": "Martedì",
+      "wednesday": "Mercoledì",
+      "thursday": "Giovedì",
+      "friday": "Venerdì",
+      "saturday": "Sabato",
+      "sunday": "Domenica"
+    },
+    "status": {
+      "active": "Attiva",
+      "pending": "In attesa",
+      "closed": "Chiusa"
+    },
+    "errors": {
+      "loadList": "Impossibile caricare le campagne SMS.",
+      "load": "Impossibile caricare la campagna SMS.",
+      "loadTemplate": "Impossibile caricare le opzioni della campagna SMS.",
+      "loadParameters": "Impossibile caricare i parametri della regola di business.",
+      "runReport": "Impossibile ottenere i parametri della regola di business.",
+      "preview": "Impossibile mostrare l'anteprima del messaggio.",
+      "create": "Impossibile creare la campagna SMS.",
+      "update": "Impossibile aggiornare la campagna SMS.",
+      "delete": "Impossibile eliminare la campagna SMS.",
+      "activate": "Impossibile attivare la campagna SMS.",
+      "close": "Impossibile chiudere la campagna SMS.",
+      "reactivate": "Impossibile riattivare la campagna SMS.",
+      "messages": "Impossibile caricare i messaggi."
+    },
+    "messages": {
+      "title": "Messaggi",
+      "selectStatus": "Seleziona uno stato",
+      "fromDate": "Dalla data",
+      "toDate": "Alla data",
+      "message": "Messaggio",
+      "mobileNo": "N. di cellulare",
+      "count_one": "{{count}} messaggio",
+      "count_other": "{{count}} messaggi",
+      "empty": "Nessun messaggio trovato",
+      "status": {
+        "pending": "SMS in attesa",
+        "waiting": "In attesa della conferma di consegna",
+        "sent": "SMS inviati",
+        "delivered": "SMS consegnati",
+        "failed": "SMS non riusciti"
+      },
+      "bothDates": "Imposta entrambe le date per filtrare per data."
+    },
+    "commands": {
+      "activate": {
+        "title": "Attiva campagna SMS",
+        "description": "La campagna viene attivata in questa data. Le campagne dirette inviano subito i messaggi; quelle pianificate seguono la loro pianificazione.",
+        "date": "Data di attivazione"
+      },
+      "close": {
+        "title": "Chiudi campagna SMS",
+        "description": "La campagna smette di inviare messaggi da questa data.",
+        "date": "Data di chiusura"
+      },
+      "reactivate": {
+        "title": "Riattiva campagna SMS",
+        "description": "La campagna invia di nuovo messaggi da questa data.",
+        "date": "Data di riattivazione"
+      }
+    },
+    "deleteDialog": {
+      "confirm": "Eliminare davvero la campagna SMS \"{{name}}\"?",
+      "deleting": "Eliminazione..."
+    }
+  },
   "smsCampaigns": "Campagne SMS",
   "standingInstructionsHistory": "Storico istruzioni permanenti",
   "success": {
     "fundSaved": "Fondo salvato con successo.",
     "officeCreated": "Ufficio creato con successo.",
     "officeSaved": "Ufficio salvato con successo."
+  },
+  "systemInformation": {
+    "fields": {
+      "businessDate": "Data lavorativa corrente",
+      "fineract": "Apache Fineract®",
+      "name": "Nome",
+      "renderTime": "Tempo di rendering",
+      "server": "Server",
+      "tenant": "Inquilino",
+      "username": "Nome utente",
+      "webApp": "Mifos® WebApp"
+    },
+    "licensing": {
+      "codeOfConduct": "<codeOfConductLink>Codice di Condotta</codeOfConductLink> di Mifos da rispettare quando si collabora nella comunità.",
+      "contributorAgreement": "<contributorAgreementLink>Accordo del Contributore Mifos</contributorAgreementLink>",
+      "distribution": "La distribuzione open source Mifos X alimentata da Apache Fineract (incluse app web, app mobili e motore di business intelligence) è concessa in licenza con la <mplLink>Licenza Pubblica Mozilla, v2.0</mplLink>.",
+      "externalSoftware": "Considerazioni da tenere in considerazione quando si <externalSoftwareLink>aggiunge software esterno a Mifos</externalSoftwareLink>.",
+      "fineract": "La piattaforma <fineractLink>Apache Fineract</fineractLink> è concessa in licenza con la <apacheLicenseLink>Licenza Apache, Versione 2.0</apacheLicenseLink>. L'Iniziativa Mifos è stata la forza trainante dietro Apache Fineract, lanciandola come Mifos X nel 2011 e contribuendo ad Apache nel 2016 con la laurea a progetto di alto livello dell'Apache Software Foundation nel 2017.",
+      "howToLicense": "<licenseCodeLink>Come licenziare correttamente il codice Mifos che stai contribuendo.</licenseCodeLink>",
+      "legacy": "La nostra base di codice legacy (Mifos 2) è regolata dalla <apacheLicenseLink>Licenza Apache 2.0</apacheLicenseLink>. Si prega di leggere quanto segue per imparare come aderire correttamente ai termini della licenza.",
+      "licenseFaq": "Le implicazioni di ciò che questo significa quando si modifica il codice sorgente possono essere trovate nelle <licenseFaqLink>FAQ sulla Licenza Apache</licenseFaqLink>",
+      "title": "Licenza del Software"
+    },
+    "title": "Informazioni di Sistema"
   },
   "tellerCashierManagement": "Gestione cassieri",
   "title": "Organizzazione",

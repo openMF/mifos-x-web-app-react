@@ -86,7 +86,9 @@ const ManageTaxGroups = () => {
       <div className="mb-6">
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
-          onClick={() => navigate('/products/tax-configurations/groups/create')}
+          onClick={() =>
+            navigate('/products/tax-configurations/tax-groups/create')
+          }
         >
           <Plus className="mr-2" /> Create Tax Groups
         </Button>
@@ -161,7 +163,10 @@ const ManageTaxGroups = () => {
             {paginated.map(t => (
               <TableRow
                 key={t.id}
-                className="text-base hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                onClick={() =>
+                  navigate(`/products/tax-configurations/tax-groups/${t.id}`)
+                }
+                className="text-base hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
               >
                 <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
                   {t.name}

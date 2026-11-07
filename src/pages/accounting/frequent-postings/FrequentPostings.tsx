@@ -165,7 +165,7 @@ const FrequentPostings = () => {
         items={[
           { label: 'Home', href: '/home' },
           { label: 'Accounting', href: '/accounting' },
-          { label: 'Journal Entries' },
+          { label: 'Journal Entries', href: '/accounting/journal-entries' },
           { label: 'Frequent Postings', current: true },
         ]}
       />

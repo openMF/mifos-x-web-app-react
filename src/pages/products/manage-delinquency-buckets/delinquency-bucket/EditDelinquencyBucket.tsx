@@ -47,6 +47,7 @@ const EditDelinquencyBucket = () => {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({ name: '' }) // bucket name
+  const [bucketName, setBucketName] = useState('') // saved name for breadcrumb
   const [selectedRange, setSelectedRange] = useState('') // selected range id for adding
   const [addedRanges, setAddedRanges] = useState<DelinquencyRangeData[]>([]) // currently assigned ranges
   const [ranges, setRanges] = useState<DelinquencyRangeData[]>([]) // all available ranges
@@ -61,6 +62,7 @@ const EditDelinquencyBucket = () => {
 
       setRanges(rangeRes.data || [])
       setFormData({ name: bucketRes.data?.name || '' })
+      setBucketName(bucketRes.data?.name || '')
       setAddedRanges(bucketRes.data?.ranges || [])
     }
 
@@ -121,6 +123,10 @@ const EditDelinquencyBucket = () => {
           {
             label: 'Delinquency Buckets',
             href: '/products/delinquency-bucket-configurations/buckets',
+          },
+          {
+            label: bucketName || `${id}`,
+            href: `/products/delinquency-bucket-configurations/buckets/${id}`,
           },
           { label: 'Edit', current: true },
         ]}

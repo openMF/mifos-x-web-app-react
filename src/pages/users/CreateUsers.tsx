@@ -7,6 +7,8 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import type { AxiosError } from 'axios'
 
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -17,17 +19,49 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 
 import {
+  PasswordPreferencesApi,
   StaffApi,
   UsersApi,
   type GetUsersTemplateResponse,
   type StaffData,
+  type PostUsersRequest,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 const userApi = new UsersApi(getConfiguration())
 const staffApi = new StaffApi(getConfiguration())
+const passwordPreferencesApi = new PasswordPreferencesApi(getConfiguration())
+
+type UserApiErrorResponse = {
+  defaultUserMessage?: string
+  developerMessage?: string
+  errors?: Array<{
+    defaultUserMessage?: string
+    developerMessage?: string
+  }>
+}
+
+const parseId = (value: string) => {
+  const parsed = parseInt(value, 10)
+  return Number.isNaN(parsed) ? undefined : parsed
+}
+
+const getUserErrorMessage = (error: unknown) => {
+  const axiosError = error as AxiosError<UserApiErrorResponse>
+  const responseData = axiosError.response?.data
+
+  return (
+    responseData?.errors?.[0]?.defaultUserMessage ||
+    responseData?.errors?.[0]?.developerMessage ||
+    responseData?.defaultUserMessage ||
+    responseData?.developerMessage ||
+    axiosError.message ||
+    'Failed to create user'
+  )
+}
 
 const CreateUsers = () => {
+  const { t } = useTranslation('auth')
   const [users, setUsers] = useState<GetUsersTemplateResponse>()
   const [staff, setStaff] = useState<StaffData[] | null>(null)
 
@@ -37,7 +71,7 @@ const CreateUsers = () => {
     firstName: '',
     lastName: '',
     passwordNeverExpiers: false,
-    sendPasswordToEmail: true,
+    sendPasswordToEmail: false,
     office: '',
     staff: '',
     roles: '',
@@ -45,16 +79,29 @@ const CreateUsers = () => {
     repeatPassword: '',
   })
 
+  // The active policy from Organization > Password Preferences. Fineract checks
+  // the password against its regex and returns its description when it fails;
+  // the regex itself is not sent, so the description is shown as the rule.
+  // Reading it needs READ_PASSWORD_PREFERENCES, so a user who can create users
+  // but not read the preferences gets a general line instead.
+  const [passwordPolicy, setPasswordPolicy] = useState<string | null>(null)
+
   const showPassword = !formData.sendPasswordToEmail
-  const passwordShort =
-    showPassword &&
-    formData.password.length > 0 &&
-    formData.password.length < 12
 
   const passwordsDontMatch =
     showPassword &&
     formData.repeatPassword.length > 0 &&
     formData.password !== formData.repeatPassword
+
+  useEffect(() => {
+    passwordPreferencesApi
+      .retrieve1()
+      .then(res => setPasswordPolicy(res.data?.description ?? null))
+      .catch(err => {
+        console.error('Failed to fetch password policy', err)
+        setPasswordPolicy(t('user.passwordPolicyFallback'))
+      })
+  }, [t])
 
   // fetch template for offices, roles, etc.
   useEffect(() => {
@@ -83,7 +130,73 @@ const CreateUsers = () => {
     fetchStaff()
   }, [formData.office])
 
+  const staffOptions = (staff || []).filter(
+    option => option.officeId?.toString() === formData.office
+  )
+
   const navigate = useNavigate()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const requiresStaff = staffOptions.length > 0
+
+    if (
+      !formData.username.trim() ||
+      !formData.email.trim() ||
+      !formData.firstName.trim() ||
+      !formData.lastName.trim() ||
+      !formData.office ||
+      !formData.roles ||
+      (requiresStaff && !formData.staff)
+    ) {
+      alert('Please fill all required fields.')
+      return
+    }
+
+    if (showPassword) {
+      if (!formData.password || !formData.repeatPassword) {
+        alert('Please enter and confirm the password.')
+        return
+      }
+      if (passwordsDontMatch) {
+        alert('Please fix the password errors.')
+        return
+      }
+    }
+
+    const officeId = parseId(formData.office)
+    const roleId = parseId(formData.roles)
+    const staffId = formData.staff ? parseId(formData.staff) : undefined
+
+    if (!officeId || !roleId || (formData.staff && !staffId)) {
+      alert('Please select valid office, role, and staff values.')
+      return
+    }
+
+    const payload: PostUsersRequest = {
+      username: formData.username.trim(),
+      email: formData.email.trim(),
+      firstname: formData.firstName.trim(),
+      lastname: formData.lastName.trim(),
+      officeId,
+      roles: [roleId],
+      staffId,
+      passwordNeverExpires: formData.passwordNeverExpiers,
+      sendPasswordToEmail: formData.sendPasswordToEmail,
+      password: showPassword ? formData.password : undefined,
+      repeatPassword: showPassword ? formData.repeatPassword : undefined,
+    }
+
+    try {
+      await userApi.create15(payload)
+      alert('User created successfully!')
+      navigate('/appusers')
+    } catch (err) {
+      console.error('Failed to create user', err)
+      alert(getUserErrorMessage(err))
+    }
+  }
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
@@ -96,26 +209,66 @@ const CreateUsers = () => {
 
       <div className="p-8 bg-white dark:bg-zinc-900 rounded-md shadow border max-w-5xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">Create User</h2>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="flex flex-wrap gap-6">
             <div className="w-full md:w-[48%] space-y-2">
               <Label>Username *</Label>
-              <Input placeholder="Enter username" className="w-full" />
+              <Input
+                placeholder="Enter username"
+                className="w-full"
+                value={formData.username}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    username: e.target.value,
+                  }))
+                }
+              />
             </div>
             <div className="w-full md:w-[48%] space-y-2">
               <Label>Email *</Label>
-              <Input placeholder="Enter email" className="w-full" />
+              <Input
+                placeholder="Enter email"
+                className="w-full"
+                value={formData.email}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    email: e.target.value,
+                  }))
+                }
+              />
             </div>
           </div>
 
           <div className="flex flex-wrap gap-6">
             <div className="w-full md:w-[48%] space-y-2">
               <Label>First Name *</Label>
-              <Input placeholder="Enter First Name" className="w-full" />
+              <Input
+                placeholder="Enter First Name"
+                className="w-full"
+                value={formData.firstName}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    firstName: e.target.value,
+                  }))
+                }
+              />
             </div>
             <div className="w-full md:w-[48%] space-y-2">
               <Label>Last Name *</Label>
-              <Input placeholder="Enter Last Name" className="w-full" />
+              <Input
+                placeholder="Enter Last Name"
+                className="w-full"
+                value={formData.lastName}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    lastName: e.target.value,
+                  }))
+                }
+              />
             </div>
           </div>
 
@@ -159,15 +312,15 @@ const CreateUsers = () => {
                 <Input
                   type="password"
                   placeholder="Enter password"
-                  className={`w-full ${passwordShort ? 'border-red-500' : ''}`}
+                  className="w-full"
                   value={formData.password}
                   onChange={e =>
                     setFormData(prev => ({ ...prev, password: e.target.value }))
                   }
                 />
-                {passwordShort && (
-                  <p className="text-sm text-red-500">
-                    Password must be at least 12 characters.
+                {passwordPolicy && (
+                  <p className="text-sm text-muted-foreground">
+                    {passwordPolicy}
                   </p>
                 )}
               </div>
@@ -200,7 +353,7 @@ const CreateUsers = () => {
               selectLabel="Office *"
               selectValue={formData.office}
               selectOnChange={value =>
-                setFormData(prev => ({ ...prev, office: value }))
+                setFormData(prev => ({ ...prev, office: value, staff: '' }))
               }
               selectPlaceholder="Select office"
               selectOptions={(users?.allowedOffices || [])
@@ -217,14 +370,10 @@ const CreateUsers = () => {
                 setFormData(prev => ({ ...prev, staff: value }))
               }
               selectPlaceholder="Select staff"
-              selectOptions={(staff || [])
-                .filter(
-                  option => option.officeId?.toString() === formData.office
-                )
-                .map(option => ({
-                  id: option.id!,
-                  name: option.displayName!,
-                }))}
+              selectOptions={staffOptions.map(option => ({
+                id: option.id!,
+                name: option.displayName!,
+              }))}
             />
           </div>
 

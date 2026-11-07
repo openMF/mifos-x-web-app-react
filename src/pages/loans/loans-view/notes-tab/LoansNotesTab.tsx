@@ -22,10 +22,7 @@ const LoansNotesTab = () => {
           value={newNote}
           onChange={e => setNewNote(e.target.value)}
         />
-        <Button
-          variant="outline"
-          className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white"
-        >
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
           + Add
         </Button>
       </div>

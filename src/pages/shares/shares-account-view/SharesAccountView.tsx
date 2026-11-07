@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 
@@ -123,6 +124,10 @@ const SharesAccountView = () => {
   const productName = acct?.productName ?? '—'
   const accountNo = acct?.accountNo ?? '—'
   const holderName = acct?.clientName ?? '—'
+  const breadcrumbs = useAccountBreadcrumbs({
+    ownerLabel: acct?.clientName,
+    accountLabel: acct?.accountNo?.toString(),
+  })
   const currentMarketPrice = acct?.currentMarketPrice ?? '—'
 
   // sub-tabs inside Shares account view
@@ -144,20 +149,7 @@ const SharesAccountView = () => {
   return (
     <div className="min-h-screen px-6 py-10">
       {/* breadcrumbs for navigation */}
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Clients', href: '/clients' },
-          {
-            label: holderName,
-            href: clientId ? `/clients/${clientId}` : '/clients',
-          },
-          {
-            label: 'Shares',
-            href: clientId ? `/clients/${clientId}/shares` : '/clients',
-          },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       {/* main card with header, dropdown actions, and tabs */}
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-hidden max-w-7xl mx-auto mt-6">

@@ -8,11 +8,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 const DisburseToSavingsAccount = () => {
+  const breadcrumbs = useAccountBreadcrumbs({
+    actionLabel: 'Disburse to Savings',
+  })
   const navigate = useNavigate()
 
   const [disbursementOn, setDisbursementOn] = useState('')
@@ -30,13 +34,7 @@ const DisburseToSavingsAccount = () => {
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
-      <AppBreadCrumbs
-        items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Groups', href: '/groups' },
-          { label: 'Disburse to Savings', current: true },
-        ]}
-      />
+      <AppBreadCrumbs items={breadcrumbs} />
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">Disburse to Savings</h2>

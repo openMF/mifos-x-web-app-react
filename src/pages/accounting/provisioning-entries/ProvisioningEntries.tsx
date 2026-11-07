@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, FileText, RotateCcw, NotebookText } from 'lucide-react'
 
@@ -28,34 +28,72 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import {
+  ProvisioningEntriesApi,
+  type PageProvisioningEntryData,
+  type ProvisioningEntryData,
+} from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 
-type ProvisioningEntry = {
-  id: number
-  createdBy?: string
-  createdOn?: string // ISO date
-  journalEntryId?: number | null // if present => JE created
+const provisioningEntriesApi = new ProvisioningEntriesApi(getConfiguration())
+
+type ProvisioningEntryRow = ProvisioningEntryData & {
+  journalEntryId?: number | null
 }
-
-// TODO: replace with real data from API
-const SEED: ProvisioningEntry[] = []
 
 const ProvisioningEntries = () => {
   const navigate = useNavigate()
 
-  const [entries] = useState<ProvisioningEntry[]>(SEED)
+  const [entries, setEntries] = useState<ProvisioningEntryRow[]>([])
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
 
+  useEffect(() => {
+    let cancelled = false
+
+    ;(async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const offset = (page - 1) * itemsPerPage
+        const res = await provisioningEntriesApi.retrieveAllProvisioningEntries(
+          offset,
+          itemsPerPage
+        )
+
+        if (cancelled) return
+
+        const data: PageProvisioningEntryData = res.data || {}
+        const pageItems = (data.pageItems ?? []) as ProvisioningEntryRow[]
+        setEntries(pageItems)
+        setTotal(data.totalFilteredRecords ?? pageItems.length)
+      } catch (err) {
+        if (cancelled) return
+        console.error('Failed to fetch provisioning entries', err)
+        setError('Unable to load provisioning entries.')
+        setEntries([])
+        setTotal(0)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [itemsPerPage, page])
+
   const filtered = entries.filter(e =>
-    (e.createdBy ?? '').toLowerCase().includes(searchTerm.toLowerCase())
+    (e.createdUser ?? '').toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
-  const paginated = filtered.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  )
+  const totalPages = Math.max(1, Math.ceil(total / itemsPerPage))
+  const visibleRows = searchTerm ? filtered : entries
 
   const handleItemsPerPageChange = (value: string) => {
     setItemsPerPage(parseInt(value, 10))
@@ -131,8 +169,9 @@ const ProvisioningEntries = () => {
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
+            Showing {visibleRows.length} of{' '}
+            {searchTerm ? visibleRows.length : total} items • Page {page} of{' '}
+            {totalPages}
           </TableCaption>
           <TableHeader>
             <TableRow>
@@ -146,71 +185,103 @@ const ProvisioningEntries = () => {
           </TableHeader>
 
           <TableBody>
-            {paginated.map(row => {
-              const createdOn = row.createdOn
-                ? new Date(row.createdOn).toLocaleDateString()
-                : '—'
-              const jeCreated = row.journalEntryId ? 'Yes' : 'No'
+            {loading && (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-8 text-sm text-zinc-500"
+                >
+                  Loading...
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && error && (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-8 text-sm text-red-600"
+                >
+                  {error}
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && !error && visibleRows.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-8 text-sm text-zinc-500"
+                >
+                  No provisioning entries
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading &&
+              !error &&
+              visibleRows.map(row => {
+                const createdOn = row.createdDate
+                  ? new Date(row.createdDate).toLocaleDateString()
+                  : '—'
+                const jeCreated = row.journalEntry ? 'Yes' : 'No'
 
-              return (
-                <TableRow key={row.id} className="text-base hover:bg-muted">
-                  <TableCell className="px-6 py-4">
-                    {row.createdBy ?? '—'}
-                  </TableCell>
-                  <TableCell className="px-6 py-4">{createdOn}</TableCell>
-                  <TableCell className="px-6 py-4">{jeCreated}</TableCell>
+                return (
+                  <TableRow key={row.id} className="text-base hover:bg-muted">
+                    <TableCell className="px-6 py-4">
+                      {row.createdUser ?? '—'}
+                    </TableCell>
+                    <TableCell className="px-6 py-4">{createdOn}</TableCell>
+                    <TableCell className="px-6 py-4">{jeCreated}</TableCell>
 
-                  <TableCell className="px-6 py-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(
-                          `/accounting/provisioning-entries/${row.id}/report`
-                        )
-                      }
-                    >
-                      <FileText className="mr-2 h-4 w-4" />
-                      View
-                    </Button>
-                  </TableCell>
-
-                  <TableCell className="px-6 py-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        navigate(
-                          `/accounting/provisioning-entries/${row.id}/recreate`
-                        )
-                      }
-                    >
-                      <RotateCcw className="mr-2 h-4 w-4" />
-                      Recreate
-                    </Button>
-                  </TableCell>
-
-                  <TableCell className="px-6 py-4">
-                    {row.journalEntryId ? (
+                    <TableCell className="px-6 py-4">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() =>
                           navigate(
-                            `/accounting/journal-entries/view/${row.journalEntryId}`
+                            `/accounting/provisioning-entries/${row.id}/report`
                           )
                         }
                       >
-                        <NotebookText className="mr-2 h-4 w-4" />
-                        View JE
+                        <FileText className="mr-2 h-4 w-4" />
+                        View
                       </Button>
-                    ) : (
-                      '—'
-                    )}
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+                    </TableCell>
+
+                    <TableCell className="px-6 py-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          navigate(
+                            `/accounting/provisioning-entries/${row.id}/recreate`
+                          )
+                        }
+                      >
+                        <RotateCcw className="mr-2 h-4 w-4" />
+                        Recreate
+                      </Button>
+                    </TableCell>
+
+                    <TableCell className="px-6 py-4">
+                      {row.journalEntryId ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            navigate(
+                              `/accounting/journal-entries/view/${row.journalEntryId}`
+                            )
+                          }
+                        >
+                          <NotebookText className="mr-2 h-4 w-4" />
+                          View JE
+                        </Button>
+                      ) : (
+                        '—'
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
           </TableBody>
         </Table>
       </div>

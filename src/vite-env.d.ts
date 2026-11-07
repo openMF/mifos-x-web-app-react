@@ -12,8 +12,13 @@ interface ImportMetaEnv {
   readonly VITE_FINERACT_API_PROVIDER: string
   readonly VITE_FINERACT_API_VERSION: string
   readonly VITE_FINERACT_PLATFORM_TENANT_IDENTIFIER: string
+  readonly VITE_FINERACT_PLATFORM_TENANTS_IDENTIFIER: string
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+/** Version from package.json and short commit hash, set in vite.config.ts */
+declare const __APP_VERSION__: string
+declare const __APP_HASH__: string

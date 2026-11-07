@@ -7,15 +7,12 @@
  */
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import {
-  ReportsApi,
-  OfficesApi,
-  RunReportsApi,
-  Configuration,
-} from '@/fineract-api'
+import { ReportsApi, OfficesApi, RunReportsApi } from '@/fineract-api'
+import { getConfiguration } from '@/lib/fineract-openapi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -43,6 +40,7 @@ interface BasicReport {
   id: number
   reportName?: string
   name?: string
+  reportCategory?: string
 }
 
 const RunReports: React.FC = () => {
@@ -52,6 +50,11 @@ const RunReports: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, string>>({})
+  const [reportCategory, setReportCategory] = useState<string | undefined>()
+  const [matchedReportName, setMatchedReportName] = useState<
+    string | undefined
+  >()
+  const displayName = matchedReportName ?? reportName ?? ''
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,32 +62,30 @@ const RunReports: React.FC = () => {
       try {
         setLoading(true)
 
-        const config = new Configuration({
-          accessToken: sessionStorage.getItem('mifosToken') || undefined,
-          basePath:
-            import.meta.env.VITE_FINERACT_API_URL || '/fineract-provider/api',
-          apiKey: 'default', // Required Fineract-Platform-TenantId header
-        })
-
+        const config = getConfiguration()
         const reportsApi = new ReportsApi(config)
         const officesApi = new OfficesApi(config)
 
         // Fetch the list of all reports to find the ID of the current report
-        const formattedSearchName = reportName.replace(/-/g, ' ').toLowerCase()
         const reportsListRes = await reportsApi.retrieveReportList({})
         const allReports = reportsListRes.data as BasicReport[]
 
-        const matchedReport = allReports.find(
-          r =>
-            (r.reportName &&
-              r.reportName.toLowerCase() === formattedSearchName) ||
-            (r.name && r.name.toLowerCase() === formattedSearchName)
-        )
+        const findByName = (searchName: string) =>
+          allReports.find(
+            r =>
+              r.reportName?.toLowerCase() === searchName ||
+              r.name?.toLowerCase() === searchName
+          )
+
+        // Match the exact name first so that names containing hyphens, such
+        // as "Active Loans - Summary", are found. Hyphenated slugs from older
+        // links are still matched as a fallback.
+        const matchedReport =
+          findByName(reportName.toLowerCase()) ??
+          findByName(reportName.replace(/-/g, ' ').toLowerCase())
 
         if (!matchedReport) {
-          setError(
-            `Could not find a report named "${reportName.replace(/-/g, ' ')}".`
-          )
+          setError(`Could not find a report named "${reportName}".`)
           setLoading(false)
           return
         }
@@ -95,6 +96,8 @@ const RunReports: React.FC = () => {
           officesApi.retrieveOffices(undefined, undefined, undefined, {}),
         ])
 
+        setReportCategory(matchedReport.reportCategory)
+        setMatchedReportName(matchedReport.reportName ?? matchedReport.name)
         setReportData(reportRes.data as ReportMetadata)
         setOffices(officeRes.data as Office[])
       } catch (_err) {
@@ -113,24 +116,8 @@ const RunReports: React.FC = () => {
   const handleRunReport = async () => {
     try {
       setError(null)
-      const token = sessionStorage.getItem('mifosToken')
-
-      // Configuration must include explicit headers to satisfy Fineract security
-      const config = new Configuration({
-        basePath:
-          import.meta.env.VITE_FINERACT_API_URL || '/fineract-provider/api',
-        baseOptions: {
-          headers: {
-            'Fineract-Platform-TenantId': 'default', // Mandatory Header
-            Authorization: token ? `Basic ${token}` : undefined,
-          },
-        },
-      })
-
-      const runReportsApi = new RunReportsApi(config)
-      const exactReportName = reportName!.replace(/-/g, ' ')
-
-      await runReportsApi.runReport(exactReportName, false, {
+      const runReportsApi = new RunReportsApi(getConfiguration())
+      await runReportsApi.runReport(displayName, false, {
         params: formValues,
       })
 
@@ -184,6 +171,21 @@ const RunReports: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      <AppBreadCrumbs
+        items={[
+          { label: 'Home', href: '/home' },
+          { label: 'Reports', href: '/reports' },
+          ...(reportCategory
+            ? [
+                {
+                  label: reportCategory,
+                  href: `/reports/${reportCategory.toLowerCase()}`,
+                },
+              ]
+            : []),
+          { label: displayName },
+        ]}
+      />
       <Link
         to="/reports"
         className="flex items-center text-zinc-500 mb-4 hover:text-black"
@@ -192,9 +194,7 @@ const RunReports: React.FC = () => {
       </Link>
       <Card>
         <CardHeader>
-          <CardTitle className="capitalize">
-            {reportName?.replace(/-/g, ' ')}
-          </CardTitle>
+          <CardTitle className="capitalize">{displayName}</CardTitle>
         </CardHeader>
         <CardContent>
           {error && (

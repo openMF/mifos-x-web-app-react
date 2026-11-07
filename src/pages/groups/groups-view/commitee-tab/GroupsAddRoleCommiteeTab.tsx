@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 
 const GroupsAddRoleCommitteeTab = () => {
   const navigate = useNavigate()
+  const { id } = useParams()
   const { t } = useTranslation('groups')
   const { t: tc } = useTranslation('common')
 
@@ -40,7 +41,11 @@ const GroupsAddRoleCommitteeTab = () => {
         items={[
           { label: tc('nav.home'), href: '/home' },
           { label: t('title'), href: '/groups' },
-          { label: t('addRole.breadcrumbGroup') },
+          {
+            label: t('addRole.breadcrumbGroup'),
+            href: `/groups/${id}/general`,
+          },
+          { label: t('view.tabs.committee'), href: `/groups/${id}/committee` },
           { label: t('addRole.heading'), current: true },
         ]}
       />

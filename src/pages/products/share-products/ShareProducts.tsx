@@ -29,21 +29,16 @@ import {
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 
-import {
-  SelfShareProductsApi,
-  type GetProductsTypeProductIdResponse,
-} from '@/fineract-api'
+import { ProductsApi, type GetProductsPageItems } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
-const shareApi = new SelfShareProductsApi(getConfiguration())
+const productsApi = new ProductsApi(getConfiguration())
 
 const ShareProducts = () => {
   const navigate = useNavigate()
 
   // data
-  const [products, setProducts] = useState<GetProductsTypeProductIdResponse[]>(
-    []
-  )
+  const [products, setProducts] = useState<GetProductsPageItems[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
@@ -52,13 +47,9 @@ const ShareProducts = () => {
   useEffect(() => {
     const fetchShareProducts = async () => {
       try {
-        const res = await shareApi.retrieveAllProducts1()
-        const items = res.data
-        setProducts(
-          typeof items !== 'string' && items
-            ? (items as GetProductsTypeProductIdResponse[])
-            : []
-        )
+        // The staff endpoint, as /self/products/share is for self-service users
+        const res = await productsApi.retrieveAllProducts('share')
+        setProducts(Array.from(res.data.pageItems ?? []))
       } catch (err) {
         console.error('Failed to fetch share products', err)
       }

@@ -58,7 +58,7 @@ const ViewClosure = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Accounting' },
+          { label: 'Accounting', href: '/accounting' },
           { label: 'Closing Entries', href: '/accounting/closing-entries' },
           { label: `${closure?.id}`, current: true },
         ]}

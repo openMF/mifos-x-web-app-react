@@ -103,8 +103,9 @@ const EditEmployees = () => {
       <AppBreadCrumbs
         items={[
           { label: 'Home', href: '/home' },
-          { label: 'Organization' },
+          { label: 'Organization', href: '/organization' },
           { label: 'Manage Employees', href: '/organization/employees' },
+          { label: `${id}`, href: `/organization/employees/${id}` },
           { label: 'Edit', current: true },
         ]}
       />

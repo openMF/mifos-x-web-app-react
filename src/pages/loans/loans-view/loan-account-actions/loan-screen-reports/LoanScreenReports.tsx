@@ -5,9 +5,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 
 const LoanScreenReports = () => {
-  return <div></div>
+  const breadcrumbs = useAccountBreadcrumbs({
+    actionLabel: 'Loan Screen Reports',
+  })
+
+  return (
+    <div className="min-h-screen px-6 py-10">
+      <AppBreadCrumbs items={breadcrumbs} />
+    </div>
+  )
 }
 
 export default LoanScreenReports

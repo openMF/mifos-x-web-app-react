@@ -7,6 +7,8 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import type { AxiosError } from 'axios'
+import { format, parseISO } from 'date-fns'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -15,20 +17,78 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 import { getConfiguration } from '@/lib/fineract-openapi'
-import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
+import {
+  HolidaysApi,
+  OfficesApi,
+  type GetOfficesResponse,
+  type PostHolidaysRequest,
+} from '@/fineract-api'
 
 // repayment scheduling options
 const REPAYMENT_TYPES = [
-  { id: 'RESCHEDULE_TO_NEXT_MEETING', name: 'Reschedule to Next Meeting' },
   { id: 'RESCHEDULE_TO_NEXT_REPAYMENT', name: 'Reschedule to Next Repayment' },
-  { id: 'NO_REPAYMENT', name: 'No Repayment' },
 ]
 
 const officesApi = new OfficesApi(getConfiguration())
+const holidaysApi = new HolidaysApi(getConfiguration())
+
+const HOLIDAY_DATE_FORMAT = 'dd MMMM yyyy'
+
+type HolidayCreateRequest = PostHolidaysRequest & {
+  reschedulingType: number
+}
+
+const HOLIDAY_RESCHEDULING_TYPES = {
+  RESCHEDULE_TO_NEXT_REPAYMENT: 1,
+  RESCHEDULE_TO_SPECIFIC_DATE: 2,
+} as const
+
+type HolidayApiErrorResponse = {
+  defaultUserMessage?: string
+  developerMessage?: string
+  errors?: Array<{
+    defaultUserMessage?: string
+    developerMessage?: string
+  }>
+}
+
+const formatHolidayDate = (date: string) =>
+  format(parseISO(date), HOLIDAY_DATE_FORMAT)
+
+const getHolidayReschedulingPayload = (repaymentType: string) => {
+  if (repaymentType === 'RESCHEDULE_TO_NEXT_REPAYMENT') {
+    return {
+      reschedulingType: HOLIDAY_RESCHEDULING_TYPES.RESCHEDULE_TO_NEXT_REPAYMENT,
+    }
+  }
+
+  if (repaymentType === 'RESCHEDULE_TO_NEXT_MEETING') {
+    throw new Error(
+      'Reschedule to Next Meeting requires a backend-provided next meeting date. Add that date to the form/API response before submitting.'
+    )
+  }
+
+  throw new Error(`Unsupported repayment scheduling type: ${repaymentType}`)
+}
+
+const getHolidayErrorMessage = (error: unknown) => {
+  const axiosError = error as AxiosError<HolidayApiErrorResponse>
+  const responseData = axiosError.response?.data
+
+  return (
+    responseData?.errors?.[0]?.defaultUserMessage ||
+    responseData?.errors?.[0]?.developerMessage ||
+    responseData?.defaultUserMessage ||
+    responseData?.developerMessage ||
+    axiosError.message ||
+    'Failed to create holiday'
+  )
+}
 
 const ManageHolidays = () => {
   const navigate = useNavigate()
   const [offices, setOffices] = useState<GetOfficesResponse[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // fetch offices
   useEffect(() => {
@@ -56,8 +116,52 @@ const ManageHolidays = () => {
   const handleChange = (field: keyof typeof form, value: string) =>
     setForm(prev => ({ ...prev, [field]: value }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (isSubmitting) return
+
+    if (
+      !form.name.trim() ||
+      !form.fromDate ||
+      !form.toDate ||
+      !form.repaymentType ||
+      form.offices.length === 0
+    ) {
+      alert('Please fill all required fields.')
+      return
+    }
+
+    let reschedulingPayload: ReturnType<typeof getHolidayReschedulingPayload>
+    try {
+      reschedulingPayload = getHolidayReschedulingPayload(form.repaymentType)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Invalid repayment option.')
+      return
+    }
+
+    const payload: HolidayCreateRequest = {
+      name: form.name.trim(),
+      description: form.description.trim(),
+      fromDate: formatHolidayDate(form.fromDate),
+      toDate: formatHolidayDate(form.toDate),
+      ...reschedulingPayload,
+      offices: form.offices.map(officeId => ({ officeId })),
+      locale: 'en',
+      dateFormat: HOLIDAY_DATE_FORMAT,
+    }
+
+    try {
+      setIsSubmitting(true)
+      await holidaysApi.createNewHoliday(payload)
+      alert('Holiday created successfully!')
+      navigate('/organization/holidays')
+    } catch (err) {
+      console.error('Failed to create holiday', err)
+      alert(getHolidayErrorMessage(err))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -169,8 +273,9 @@ const ManageHolidays = () => {
             <Button
               type="submit"
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+              disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </div>
         </form>

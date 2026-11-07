@@ -1,0 +1,32 @@
+name: single-commit-check
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-single-commit:
+    name: Enforce single commit per PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Verify PR has exactly one commit
+        env:
+          COMMIT_COUNT: ${{ github.event.pull_request.commits }}
+        run: |
+          echo "This PR has $COMMIT_COUNT commit(s)."
+          if [ "$COMMIT_COUNT" -gt 1 ]; then
+            echo "::error::This PR has $COMMIT_COUNT commits. Please squash them into a single commit before merging."
+            exit 1
+          fi
+          echo "PR has a single commit. Check passed."

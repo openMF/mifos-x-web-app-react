@@ -6,16 +6,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
-import AppStepper from '@/components/custom/stepper/AppStepper'
-import {
-  faPen,
-  faDollarSign,
-  faSlidersH,
-  faCalendarAlt,
-  faTag,
-  faBook,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import LoanProductDetailsStep from './create-loan-products-stepper/LoanProductDetailsStep'
 import LoanProductCurrencyStep from './create-loan-products-stepper/LoanProductCurrencyStep'
 import LoanProductSettingsStep from './create-loan-products-stepper/LoanProductSettingsStep'
@@ -26,30 +16,59 @@ import { getConfiguration } from '@/lib/fineract-openapi'
 import {
   LoanProductsApi,
   type GetLoanProductsTemplateResponse,
+  type PostLoanProductsRequest,
 } from '@/fineract-api'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import MultiStepForm from '@/components/custom/multi-step-form/MultiStepForm'
+import { useNavigate } from 'react-router-dom'
+import { datatableErrorMessage } from '@/lib/datatables-api'
+import { incompleteMappings, missingAccounts } from '../loanProductAccounting'
 
 const loanProductApi = new LoanProductsApi(getConfiguration())
 
 const CreateLoanProducts = () => {
+  const navigate = useNavigate()
+  const { t } = useTranslation('products')
   const [loanProducts, setLoanProducts] =
     useState<GetLoanProductsTemplateResponse>()
-  const [_formData, _setFormData] = useState({
-    // Reserved for future use
-    fund: '', // only fund for now
-  })
 
+  //fetch inital data
   useEffect(() => {
-    const fetchLoanProductDetails = async () => {
+    const fetchInitialData = async () => {
       try {
         const response = await loanProductApi.retrieveTemplate11()
         setLoanProducts(response.data)
       } catch (err) {
-        console.error('Failed to fetch Loan Products', err)
+        console.log('Failed to fetch initial data: ', err)
       }
     }
-    fetchLoanProductDetails()
+    fetchInitialData()
   }, [])
+
+  const handleSubmit = async () => {
+    try {
+      await loanProductApi.createLoanProduct(formData)
+      navigate(`/products/loan-products`)
+    } catch (error) {
+      console.error('Error while submitting', error)
+      // MultiStepForm shows a thrown error; without it a refused product looked like nothing happened
+      throw new Error(
+        datatableErrorMessage(error) ?? t('loanProductAccounting.saveFailed')
+      )
+    }
+  }
+
+  //some form details are kept manually because they are broken in OpenApi
+  const [formData, setFormData] = useState<PostLoanProductsRequest>({
+    locale: 'en',
+    dateFormat: 'dd MMMM yyyy',
+    isInterestRecalculationEnabled: false,
+    accountingRule: 1,
+    interestRateVariationsForBorrowerCycle: [],
+    numberOfRepaymentVariationsForBorrowerCycle: [],
+    principalVariationsForBorrowerCycle: [],
+  })
 
   if (!loanProducts) {
     return (
@@ -57,36 +76,84 @@ const CreateLoanProducts = () => {
     )
   }
 
-  const pages = [
+  const steps = [
     {
-      icon: <FontAwesomeIcon icon={faPen} className="text-base" />,
-      label: 'DETAILS',
-      component: <LoanProductDetailsStep />,
+      title: 'DETAILS',
+      component: (
+        <LoanProductDetailsStep formData={formData} onChange={setFormData} />
+      ),
     },
     {
-      icon: <FontAwesomeIcon icon={faDollarSign} className="text-base" />,
-      label: 'CURRENCY',
-      component: <LoanProductCurrencyStep />,
+      title: 'CURRENCY',
+      component: (
+        <LoanProductCurrencyStep
+          formData={formData}
+          onChange={setFormData}
+          template={loanProducts}
+        />
+      ),
     },
     {
-      icon: <FontAwesomeIcon icon={faSlidersH} className="text-base" />,
-      label: 'SETTINGS',
-      component: <LoanProductSettingsStep />,
+      title: 'SETTINGS',
+      component: (
+        <LoanProductSettingsStep
+          formData={formData}
+          onChange={setFormData}
+          template={loanProducts}
+        />
+      ),
     },
     {
-      icon: <FontAwesomeIcon icon={faCalendarAlt} className="text-base" />,
-      label: 'TERMS',
-      component: <LoanProductTermsStep />,
+      title: 'TERMS',
+      component: (
+        <LoanProductTermsStep
+          formData={formData}
+          onChange={setFormData}
+          template={loanProducts}
+        />
+      ),
     },
     {
-      icon: <FontAwesomeIcon icon={faTag} className="text-base" />,
-      label: 'CHARGES',
-      component: <LoanProductChargesStep />,
+      title: 'CHARGES',
+      component: (
+        <LoanProductChargesStep
+          formData={formData}
+          onChange={setFormData}
+          template={loanProducts}
+        />
+      ),
     },
     {
-      icon: <FontAwesomeIcon icon={faBook} className="text-base" />,
-      label: 'ACCOUNTING',
-      component: <LoanProductAccountingStep />,
+      title: 'ACCOUNTING',
+      component: (
+        <LoanProductAccountingStep
+          formData={formData}
+          onChange={setFormData}
+          template={loanProducts}
+        />
+      ),
+      validate: () => {
+        const missing = missingAccounts(
+          formData.accountingRule,
+          formData as Record<string, unknown>
+        )
+        if (missing.length)
+          return t('loanProductAccounting.missingAccounts', {
+            accounts: missing
+              .map(f => t(`loanProductAccounting.fields.${f.label}`))
+              .join(', '),
+          })
+        const incomplete = incompleteMappings(
+          formData as Record<string, unknown>
+        )
+        return incomplete.length
+          ? t('loanProductAccounting.advanced.incompleteRows', {
+              tables: incomplete
+                .map(m => t(`loanProductAccounting.advanced.${m.label}.title`))
+                .join(', '),
+            })
+          : null
+      },
     },
   ]
 
@@ -105,7 +172,13 @@ const CreateLoanProducts = () => {
 
       <div className="bg-white dark:bg-zinc-900 border rounded-md shadow-sm p-6">
         <h1 className="text-2xl font-semibold mb-10">Create Loan Product</h1>
-        <AppStepper steps={pages} />
+        {/* MultiStep form component */}
+        <MultiStepForm
+          prefix="Loan Product"
+          steps={steps}
+          onSubmit={handleSubmit}
+          onCancel={() => navigate('/products/loan-products')}
+        />
       </div>
     </div>
   )

@@ -2,6 +2,15 @@
 
 This document tracks missing or incorrect fields in the OpenAPI-generated interfaces used in the React migration of the Mifos X Web App. Do modify this based if you notice any additions/deletions need to be made to this list
 
+> **Validated against Fineract (1.16.0-SNAPSHOT) on [19/9/2026], diffed against the
+> 1.12.0-SNAPSHOT spec this app was originally generated from. (Current yaml file)**
+>
+> **Legend:**
+>
+> - `[TO BE REMOVED]` - Fineract removed this field/feature, this entries can be deleted.
+> - `[TO BE FIXED]` - Fineract has fixed these fields/endpoints correctly; the OpenAPI gap
+>   is resolved, but the corresponding React page still needs to be updated.
+
 ---
 
 ## Admin Users
@@ -10,13 +19,13 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 **Missing in `GetUsersResponse`:**
 
-- `isSelfServiceUser`
+- `isSelfServiceUser` [TO BE REMOVED]
 
 ### `/users/{id}`
 
 **Missing in `GetUsersUserIdResponse`:**
 
-- `isSelfServiceUser`
+- `isSelfServiceUser` [TO BE REMOVED]
 
 ---
 
@@ -35,6 +44,26 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `holdGuaranteeFunds`
 - More missing fields in description/code
 - Unnecessary fields also present
+- `GetLoanProductsAccountingRule` has `description`, but the response sends the rule name as `value` (e.g. `CASH BASED`)
+- `penaltyToIncomeAccountMappings` and `writeOffReasonsToExpenseMappings` missing
+- `GetChargeOffReasonToExpenseAccountMappings` has `chargeOffReasonCodeValue`, but the response sends `reasonCodeValue`
+
+### `/products/loan-products/create`
+
+**Missing in `GetLoanProductsTemplateResponse`:**
+
+- `fundOptions`
+- `allowPartialPeriodInterestCalculation` is misspelled
+- `delinquencyBucketOptions` missing
+- `interestFreePeriodOptions` missing
+- `overAppliedCalculationTypeOptions` missing
+- `floatingRateOptions` missing
+- `penaltyOptions` and `writeOffReasonOptions` missing (the advanced accounting rules read them)
+
+**Missing in `PostLoanProductsRequest`:**
+
+- `writeOffReasonsToExpenseMappings` (Fineract reads it with the other advanced accounting mappings)
+- `paymentChannelToFundSourceMappings`, `feeToIncomeAccountMappings` and `penaltyToIncomeAccountMappings` are typed with the response rows; Fineract reads `paymentTypeId` / `fundSourceAccountId` and `chargeId` / `incomeAccountId`
 
 ### `/products/saving-products/{id}/general`
 
@@ -46,14 +75,85 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `isDormancyTrackingActive`
 - Additional fields missing
 
+### `/savingsproducts (create)`
+
+**Missing in `PostSavingsProductsRequest`:**
+
+- `minRequiredOpeningBalance` [TO BE FIXED]
+- `lockinPeriodFrequency`
+- `lockinPeriodFrequencyType`
+- `withdrawalFeeForTransfers` [TO BE FIXED]
+- `minBalanceForInterestCalculation`
+- `enforceMinRequiredBalance` [TO BE FIXED]
+- `minRequiredBalance`
+- `withHoldTax` [TO BE FIXED]
+- `allowOverdraft` [TO BE FIXED]
+- `isDormancyTrackingActive` [TO BE FIXED]
+
 ### `/products/share`
 
 - Not present in OpenAPI
 
-### `/products/products-mix`
+### `/products/share-products/{id}`
+
+**Mistyped in `GetProductsTypeProductIdResponse`** (`GET /products/share/{productId}`):
+
+- `accountingRule`, `lockPeriodTypeEnum`, `minimumActivePeriodForDividendsTypeEnum` and the charges' `chargeCalculationType`/`chargeTimeType` are typed with `description`, but Fineract sends `value`
+- `charges` and `marketPrice` are typed as `Set`, but Fineract sends JSON arrays
+- `marketPrice[].fromDate` is typed as a string, but Fineract sends a `[year, month, day]` array
+
+### `/products/products-mix` [TO BE FIXED] (Schema didn't exist before)
 
 - `loanproducts?associations=productMixes`
 - `GetLoanProductsResponse` does not include product mix data
+
+### `/charges`
+
+- `taxGroupId` missing from `ChargeRequest` [TO BE FIXED]
+- `taxGroupOptions` typed as `TaxGroupData`, but that type is missing `id` and `name` [TO BE FIXED]
+
+### `/fixeddepositproducts`
+
+- `amountRangeFrom`/`amountRangeTo` missing from `PostFixedDepositProductsChartSlabs`
+
+### `/recurringdepositproducts`
+
+- `amountRangeFrom`/`amountRangeTo` missing from `PostRecurringDepositProductsChartSlabs`
+
+### `/taxes/component`
+
+**Missing in `PostTaxesComponentsRequest`:** [TO BE FIXED]
+
+- `debitAccountType`
+- `debitAccountId`
+
+**Misspelled in `PostTaxesComponentsRequest`:** [TO BE FIXED]
+
+- `creditAccountId` is spelled as `creditAcountId` (missing 'c')
+- `debitAccountId` is spelled as `debitAcountId` (missing 'c')
+
+**Missing in `GetTaxesComponentsResponse`:**
+
+- `debitAccountType`
+- `debitAccount`
+
+### `/taxes/group`
+
+**Missing in `TaxGroupData` (template response):**
+
+- `taxComponents` — API returns it but not in spec, only `taxAssociations` is present
+
+**Missing in `GetTaxesGroupTaxAssociations`:**
+
+- `endDate`
+
+**Missing in `PutTaxesGroupTaxComponents`:**
+
+- `startDate`
+
+**Serialization issue in `PostTaxesGroupRequest` and `PutTaxesGroupTaxGroupIdRequest`:**
+
+- `taxComponents` is typed as `Set` but must be sent as array for correct JSON serialization
 
 ---
 
@@ -78,7 +178,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ### `/organization/holidays/{id}/edit`
 
-- `GetHolidayResponse` missing `description` → cannot fetch previous value for edit
+- `GetHolidaysResponse` missing `description` → cannot fetch previous value for edit
 
 ### `/organization/employees/{id}/edit`
 
@@ -88,18 +188,40 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `GetTellersResponse` missing `endDate` and `description` → edit blocked
 
+### `/organization/fund-mapping`
+
+- `PostAdhocQuerySearchRequest` (POST `/search/advance`) missing `entities`, `loanStatus`, `loanProducts`, `offices`, `minOutStandingAmountPercentage`, `maxOutStandingAmountPercentage`, `outstandingAmount`
+
 ---
 
 ## Admin System
 
 ### `/system/data-tables`
 
-- `GetDataTablesResponse` missing `entitySubType`
+- `GetDataTablesResponse` missing `entitySubType` [TO BE FIXED]
 - Page works, but causes many TypeScript errors
 
 ### `/system/roles-and-permissions`
 
 - `GetRolesResponse` missing `status`
+
+### `/system/audit-trails`
+
+- `retrieveAuditEntries` (GET `/audits`) typed as `string`; the paged response has `totalFilteredRecords` and `pageItems`
+- `retrieveAuditEntry` (GET `/audits/{id}`) typed as `AuditData`, which only has `createdBy`, `createdDate`, `lastModifiedBy`, `lastModifiedDate`; the entry has `actionName`, `entityName`, `resourceId`, `maker`, `madeOnDate`, `checker`, `checkedOnDate`, `processingResult`, `commandAsJson`, `officeName` and more
+- `AppUserData` (in `appUsers` of GET `/audits/searchtemplate`) missing `id`, `username`
+
+---
+
+## Admin Templates
+
+### `/templates/template`
+
+- `GetTemplatesTemplateResponse`: `entity`, `type` defined as numbers instead of arrays
+
+### `/templates/{id}/template`
+
+- no defined type
 
 ---
 
@@ -110,13 +232,13 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetCentersResponse` → references `GetCentersPageItems`
 - `GetCentersPageItems` missing:
   - `accountNo`
-  - `externalId`
+  - `externalId` [TO BE FIXED]
 
 ### `/centers/{id}/general`
 
 - `GetCentersCenterIdResponse` missing:
   - `accountNo`
-  - `externalId`
+  - `externalId` [TO BE FIXED]
   - `activationDate`
 - Causes TypeScript errors
 
@@ -126,7 +248,8 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
   - `name`
   - `officeId`
   - `active`
-- Other required fields missing
+- Other required fields missing [TO BE FIXED]
+  - `submittedOnDate` (Still missing)
 
 ### `/centers/{id}/notes`
 
@@ -135,6 +258,12 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/centers/{id}`
 
 - `GetCentersCenterIdResponse` missing `staff` data
+
+### `/centers/{id}` (PUT)
+
+- `PutCentersCenterIdRequest` incomplete `staffId`, `externalId` missing from both [TO BE FIXED]
+  - `name` [TO BE FIXED]
+- `PutGroupsGroupIdRequest` (the endpoint the Angular web-app actually PUTs to for center edits, `/v1/groups/{id}`, not `/v1/centers/{id}`) incomplete `staffId`, `externalId` missing from both
 
 ---
 
@@ -145,7 +274,7 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetGroupsResponse` → references `GetGroupsPageItems`
 - `GetGroupsPageItems` missing:
   - `accountNo`
-  - `externalId`
+  - `externalId` [TO BE FIXED]
 
 ### `/groups` (POST)
 
@@ -163,3 +292,89 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/clients/{id}/charges/{chargeId}`
 
 - `GetClientsChargesPageItems` missing `clientTransactionDatas`
+
+### `/clients/template`
+
+- `GetClientsTemplateResponse` missing `genderOptions`, `clientTypeOptions`, `clientClassificationOptions`
+
+### `/clients`
+
+- `PostClientsRequest` missing `staffId`, `isStaff`
+- `submittedOnDate` [TO BE FIXED]
+
+### `/clients/{id}` (GET)
+
+- `GetClientsClientIdResponse` missing `legalFormId`, `middlename`, `dateOfBirth`, `genderId`, `mobileNo`, `clientTypeId`, `clientClassificationId`, `submittedOnDate`
+- `GetClientsClientIdResponse` also missing `fullname`, `legalForm`, `gender`, `isStaff`, `staffName`, `clientType`, `clientClassification`, `subStatus`, `savingsAccountId`, `clientNonPersonDetails` (the Personal Data tab reads the response as `ClientData`, which has them)
+- `staffId` [TO BE FIXED]
+
+### `/clients/{id}` (PUT)
+
+- `PutClientsClientIdRequest` only has `externalId`, `resourceExternalId` [TO BE FIXED] (firstname, lastname added)
+
+### `/clients/{id}?command=proposeTransfer` (POST)
+
+- `PostClientsClientIdRequest` only declares `activationDate`, `dateFormat`, and `locale`. Missing `destinationOfficeId`, `transferDate`, and `note`.
+
+### `/savingsaccounts/template`
+
+- `GetSavingsAccountsTemplateResponse` missing `fieldOfficerOptions`, `interestCompoundingPeriodTypeOptions`, `interestPostingPeriodTypeOptions`, `interestCalculationTypeOptions`, `interestCalculationDaysInYearTypeOptions`, `lockinPeriodFrequencyTypeOptions`, `savingsAmountOnClosureTypeOptions`, `withdrawalFeeTypeOptions`, `chargeOptions`, `currencyOptions`
+
+### `/savingsaccounts`
+
+- `PostSavingsAccountsRequest` missing `fieldOfficerId`, `nominalAnnualInterestRate`, `interestCompoundingPeriodType`, `interestPostingPeriodType`, `interestCalculationType`, `interestCalculationDaysInYearType`, `minRequiredOpeningBalance`, `lockinPeriodFrequency`,
+
+### `/accounts/share/template`
+
+- `GetAccountsTypeTemplateResponse` missing `chargeOptions`, `minimumActivePeriodFrequencyTypeOptions``lockinPeriodFrequencyTypeOptions`, `currencyOptions`
+
+---
+
+### `/accountingrules` (POST) / `/accountingrules/{id}` (PUT)
+
+- `AccountRuleRequest` missing `debitTags`, `creditTags`, `allowMultipleDebitEntries`, `allowMultipleCreditEntries`
+
+### `/accountingrules/{id}` (GET)
+
+- `AccountingRuleData` missing `accountToDebit`,`accountToCredit`
+
+### `/loan-originators`
+
+- The generated client has no API class for `/loan-originators` (list, template, get, create, update, delete), so the Loan Originators pages call it through `@/lib/axios`
+
+### `/entityDatatableChecks` (GET)
+
+- `retrieveAll6` is typed as `GetEntityDatatableChecksResponse[]`, but the response is a page: `{ totalFilteredRecords, pageItems }`
+
+### `/entityDatatableChecks/template` (GET)
+
+- `GetEntityDatatableChecksTemplateResponse` types `datatables`, `statusClient`, `statusLoans`, `statusGroup` and `statusSavings` as `object[]`; the real items are `{ entity, dataTableName }` and `{ name, code }`
+
+---
+
+## System: Manage Data Tables
+
+### `/datatables/{datatableName}` (PUT)
+
+- `PutDataTablesRequestAddColumns` and `PutDataTablesRequestChangeColumns` are missing `length` (Fineract reads it for String columns)
+
+### `/datatables/{datatableName}` (GET)
+
+- `GetDataTablesResponse` is missing `entitySubType`
+
+### `/provisioningcriteria/{criteriaId}` (GET)
+
+- `GetProvisioningCriteriaCriteriaIdResponse` has `provisioningcriteria`, but the response sends the categories as `definitions`
+- `retrieveProvisioningCriteria` has no `template` parameter; `?template=true` adds `selectedLoanProducts` and `glAccounts`, which the edit page needs
+
+### `/jobs`
+
+- The generated client has no API class for `/jobs` (list, get, update, `executeJob`, `runhistory`); only `SchedulerApi` (`/scheduler`) exists, so the Manage Jobs pages call `/jobs` through `@/lib/axios`
+
+## Organization: SMS Campaigns
+
+### `/smscampaigns`, `/smscampaigns/template`, `/smscampaigns/{campaignId}`, `/smscampaigns/preview`
+
+- The endpoints are only generated on `DefaultApi` with generic method names, and there are no request types for the create/update bodies (`campaignName`, `triggerType`, `runReportId`, `isNotification`, `paramValue` as an object, `recurrenceStartDate`, `frequency`, `interval`, `repeatsOnDay`, `dateTimeFormat`), so the SMS Campaigns pages call them through `@/lib/axios`
+- `SmsCampaignData.recurrenceStartDate` is typed as a string, but the API returns epoch seconds as a number (e.g. `1792434600.0`)
+- The notification flag is sent as `isNotification` but returned as `notification`

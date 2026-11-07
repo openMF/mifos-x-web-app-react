@@ -8,44 +8,46 @@
 
 import { Page, Locator, expect } from '@playwright/test'
 import { BasePage } from './BasePage'
-import { LoginSelectors } from '../types/selectors'
+import { LOGIN_SELECTORS } from '../config/selectors'
+import { ROUTES } from '../config/routes'
 
 /**
  * LoginPage - React implementation of login page object.
  *
- * Core rule: only the SELECTORS object should differ across frameworks.
+ * Core rule: only the LOGIN_SELECTORS map and the ROUTES.login
+ * literal should differ across frameworks. Public method signatures
+ * are identical to the Angular `LoginPage` so spec files can be
+ * shared cross-repo (proposal §8 portability claim).
+ *
+ * Selectors are sourced from `playwright/config/selectors.ts`
+ * (Layer 2 — typed contracts). The login route is sourced from
+ * `playwright/config/routes.ts` (Layer 2 — route registry). The
+ * previous in-file `SELECTORS` const and `/login` literal were
+ * migrated to those modules in MXWAR-98 with no behavior change.
  */
-const SELECTORS: LoginSelectors = {
-  usernameInput: 'input[name="username"]',
-  passwordInput: 'input[name="password"]',
-  loginButton: 'submit|log\\s*in',
-  errorMessage: '.text-red-500',
-  loadingIndicator: 'button[type="submit"]:disabled',
-}
-
 export class LoginPage extends BasePage {
-  readonly url = '/login'
+  readonly url = ROUTES.login
 
   constructor(page: Page) {
     super(page)
   }
 
   get usernameInput(): Locator {
-    return this.page.locator(SELECTORS.usernameInput)
+    return this.page.locator(LOGIN_SELECTORS.usernameInput)
   }
 
   get passwordInput(): Locator {
-    return this.page.locator(SELECTORS.passwordInput)
+    return this.page.locator(LOGIN_SELECTORS.passwordInput)
   }
 
   get loginButton(): Locator {
     return this.page.getByRole('button', {
-      name: new RegExp(SELECTORS.loginButton, 'i'),
+      name: new RegExp(LOGIN_SELECTORS.loginButton, 'i'),
     })
   }
 
   get errorMessages(): Locator {
-    return this.page.locator(SELECTORS.errorMessage)
+    return this.page.locator(LOGIN_SELECTORS.errorMessage)
   }
 
   get rememberMeCheckbox(): Locator {
@@ -64,7 +66,7 @@ export class LoginPage extends BasePage {
 
   get loadingIndicator(): Locator {
     return this.page.locator(
-      SELECTORS.loadingIndicator ?? 'button[type="submit"]:disabled'
+      LOGIN_SELECTORS.loadingIndicator ?? 'button[type="submit"]:disabled'
     )
   }
 

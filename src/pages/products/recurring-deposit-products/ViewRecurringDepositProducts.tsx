@@ -47,7 +47,7 @@ const ViewRecurringDepositProducts = () => {
           { label: 'Products', href: '/products' },
           {
             label: 'Recurring Deposit Products',
-            href: '/products/recurring-deposit',
+            href: '/products/recurring-deposit-products',
           },
           { label: recurrProduct?.name ?? 'View', current: true },
         ]}

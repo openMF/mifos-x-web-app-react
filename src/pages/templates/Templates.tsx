@@ -5,6 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Table,
   TableBody,
@@ -14,13 +16,67 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+
+import { getConfiguration } from '@/lib/fineract-openapi'
+import {
+  UserGeneratedDocumentsApi,
+  type GetTemplatesResponse,
+} from '@/fineract-api'
+
 import { Plus } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+
+//templates API
+const templatesApi = new UserGeneratedDocumentsApi(getConfiguration())
 
 const Templates = () => {
   const navigate = useNavigate()
+
+  //state to fetch templates data
+  const [templates, setTemplates] = useState<GetTemplatesResponse[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await templatesApi.retrieveAll40()
+        setTemplates(
+          Array.isArray(response.data) ? response.data : [response.data]
+        )
+      } catch (err) {
+        console.error('Failed to fetch templates', err)
+      }
+    }
+    fetchTemplates()
+  }, [])
+
+  const normalizedSearch = searchTerm.toLowerCase()
+  const filtered = templates.filter(template =>
+    (template.name ?? '').toLowerCase().includes(normalizedSearch)
+  )
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
+  const paginated = filtered.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
+
+  const handleItemsPerPageChange = (value: string) => {
+    setItemsPerPage(parseInt(value))
+    setPage(1)
+  }
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
@@ -31,44 +87,101 @@ const Templates = () => {
         ]}
       />
 
-      <div className="mb-6">
-        <Button className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white">
+      <div className="flex justify-between items-center mb-6">
+        <Button
+          className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
+          onClick={() => navigate('/templates/create')}
+        >
           <Plus className="mr-2" /> Create Template
         </Button>
       </div>
 
+      <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
+        <Input
+          placeholder="Filter"
+          value={searchTerm}
+          onChange={e => {
+            setSearchTerm(e.target.value)
+            setPage(1)
+          }}
+          className="max-w-sm h-11 text-base"
+        />
+
+        <div className="flex items-center gap-2">
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={handleItemsPerPageChange}
+          >
+            <SelectTrigger className="w-[140px] h-11 text-base">
+              <SelectValue placeholder="Items per page" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="5">5</SelectItem>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            Prev
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
+        {/* Templates table */}
         <Table>
-          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2"></TableCaption>
+          <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
+            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
+            of {totalPages}
+          </TableCaption>
           <TableHeader>
-            <TableRow className="text-base">
-              <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
-                Entity
-              </TableHead>
-              <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
-                Type
-              </TableHead>
-              <TableHead className="px-6 py-4 text-gray-600 dark:text-gray-200">
-                Name
-              </TableHead>
+            <TableRow>
+              <TableHead className="px-6 py-4">Entity</TableHead>
+              <TableHead className="px-6 py-4">Type</TableHead>
+              <TableHead className="px-6 py-4">Name</TableHead>
             </TableRow>
           </TableHeader>
-
           <TableBody>
-            <TableRow
-              className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-              onClick={() => navigate(`//`)}
-            >
-              <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
-                test
-              </TableCell>
-              <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                test
-              </TableCell>
-              <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                test
-              </TableCell>
-            </TableRow>
+            {paginated.map((template, idx) => (
+              <TableRow
+                key={idx}
+                onClick={() => {
+                  if (template.id) navigate(`/templates/${template.id}`)
+                }}
+                className="text-base hover:bg-muted cursor-pointer"
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    if (template.id) navigate(`/templates/${template.id}`)
+                  }
+                }}
+              >
+                <TableCell className="px-6 py-4">
+                  {template.entity ?? '—'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {template.type ?? '—'}
+                </TableCell>
+                <TableCell className="px-6 py-4">{template.name}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

@@ -8,7 +8,8 @@
 import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
-import { Route, Routes } from 'react-router-dom'
+import Callback from '@/pages/login/Callback'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
 import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
@@ -28,6 +29,7 @@ import LoanDisbursal from '@/pages/tasks/checker-inbox-and-tasks-tabs/loan-disbu
 import RescheduleLoan from '@/pages/tasks/checker-inbox-and-tasks-tabs/reschedule-loan/RescheduleLoan'
 import Profile from '@/pages/profile/Profile'
 import NotFound from '@/pages/not-found/NotFound'
+import SearchResults from '@/pages/search/SearchResults'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
 import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
@@ -42,12 +44,18 @@ import CreateFinancialActivityMappings from '@/pages/accounting/financial-activi
 import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
+import CreateProvisioningEntry from '@/pages/accounting/provisioning-entries/CreateProvisioningEntry'
 import Reports from '@/pages/reports/Reports'
 import RunReports from '@/pages/reports/RunReports'
 import Users from '@/pages/users/Users'
 import ViewUsers from '@/pages/users/ViewUsers'
 import CreateUsers from '@/pages/users/CreateUsers'
 import EditUsers from '@/pages/users/EditUsers'
+import OidcUsers from '@/pages/users/oidc/OidcUsers'
+import OidcViewUser from '@/pages/users/oidc/OidcViewUser'
+import OidcCreateUser from '@/pages/users/oidc/OidcCreateUser'
+import OidcEditUser from '@/pages/users/oidc/OidcEditUser'
+import { isOidcUsable } from '@/lib/oidc-config'
 import Templates from '@/pages/templates/Templates'
 import Organization from '@/pages/organization/Organization'
 import Offices from '@/pages/organization/offices/Offices'
@@ -69,6 +77,17 @@ import Funds from '@/pages/organization/manage-funds/ManageFunds'
 import CreateFunds from '@/pages/organization/manage-funds/CreateFunds'
 import ViewFunds from '@/pages/organization/manage-funds/ViewFunds'
 import EditFunds from '@/pages/organization/manage-funds/EditFunds'
+import FundMapping from '@/pages/organization/fund-mapping/FundMapping'
+import LoanOriginators from '@/pages/organization/loan-originators/LoanOriginators'
+import CreateLoanOriginator from '@/pages/organization/loan-originators/CreateLoanOriginator'
+import ViewLoanOriginator from '@/pages/organization/loan-originators/ViewLoanOriginator'
+import EditLoanOriginator from '@/pages/organization/loan-originators/EditLoanOriginator'
+import LoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/LoanProvisioningCriteria'
+import CreateLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/CreateLoanProvisioningCriteria'
+import ViewLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/ViewLoanProvisioningCriteria'
+import EditLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/EditLoanProvisioningCriteria'
+import EntityDataTableChecks from '@/pages/organization/entity-data-table-checks/EntityDataTableChecks'
+import CreateEntityDataTableCheck from '@/pages/organization/entity-data-table-checks/CreateEntityDataTableCheck'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -79,8 +98,15 @@ import Tellers from '@/pages/organization/tellers/Tellers'
 import CreateTellers from '@/pages/organization/tellers/CreateTellers'
 import ViewTellers from '@/pages/organization/tellers/ViewTellers'
 import EditTellers from '@/pages/organization/tellers/EditTellers'
+import ViewCashiers from '@/pages/organization/tellers/cashiers/viewCashiers'
 import Investors from '@/pages/organization/investors/Investors'
 import WorkingDays from '@/pages/organization/working-days/WorkingDays'
+import InstructionsHistory from '@/pages/organization/instructions-history/InstructionsHistory'
+import PasswordPreferences from '@/pages/organization/password-preferences/PasswordPreferences'
+import SmsCampaigns from '@/pages/organization/sms-campaigns/SmsCampaigns'
+import CreateSmsCampaign from '@/pages/organization/sms-campaigns/CreateSmsCampaign'
+import ViewSmsCampaign from '@/pages/organization/sms-campaigns/ViewSmsCampaign'
+import EditSmsCampaign from '@/pages/organization/sms-campaigns/EditSmsCampaign'
 import Products from '@/pages/products/Products'
 import LoanProducts from '@/pages/products/loan-products/LoanProducts'
 import CreateLoanProducts from '@/pages/products/loan-products/create-loan-products/CreateLoanProducts'
@@ -89,6 +115,8 @@ import SavingsProducts from '@/pages/products/savings-products/SavingsProducts'
 import CreateSavingsProducts from '@/pages/products/savings-products/create-saving-products/CreateSavingsProducts'
 import ViewSavingsProducts from '@/pages/products/savings-products/ViewSavingsProducts'
 import ShareProducts from '@/pages/products/share-products/ShareProducts'
+import CreateShareProduct from '@/pages/products/share-products/create-share-product/CreateShareProduct'
+import ViewShareProduct from '@/pages/products/share-products/ViewShareProduct'
 import Charges from '@/pages/products/charges/Charges'
 import ViewCharges from '@/pages/products/charges/ViewCharges'
 import EditCharges from '@/pages/products/charges/EditCharges'
@@ -106,8 +134,10 @@ import CreateDelinquencyBucket from '@/pages/products/manage-delinquency-buckets
 import ViewDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/ViewDelinquencyBucket'
 import EditDelinquencyBucket from '@/pages/products/manage-delinquency-buckets/delinquency-bucket/EditDelinquencyBucket'
 import ProductsMix from '@/pages/products/products-mix/ProductsMix'
+import CreateProductMix from '@/pages/products/products-mix/CreateProductMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
+import CreateFixedDepositProduct from '@/pages/products/fixed-deposit-products/create-fixed-deposit-product/CreateFixedDepositProduct'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
@@ -115,22 +145,36 @@ import ManageTaxComponents from '@/pages/products/manage-tax-configurations/mana
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
 import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
+import CreateFloatingRate from '@/pages/products/floating-rates/CreateFloatingRate'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
+import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
+import EditDataTable from '@/pages/system/manage-data-tables/EditDataTable'
 import ViewDataTables from '@/pages/system/manage-data-tables/ViewDataTables'
 import Codes from '@/pages/system/codes/Codes'
 import ViewCodes from '@/pages/system/codes/ViewCodes'
+import CreateCode from '@/pages/system/codes/CreateCode'
 import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
 import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
+import EditRolesAndPermissions from '@/pages/system/roles-and-permissions/EditRolesAndPermissions'
 import AccountNumberPreferences from '@/pages/system/account-number-preferences/AccountNumberPreferences'
 import CreateAccountNumberPreferences from '@/pages/system/account-number-preferences/CreateAccountNumberPreferences'
 import ViewAccountNumberPreferences from '@/pages/system/account-number-preferences/ViewAccountNumberPreferences'
 import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/EntityToEntityMapping'
 import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
+import MakerChecker from '@/pages/system/maker-checker/MakerChecker'
+import SchedulerJobs from '@/pages/system/scheduler-jobs/SchedulerJobs'
+import EditSchedulerJob from '@/pages/system/scheduler-jobs/EditSchedulerJob'
+import SchedulerJobHistory from '@/pages/system/scheduler-jobs/SchedulerJobHistory'
 import Configurations from '@/pages/system/configurations/Configurations'
+import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
+import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
+import AboutUs from '@/pages/system/about-us/AboutUs'
+import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
+import SystemInformation from '@/pages/system/system-information/SystemInformation'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -199,12 +243,24 @@ import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/Loans
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
+import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
+import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
+import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
+import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
+import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
+import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
+import ClientsFamilyMembersTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersTab'
 import ClientsDocumentsTab from '@/pages/clients/clients-view/documents-tab/ClientsDocumentsTab'
+import ClientDatatableTab from '@/pages/clients/clients-view/datatables-tab/ClientDatatableTab'
+import LoanDatatableTab from '@/pages/loans/loans-view/datatables-tab/LoanDatatableTab'
+import GroupDatatableTab from '@/pages/groups/groups-view/datatables-tab/GroupDatatableTab'
 import ClientsIdentitiesTab from '@/pages/clients/clients-view/Identities-tab/ClientsidentitiesTab'
+import ClientsGeneralDataTab from '@/pages/clients/clients-view/general-data-tab/ClientsGeneralDataTab'
+import ClientsPersonalDataTab from '@/pages/clients/clients-view/personal-data-tab/ClientsPersonalDataTab'
 import ClientsAddressTab from '@/pages/clients/clients-view/address-tab/ClientsAddressTab'
 import UndoApprovalSharesAccount from '@/pages/shares/shares-account-actions/undo-approval-shares-account/UndoApprovalSharesAccount'
 import SharesAccountView from '@/pages/shares/shares-account-view/SharesAccountView'
@@ -218,11 +274,30 @@ import ActivateSharesAccount from '@/pages/shares/shares-account-actions/activat
 import ApplyShares from '@/pages/shares/shares-account-actions/apply-shares/ApplyShares'
 import RedeemShares from '@/pages/shares/shares-account-actions/redeem-shares/RedeemShares'
 import CloseSharesAccount from '@/pages/shares/shares-account-actions/close-shares-account/CloseSharesAccount'
+import ViewTemplates from '@/pages/templates/ViewTemplates'
+import CreateEditTemplate from '@/pages/templates/CreateEditTemplate'
+import CreateTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/CreateTaxComponents'
+import ViewTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ViewTaxComponents'
+import EditTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/EditTaxComponenets'
+import ViewTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ViewTaxGroups'
+import CreateTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/CreateTaxGroups'
+import EditTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/EditTaxGroups'
+import CreateCharges from '@/pages/products/charges/CreateCharges'
+import EditPaymentTypes from '@/pages/organization/payment-types/EditPaymentTypes'
+import EditAccountNumberPreferences from '@/pages/system/account-number-preferences/EditAccountNumberPreferences'
+import CreateClients from '@/pages/clients/create-clients/CreateClients'
+import EditClients from '@/pages/clients/edit-clients/EditClients'
+import CreateSavingsAccount from '@/pages/savings/CreateSavingsAccount'
+import CreateSharesAccount from '@/pages/shares/create-shares-account/CreateSharesAccount'
+import CreateFixedDepositAccount from '@/pages/fixed-deposits/create-fixed-deposit-account/CreateFixedDepositAccount'
+import CreateAccountingRule from '@/pages/accounting/accounting-rules/CreateAccountingRules'
+import EditAccountingRules from '@/pages/accounting/accounting-rules/EditAccountingRules'
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/callback" element={<Callback />} />
 
       <Route element={<ProtectedRoutes />}>
         {/* Login Route */}
@@ -230,6 +305,9 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           {/* Home Route */}
           <Route path="/home" element={<Home />} />
+
+          {/* Search Route */}
+          <Route path="/search" element={<SearchResults />} />
 
           {/* Accounting */}
           <Route path="/accounting" element={<Accounting />} />
@@ -274,8 +352,16 @@ const AppRoutes = () => {
             element={<AccountingRules />}
           />
           <Route
+            path="/accounting/accounting-rules/create"
+            element={<CreateAccountingRule />}
+          />
+          <Route
             path="/accounting/accounting-rules/view/:id"
             element={<ViewAccountingRules />}
+          />
+          <Route
+            path="/accounting/accounting-rules/view/:id/edit"
+            element={<EditAccountingRules />}
           />
 
           {/* Closing Entries */}
@@ -315,6 +401,10 @@ const AppRoutes = () => {
             path="/accounting/provisioning-entries"
             element={<ProvisioningEntries />}
           />
+          <Route
+            path="/accounting/provisioning-entries/create"
+            element={<CreateProvisioningEntry />}
+          />
 
           {/* Notifications Routes */}
           <Route path="/notifications" element={<Notifications />} />
@@ -340,6 +430,7 @@ const AppRoutes = () => {
             path="/checker-inbox-and-tasks"
             element={<CheckerInBoxAndTasks />}
           >
+            <Route index element={<Navigate to="checker-inbox" replace />} />
             <Route path="checker-inbox" element={<CheckerInboxContent />} />
             <Route path="client-approval" element={<ClientApproval />} />
             <Route path="loan-approval" element={<LoanApproval />} />
@@ -355,13 +446,30 @@ const AppRoutes = () => {
           {/* Admin Routes */}
 
           {/* User */}
-          <Route path="/appusers" element={<Users />} />
-          <Route path="/appusers/:id" element={<ViewUsers />} />
-          <Route path="/appusers/create" element={<CreateUsers />} />
-          <Route path="/appusers/:id/edit" element={<EditUsers />} />
+          {/* With OIDC the identity provider owns users, so the whole set of
+              user pages is swapped for ones that go through the security
+              plugin, as the Angular client does. */}
+          {isOidcUsable() ? (
+            <>
+              <Route path="/appusers" element={<OidcUsers />} />
+              <Route path="/appusers/:id" element={<OidcViewUser />} />
+              <Route path="/appusers/create" element={<OidcCreateUser />} />
+              <Route path="/appusers/:id/edit" element={<OidcEditUser />} />
+            </>
+          ) : (
+            <>
+              <Route path="/appusers" element={<Users />} />
+              <Route path="/appusers/:id" element={<ViewUsers />} />
+              <Route path="/appusers/create" element={<CreateUsers />} />
+              <Route path="/appusers/:id/edit" element={<EditUsers />} />
+            </>
+          )}
 
           {/* Templates */}
           <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/create" element={<CreateEditTemplate />} />
+          <Route path="/templates/:id" element={<ViewTemplates />} />
+          <Route path="/templates/:id/edit" element={<CreateEditTemplate />} />
 
           {/* Organization */}
           <Route path="/organization" element={<Organization />} />
@@ -418,6 +526,12 @@ const AppRoutes = () => {
             element={<BulkLoanReassignment />}
           />
 
+          {/* Standing Instructions History */}
+          <Route
+            path="/organization/instructions-history"
+            element={<InstructionsHistory />}
+          />
+
           {/* Manage Funds */}
           <Route path="/organization/manage-funds" element={<Funds />} />
           <Route
@@ -433,11 +547,64 @@ const AppRoutes = () => {
             element={<EditFunds />}
           />
 
+          {/* Fund Mapping */}
+          <Route path="/organization/fund-mapping" element={<FundMapping />} />
+
+          {/* Loan Originators */}
+          <Route
+            path="/organization/loan-originators"
+            element={<LoanOriginators />}
+          />
+          <Route
+            path="/organization/loan-originators/create"
+            element={<CreateLoanOriginator />}
+          />
+          <Route
+            path="/organization/loan-originators/:id"
+            element={<ViewLoanOriginator />}
+          />
+          <Route
+            path="/organization/loan-originators/:id/edit"
+            element={<EditLoanOriginator />}
+          />
+
+          {/* Loan Provisioning Criteria */}
+          <Route
+            path="/organization/loan-provisioning"
+            element={<LoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/create"
+            element={<CreateLoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/:id"
+            element={<ViewLoanProvisioningCriteria />}
+          />
+          <Route
+            path="/organization/loan-provisioning/:id/edit"
+            element={<EditLoanProvisioningCriteria />}
+          />
+
+          {/* Entity Data Table Checks */}
+          <Route
+            path="/organization/data-checks"
+            element={<EntityDataTableChecks />}
+          />
+          <Route
+            path="/organization/data-checks/create"
+            element={<CreateEntityDataTableCheck />}
+          />
+
           {/* Payment Types */}
           <Route path="/organization/payment-types" element={<Payment />} />
           <Route
             path="/organization/payment-types/create"
             element={<CreatePaymentTypes />}
+          />
+          <Route
+            path="/organization/payment-types/:id/edit"
+            element={<EditPaymentTypes />}
           />
 
           {/* Adhoc Query */}
@@ -463,6 +630,10 @@ const AppRoutes = () => {
           />
           <Route path="/organization/tellers/:id" element={<ViewTellers />} />
           <Route
+            path="/organization/tellers/:id/cashiers"
+            element={<ViewCashiers />}
+          />
+          <Route
             path="/organization/tellers/:id/edit"
             element={<EditTellers />}
           />
@@ -472,6 +643,30 @@ const AppRoutes = () => {
 
           {/* Working Days */}
           <Route path="/organization/working-days" element={<WorkingDays />} />
+
+          {/* Password Preferences */}
+          <Route
+            path="/organization/password-preferences"
+            element={<PasswordPreferences />}
+          />
+
+          {/* SMS Campaigns */}
+          <Route
+            path="/organization/sms-campaigns"
+            element={<SmsCampaigns />}
+          />
+          <Route
+            path="/organization/sms-campaigns/create"
+            element={<CreateSmsCampaign />}
+          />
+          <Route
+            path="/organization/sms-campaigns/:id"
+            element={<ViewSmsCampaign />}
+          />
+          <Route
+            path="/organization/sms-campaigns/:id/edit"
+            element={<EditSmsCampaign />}
+          />
 
           {/* Products */}
           <Route path="/products" element={<Products />} />
@@ -503,9 +698,18 @@ const AppRoutes = () => {
 
           {/* Share Products */}
           <Route path="/products/share-products" element={<ShareProducts />} />
+          <Route
+            path="/products/share-products/create"
+            element={<CreateShareProduct />}
+          />
+          <Route
+            path="/products/share-products/:id"
+            element={<ViewShareProduct />}
+          />
 
           {/* Charges */}
           <Route path="/products/charges" element={<Charges />} />
+          <Route path="/products/charges/create" element={<CreateCharges />} />
           <Route path="/products/charges/:id" element={<ViewCharges />} />
           <Route path="/products/charges/:id/edit" element={<EditCharges />} />
 
@@ -566,11 +770,19 @@ const AppRoutes = () => {
 
           {/* Products Mix */}
           <Route path="/products/products-mix" element={<ProductsMix />} />
+          <Route
+            path="/products/products-mix/create"
+            element={<CreateProductMix />}
+          />
 
           {/* Fixed Deposit Products */}
           <Route
             path="/products/fixed-deposit-products"
             element={<FixedDepositProducts />}
+          />
+          <Route
+            path="/products/fixed-deposit-products/create"
+            element={<CreateFixedDepositProduct />}
           />
           <Route
             path="/products/fixed-deposit-products/:id/general"
@@ -597,12 +809,40 @@ const AppRoutes = () => {
             element={<ManageTaxComponents />}
           />
           <Route
+            path="/products/tax-configurations/tax-components/create"
+            element={<CreateTaxComponents />}
+          />
+          <Route
+            path="/products/tax-configurations/tax-components/:id"
+            element={<ViewTaxComponents />}
+          />
+          <Route
+            path="/products/tax-configurations/tax-components/:id/edit"
+            element={<EditTaxComponents />}
+          />
+          <Route
             path="/products/tax-configurations/tax-groups"
             element={<ManageTaxGroups />}
+          />
+          <Route
+            path="/products/tax-configurations/tax-groups/:id"
+            element={<ViewTaxGroups />}
+          />
+          <Route
+            path="/products/tax-configurations/tax-groups/create"
+            element={<CreateTaxGroups />}
+          />
+          <Route
+            path="/products/tax-configurations/tax-groups/:id/edit"
+            element={<EditTaxGroups />}
           />
 
           {/* Floating Rates */}
           <Route path="/products/floating-rates" element={<FloatingRates />} />
+          <Route
+            path="/products/floating-rates/create"
+            element={<CreateFloatingRate />}
+          />
           <Route
             path="/products/floating-rates/:id"
             element={<ViewFloatingRates />}
@@ -613,10 +853,19 @@ const AppRoutes = () => {
 
           {/* Manage Data Tables */}
           <Route path="/system/data-tables" element={<ManageDataTables />} />
+          <Route
+            path="/system/data-tables/create"
+            element={<CreateDataTable />}
+          />
           <Route path="/system/data-tables/:id" element={<ViewDataTables />} />
+          <Route
+            path="/system/data-tables/:id/edit"
+            element={<EditDataTable />}
+          />
 
           {/* Manage Codes*/}
           <Route path="/system/codes" element={<Codes />} />
+          <Route path="/system/codes/create" element={<CreateCode />} />
           <Route path="/system/codes/:id" element={<ViewCodes />} />
 
           {/* Manage Reports*/}
@@ -632,6 +881,10 @@ const AppRoutes = () => {
             path="/system/roles-and-permissions/add"
             element={<CreateRolesAndPermissions />}
           />
+          <Route
+            path="/system/roles-and-permissions/:id/edit"
+            element={<EditRolesAndPermissions />}
+          />
 
           {/*  Account Number Preferences */}
           <Route
@@ -639,12 +892,16 @@ const AppRoutes = () => {
             element={<AccountNumberPreferences />}
           />
           <Route
-            path="//system/account-number-preferences/create"
+            path="/system/account-number-preferences/create"
             element={<CreateAccountNumberPreferences />}
           />
           <Route
             path="/system/account-number-preferences/:id"
             element={<ViewAccountNumberPreferences />}
+          />
+          <Route
+            path="/system/account-number-preferences/:id/edit"
+            element={<EditAccountNumberPreferences />}
           />
 
           {/* Entity to Entity Mapping */}
@@ -659,143 +916,220 @@ const AppRoutes = () => {
           />
 
           {/* Configurations */}
+          {/* Maker Checker */}
+          <Route path="/system/maker-checker" element={<MakerChecker />} />
+
+          {/* Scheduler Jobs */}
+          <Route path="/system/jobs" element={<SchedulerJobs />} />
+          <Route path="/system/jobs/:id/edit" element={<EditSchedulerJob />} />
+          <Route
+            path="/system/jobs/:id/history"
+            element={<SchedulerJobHistory />}
+          />
           <Route path="/system/hooks" element={<ManageHooks />} />
 
           {/* Manage Hooks */}
           <Route path="/system/configurations" element={<Configurations />} />
 
+          {/* Audit Trails */}
+          <Route path="/system/audit-trails" element={<AuditTrails />} />
+          <Route path="/system/audit-trails/:id" element={<ViewAuditTrail />} />
+
+          {/* About Us */}
+          <Route path="/system/about-us" element={<AboutUs />} />
+
+          {/* Manage Dashboards */}
+          <Route
+            path="/system/manage-dashboards"
+            element={<ManageDashboards />}
+          />
+
+          {/* System Information */}
+          <Route
+            path="/system/system-information"
+            element={<SystemInformation />}
+          />
+
           {/* Institution */}
+
+          {/* Loans list */}
+          <Route path="/loans" element={<Loans />} />
 
           {/* Clients */}
           <Route path="/clients" element={<Clients />} />
+          <Route path="/clients/create" element={<CreateClients />} />
+          <Route
+            path="/clients/:id/actions/activate"
+            element={<ActivateClient />}
+          />
+          <Route
+            path="/clients/:id/actions/assign-staff"
+            element={<ClientAssignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/unassign-staff"
+            element={<ClientUnassignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/transfer-client"
+            element={<TransferClient />}
+          />
+          <Route path="/clients/:id/actions/close" element={<CloseClient />} />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
+            <Route path="personal-data" element={<ClientsPersonalDataTab />} />
+            <Route path="general-data" element={<ClientsGeneralDataTab />} />
             <Route path="notes" element={<ClientNotesTab />} />
             <Route path="address" element={<ClientsAddressTab />} />
             <Route
               path="family-members"
+              element={<ClientsFamilyMembersTab />}
+            />
+            <Route
+              path="family-members/add"
               element={<ClientsFamilyMembersAddTab />}
-            >
-              <Route path="add" element={<ClientsFamilyMembersAddTab />} />
-            </Route>
+            />
+            <Route
+              path="family-members/:familyMemberId/edit"
+              element={<ClientsFamilyMembersAddTab />}
+            />
             <Route path="documents" element={<ClientsDocumentsTab />} />
+            <Route
+              path="datatables/:datatableName"
+              element={<ClientDatatableTab />}
+            />
             <Route path="identities" element={<ClientsIdentitiesTab />} />
           </Route>
+          <Route path="/clients/:id/edit" element={<EditClients />} />
 
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/GoodwillCredit"
-            element={<MakeRepayment />}
+            path="/clients/:clientId/loans-accounts/:loanId/actions/GoodwillCredit"
+            element={
+              <MakeRepayment command="goodwillCredit" title="Goodwill Credit" />
+            }
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/InterestPaymentWaiver"
-            element={<MakeRepayment />}
+            path="/clients/:clientId/loans-accounts/:loanId/actions/InterestPaymentWaiver"
+            element={
+              <MakeRepayment
+                command="interestPaymentWaiver"
+                title="Interest Payment Waiver"
+              />
+            }
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/PayoutRefund"
-            element={<MakeRepayment />}
+            path="/clients/:clientId/loans-accounts/:loanId/actions/PayoutRefund"
+            element={
+              <MakeRepayment command="payoutRefund" title="Payout Refund" />
+            }
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/MerchantIssuedRefund"
-            element={<MakeRepayment />}
+            path="/clients/:clientId/loans-accounts/:loanId/actions/MerchantIssuedRefund"
+            element={
+              <MakeRepayment
+                command="merchantIssuedRefund"
+                title="Merchant Issued Refund"
+              />
+            }
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/AddLoanCharge"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/AddLoanCharge"
             element={<AddLoanCharge />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Approve"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Approve"
             element={<ApproveLoan />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/WithdrawnByClient"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/WithdrawnByClient"
             element={<WithdrawByClient />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/AddCollateral"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/AddCollateral"
             element={<AddCollateral />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/ViewGuarantors"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/ViewGuarantors"
             element={<ViewGuarantors />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/CreateGuarantor"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/CreateGuarantor"
             element={<CreateGuarantor />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/LoanScreenReports"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/LoanScreenReports"
             element={<LoanScreenReports />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/AssignLoanOfficer"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/AssignLoanOfficer"
             element={<AssignLoanOfficer />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Disburse"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Disburse"
             element={<Disburse />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/DisbursetoSavings"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/DisbursetoSavings"
             element={<DisburseToSavingsAccount />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/UndoApproval"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/UndoApproval"
             element={<UndoApproval />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Foreclosure"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Foreclosure"
             element={<Foreclosure />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/MakeRepayment"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/MakeRepayment"
             element={<MakeRepayment />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/UndoDisbursal"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/UndoDisbursal"
             element={<UndoDisbursal />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/AddInterestPause"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/AddInterestPause"
             element={<AddInterestPause />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/PrepayLoan"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/PrepayLoan"
             element={<PrepayLoan />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Charge-Off"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Charge-Off"
             element={<ChargeOff />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Re-Age"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Re-Age"
             element={<LoanReaging />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Re-Amortize"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Re-Amortize"
             element={<LoanReamortize />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/WaiveInterest"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/WaiveInterest"
             element={<WaiveInterest />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Reschedule"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Reschedule"
             element={<LoanReschedule />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/WriteOff"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/WriteOff"
             element={<WriteOffPage />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Close-as-Rescheduled"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Close-as-Rescheduled"
             element={<CloseAsRescheduled />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/Close"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/Close"
             element={<LoansAccountClose />}
           />
           <Route
-            path="/clients/:id/loans-accounts/:id/actions/SellLoan"
+            path="/clients/:clientId/loans-accounts/:loanId/actions/SellLoan"
             element={<SellLoan />}
           />
 
@@ -804,6 +1138,10 @@ const AppRoutes = () => {
             element={<ViewCharge />}
           />
 
+          <Route
+            path="/clients/:id/savings-accounts/create"
+            element={<CreateSavingsAccount />}
+          />
           <Route
             path="/clients/:groupId/savings-accounts/:accountId"
             element={<SavingsAccountView />}
@@ -852,6 +1190,15 @@ const AppRoutes = () => {
           />
 
           <Route
+            path="/clients/:clientId/fixed-deposits-accounts/create"
+            element={<CreateFixedDepositAccount />}
+          />
+
+          <Route
+            path="/clients/:id/shares-accounts/create"
+            element={<CreateSharesAccount />}
+          />
+          <Route
             path="/clients/:clientId/shares-accounts/:sharesAccountId"
             element={<SharesAccountView />}
           >
@@ -894,10 +1241,19 @@ const AppRoutes = () => {
 
           {/* Groups */}
 
+          <Route
+            path="/groups/:id/savings-accounts/create"
+            element={<CreateSavingsAccount />}
+          />
+
           <Route path="/groups/:id" element={<GroupsView />}>
             <Route path="general" element={<GroupsGeneralTab />} />
             <Route path="notes" element={<GroupsNotesTab />} />
             <Route path="committee" element={<GroupsCommitteeTab />}></Route>
+            <Route
+              path="datatables/:datatableName"
+              element={<GroupDatatableTab />}
+            />
           </Route>
           <Route
             path="/groups/:id/committee/add-role"
@@ -921,119 +1277,133 @@ const AppRoutes = () => {
           />
 
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/GoodwillCredit"
-            element={<MakeRepayment />}
+            path="/groups/:groupId/loans-accounts/:loanId/actions/GoodwillCredit"
+            element={
+              <MakeRepayment command="goodwillCredit" title="Goodwill Credit" />
+            }
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/InterestPaymentWaiver"
-            element={<MakeRepayment />}
+            path="/groups/:groupId/loans-accounts/:loanId/actions/InterestPaymentWaiver"
+            element={
+              <MakeRepayment
+                command="interestPaymentWaiver"
+                title="Interest Payment Waiver"
+              />
+            }
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/PayoutRefund"
-            element={<MakeRepayment />}
+            path="/groups/:groupId/loans-accounts/:loanId/actions/PayoutRefund"
+            element={
+              <MakeRepayment command="payoutRefund" title="Payout Refund" />
+            }
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/MerchantIssuedRefund"
-            element={<MakeRepayment />}
+            path="/groups/:groupId/loans-accounts/:loanId/actions/MerchantIssuedRefund"
+            element={
+              <MakeRepayment
+                command="merchantIssuedRefund"
+                title="Merchant Issued Refund"
+              />
+            }
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/AddLoanCharge"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/AddLoanCharge"
             element={<AddLoanCharge />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Approve"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Approve"
             element={<ApproveLoan />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/WithdrawnByClient"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/WithdrawnByClient"
             element={<WithdrawByClient />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/AddCollateral"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/AddCollateral"
             element={<AddCollateral />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/ViewGuarantors"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/ViewGuarantors"
             element={<ViewGuarantors />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/CreateGuarantor"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/CreateGuarantor"
             element={<CreateGuarantor />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/LoanScreenReports"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/LoanScreenReports"
             element={<LoanScreenReports />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/AssignLoanOfficer"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/AssignLoanOfficer"
             element={<AssignLoanOfficer />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Disburse"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Disburse"
             element={<Disburse />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/DisbursetoSavings"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/DisbursetoSavings"
             element={<DisburseToSavingsAccount />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/UndoApproval"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/UndoApproval"
             element={<UndoApproval />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Foreclosure"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Foreclosure"
             element={<Foreclosure />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/MakeRepayment"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/MakeRepayment"
             element={<MakeRepayment />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/UndoDisbursal"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/UndoDisbursal"
             element={<UndoDisbursal />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/AddInterestPause"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/AddInterestPause"
             element={<AddInterestPause />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/PrepayLoan"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/PrepayLoan"
             element={<PrepayLoan />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Charge-Off"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Charge-Off"
             element={<ChargeOff />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Re-Age"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Re-Age"
             element={<LoanReaging />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Re-Amortize"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Re-Amortize"
             element={<LoanReamortize />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/WaiveInterest"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/WaiveInterest"
             element={<WaiveInterest />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Reschedule"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Reschedule"
             element={<LoanReschedule />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/WriteOff"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/WriteOff"
             element={<WriteOffPage />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Close-as-Rescheduled"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Close-as-Rescheduled"
             element={<CloseAsRescheduled />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/Close"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/Close"
             element={<LoansAccountClose />}
           />
           <Route
-            path="/groups/:id/loans-accounts/:id/actions/SellLoan"
+            path="/groups/:groupId/loans-accounts/:loanId/actions/SellLoan"
             element={<SellLoan />}
           />
 
@@ -1165,6 +1535,10 @@ const AppRoutes = () => {
             />
             <Route path="loan-documents" element={<LoansDocumentsTab />} />
             <Route path="notes" element={<LoansNotesTab />} />
+            <Route
+              path="datatables/:datatableName"
+              element={<LoanDatatableTab />}
+            />
           </Route>
         </Route>
       </Route>

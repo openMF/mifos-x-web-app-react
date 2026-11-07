@@ -46,6 +46,8 @@
     "meetingFrequency": "Meeting Frequency:",
     "missingInOpenAPI": "Missing in OpenApi",
     "confirmDelete": "Are you sure you want to delete this group?",
+    "deleted": "Group deleted successfully.",
+    "deleteFailed": "Failed to delete the group. Please try again.",
     "tabs": {
       "general": "General",
       "notes": "Notes",

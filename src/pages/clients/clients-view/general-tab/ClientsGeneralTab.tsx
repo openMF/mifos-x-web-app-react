@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import {
@@ -22,7 +22,6 @@ import {
   ClientApi,
   ClientChargesApi,
   RunReportsApi,
-  type GetClientsClientIdAccountsResponse,
   type GetClientsChargesPageItems,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
@@ -56,13 +55,16 @@ interface AccountStatus {
 
 interface AccountTimeline {
   closedOnDate?: unknown
+  // share accounts name their close date differently
+  closedDate?: unknown
   activatedOnDate?: unknown
+  submittedOnDate?: unknown
+  actualDisbursementDate?: unknown
 }
 
-interface AccountSummary {
-  totalOutstanding?: number
-  totalPaid?: number
-  accountBalance?: number
+interface AccountCurrency {
+  code?: string
+  decimalPlaces?: number
 }
 
 interface AccountRecord {
@@ -70,13 +72,13 @@ interface AccountRecord {
   id?: number | string
   status?: AccountStatus
   timeline?: AccountTimeline
-  summary?: AccountSummary
+  currency?: AccountCurrency
   accountNo?: string
   productName?: string
-  loanProductName?: string
-  principal?: number
   loanBalance?: number
   originalLoan?: number
+  inArrears?: boolean
+  depositType?: { code?: string }
   loanType?: { code?: string }
   name?: string
   dueDate?: unknown
@@ -88,35 +90,189 @@ interface AccountRecord {
   totalPendingForApprovalShares?: number
   lastActiveTransactionDate?: unknown
   closedOnDate?: unknown
-  totalOutstanding?: number
-  totalPaid?: number
   code?: string
   accountBalance?: number
+  availableBalance?: number
 }
+
+/**
+ * The /clients/{id}/accounts response. The generated type leaves out
+ * shareAccounts, which Fineract does send, so the response is read as this.
+ */
+interface ClientAccounts {
+  loanAccounts?: AccountRecord[]
+  savingsAccounts?: AccountRecord[]
+  shareAccounts?: AccountRecord[]
+}
+
+// Fineract returns fixed and recurring deposits inside savingsAccounts
+const FIXED_DEPOSIT = 'depositAccountType.fixedDeposit'
+const RECURRING_DEPOSIT = 'depositAccountType.recurringDeposit'
+
+/** A Fineract date, sent as [y, m, d] or as a string, as a timestamp for sorting. */
+const dateTime = (value: unknown) => {
+  if (Array.isArray(value))
+    return new Date(value[0], value[1] - 1, value[2]).getTime()
+  if (typeof value === 'string') return new Date(value).getTime() || 0
+  return 0
+}
+
+/**
+ * The loan whose amount the "Last Loan Amount" card shows: the most recently
+ * disbursed one. The accounts list only carries an amount (originalLoan) once
+ * a loan is disbursed.
+ */
+const lastDisbursedLoan = (loans: AccountRecord[]) => {
+  const disbursedOn = (loan: AccountRecord) =>
+    dateTime(
+      loan.timeline?.actualDisbursementDate ?? loan.timeline?.submittedOnDate
+    )
+  return loans
+    .filter(loan => loan.originalLoan !== undefined)
+    .reduce<
+      AccountRecord | undefined
+    >((latest, loan) => (!latest || disbursedOn(loan) > disbursedOn(latest) ? loan : latest), undefined)
+}
+
+/** One figure in the Performance History section. */
+const StatCard = ({
+  label,
+  value,
+  sub,
+  accent = 'border-l-[#0e77b7]',
+}: {
+  label: string
+  value: string
+  sub?: string
+  accent?: string
+}) => (
+  <div
+    className={`rounded-md border border-l-4 border-y-zinc-200 border-r-zinc-200 bg-white p-4 dark:border-y-zinc-700 dark:border-r-zinc-700 dark:bg-zinc-800 ${accent}`}
+  >
+    <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+      {label}
+    </div>
+    <div className="mt-2 whitespace-pre-line text-2xl font-semibold tabular-nums">
+      {value}
+    </div>
+    {sub && (
+      <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{sub}</div>
+    )}
+  </div>
+)
 
 // small dot for status
 const StatusDot = ({ acc }: { acc: AccountRecord }) => {
   const { t: tc } = useTranslation('common')
   const s: AccountStatus = acc?.status || {}
-  const cls = s.active
-    ? 'bg-green-500'
-    : s.submittedAndPendingApproval || s.pendingApproval
-      ? 'bg-yellow-500'
-      : s.closed
-        ? 'bg-zinc-400'
-        : 'bg-sky-500'
+  const cls = acc.inArrears
+    ? 'bg-red-500'
+    : s.active
+      ? 'bg-green-500'
+      : s.submittedAndPendingApproval || s.pendingApproval
+        ? 'bg-yellow-500'
+        : s.closed
+          ? 'bg-zinc-400'
+          : 'bg-sky-500'
   return (
     <span
       className={`inline-block w-3 h-3 rounded-full ${cls}`}
-      title={s?.value || tc('status.unknown')}
+      title={
+        acc.inArrears
+          ? tc('status.inArrears')
+          : s?.value || tc('status.unknown')
+      }
     />
+  )
+}
+
+/** A Fineract date, sent as [y, m, d] or as a string, for display. */
+const shownDate = (value: unknown) =>
+  Array.isArray(value) ? formatDate(value) : String(value ?? '—')
+
+/**
+ * The client's fixed or recurring deposit accounts. The rows do not link
+ * anywhere yet, as the app has no deposit account view.
+ */
+const DepositAccounts = ({
+  title,
+  accounts,
+  money,
+}: {
+  title: string
+  accounts: AccountRecord[]
+  money: (value: unknown, currency?: AccountCurrency) => string
+}) => {
+  const { t } = useTranslation('clients')
+  const [showClosed, setShowClosed] = useState(false)
+  const shown = accounts.filter(a => !!a.status?.closed === showClosed)
+
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">{title}</h2>
+        <Button
+          className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+          size="sm"
+          onClick={() => setShowClosed(!showClosed)}
+        >
+          {showClosed
+            ? t('general.viewActiveAccounts')
+            : t('general.viewClosedAccounts')}
+        </Button>
+      </div>
+
+      <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('general.savingTableAccountNo')}</TableHead>
+              <TableHead>{t('general.depositTableProduct')}</TableHead>
+              <TableHead>
+                {showClosed
+                  ? t('general.savingTableClosedDate')
+                  : t('general.savingTableBalance')}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {shown.map(acc => (
+              <TableRow key={String(acc.id ?? '')}>
+                <TableCell className="px-6 py-4 flex items-center gap-2">
+                  <StatusDot acc={acc} />
+                  <span>{acc.accountNo ?? '—'}</span>
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {acc.productName ?? '—'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {showClosed
+                    ? shownDate(acc.timeline?.closedOnDate)
+                    : money(acc.accountBalance, acc.currency)}
+                </TableCell>
+              </TableRow>
+            ))}
+            {shown.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  className="px-6 py-6 text-center text-zinc-500"
+                >
+                  {t('general.noDepositAccounts')}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   )
 }
 
 const ClientsGeneralTab = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { t } = useTranslation('clients')
+  const { t, i18n } = useTranslation('clients')
 
   // data
   const [loanAccounts, setLoanAccounts] = useState<AccountRecord[]>([])
@@ -130,32 +286,28 @@ const ClientsGeneralTab = () => {
   const [showClosedSavings, setShowClosedSavings] = useState(false)
   const [showClosedShares, setShowClosedShares] = useState(false)
 
-  // performance history -> keep the same 5 fields as your Angular template
-  const [perf, setPerf] = useState<Record<string, string>>({
-    loanCycle: '',
-    activeLoans: '',
-    lastLoanAmount: '',
-    activeSavings: '',
-    totalSavings: '',
-  })
+  // Performance History is worked out from the accounts, so it waits for them.
+  const [accountsLoaded, setAccountsLoaded] = useState(false)
 
   useEffect(() => {
     if (!id) return
+    // set when the client changes, so a slow reply for the old one is dropped
+    let stale = false
+    setAccountsLoaded(false)
     ;(async () => {
       // accounts
       try {
         const res = await accountsApi.retrieveAssociatedAccounts(Number(id))
-        const d: GetClientsClientIdAccountsResponse = res.data ?? {}
-        setLoanAccounts(
-          d.loanAccounts ? (Array.from(d.loanAccounts) as AccountRecord[]) : []
-        )
+        if (stale) return
+        const d = (res.data ?? {}) as ClientAccounts
+        setLoanAccounts(d.loanAccounts ? Array.from(d.loanAccounts) : [])
         setSavingsAccounts(
-          d.savingsAccounts
-            ? (Array.from(d.savingsAccounts) as AccountRecord[])
-            : []
+          d.savingsAccounts ? Array.from(d.savingsAccounts) : []
         )
-        setShareAccounts([])
+        setShareAccounts(d.shareAccounts ? Array.from(d.shareAccounts) : [])
+        setAccountsLoaded(true)
       } catch {
+        if (stale) return
         setLoanAccounts([])
         setSavingsAccounts([])
         setShareAccounts([])
@@ -168,6 +320,7 @@ const ClientsGeneralTab = () => {
           ?.pageItems
           ? Array.from(chargesRes.data.pageItems)
           : []
+        if (stale) return
         setUpcomingCharges(
           chargeItems.map(ch => ({
             id: ch.id,
@@ -177,31 +330,12 @@ const ClientsGeneralTab = () => {
             amountPaid: ch.amountPaid,
             amountWaived: ch.amountWaived,
             amountOutstanding: ch.amountOutstanding,
+            currency: ch.currency,
           }))
         )
       } catch {
+        if (stale) return
         setUpcomingCharges([])
-      }
-
-      // performance history (report values as-is)
-      try {
-        const r = await reportsApi.runReport('ClientSummaryCounts', false, {
-          params: { R_clientId: Number(id), genericResultSet: false },
-        })
-        const row = (r?.data?.data?.[0] ?? {}) as Record<string, unknown>
-        setPerf({
-          loanCycle: String(row.loanCycle ?? row['Loan Cycle'] ?? ''),
-          activeLoans: String(row.activeLoans ?? row['Active Loans'] ?? ''),
-          lastLoanAmount: String(
-            row.lastLoanAmount ?? row['Last Loan Amount'] ?? ''
-          ),
-          activeSavings: String(
-            row.activeSavings ?? row['Active Savings'] ?? ''
-          ),
-          totalSavings: String(row.totalSavings ?? row['Total Savings'] ?? ''),
-        })
-      } catch {
-        // leave perf values empty if the report isn't there
       }
 
       // collateral rows (report). we won't re-shape; print what we get.
@@ -212,41 +346,141 @@ const ClientsGeneralTab = () => {
         const rows: Record<string, unknown>[] = Array.isArray(rr?.data?.data)
           ? (rr.data.data as unknown as Record<string, unknown>[])
           : []
+        if (stale) return
         setCollaterals(rows)
       } catch {
+        if (stale) return
         setCollaterals([])
       }
     })()
+    return () => {
+      stale = true
+    }
   }, [id])
+
+  const depositType = (a: AccountRecord) => a.depositType?.code
+  const plainSavings = savingsAccounts.filter(
+    a =>
+      depositType(a) !== FIXED_DEPOSIT && depositType(a) !== RECURRING_DEPOSIT
+  )
+  const fixedDeposits = savingsAccounts.filter(
+    a => depositType(a) === FIXED_DEPOSIT
+  )
+  const recurringDeposits = savingsAccounts.filter(
+    a => depositType(a) === RECURRING_DEPOSIT
+  )
 
   // open vs closed
   const openLoans = loanAccounts.filter(a => !a?.status?.closed)
   const closedLoans = loanAccounts.filter(a => a?.status?.closed)
-  const openSavings = savingsAccounts.filter(a => !a?.status?.closed)
-  const closedSavings = savingsAccounts.filter(a => a?.status?.closed)
+  const openSavings = plainSavings.filter(a => !a?.status?.closed)
+  const closedSavings = plainSavings.filter(a => a?.status?.closed)
   const openShares = shareAccounts.filter(a => !a?.status?.closed)
   const closedShares = shareAccounts.filter(a => a?.status?.closed)
 
+  /** An amount in its account's currency, e.g. ₹34,557.20, or "—". */
+  const money = (value: unknown, currency?: AccountCurrency) => {
+    if (typeof value !== 'number') return '—'
+    const digits = currency?.decimalPlaces ?? 2
+    const options = {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    }
+    try {
+      return new Intl.NumberFormat(i18n.language, {
+        ...options,
+        style: 'currency',
+        currency: currency?.code,
+      }).format(value)
+    } catch {
+      // no currency, or a code Intl does not know
+      return new Intl.NumberFormat(i18n.language, options).format(value)
+    }
+  }
+
+  // Calculated from the accounts, as the Angular web app does: Fineract has no
+  // ClientSummaryCounts report, and its ClientSummary report fails to run.
+  const performance = useMemo(() => {
+    const isActive = (a: AccountRecord) => !!a.status?.active
+    const isDeposit = (a: AccountRecord) =>
+      a.depositType?.code === FIXED_DEPOSIT ||
+      a.depositType?.code === RECURRING_DEPOSIT
+    // balances in different currencies cannot be added, so keep one total each
+    const savingsByCurrency = new Map<
+      string,
+      { total: number; currency?: AccountCurrency }
+    >()
+    for (const a of savingsAccounts) {
+      // Fineract before 1.15 sends no availableBalance. A deposit's
+      // accountBalance is locked away, so it does not count as available.
+      const balance =
+        a.availableBalance ?? (isDeposit(a) ? 0 : (a.accountBalance ?? 0))
+      const code = a.currency?.code ?? ''
+      const entry = savingsByCurrency.get(code)
+      if (entry) entry.total += balance
+      else savingsByCurrency.set(code, { total: balance, currency: a.currency })
+    }
+    return {
+      // only disbursed loans carry an originalLoan, and only they are cycles
+      loanCycles: loanAccounts.filter(loan => loan.originalLoan !== undefined)
+        .length,
+      activeLoans: loanAccounts.filter(isActive).length,
+      lastLoan: lastDisbursedLoan(loanAccounts),
+      activeSavings: savingsAccounts.filter(isActive).length,
+      availableSavings: Array.from(savingsByCurrency.values()),
+    }
+  }, [loanAccounts, savingsAccounts])
+
+  const shown = (value: string) => (accountsLoaded ? value : '—')
+
   return (
     <div className="space-y-6 text-black dark:text-white">
-      {/* Performance History  */}
+      {/* Performance History */}
       <div>
         <h3 className="text-lg font-semibold">
           {t('general.performanceHistory')}
         </h3>
-        <div className="mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md p-4 text-sm">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              {t('general.noOfLoanCycles')} {perf.loanCycle || '—'} <br />
-              {t('general.noOfActiveLoans')} {perf.activeLoans || '—'} <br />
-              {t('general.lastLoanAmount')} {perf.lastLoanAmount || '—'} <br />
-            </div>
-            <div>
-              {t('general.noOfActiveSavings')} {perf.activeSavings || '—'}{' '}
-              <br />
-              {t('general.totalSavings')} {perf.totalSavings || '—'} <br />
-            </div>
-          </div>
+        <div className="mt-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            label={t('general.noOfLoanCycles')}
+            value={shown(String(performance.loanCycles))}
+            sub={
+              accountsLoaded
+                ? t('general.activeCount', { count: performance.activeLoans })
+                : undefined
+            }
+          />
+          <StatCard
+            label={t('general.noOfActiveLoans')}
+            value={shown(String(performance.activeLoans))}
+          />
+          <StatCard
+            label={t('general.lastLoanAmount')}
+            value={shown(
+              money(
+                performance.lastLoan?.originalLoan ?? 0,
+                performance.lastLoan?.currency
+              )
+            )}
+          />
+          <StatCard
+            label={t('general.availableSavings')}
+            value={shown(
+              performance.availableSavings.length
+                ? performance.availableSavings
+                    .map(s => money(s.total, s.currency))
+                    .join('\n')
+                : money(0)
+            )}
+            sub={
+              accountsLoaded
+                ? t('general.activeSavingsCount', {
+                    count: performance.activeSavings,
+                  })
+                : undefined
+            }
+            accent="border-l-green-600"
+          />
         </div>
       </div>
 
@@ -308,18 +542,21 @@ const ClientsGeneralTab = () => {
                     : String(ch?.dueDate ?? '—')}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amount ?? '—')}
+                  {money(ch.amount, ch.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amountPaid ?? '—')}
+                  {money(ch.amountPaid, ch.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amountWaived ?? '—')}
+                  {money(ch.amountWaived, ch.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {String(ch?.amountOutstanding ?? '—')}
+                  {money(ch.amountOutstanding, ch.currency)}
                 </TableCell>
-                <TableCell className="px-6 py-4 space-x-2">
+                <TableCell
+                  className="px-6 py-4 space-x-2"
+                  onClick={e => e.stopPropagation()}
+                >
                   <Button
                     size="icon"
                     className="bg-[#1074b9] hover:bg-[#0662a3]"
@@ -395,16 +632,16 @@ const ClientsGeneralTab = () => {
                   <span>{acc?.accountNo ?? '—'}</span>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.loanProductName ?? acc?.productName ?? '—'}
+                  {acc?.productName ?? '—'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.principal ?? acc?.originalLoan ?? '—'}
+                  {money(acc.originalLoan, acc.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.summary?.totalOutstanding ?? acc?.loanBalance ?? '—'}
+                  {money(acc.loanBalance, acc.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {acc?.summary?.totalPaid ?? '—'}
+                  {money(acc.amountPaid, acc.currency)}
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   {acc?.loanType?.code ?? '—'}
@@ -552,7 +789,7 @@ const ClientsGeneralTab = () => {
                 </TableCell>
                 {!showClosedSavings && (
                   <TableCell className="px-6 py-4">
-                    {acc?.summary?.accountBalance ?? acc?.accountBalance ?? '—'}
+                    {money(acc.accountBalance, acc.currency)}
                   </TableCell>
                 )}
                 <TableCell
@@ -631,7 +868,7 @@ const ClientsGeneralTab = () => {
             {(showClosedSavings ? closedSavings : openSavings).length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={showClosedSavings ? 5 : 6}
+                  colSpan={showClosedSavings ? 4 : 5}
                   className="px-6 py-6 text-center text-zinc-500"
                 >
                   {t('general.noSavingAccounts')}
@@ -641,6 +878,21 @@ const ClientsGeneralTab = () => {
           </TableBody>
         </Table>
       </div>
+
+      {fixedDeposits.length > 0 && (
+        <DepositAccounts
+          title={t('general.fixedDepositAccounts')}
+          accounts={fixedDeposits}
+          money={money}
+        />
+      )}
+      {recurringDeposits.length > 0 && (
+        <DepositAccounts
+          title={t('general.recurringDepositAccounts')}
+          accounts={recurringDeposits}
+          money={money}
+        />
+      )}
 
       {/* Shares Accounts */}
       <div className="flex items-center justify-between">
@@ -696,9 +948,9 @@ const ClientsGeneralTab = () => {
                 </TableCell>
                 {showClosedShares && (
                   <TableCell className="px-6 py-4">
-                    {Array.isArray(acc?.timeline?.closedOnDate)
-                      ? formatDate(acc.timeline!.closedOnDate as number[])
-                      : String(acc?.timeline?.closedOnDate ?? '—')}
+                    {shownDate(
+                      acc.timeline?.closedDate ?? acc.timeline?.closedOnDate
+                    )}
                   </TableCell>
                 )}
                 <TableCell
@@ -794,8 +1046,8 @@ const ClientsGeneralTab = () => {
                       {String(c?.name ?? c?.collateralName ?? '—')}
                     </TableCell>
                     <TableCell>{qty}</TableCell>
-                    <TableCell>{total}</TableCell>
-                    <TableCell>{totalCollateral}</TableCell>
+                    <TableCell>{money(total)}</TableCell>
+                    <TableCell>{money(totalCollateral)}</TableCell>
                   </TableRow>
                 )
               })}
