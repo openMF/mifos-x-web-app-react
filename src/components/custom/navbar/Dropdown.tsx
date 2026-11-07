@@ -57,8 +57,11 @@ const Dropdown = ({
 }: DropdownProps) => {
   const navigate = useNavigate()
 
-  const handleSelect = (path?: string) => {
-    if (onSelect) {
+  const handleSelect = ({ path, onClick }: DropdownOption) => {
+    // An option with its own action, such as Delete, runs it instead of navigating
+    if (onClick) {
+      onClick()
+    } else if (onSelect) {
       onSelect(path)
     } else if (path) {
       navigate(`/${path}`)
@@ -106,7 +109,7 @@ const Dropdown = ({
                 {option.children.map((child, i) => (
                   <DropdownMenuItem
                     key={i}
-                    onClick={() => handleSelect(child.path)}
+                    onClick={() => handleSelect(child)}
                     disabled={child.disabled}
                     aria-current={
                       child.path && child.path === activePath
@@ -128,7 +131,7 @@ const Dropdown = ({
           ) : (
             <DropdownMenuItem
               key={index}
-              onClick={() => handleSelect(option.path)}
+              onClick={() => handleSelect(option)}
               disabled={option.disabled}
               aria-current={
                 option.path && option.path === activePath ? 'page' : undefined

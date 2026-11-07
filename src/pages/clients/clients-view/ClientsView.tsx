@@ -276,7 +276,7 @@ const ClientsView = () => {
                             : t('view.menu.assignStaff'),
                         path:
                           client.staffId != null
-                            ? `clients/${client.id}/edit`
+                            ? `clients/${client.id}/actions/unassign-staff`
                             : `clients/${client.id}/actions/assign-staff`,
                       },
                     ]

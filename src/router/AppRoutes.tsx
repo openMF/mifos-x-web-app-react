@@ -137,6 +137,7 @@ import ProductsMix from '@/pages/products/products-mix/ProductsMix'
 import CreateProductMix from '@/pages/products/products-mix/CreateProductMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
+import CreateFixedDepositProduct from '@/pages/products/fixed-deposit-products/create-fixed-deposit-product/CreateFixedDepositProduct'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
@@ -144,6 +145,7 @@ import ManageTaxComponents from '@/pages/products/manage-tax-configurations/mana
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
 import FloatingRates from '@/pages/products/floating-rates/FloatingRates'
 import ViewFloatingRates from '@/pages/products/floating-rates/ViewFloatingRates'
+import CreateFloatingRate from '@/pages/products/floating-rates/CreateFloatingRate'
 import System from '@/pages/system/System'
 import ManageDataTables from '@/pages/system/manage-data-tables/ManageDataTables'
 import CreateDataTable from '@/pages/system/manage-data-tables/CreateDataTable'
@@ -156,6 +158,7 @@ import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
 import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
+import EditRolesAndPermissions from '@/pages/system/roles-and-permissions/EditRolesAndPermissions'
 import AccountNumberPreferences from '@/pages/system/account-number-preferences/AccountNumberPreferences'
 import CreateAccountNumberPreferences from '@/pages/system/account-number-preferences/CreateAccountNumberPreferences'
 import ViewAccountNumberPreferences from '@/pages/system/account-number-preferences/ViewAccountNumberPreferences'
@@ -243,6 +246,7 @@ import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
+import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
 import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
@@ -776,6 +780,10 @@ const AppRoutes = () => {
             element={<FixedDepositProducts />}
           />
           <Route
+            path="/products/fixed-deposit-products/create"
+            element={<CreateFixedDepositProduct />}
+          />
+          <Route
             path="/products/fixed-deposit-products/:id/general"
             element={<ViewFixedDepositProducts />}
           />
@@ -831,6 +839,10 @@ const AppRoutes = () => {
           {/* Floating Rates */}
           <Route path="/products/floating-rates" element={<FloatingRates />} />
           <Route
+            path="/products/floating-rates/create"
+            element={<CreateFloatingRate />}
+          />
+          <Route
             path="/products/floating-rates/:id"
             element={<ViewFloatingRates />}
           />
@@ -867,6 +879,10 @@ const AppRoutes = () => {
           <Route
             path="/system/roles-and-permissions/add"
             element={<CreateRolesAndPermissions />}
+          />
+          <Route
+            path="/system/roles-and-permissions/:id/edit"
+            element={<EditRolesAndPermissions />}
           />
 
           {/*  Account Number Preferences */}
@@ -942,6 +958,10 @@ const AppRoutes = () => {
           <Route
             path="/clients/:id/actions/assign-staff"
             element={<ClientAssignStaff />}
+          />
+          <Route
+            path="/clients/:id/actions/unassign-staff"
+            element={<ClientUnassignStaff />}
           />
           <Route
             path="/clients/:id/actions/transfer-client"
