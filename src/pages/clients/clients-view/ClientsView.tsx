@@ -28,10 +28,12 @@ import { isLegalEntity } from './general-data-tab/generalDataUtils'
 const clientsApi = new ClientApi(getConfiguration())
 
 /**
- * Fineract sends the client's legal form, staff name, mobile number and the
- * groups it belongs to; the generated type leaves them out (see ISSUES.md).
+ * Fineract sends the client's legal form, staff name, mobile number, the
+ * groups it belongs to and the status label; the generated type leaves them
+ * out (see ISSUES.md).
  */
 type ClientWithLegalForm = GetClientsClientIdResponse & {
+  status?: GetClientsClientIdResponse['status'] & { value?: string }
   legalForm?: { id?: number } | null
   staffId?: number | null
   staffName?: string | null
@@ -236,8 +238,7 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.newFixedDepositAccount'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/fixed-deposits-accounts/create`,
                     },
                   ],
                 },
@@ -277,7 +278,7 @@ const ClientsView = () => {
                             : t('view.menu.assignStaff'),
                         path:
                           client.staffId != null
-                            ? `clients/${client.id}/edit`
+                            ? `clients/${client.id}/actions/unassign-staff`
                             : `clients/${client.id}/actions/assign-staff`,
                       },
                     ]
@@ -338,7 +339,7 @@ const ClientsView = () => {
 
           <div className="mt-30 bg-[#0662a3] px-4 py-2 rounded-md text-sm font-medium text-white">
             <div>
-              {t('view.status')} {client?.status?.code ?? '—'}
+              {t('view.status')} {client?.status?.value ?? '—'}
             </div>
           </div>
         </div>

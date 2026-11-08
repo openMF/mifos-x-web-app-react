@@ -28,13 +28,7 @@ import {
   X,
 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  type FormEvent,
-  type ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { type FormEvent, type ReactNode, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
@@ -47,6 +41,7 @@ import { useLogout } from '@/hooks/use-logout'
 import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/custom/language-switcher/LanguageSwitcher'
+import { useTheme } from '@/hooks/use-theme'
 
 // Icon-only controls get a visible hover/focus label next to their aria-label.
 // The label already names the control, so the trigger skips Radix's
@@ -91,17 +86,10 @@ const MfNavbar = () => {
     }
   }
 
-  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
-    localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
-  )
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('theme', theme)
-  }, [theme])
+  const { isDark: darkThemeActive, setTheme } = useTheme()
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
+    setTheme(darkThemeActive ? 'light' : 'dark')
   }
 
   const institutionOptions = [
@@ -311,7 +299,7 @@ const MfNavbar = () => {
         </NavTooltip>
         <NavTooltip
           label={
-            theme === 'light'
+            !darkThemeActive
               ? t('common:accessibility.switchToDarkTheme')
               : t('common:accessibility.switchToLightTheme')
           }
@@ -321,13 +309,13 @@ const MfNavbar = () => {
             className="hover:text-gray-200 transition-colors hover:bg-transparent dark:hover:bg-transparent cursor-pointer p-2"
             onClick={toggleTheme}
             aria-label={
-              theme === 'light'
+              !darkThemeActive
                 ? t('common:accessibility.switchToDarkTheme')
                 : t('common:accessibility.switchToLightTheme')
             }
-            aria-pressed={theme !== 'light'}
+            aria-pressed={darkThemeActive}
           >
-            {theme === 'light' ? (
+            {!darkThemeActive ? (
               <Moon className="w-5 h-5" />
             ) : (
               <Sun className="w-5 h-5" />
@@ -347,6 +335,10 @@ const MfNavbar = () => {
             {
               label: t('common:nav.help'),
               path: 'https://mifosforge.jira.com/wiki/spaces/docs/pages/52035622/User+Manualsers',
+            },
+            {
+              label: t('common:nav.systemInformation'),
+              path: 'system/system-information',
             },
             { label: t('common:nav.profile'), path: 'profile' },
             { label: t('common:nav.settings'), path: 'settings' },
