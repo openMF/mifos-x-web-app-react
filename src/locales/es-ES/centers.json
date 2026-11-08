@@ -32,10 +32,45 @@
     "placeholderExternalId": "Ingresar id externo",
     "breadcrumb": "Editar"
   },
+  "activate": {
+    "title": "Activar Centro",
+    "labelActivationDate": "Fecha de Activación*",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de activación.",
+      "dateInFuture": "La fecha de activación no puede ser futura.",
+      "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
+  },
   "close": {
+    "title": "Cerrar Centro",
     "heading": "Cerrar Centro",
-    "labelClosedOn": "Fecha de cierre*",
-    "breadcrumb": "Cerrar"
+    "labelClosedOnDate": "Fecha de cierre*",
+    "labelClosureReason": "Motivo de Cierre*",
+    "labelClosureReasonOptional": "Motivo de Cierre (Opcional)",
+    "selectClosureReason": "Seleccionar motivo de cierre",
+    "noReasonsFound": "No hay motivos de cierre disponibles",
+    "noReasonsAvailable": "No hay motivos de cierre configurados. Por favor configure los motivos de cierre en Configuración.",
+    "breadcrumb": "Cerrar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de cierre.",
+      "dateInFuture": "La fecha de cierre no puede ser en el futuro.",
+      "dateBeforeActivated": "La fecha de cierre no puede ser anterior a la fecha de activación.",
+      "reasonRequired": "Por favor seleccione un motivo de cierre.",
+      "failedFetchReasons": "Error al obtener los motivos de cierre."
+    }
+  },
+  "success": {
+    "centerActivated": "Centro activado con éxito.",
+    "centerClosed": "Centro cerrado con éxito."
+  },
+  "errors": {
+    "failedActivateCenter": "Error al activar el centro.",
+    "failedCloseCenter": "Error al cerrar el centro.",
+    "failedFetchCenter": "Error al cargar los detalles del centro."
   },
   "view": {
     "centerName": "Nombre del Centro :",
@@ -47,7 +82,6 @@
     "meetingFrequency": "Frecuencia de Reunión:",
     "missingInOpenAPI": "Falta en OpenAPI",
     "confirmDelete": "¿Está seguro de que desea eliminar este centro?",
-    "activateTodo": "POR HACER: activar centro",
     "tabs": {
       "general": "General",
       "notes": "Notas"

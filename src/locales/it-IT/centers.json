@@ -32,10 +32,45 @@
     "placeholderExternalId": "Inserisci id esterno",
     "breadcrumb": "Modifica"
   },
+  "activate": {
+    "title": "Attiva Centro",
+    "labelActivationDate": "Data di Attivazione*",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Inserisci una data di attivazione.",
+      "dateInFuture": "La data di attivazione non può essere nel futuro.",
+      "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
   "close": {
+    "title": "Chiudi Centro",
     "heading": "Chiudi Centro",
-    "labelClosedOn": "Data di chiusura*",
-    "breadcrumb": "Chiudi"
+    "labelClosedOnDate": "Data di chiusura*",
+    "labelClosureReason": "Motivo della Chiusura*",
+    "labelClosureReasonOptional": "Motivo della Chiusura (Opzionale)",
+    "selectClosureReason": "Seleziona il motivo della chiusura",
+    "noReasonsFound": "Nessun motivo di chiusura disponibile",
+    "noReasonsAvailable": "Nessun motivo di chiusura configurato. Configurare i motivi di chiusura nelle Impostazioni.",
+    "breadcrumb": "Chiudi",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Si prega di inserire una data di chiusura.",
+      "dateInFuture": "La data di chiusura non può essere nel futuro.",
+      "dateBeforeActivated": "La data di chiusura non può essere antecedente alla data di attivazione.",
+      "reasonRequired": "Si prega di selezionare un motivo di chiusura.",
+      "failedFetchReasons": "Impossibile recuperare i motivi di chiusura."
+    }
+  },
+  "success": {
+    "centerActivated": "Centro attivato con successo.",
+    "centerClosed": "Centro chiuso con successo."
+  },
+  "errors": {
+    "failedActivateCenter": "Impossibile attivare il centro.",
+    "failedCloseCenter": "Impossibile chiudere il centro.",
+    "failedFetchCenter": "Impossibile caricare i dettagli del centro."
   },
   "view": {
     "centerName": "Nome Centro :",
@@ -44,10 +79,9 @@
     "externalId": "Id Esterno:",
     "activationDate": "Data di Attivazione :",
     "nextMeetingOn": "Prossima Riunione il:",
-    "meetingFrequency": "Frequenza Riunioni:",
+    "meetingFrequency": "Frecuenza Riunioni:",
     "missingInOpenAPI": "Mancante in OpenAPI",
     "confirmDelete": "Sei sicuro di voler eliminare questo centro?",
-    "activateTodo": "DA FARE: attivare il centro",
     "tabs": {
       "general": "Generale",
       "notes": "Note"
