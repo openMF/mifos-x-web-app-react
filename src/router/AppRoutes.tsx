@@ -246,6 +246,8 @@ import Clients from '@/pages/clients/Clients'
 import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
+import RejectClient from '@/pages/clients/clients-view/client-actions/RejectClient'
+import WithdrawClient from '@/pages/clients/clients-view/client-actions/WithdrawClient'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
 import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
@@ -961,6 +963,14 @@ const AppRoutes = () => {
           <Route
             path="/clients/:id/actions/activate"
             element={<ActivateClient />}
+          />
+          <Route
+            path="/clients/:id/actions/reject"
+            element={<RejectClient />}
+          />
+          <Route
+            path="/clients/:id/actions/withdraw"
+            element={<WithdrawClient />}
           />
           <Route
             path="/clients/:id/actions/assign-staff"
