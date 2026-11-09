@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faRepeat,
@@ -84,6 +85,8 @@ const Accounting = () => {
           { label: 'Accounting', current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
         <div className="grid grid-cols-1 md:grid-cols-2">
