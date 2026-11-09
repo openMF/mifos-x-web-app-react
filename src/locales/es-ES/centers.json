@@ -37,6 +37,24 @@
     "labelClosedOn": "Fecha de cierre*",
     "breadcrumb": "Cerrar"
   },
+  "assignStaff": {
+    "title": "Asignar personal",
+    "labelStaff": "Personal*",
+    "selectStaff": "Seleccionar personal",
+    "loadingStaff": "Cargando personal...",
+    "noStaffFound": "No se encontró personal",
+    "noStaffAvailable": "No hay miembros del personal disponibles para la oficina de este centro.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "errors": {
+      "failedFetchCenter": "Error al obtener los detalles del centro.",
+      "staffRequired": "Por favor seleccione un miembro del personal.",
+      "failedAssignStaff": "Error al asignar personal."
+    }
+  },
+  "success": {
+    "staffAssigned": "Personal asignado exitosamente."
+  },
   "view": {
     "centerName": "Nombre del Centro :",
     "accountNo": "N.º de Cuenta:",
