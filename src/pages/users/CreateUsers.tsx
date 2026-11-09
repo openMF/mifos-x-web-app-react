@@ -7,7 +7,6 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import type { AxiosError } from 'axios'
 
 import { Label } from '@/components/ui/label'
@@ -22,11 +21,13 @@ import {
   PasswordPreferencesApi,
   StaffApi,
   UsersApi,
+  type GetPasswordPreferencesTemplateResponse,
   type GetUsersTemplateResponse,
   type StaffData,
   type PostUsersRequest,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { getPasswordPolicyError } from './password-policy'
 
 const userApi = new UsersApi(getConfiguration())
 const staffApi = new StaffApi(getConfiguration())
@@ -61,9 +62,12 @@ const getUserErrorMessage = (error: unknown) => {
 }
 
 const CreateUsers = () => {
-  const { t } = useTranslation('auth')
   const [users, setUsers] = useState<GetUsersTemplateResponse>()
   const [staff, setStaff] = useState<StaffData[] | null>(null)
+  const [activePasswordPolicy, setActivePasswordPolicy] =
+    useState<GetPasswordPreferencesTemplateResponse | null>(null)
+  const [passwordPolicyLoading, setPasswordPolicyLoading] = useState(true)
+  const [passwordPolicyLoadError, setPasswordPolicyLoadError] = useState(false)
 
   const [formData, setFormData] = useState({
     username: '',
@@ -84,24 +88,17 @@ const CreateUsers = () => {
   // the regex itself is not sent, so the description is shown as the rule.
   // Reading it needs READ_PASSWORD_PREFERENCES, so a user who can create users
   // but not read the preferences gets a general line instead.
-  const [passwordPolicy, setPasswordPolicy] = useState<string | null>(null)
 
   const showPassword = !formData.sendPasswordToEmail
+  const passwordPolicyError =
+    showPassword && formData.password.length > 0
+      ? getPasswordPolicyError(formData.password, activePasswordPolicy?.key)
+      : null
 
   const passwordsDontMatch =
     showPassword &&
     formData.repeatPassword.length > 0 &&
     formData.password !== formData.repeatPassword
-
-  useEffect(() => {
-    passwordPreferencesApi
-      .retrieve1()
-      .then(res => setPasswordPolicy(res.data?.description ?? null))
-      .catch(err => {
-        console.error('Failed to fetch password policy', err)
-        setPasswordPolicy(t('user.passwordPolicyFallback'))
-      })
-  }, [t])
 
   // fetch template for offices, roles, etc.
   useEffect(() => {
@@ -114,6 +111,30 @@ const CreateUsers = () => {
       }
     }
     fetchUserTemplate()
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    const fetchActivePasswordPolicy = async () => {
+      try {
+        const response = await passwordPreferencesApi.template21()
+        const activePolicy = response.data.find(policy => policy.active)
+        if (!activePolicy?.key) {
+          throw new Error('No active password policy was returned')
+        }
+        if (!cancelled) setActivePasswordPolicy(activePolicy)
+      } catch (err) {
+        console.error('Failed to load the active password policy', err)
+        if (!cancelled) setPasswordPolicyLoadError(true)
+      } finally {
+        if (!cancelled) setPasswordPolicyLoading(false)
+      }
+    }
+    fetchActivePasswordPolicy()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   // fetch staff when office changes
@@ -159,7 +180,13 @@ const CreateUsers = () => {
         alert('Please enter and confirm the password.')
         return
       }
-      if (passwordsDontMatch) {
+      if (passwordPolicyLoading || passwordPolicyLoadError) {
+        alert(
+          'The active password policy could not be loaded. Please reload the page and try again.'
+        )
+        return
+      }
+      if (passwordPolicyError || passwordsDontMatch) {
         alert('Please fix the password errors.')
         return
       }
@@ -312,15 +339,29 @@ const CreateUsers = () => {
                 <Input
                   type="password"
                   placeholder="Enter password"
-                  className="w-full"
+                  className={`w-full ${passwordPolicyError ? 'border-red-500' : ''}`}
                   value={formData.password}
                   onChange={e =>
                     setFormData(prev => ({ ...prev, password: e.target.value }))
                   }
                 />
-                {passwordPolicy && (
-                  <p className="text-sm text-muted-foreground">
-                    {passwordPolicy}
+                {passwordPolicyError && (
+                  <p className="text-sm text-red-500">{passwordPolicyError}</p>
+                )}
+                {passwordPolicyLoading && (
+                  <p className="text-sm text-zinc-500">
+                    Loading active password policy...
+                  </p>
+                )}
+                {passwordPolicyLoadError && (
+                  <p role="alert" className="text-sm text-red-500">
+                    Could not load the active password policy.
+                  </p>
+                )}
+                {activePasswordPolicy?.description && (
+                  <p className="text-sm text-zinc-500">
+                    Active policy ({activePasswordPolicy.key}):{' '}
+                    {activePasswordPolicy.description}
                   </p>
                 )}
               </div>
