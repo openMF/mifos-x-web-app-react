@@ -272,7 +272,7 @@ const clean = (element: Element): void => {
 }
 
 /** Returns `html` with everything outside the allow-list removed. */
-export const sanitizeHtml = (html: string): string => {
+export const sanitizeHtml = (html?: string | null): string => {
   if (!html) return ''
   const parsed = new DOMParser().parseFromString(html, 'text/html')
   clean(parsed.body)
