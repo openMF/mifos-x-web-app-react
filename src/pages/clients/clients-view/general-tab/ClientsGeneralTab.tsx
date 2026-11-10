@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { type KeyboardEvent, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import {
@@ -191,18 +191,21 @@ const shownDate = (value: unknown) =>
   Array.isArray(value) ? formatDate(value) : String(value ?? '—')
 
 /**
- * The client's fixed or recurring deposit accounts. The rows do not link
- * anywhere yet, as the app has no deposit account view.
+ * The client's fixed or recurring deposit accounts. Rows open the account when
+ * `accountPath` is given; recurring deposits have no account view yet.
  */
 const DepositAccounts = ({
   title,
   accounts,
   money,
+  accountPath,
 }: {
   title: string
   accounts: AccountRecord[]
   money: (value: unknown, currency?: AccountCurrency) => string
+  accountPath?: (acc: AccountRecord) => string
 }) => {
+  const navigate = useNavigate()
   const { t } = useTranslation('clients')
   const [showClosed, setShowClosed] = useState(false)
   const shown = accounts.filter(a => !!a.status?.closed === showClosed)
@@ -237,7 +240,22 @@ const DepositAccounts = ({
           </TableHeader>
           <TableBody>
             {shown.map(acc => (
-              <TableRow key={String(acc.id ?? '')}>
+              <TableRow
+                key={String(acc.id ?? '')}
+                {...(accountPath && {
+                  role: 'link',
+                  tabIndex: 0,
+                  onClick: () => navigate(accountPath(acc)),
+                  onKeyDown: (e: KeyboardEvent<HTMLTableRowElement>) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      navigate(accountPath(acc))
+                    }
+                  },
+                  className:
+                    'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 focus-visible:outline-2 focus-visible:outline-[#1074b9]',
+                })}
+              >
                 <TableCell className="px-6 py-4 flex items-center gap-2">
                   <StatusDot acc={acc} />
                   <span>{acc.accountNo ?? '—'}</span>
@@ -884,6 +902,9 @@ const ClientsGeneralTab = () => {
           title={t('general.fixedDepositAccounts')}
           accounts={fixedDeposits}
           money={money}
+          accountPath={acc =>
+            `/clients/${id}/fixed-deposits-accounts/${acc.id}/general`
+          }
         />
       )}
       {recurringDeposits.length > 0 && (
