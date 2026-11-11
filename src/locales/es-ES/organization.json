@@ -364,6 +364,41 @@
   "searchByMaker": "Buscar por creador",
   "searchEvents": "Buscar eventos",
   "searchReports": "Buscar informes",
+  "serviceSettings": {
+    "editTitle": "Editar {{service}}",
+    "errors": {
+      "loadServices": "Error al cargar los servicios externos.",
+      "loadSettings": "Error al cargar la configuración.",
+      "saveSettings": "Error al guardar la configuración."
+    },
+    "fields": {
+      "accessKey": "Clave de acceso",
+      "bucketName": "Nombre del bucket",
+      "endPoint": "Endpoint",
+      "fcmEndPoint": "Endpoint de FCM",
+      "fromEmail": "Correo del remitente",
+      "fromName": "Nombre del remitente",
+      "gcmEndPoint": "Endpoint de GCM",
+      "host": "Host",
+      "password": "Contraseña",
+      "port": "Puerto",
+      "secretKey": "Clave secreta",
+      "serverKey": "Clave del servidor",
+      "tenantAppKey": "Clave de aplicación del inquilino",
+      "useTls": "Usar TLS",
+      "username": "Nombre de usuario"
+    },
+    "notSet": "No configurado",
+    "secretPlaceholder": "Configurado. Déjelo vacío para conservarlo",
+    "secretSet": "Configurado (oculto)",
+    "services": {
+      "amazonS3": "Amazon S3",
+      "email": "Correo electrónico (SMTP)",
+      "pushNotification": "Notificaciones push",
+      "smsGateway": "Pasarela SMS"
+    },
+    "unknownService": "Servicio externo desconocido \"{{slug}}\"."
+  },
   "smsCampaign": {
     "title": "Campañas SMS",
     "create": "Crear campaña SMS",
