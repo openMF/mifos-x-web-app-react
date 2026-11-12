@@ -233,8 +233,7 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.newRecurringDepositAccount'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/recurring-deposits-accounts/create`,
                     },
                     {
                       label: t('view.menu.newFixedDepositAccount'),
