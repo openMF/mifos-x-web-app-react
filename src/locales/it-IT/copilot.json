@@ -68,6 +68,9 @@
     "thoughtBriefly": "Ha pensato per qualche secondo",
     "steps": "Passaggi eseguiti",
     "wrote": "ha modificato",
+    "writing": "modifica in corso",
+    "writeStopped": "interrotto, controlla il record",
+    "stopped": "interrotto",
     "notes": "Note di lavoro",
     "notesCaution": "Testo di lavoro dell'assistente. Non è un resoconto di come è stata prodotta la risposta, né una valutazione del credito. Verifica ogni importo sulla scheda del cliente.",
     "stepCount": "Passaggi: {{count}}"

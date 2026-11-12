@@ -68,6 +68,9 @@
     "thoughtBriefly": "A réfléchi quelques secondes",
     "steps": "Étapes effectuées",
     "wrote": "a modifié",
+    "writing": "modification en cours",
+    "writeStopped": "interrompu, vérifiez la fiche",
+    "stopped": "interrompu",
     "notes": "Notes de travail",
     "notesCaution": "Texte de travail de l'assistant. Ce n'est ni un compte rendu de la manière dont la réponse a été produite, ni une évaluation de crédit. Vérifiez chaque chiffre dans la fiche du client.",
     "stepCount": "Étapes : {{count}}"

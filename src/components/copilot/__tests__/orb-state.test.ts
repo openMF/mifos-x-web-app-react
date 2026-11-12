@@ -60,14 +60,18 @@ describe('orb motion', () => {
   })
 
   it('comes to a stop at rest, within the five seconds WCAG 2.2.2 allows', () => {
-    expect(IDLE_MOTION_MS).toBeLessThanOrEqual(5000)
     expect(ORB_AT_REST.speed).toBe(0)
 
-    // From idle, the surface is still well within a couple of seconds.
+    // The idle window plus the time the surface takes to settle, at a slow
+    // 30 frames a second: the whole stop has to fit in five seconds.
+    const frame = 1 / 30
     let motion = ORB_MOTION.idle
-    for (let i = 0; i < 120; i++)
-      motion = easeMotion(motion, ORB_AT_REST, 1 / 60)
-    expect(motion.speed).toBeLessThan(REST_SPEED)
+    let settleMs = 0
+    while (motion.speed >= REST_SPEED) {
+      motion = easeMotion(motion, ORB_AT_REST, frame)
+      settleMs += frame * 1000
+    }
+    expect(IDLE_MOTION_MS + settleMs).toBeLessThanOrEqual(5000)
     // Only the flow stops; the shape it settles into is the idle one.
     expect(motion.amplitude).toBeCloseTo(ORB_MOTION.idle.amplitude, 6)
   })

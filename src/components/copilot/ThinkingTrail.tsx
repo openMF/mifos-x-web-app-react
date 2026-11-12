@@ -7,7 +7,7 @@
  */
 
 import { useState } from 'react'
-import { Check, ListChecks, Loader2, PenLine } from 'lucide-react'
+import { Check, CircleSlash, ListChecks, Loader2, PenLine } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -124,7 +124,7 @@ export function ThinkingTrail({
             )}
           </ChainOfThoughtHeader>
           <ChainOfThoughtContent>
-            <Steps steps={steps} />
+            <Steps steps={steps} live={live} />
           </ChainOfThoughtContent>
         </ChainOfThought>
       )}
@@ -132,32 +132,52 @@ export function ThinkingTrail({
   )
 }
 
-function Steps({ steps }: { steps: ToolStep[] }) {
+function Steps({ steps, live }: { steps: ToolStep[]; live: boolean }) {
   const { t } = useTranslation('copilot')
   return (
     <ul className="space-y-3" aria-label={t('trail.steps')}>
-      {steps.map(step => (
-        <li key={step.id}>
-          <ChainOfThoughtStep
-            status={step.done ? 'complete' : 'active'}
-            icon={!step.done ? SpinningLoader : step.readOnly ? Check : PenLine}
-            // A write is marked apart from a read: that matters on an account.
-            className={
-              step.readOnly ? undefined : 'text-amber-700 dark:text-amber-400'
-            }
-            label={
-              <span className="flex flex-wrap items-center gap-2">
-                {step.label}
-                {!step.readOnly && (
-                  <span className="rounded border border-current px-1 text-xs">
-                    {t('trail.wrote')}
-                  </span>
-                )}
-              </span>
-            }
-          />
-        </li>
-      ))}
+      {steps.map(step => {
+        // A step still open when its turn ended was cut short: it is not
+        // running any more, and it may not have finished.
+        const stopped = !step.done && !live
+        return (
+          <li key={step.id}>
+            <ChainOfThoughtStep
+              status={step.done ? 'complete' : stopped ? 'pending' : 'active'}
+              icon={
+                step.done
+                  ? step.readOnly
+                    ? Check
+                    : PenLine
+                  : stopped
+                    ? CircleSlash
+                    : SpinningLoader
+              }
+              // A write is marked apart from a read: that matters on an account.
+              className={
+                step.readOnly ? undefined : 'text-amber-700 dark:text-amber-400'
+              }
+              label={
+                <span className="flex flex-wrap items-center gap-2">
+                  {step.label}
+                  {!step.readOnly && (
+                    <span className="rounded border border-current px-1 text-xs">
+                      {step.done
+                        ? t('trail.wrote')
+                        : stopped
+                          ? t('trail.writeStopped')
+                          : t('trail.writing')}
+                    </span>
+                  )}
+                  {step.readOnly && stopped && (
+                    <span className="text-xs">{t('trail.stopped')}</span>
+                  )}
+                </span>
+              }
+            />
+          </li>
+        )
+      })}
     </ul>
   )
 }

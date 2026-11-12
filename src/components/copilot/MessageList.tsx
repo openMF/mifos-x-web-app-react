@@ -85,6 +85,7 @@ export function MessageList({
                         : undefined
                     }
                     onAsk={onAsk}
+                    answerCount={turn.answers.length}
                     showSuggestions={
                       message === last && thread.phase === 'idle'
                     }
@@ -137,6 +138,7 @@ const AssistantMessage = memo(function AssistantMessage({
   askAgainPrompt,
   showSuggestions,
   onAsk,
+  answerCount,
   branchLabels,
 }: {
   message: CopilotMessage
@@ -146,10 +148,13 @@ const AssistantMessage = memo(function AssistantMessage({
   askAgainPrompt?: string
   showSuggestions: boolean
   onAsk: (text: string) => void
+  /** How many answers this question has had. */
+  answerCount: number
   branchLabels: { previous: string; next: string }
 }) {
   const { t } = useTranslation('copilot')
   const text = visibleText(message.text, message.streaming)
+  const hasActions = Boolean(text) && !message.error
 
   return (
     <Message
@@ -214,13 +219,19 @@ const AssistantMessage = memo(function AssistantMessage({
             </div>
           )}
         </MessageContent>
-        {!message.streaming && text && !message.error && (
+        {/* The answer switcher stays even when this answer failed, so an
+            earlier answer to the same question is still within reach. */}
+        {!message.streaming && (hasActions || answerCount > 1) && (
           <MessageToolbar className="mt-0">
-            <AnswerActions
-              text={message.text}
-              askAgainPrompt={askAgainPrompt}
-              onAsk={onAsk}
-            />
+            {hasActions ? (
+              <AnswerActions
+                text={message.text}
+                askAgainPrompt={askAgainPrompt}
+                onAsk={onAsk}
+              />
+            ) : (
+              <span />
+            )}
             <MessageBranchSelector>
               <MessageBranchPrevious aria-label={branchLabels.previous} />
               <MessageBranchPage>

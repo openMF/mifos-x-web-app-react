@@ -25,6 +25,8 @@ import {
 import { Streamdown } from 'streamdown'
 // Keyframes for Streamdown's word-by-word reveal (the `animated` prop).
 import 'streamdown/styles.css'
+// Layout and fonts for maths rendered by the math plugin.
+import 'katex/dist/katex.min.css'
 
 import { Button } from '@/components/ui/button'
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group'
@@ -317,7 +319,7 @@ export type MessageBranchPageProps = Omit<
   HTMLAttributes<HTMLSpanElement>,
   'children'
 > & {
-  /** Translatable "2 of 3"; defaults to the English upstream wording. */
+  /** Translatable "2 of 3"; defaults to English. */
   children?: (current: number, total: number) => ReactNode
 }
 

@@ -11,6 +11,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ComponentProps,
   type RefObject,
 } from 'react'
@@ -50,7 +51,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useCopilotChat } from '@/hooks/use-copilot-chat'
-import { isTurnActive, type TurnPhase } from '@/lib/copilot'
+import { isTurnActive, type CopilotThread, type TurnPhase } from '@/lib/copilot'
 import { cn } from '@/lib/utils'
 import { AiBadge } from './AiBadge'
 import { Composer } from './Composer'
@@ -108,8 +109,17 @@ export default function CopilotPanel({
     state => (state.auth.user as { username?: unknown } | null)?.username
   )
 
+  // The unsent question. Kept here, not in the box, so it survives the
+  // panel being minimised and opened again.
+  const [draft, setDraft] = useState('')
   // Whether there is a draft in the box: the orb leans in while there is.
   const [typing, setTyping] = useState(false)
+
+  // Over the whole screen, the page behind is out of sight, so it must also
+  // be out of reach: focus and screen readers stay in the panel. Floating
+  // and docked panels leave the page in view and usable.
+  const phone = usePhoneLayout()
+  useInertPage(open && (phone || mode === 'fullscreen'))
 
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const conversationRef = useRef<StickToBottomContext>(null)
@@ -131,7 +141,7 @@ export default function CopilotPanel({
 
   useEffect(() => onPhaseChange(thread.phase), [thread.phase, onPhaseChange])
 
-  const announcement = useAnnouncement(thread.phase)
+  const announcement = useAnnouncement(thread)
   const empty = !thread.messages.length
 
   return (
@@ -292,6 +302,8 @@ export default function CopilotPanel({
             <footer className="mx-auto w-full max-w-3xl shrink-0 px-4 pt-2 pb-3 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-backwards motion-safe:delay-100 motion-safe:duration-300">
               <Composer
                 ref={inputRef}
+                text={draft}
+                onTextChange={setDraft}
                 busy={busy}
                 onSend={sendAndFollow}
                 onStop={stop}
@@ -339,21 +351,63 @@ function HeaderButton({
   )
 }
 
-/** "Working on your question" when a turn starts, "Reply ready" when it ends. */
-function useAnnouncement(phase: TurnPhase): string {
+/**
+ * Takes the app behind the panel out of reach while the panel covers it.
+ * Native `inert`, rather than switching the dialog to modal: that swaps the
+ * dialog's content while it is open, and a mode change would remount the
+ * conversation.
+ */
+function useInertPage(active: boolean) {
+  useEffect(() => {
+    const page = document.getElementById('root')
+    if (!active || !page) return
+    page.inert = true
+    return () => {
+      page.inert = false
+    }
+  }, [active])
+}
+
+/** Below the `sm` breakpoint, where the panel always fills the screen. */
+const PHONE_QUERY = '(max-width: 639px)'
+
+function subscribePhone(onChange: () => void) {
+  const query = window.matchMedia(PHONE_QUERY)
+  query.addEventListener('change', onChange)
+  return () => query.removeEventListener('change', onChange)
+}
+
+function usePhoneLayout(): boolean {
+  return useSyncExternalStore(
+    subscribePhone,
+    () => window.matchMedia(PHONE_QUERY).matches,
+    () => false
+  )
+}
+
+/**
+ * "Working on your question" when a turn starts, "Reply ready" when it ends
+ * with something to read. A turn stopped before anything arrived leaves no
+ * answer behind, so nothing is announced for it.
+ */
+function useAnnouncement(thread: CopilotThread): string {
   const { t } = useTranslation('copilot')
   const [message, setMessage] = useState('')
+  const { phase, messages } = thread
   const previous = useRef(phase)
+  // The reducer drops an empty answer when its turn ends, so a reply exists
+  // exactly when the conversation now ends with one.
+  const endsWithReply = messages[messages.length - 1]?.role === 'assistant'
 
   useEffect(() => {
     const was = previous.current
     previous.current = phase
     if (phase === 'thinking' && was !== 'thinking') {
       setMessage(t('a11y.working'))
-    } else if (isTurnActive(was) && phase === 'idle') {
+    } else if (isTurnActive(was) && phase === 'idle' && endsWithReply) {
       setMessage(t('a11y.replyReady'))
     }
-  }, [phase, t])
+  }, [phase, endsWithReply, t])
 
   return message
 }

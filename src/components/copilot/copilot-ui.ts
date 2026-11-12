@@ -11,7 +11,7 @@ import type { CopilotErrorCode, CopilotMessage, TurnPhase } from '@/lib/copilot'
 // config on load, which this file (and its tests) must not depend on.
 import { isTurnActive } from '@/lib/copilot/reducer'
 
-/** Any one of these lets an officer see the Copilot, as in the Angular app. */
+/** Any one of these lets an officer see the Copilot. */
 export const COPILOT_PERMISSIONS = [
   'ALL_FUNCTIONS',
   'USE_MCP_TOOLS',

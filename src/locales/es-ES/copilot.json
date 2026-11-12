@@ -68,6 +68,9 @@
     "thoughtBriefly": "Pensó durante unos segundos",
     "steps": "Pasos realizados",
     "wrote": "modificó",
+    "writing": "modificando",
+    "writeStopped": "detenido, revise el registro",
+    "stopped": "detenido",
     "notes": "Notas de trabajo",
     "notesCaution": "Texto de trabajo del propio asistente. No es un registro de cómo se produjo la respuesta, ni una evaluación crediticia. Verifique cada cifra con el expediente del cliente.",
     "stepCount": "Pasos: {{count}}"

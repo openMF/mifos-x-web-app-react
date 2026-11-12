@@ -25,12 +25,20 @@ const COUNTER_FROM = MAX_INPUT_LENGTH - 100
 
 export function Composer({
   ref,
+  text,
+  onTextChange,
   busy,
   onSend,
   onStop,
   onTypingChange,
 }: {
   ref?: Ref<HTMLTextAreaElement>
+  /**
+   * The draft. Held by the panel, which outlives this box: closing the panel
+   * unmounts it, and an unsent question must still be there on reopening.
+   */
+  text: string
+  onTextChange: (text: string) => void
   busy: boolean
   onSend: (text: string) => SendResult
   onStop: () => void
@@ -38,7 +46,6 @@ export function Composer({
   onTypingChange?: (typing: boolean) => void
 }) {
   const { t } = useTranslation('copilot')
-  const [text, setText] = useState('')
   const [blocked, setBlocked] = useState<
     'invalid_length' | 'injection_detected' | null
   >(null)
@@ -50,7 +57,7 @@ export function Composer({
     if (busy || !text.trim()) return
     const result = onSend(text)
     if (result.sent) {
-      setText('')
+      onTextChange('')
       setBlocked(null)
     } else if (result.reason !== 'busy') {
       // The text stays, so the officer can fix it rather than retype it.
@@ -80,7 +87,7 @@ export function Composer({
             ref={ref}
             value={text}
             onChange={event => {
-              setText(event.target.value)
+              onTextChange(event.target.value)
               if (blocked) setBlocked(null)
             }}
             maxLength={MAX_INPUT_LENGTH}

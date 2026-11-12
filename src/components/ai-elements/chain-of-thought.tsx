@@ -36,7 +36,7 @@ export const ChainOfThought = memo(
 export type ChainOfThoughtHeaderProps = ComponentProps<
   typeof CollapsibleTrigger
 > & {
-  /** Defaults to upstream's brain. */
+  /** Defaults to a brain. */
   icon?: ComponentType<{ className?: string }>
 }
 

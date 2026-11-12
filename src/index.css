@@ -7,7 +7,7 @@
  */
 @import 'tailwindcss';
 @import 'tw-animate-css';
-/* Positions the AI Elements Panel (top-right, bottom-left, ...). In a low
+/* Positions the chat Panel (top-right, bottom-left, ...). In a low
    layer, so Tailwind classes on a panel still win. */
 @import '@xyflow/react/dist/base.css' layer(base);
 /* Classes used by Streamdown, which renders Copilot answers as markdown. */
@@ -131,7 +131,7 @@
   }
 }
 
-/* AI Elements Shimmer: a highlight sweeping across "working" text. */
+/* Shimmer: a highlight sweeping across "working" text. */
 @keyframes ai-shimmer {
   from {
     background-position: 100% center;

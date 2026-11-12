@@ -68,6 +68,9 @@
     "thoughtBriefly": "Thought for a few seconds",
     "steps": "Steps taken",
     "wrote": "changed",
+    "writing": "changing",
+    "writeStopped": "stopped, check the record",
+    "stopped": "stopped",
     "notes": "Working notes",
     "notesCaution": "The assistant's own working text. Not a record of how the answer was produced, and not a credit assessment. Check every figure against the client record.",
     "stepCount": "Steps: {{count}}"

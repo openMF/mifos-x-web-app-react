@@ -38,11 +38,12 @@ export const ORB_MOTION: Record<OrbState, OrbMotion> = {
 export const ORB_AT_REST: OrbMotion = { ...ORB_MOTION.idle, speed: 0 }
 
 /**
- * How long an idle orb keeps moving before it settles. Motion that starts on
- * its own and runs beside other content has to stop within five seconds
- * (WCAG 2.2.2); after that the orb moves only to say something.
+ * How long an idle orb keeps moving before it starts to settle. Motion that
+ * starts on its own and runs beside other content has to stop within five
+ * seconds (WCAG 2.2.2); settling takes about another second, so this leaves
+ * room for slow frames. After that the orb moves only to say something.
  */
-export const IDLE_MOTION_MS = 4500
+export const IDLE_MOTION_MS = 3500
 
 /** Below this the surface is still to the eye, and drawing can stop. */
 export const REST_SPEED = 0.004
