@@ -26,6 +26,7 @@ i18next
       'organization',
       'products',
       'loans',
+      'copilot',
     ],
     defaultNS: 'common',
     load: 'currentOnly',

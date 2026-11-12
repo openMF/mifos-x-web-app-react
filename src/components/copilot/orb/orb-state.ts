@@ -1,0 +1,81 @@
+/**
+ * Copyright since 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+import type { TurnPhase } from '@/lib/copilot'
+
+/**
+ * What the orb is showing. It mirrors the assistant, so the officer can tell
+ * at a glance whether it is waiting, reading what they type, working, or
+ * answering.
+ */
+export type OrbState = 'idle' | 'listening' | 'thinking' | 'speaking'
+
+/** The shape and pace of the orb's surface in one state. */
+export interface OrbMotion {
+  /** How far the surface rises and falls, as a share of the radius. */
+  amplitude: number
+  /** How fine the ripples are. */
+  frequency: number
+  /** How fast the surface flows. */
+  speed: number
+  /** How much the whole orb breathes in and out. */
+  pulse: number
+}
+
+export const ORB_MOTION: Record<OrbState, OrbMotion> = {
+  idle: { amplitude: 0.07, frequency: 1.1, speed: 0.16, pulse: 0 },
+  listening: { amplitude: 0.11, frequency: 1.45, speed: 0.42, pulse: 0.012 },
+  thinking: { amplitude: 0.19, frequency: 1.9, speed: 0.95, pulse: 0 },
+  speaking: { amplitude: 0.14, frequency: 1.3, speed: 0.62, pulse: 0.035 },
+}
+
+/** A still orb: where an idle orb settles once it has been seen. */
+export const ORB_AT_REST: OrbMotion = { ...ORB_MOTION.idle, speed: 0 }
+
+/**
+ * How long an idle orb keeps moving before it settles. Motion that starts on
+ * its own and runs beside other content has to stop within five seconds
+ * (WCAG 2.2.2); after that the orb moves only to say something.
+ */
+export const IDLE_MOTION_MS = 4500
+
+/** Below this the surface is still to the eye, and drawing can stop. */
+export const REST_SPEED = 0.004
+
+/** The orb's state for what the assistant, and the officer, are doing. */
+export function orbStateFor(phase: TurnPhase, typing: boolean): OrbState {
+  if (phase === 'thinking') return 'thinking'
+  if (phase === 'streaming') return 'speaking'
+  return typing ? 'listening' : 'idle'
+}
+
+/**
+ * Moves a value towards its target by the same share per second whatever the
+ * frame rate, so a change of state glides instead of snapping.
+ */
+export function ease(
+  current: number,
+  target: number,
+  deltaSeconds: number,
+  rate = 4
+): number {
+  return current + (target - current) * (1 - Math.exp(-rate * deltaSeconds))
+}
+
+export function easeMotion(
+  current: OrbMotion,
+  target: OrbMotion,
+  deltaSeconds: number
+): OrbMotion {
+  return {
+    amplitude: ease(current.amplitude, target.amplitude, deltaSeconds),
+    frequency: ease(current.frequency, target.frequency, deltaSeconds),
+    speed: ease(current.speed, target.speed, deltaSeconds),
+    pulse: ease(current.pulse, target.pulse, deltaSeconds),
+  }
+}
