@@ -8,13 +8,14 @@
 
 import { describe, expect, it } from 'vitest'
 import {
-  IDLE_MOTION_MS,
+  IDLE_STOP_MS,
   ORB_AT_REST,
   ORB_MOTION,
-  REST_SPEED,
+  advanceMotion,
   ease,
   easeMotion,
   orbStateFor,
+  type OrbMotion,
 } from '../orb/orb-state'
 
 describe('orbStateFor', () => {
@@ -59,20 +60,45 @@ describe('orb motion', () => {
     }
   })
 
-  it('comes to a stop at rest, within the five seconds WCAG 2.2.2 allows', () => {
+  it('settles into the idle shape: only the flow stops', () => {
     expect(ORB_AT_REST.speed).toBe(0)
-
-    // The idle window plus the time the surface takes to settle, at a slow
-    // 30 frames a second: the whole stop has to fit in five seconds.
-    const frame = 1 / 30
     let motion = ORB_MOTION.idle
-    let settleMs = 0
-    while (motion.speed >= REST_SPEED) {
-      motion = easeMotion(motion, ORB_AT_REST, frame)
-      settleMs += frame * 1000
-    }
-    expect(IDLE_MOTION_MS + settleMs).toBeLessThanOrEqual(5000)
-    // Only the flow stops; the shape it settles into is the idle one.
+    for (let i = 0; i < 300; i++)
+      motion = easeMotion(motion, ORB_AT_REST, 1 / 60)
     expect(motion.amplitude).toBeCloseTo(ORB_MOTION.idle.amplitude, 6)
+  })
+
+  /**
+   * Runs the scene's frame loop for an orb that has just gone idle, and
+   * returns when it last moved and whether it stopped, on the clock.
+   */
+  function runIdle(fps: number, from: OrbMotion) {
+    const frameMs = 1000 / fps
+    let motion = from
+    let lastMovedAt = 0
+    for (let now = frameMs; now < 20_000; now += frameMs) {
+      const step = advanceMotion(motion, 'idle', now, frameMs)
+      motion = step.motion
+      if (step.delta * motion.speed > 0) lastMovedAt = now
+      if (step.stopped) return { lastMovedAt, stoppedAt: now }
+    }
+    return { lastMovedAt, stoppedAt: Infinity }
+  }
+
+  it.each([120, 60, 30, 10, 5, 2])(
+    'stops within the five seconds WCAG 2.2.2 allows, at %i frames a second',
+    fps => {
+      for (const from of [ORB_MOTION.idle, ORB_MOTION.thinking]) {
+        const { lastMovedAt, stoppedAt } = runIdle(fps, from)
+        expect(lastMovedAt).toBeLessThan(IDLE_STOP_MS)
+        expect(stoppedAt).toBeLessThanOrEqual(IDLE_STOP_MS + 1000 / fps)
+      }
+    }
+  )
+
+  it('keeps moving while the assistant is busy', () => {
+    const step = advanceMotion(ORB_MOTION.thinking, 'thinking', 60_000, 16)
+    expect(step.stopped).toBe(false)
+    expect(step.motion.speed).toBeGreaterThan(0)
   })
 })

@@ -16,6 +16,15 @@ import { defaultRehypePlugins, type StreamdownProps } from 'streamdown'
 /** Markdown settings shared by message answers and reasoning. */
 export const streamdownPlugins = { cjk, code, math, mermaid }
 
+/**
+ * Every link asks the officer to confirm, showing the full address, before
+ * it opens. Set here rather than left to the library default, since the
+ * link filter below allows any https host.
+ */
+export const linkSafety = {
+  enabled: true,
+} satisfies StreamdownProps['linkSafety']
+
 /** The only link targets an answer may carry. */
 const LINK_PROTOCOLS = ['https:', 'mailto:']
 
@@ -49,9 +58,11 @@ function linkProtocols() {
 
 /**
  * The default sanitising steps, then two strict ones. Answers are written
- * by a model that reads client data, so a prompt-injected answer must not be
- * able to send that data out: no remote images (an image URL is fetched the
- * moment it renders), and links only to https or mailto.
+ * by a model that reads client data, so a prompt-injected answer must not
+ * send that data out on its own: no remote images (an image URL is fetched
+ * the moment it renders), and links only to https or mailto. Any https host
+ * is still allowed; Streamdown's link check has the officer confirm the full
+ * address before a link opens.
  */
 export const safeRehypePlugins = [
   defaultRehypePlugins.raw,

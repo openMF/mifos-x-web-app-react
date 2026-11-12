@@ -27,7 +27,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
-import { safeRehypePlugins, streamdownPlugins } from './markdown'
+import { linkSafety, safeRehypePlugins, streamdownPlugins } from './markdown'
 import { Shimmer } from './shimmer'
 
 interface ReasoningContextValue {
@@ -222,7 +222,11 @@ export const ReasoningContent = memo(
       {...props}
     >
       {note}
-      <Streamdown plugins={streamdownPlugins} rehypePlugins={safeRehypePlugins}>
+      <Streamdown
+        plugins={streamdownPlugins}
+        rehypePlugins={safeRehypePlugins}
+        linkSafety={linkSafety}
+      >
         {children}
       </Streamdown>
     </CollapsibleContent>

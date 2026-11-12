@@ -17,11 +17,8 @@ import {
 } from 'three'
 
 import {
-  IDLE_MOTION_MS,
-  ORB_AT_REST,
   ORB_MOTION,
-  REST_SPEED,
-  easeMotion,
+  advanceMotion,
   type OrbMotion,
   type OrbState,
 } from './orb-state'
@@ -254,9 +251,6 @@ export function createOrbScene(
   let running = false
   let disposed = false
 
-  const resting = (now: number) =>
-    current === 'idle' && now - idleSince > IDLE_MOTION_MS
-
   const draw = () => {
     uniforms.uAmplitude.value = motion.amplitude
     uniforms.uFrequency.value = motion.frequency
@@ -265,20 +259,15 @@ export function createOrbScene(
   }
 
   const tick = (now: number) => {
-    const delta = Math.min((now - last) / 1000, 0.1)
+    const step = advanceMotion(motion, current, now - idleSince, now - last)
     last = now
-    clock += delta
-
-    motion = easeMotion(
-      motion,
-      resting(now) ? ORB_AT_REST : ORB_MOTION[current],
-      delta
-    )
-    uniforms.uFlow.value += delta * motion.speed
-    mesh.rotation.y += delta * motion.speed * 0.6
+    clock += step.delta
+    motion = step.motion
+    uniforms.uFlow.value += step.delta * motion.speed
+    mesh.rotation.y += step.delta * motion.speed * 0.6
     draw()
 
-    if (resting(now) && motion.speed < REST_SPEED) {
+    if (step.stopped) {
       running = false
       return
     }

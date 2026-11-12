@@ -36,7 +36,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import { safeRehypePlugins, streamdownPlugins } from './markdown'
+import { linkSafety, safeRehypePlugins, streamdownPlugins } from './markdown'
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
   from: 'user' | 'assistant'
@@ -357,6 +357,7 @@ export const MessageResponse = memo(
       plugins={streamdownPlugins}
       rehypePlugins={safeRehypePlugins}
       {...props}
+      linkSafety={linkSafety}
     />
   ),
   (prevProps, nextProps) =>
