@@ -15,6 +15,7 @@ import { useGlobalShortcuts } from '@/hooks/use-global-shortcuts'
 import { useTheme } from '@/hooks/use-theme'
 import { useLogout } from '@/hooks/use-logout'
 import SessionTimeout from '@/components/custom/session/SessionTimeout'
+import { CopilotLauncher } from '@/components/copilot/CopilotLauncher'
 
 const LayoutShortcuts = () => {
   const navigate = useNavigate()
@@ -36,6 +37,7 @@ const Layout = () => {
     <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
       <LayoutShortcuts />
       <SessionTimeout />
+      <CopilotLauncher />
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-col flex-1 w-full">

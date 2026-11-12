@@ -66,6 +66,13 @@ describe('copilotReducer', () => {
     ])
   })
 
+  it('stamps the question and its answer with the time it was sent', () => {
+    const thread = run(initialThread, { ...send, sentAt: 1_700_000_000_000 })
+    expect(thread.messages.map(m => m.createdAt)).toEqual([
+      1_700_000_000_000, 1_700_000_000_000,
+    ])
+  })
+
   it('builds the answer as text arrives and finishes it', () => {
     const thread = run(
       initialThread,

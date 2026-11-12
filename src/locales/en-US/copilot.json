@@ -1,0 +1,102 @@
+{
+  "brand": "Mifos X Copilot",
+  "openAssistant": "Open Mifos X Copilot",
+  "launcher": {
+    "working": "Mifos X Copilot is working on your request. Open Copilot.",
+    "replying": "Mifos X Copilot is replying. Open Copilot.",
+    "minimise": "Minimise Mifos X Copilot",
+    "unread": "Mifos X Copilot has a new reply. Open Copilot."
+  },
+  "close": "Close",
+  "newChat": "New chat",
+  "minimise": "Minimise",
+  "display": {
+    "options": "Display options",
+    "label": "Display",
+    "floating": "Floating",
+    "docked": "Docked to the side",
+    "fullscreen": "Full screen"
+  },
+  "description": "Ask about clients, loans and accounts.",
+  "status": {
+    "ready": "Your Mifos X assistant",
+    "working": "Working on your question…"
+  },
+  "aiBadge": {
+    "label": "AI",
+    "title": "Written by AI. Check important figures against the client record."
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "withName": "{{greeting}}, {{name}}",
+    "question": "How can I help you today?"
+  },
+  "starters": {
+    "label": "Suggested questions",
+    "overdueLoans": {
+      "title": "Which loans are overdue this week?",
+      "description": "Arrears across your portfolio"
+    },
+    "findClient": {
+      "title": "Find a client by name",
+      "description": "Search clients and open their profile"
+    },
+    "savingsBalance": {
+      "title": "Check a client's savings balance",
+      "description": "Balances and recent transactions"
+    }
+  },
+  "you": "You",
+  "jumpToLatest": "Jump to latest",
+  "input": {
+    "label": "Message to Mifos X Copilot",
+    "placeholder": "Ask about a client, a loan or an account",
+    "send": "Send message",
+    "stop": "Stop generating",
+    "counter": "{{count}} of {{max}} characters"
+  },
+  "disclaimer": "Mifos X Copilot helps you find answers. Anything that moves money still needs your approval.",
+  "a11y": {
+    "working": "Working on your question",
+    "replyReady": "Reply ready"
+  },
+  "trail": {
+    "thinking": "Thinking",
+    "thoughtFor": "Thought for {{seconds}}",
+    "thoughtBriefly": "Thought for a few seconds",
+    "steps": "Steps taken",
+    "wrote": "changed",
+    "writing": "changing",
+    "writeStopped": "stopped, check the record",
+    "stopped": "stopped",
+    "notes": "Working notes",
+    "notesCaution": "The assistant's own working text. Not a record of how the answer was produced, and not a credit assessment. Check every figure against the client record.",
+    "stepCount": "Steps: {{count}}"
+  },
+  "approvalPending": {
+    "title": "Your confirmation is needed: {{summary}}",
+    "body": "Confirming actions from the Copilot is coming in an update. Nothing has been changed."
+  },
+  "retry": "Ask again",
+  "actions": {
+    "copy": "Copy answer",
+    "copied": "Copied"
+  },
+  "branch": {
+    "previous": "Previous answer",
+    "next": "Next answer",
+    "page": "{{current}} of {{total}}"
+  },
+  "errors": {
+    "timedOut": "The assistant took too long to respond. Please try again.",
+    "streamFailed": "Could not reach Mifos X Copilot. Please try again.",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "permissionDenied": "You do not have permission to do that.",
+    "rateLimited": "The assistant is busy right now. Please try again in a moment.",
+    "toolFailed": "The banking system could not complete that step. Please try again.",
+    "invalidLength": "That message is empty or too long. Please shorten it and try again.",
+    "injectionBlocked": "That message looks like an instruction-override attempt, so it was not sent. Please rephrase it."
+  }
+}

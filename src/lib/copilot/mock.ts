@@ -59,6 +59,8 @@ export function createMockFetch({
       } else if (/\b(repay(ment)?|approve|disburse(ment)?)\b/i.test(message)) {
         cardSequence += 1
         frames = approval(`mock-card-${cardSequence}`)
+      } else if (/\b(overdue|portfolio)\b/i.test(message)) {
+        frames = overdueReport()
       } else {
         frames = answer()
       }
@@ -99,6 +101,43 @@ function answer(): string[] {
     ),
     sse('suggest', {
       items: ['Show the repayment schedule', 'Record a repayment'],
+    }),
+    sse('done', { conversation_id: CONVERSATION_ID }),
+  ]
+}
+
+/** A formatted answer: heading, list, table and code, to show markdown. */
+function overdueReport(): string[] {
+  return [
+    sse('tool_call', {
+      tool: 'search_loans',
+      label: 'Searching overdue loans',
+      phase: 'started',
+      read_only: true,
+    }),
+    sse('tool_call', {
+      tool: 'search_loans',
+      label: 'Found 3 overdue loans',
+      phase: 'finished',
+      read_only: true,
+      duration_ms: 640,
+    }),
+    ...tokens(
+      '### Overdue loans this week\n\n' +
+        '**3 loans** are overdue, **INR 18,750.00** in total.\n\n' +
+        '| Loan | Client | Overdue | Days |\n' +
+        '| --- | --- | ---: | ---: |\n' +
+        '| 000000004521 | Rajesh Kumar | INR 3,500.00 | 4 |\n' +
+        '| 000000004610 | Maria Lopez | INR 7,250.00 | 9 |\n' +
+        '| 000000004702 | Amina Yusuf | INR 8,000.00 | 12 |\n\n' +
+        'Suggested next steps:\n\n' +
+        '1. Call **Amina Yusuf** first: the oldest arrears.\n' +
+        '2. Check whether *Maria Lopez* has a rescheduling request.\n' +
+        '3. Send reminders to the rest.\n\n' +
+        'Report filter used: `status = overdue AND days > 0`'
+    ),
+    sse('suggest', {
+      items: ['Show the oldest overdue loan', 'Find a client by name'],
     }),
     sse('done', { conversation_id: CONVERSATION_ID }),
   ]

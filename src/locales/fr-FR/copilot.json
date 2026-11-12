@@ -1,0 +1,102 @@
+{
+  "brand": "Mifos X Copilot",
+  "openAssistant": "Ouvrir Mifos X Copilot",
+  "launcher": {
+    "working": "Mifos X Copilot traite votre demande. Ouvrir Copilot.",
+    "replying": "Mifos X Copilot répond. Ouvrir Copilot.",
+    "minimise": "Réduire Mifos X Copilot",
+    "unread": "Mifos X Copilot a une nouvelle réponse. Ouvrir Copilot."
+  },
+  "close": "Fermer",
+  "newChat": "Nouvelle discussion",
+  "minimise": "Réduire",
+  "display": {
+    "options": "Options d'affichage",
+    "label": "Affichage",
+    "floating": "Flottant",
+    "docked": "Ancré sur le côté",
+    "fullscreen": "Plein écran"
+  },
+  "description": "Posez vos questions sur les clients, les prêts et les comptes.",
+  "status": {
+    "ready": "Votre assistant Mifos X",
+    "working": "Traitement de votre question…"
+  },
+  "aiBadge": {
+    "label": "IA",
+    "title": "Rédigé par l'IA. Vérifiez les chiffres importants dans le dossier du client."
+  },
+  "greeting": {
+    "morning": "Bonjour",
+    "afternoon": "Bon après-midi",
+    "evening": "Bonsoir",
+    "withName": "{{greeting}}, {{name}}",
+    "question": "Comment puis-je vous aider aujourd'hui ?"
+  },
+  "starters": {
+    "label": "Questions suggérées",
+    "overdueLoans": {
+      "title": "Quels prêts sont en retard cette semaine ?",
+      "description": "Les impayés de tout votre portefeuille"
+    },
+    "findClient": {
+      "title": "Rechercher un client par son nom",
+      "description": "Recherchez des clients et ouvrez leur profil"
+    },
+    "savingsBalance": {
+      "title": "Consulter le solde d'épargne d'un client",
+      "description": "Soldes et opérations récentes"
+    }
+  },
+  "you": "Vous",
+  "jumpToLatest": "Aller au plus récent",
+  "input": {
+    "label": "Message pour Mifos X Copilot",
+    "placeholder": "Posez une question sur un client, un prêt ou un compte",
+    "send": "Envoyer le message",
+    "stop": "Arrêter la génération",
+    "counter": "{{count}} sur {{max}} caractères"
+  },
+  "disclaimer": "Mifos X Copilot vous aide à trouver des réponses. Toute opération qui déplace de l'argent requiert toujours votre validation.",
+  "a11y": {
+    "working": "Traitement de votre question",
+    "replyReady": "Réponse prête"
+  },
+  "trail": {
+    "thinking": "Réflexion",
+    "thoughtFor": "A réfléchi pendant {{seconds}}",
+    "thoughtBriefly": "A réfléchi quelques secondes",
+    "steps": "Étapes effectuées",
+    "wrote": "a modifié",
+    "writing": "modification en cours",
+    "writeStopped": "interrompu, vérifiez la fiche",
+    "stopped": "interrompu",
+    "notes": "Notes de travail",
+    "notesCaution": "Texte de travail de l'assistant. Ce n'est ni un compte rendu de la manière dont la réponse a été produite, ni une évaluation de crédit. Vérifiez chaque chiffre dans la fiche du client.",
+    "stepCount": "Étapes : {{count}}"
+  },
+  "approvalPending": {
+    "title": "Votre confirmation est nécessaire : {{summary}}",
+    "body": "La confirmation des actions depuis Copilot arrivera dans une prochaine mise à jour. Rien n'a été modifié."
+  },
+  "retry": "Reposer la question",
+  "actions": {
+    "copy": "Copier la réponse",
+    "copied": "Copié"
+  },
+  "branch": {
+    "previous": "Réponse précédente",
+    "next": "Réponse suivante",
+    "page": "{{current}} sur {{total}}"
+  },
+  "errors": {
+    "timedOut": "L'assistant a mis trop de temps à répondre. Veuillez réessayer.",
+    "streamFailed": "Mifos X Copilot est injoignable. Veuillez réessayer.",
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "permissionDenied": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+    "rateLimited": "L'assistant est occupé pour le moment. Veuillez réessayer dans un instant.",
+    "toolFailed": "Le système bancaire n'a pas pu terminer cette étape. Veuillez réessayer.",
+    "invalidLength": "Le message est vide ou trop long. Veuillez le raccourcir et réessayer.",
+    "injectionBlocked": "Le message ressemble à une tentative de contournement des instructions, il n'a donc pas été envoyé. Veuillez le reformuler."
+  }
+}
