@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
+import type { ParseKeys } from 'i18next'
 
 export type GlobalShortcut = {
   id: string
   keys: string[]
-  description: string
+  descriptionKey: ParseKeys<'common'>
   action: 'navigate' | 'toggle-sidebar' | 'save' | 'cancel' | 'help' | 'logout'
   path?: string
 }
@@ -12,108 +13,108 @@ export const GLOBAL_SHORTCUTS: GlobalShortcut[] = [
   {
     id: 'toggle-sidebar',
     keys: ['Ctrl', 'B'],
-    description: 'Toggle Sidebar',
+    descriptionKey: 'shortcuts.descriptions.toggleSidebar',
     action: 'toggle-sidebar',
   },
   {
     id: 'navigation',
     keys: ['Ctrl', 'Alt', 'N'],
-    description: 'Navigation Page',
+    descriptionKey: 'shortcuts.descriptions.navigation',
     action: 'navigate',
     path: '/navigation',
   },
   {
     id: 'run-report',
     keys: ['Ctrl', 'Alt', 'T'],
-    description: 'Run Report',
+    descriptionKey: 'shortcuts.descriptions.runReport',
     action: 'navigate',
     path: '/reports',
   },
   {
     id: 'checker-inbox',
     keys: ['Ctrl', 'I'],
-    description: 'Checker Inbox & Pending Tasks',
+    descriptionKey: 'shortcuts.descriptions.checkerInbox',
     action: 'navigate',
     path: '/checker-inbox-and-tasks/checker-inbox',
   },
   {
     id: 'create-client',
     keys: ['Alt', 'C'],
-    description: 'Create Client',
+    descriptionKey: 'shortcuts.descriptions.createClient',
     action: 'navigate',
     path: '/clients/create',
   },
   {
     id: 'create-group',
     keys: ['Ctrl', 'G'],
-    description: 'Create Group',
+    descriptionKey: 'shortcuts.descriptions.createGroup',
     action: 'navigate',
     path: '/groups/create',
   },
   {
     id: 'create-center',
     keys: ['Ctrl', 'Q'],
-    description: 'Create Center',
+    descriptionKey: 'shortcuts.descriptions.createCenter',
     action: 'navigate',
     path: '/centers/create',
   },
   {
     id: 'frequent-posting',
     keys: ['Ctrl', 'Alt', 'F'],
-    description: 'Frequent Posting',
+    descriptionKey: 'shortcuts.descriptions.frequentPosting',
     action: 'navigate',
     path: '/accounting/journal-entries/frequent-postings',
   },
   {
     id: 'closure-entries',
     keys: ['Ctrl', 'E'],
-    description: 'Closure Entries',
+    descriptionKey: 'shortcuts.descriptions.closureEntries',
     action: 'navigate',
     path: '/accounting/closing-entries',
   },
   {
     id: 'journal-entry',
     keys: ['Ctrl', 'J'],
-    description: 'Journal Entry',
+    descriptionKey: 'shortcuts.descriptions.journalEntry',
     action: 'navigate',
     path: '/accounting/journal-entries/create',
   },
   {
     id: 'reports',
     keys: ['Ctrl', 'Alt', 'R'],
-    description: 'Reports',
+    descriptionKey: 'shortcuts.descriptions.reports',
     action: 'navigate',
     path: '/reports',
   },
   {
     id: 'accounting',
     keys: ['Alt', 'A'],
-    description: 'Accounting',
+    descriptionKey: 'shortcuts.descriptions.accounting',
     action: 'navigate',
     path: '/accounting',
   },
   {
     id: 'save-form',
     keys: ['Alt', 'S'],
-    description: 'Save/Submit Forms',
+    descriptionKey: 'shortcuts.descriptions.saveForm',
     action: 'save',
   },
   {
     id: 'cancel-form',
     keys: ['Alt', 'X'],
-    description: 'Cancel',
+    descriptionKey: 'shortcuts.descriptions.cancelForm',
     action: 'cancel',
   },
   {
     id: 'help',
     keys: ['Alt', 'H'],
-    description: 'Help',
+    descriptionKey: 'shortcuts.descriptions.help',
     action: 'help',
   },
   {
     id: 'logout',
     keys: ['Ctrl', 'Alt', 'L'],
-    description: 'Logout',
+    descriptionKey: 'shortcuts.descriptions.logout',
     action: 'logout',
   },
 ]
