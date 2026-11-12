@@ -16,6 +16,7 @@ import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
 import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccounts'
 import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
 import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
+import ViewJournalEntryTransaction from '@/pages/accounting/create-journal-entry/ViewJournalEntryTransaction'
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
 import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
@@ -337,6 +338,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/journal-entries"
             element={<SearchJournalEntry />}
+          />
+          <Route
+            path="/accounting/journal-entries/transactions/view/:transactionId"
+            element={<ViewJournalEntryTransaction />}
           />
           <Route
             path="/accounting/journal-entries/create"
