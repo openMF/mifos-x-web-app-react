@@ -59,7 +59,7 @@ const CenterNavigation = ({ centerId }: CenterProps) => {
       try {
         const [detailRes, summaryRes] = await Promise.all([
           centerApi.retrieveOne14(centerId),
-          fineract.get('/runreports/GroupSummaryCounts', {
+          fineract.get('/v1/runreports/GroupSummaryCounts', {
             params: { R_groupId: centerId, genericResultSet: false },
           }),
         ])
