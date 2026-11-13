@@ -34,6 +34,84 @@
   },
   "adhocQuery": "Consulta ad hoc",
   "auditTrails": "Rastros de auditoría",
+  "bulkImport": {
+    "description": "Descargue una plantilla, rellénela y súbala para crear registros de forma masiva.",
+    "unknownType": "Tipo de importación desconocido \"{{name}}\".",
+    "importTitle": "Importación de {{name}}",
+    "types": {
+      "offices": "Oficinas",
+      "users": "Usuarios",
+      "groups": "Grupos",
+      "centers": "Centros",
+      "clients": "Clientes",
+      "employees": "Empleados",
+      "guarantors": "Garantes",
+      "journalEntries": "Asientos contables",
+      "loanAccounts": "Cuentas de préstamo",
+      "savingsAccounts": "Cuentas de ahorro",
+      "fixedDepositAccounts": "Cuentas de depósito a plazo fijo",
+      "recurringDepositAccounts": "Cuentas de depósito recurrente",
+      "chartOfAccounts": "Plan de cuentas",
+      "shareAccounts": "Cuentas de acciones",
+      "loanRepayments": "Reembolsos de préstamos",
+      "savingsTransactions": "Transacciones de ahorro",
+      "fixedDepositTransactions": "Transacciones de depósito a plazo fijo",
+      "recurringDepositTransactions": "Transacciones de depósito recurrente"
+    },
+    "legalForms": {
+      "person": "Persona",
+      "entity": "Entidad"
+    },
+    "download": {
+      "heading": "1. Descargar la plantilla",
+      "office": "Oficina",
+      "allOffices": "Todas las oficinas",
+      "staff": "Personal",
+      "allStaff": "Todo el personal",
+      "selectOfficeFirst": "Seleccione primero una oficina",
+      "noStaff": "No hay personal en esta oficina",
+      "legalForm": "Forma jurídica*",
+      "selectLegalForm": "Seleccione una forma jurídica",
+      "button": "Descargar plantilla",
+      "downloading": "Descargando..."
+    },
+    "upload": {
+      "heading": "2. Subir el archivo completado",
+      "file": "Archivo (.xls)*",
+      "legalFormNote": "El archivo se importa con la forma jurídica seleccionada a la izquierda.",
+      "button": "Subir",
+      "uploading": "Subiendo...",
+      "uploaded": "Se subió {{fileName}}. Fineract lo importa en segundo plano; use Actualizar para ver el resultado."
+    },
+    "imports": {
+      "heading": "Importaciones",
+      "refresh": "Actualizar",
+      "count_one": "{{count}} importación",
+      "count_other": "{{count}} importaciones",
+      "empty": "Aún no hay importaciones",
+      "downloadFile": "Descargar {{name}}",
+      "columns": {
+        "name": "Nombre",
+        "importTime": "Hora de importación",
+        "endTime": "Hora de finalización",
+        "completed": "Completada",
+        "total": "Total",
+        "success": "Correctos",
+        "failed": "Fallidos",
+        "file": "Archivo"
+      }
+    },
+    "errors": {
+      "loadImports": "Error al cargar las importaciones.",
+      "loadOffices": "Error al cargar las oficinas.",
+      "loadStaff": "Error al cargar el personal.",
+      "templateLegalForm": "Seleccione una forma jurídica para la plantilla de clientes.",
+      "uploadLegalForm": "Seleccione la forma jurídica para la que se preparó el archivo de clientes.",
+      "downloadTemplate": "Error al descargar la plantilla.",
+      "upload": "Error al subir el archivo.",
+      "downloadFile": "Error al descargar el archivo de importación."
+    }
+  },
   "bulkLoanReassignment": "Reasignación masiva de préstamos",
   "collateralManagement": "Gestión de garantías",
   "configurations": "Configuraciones",

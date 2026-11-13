@@ -34,6 +34,84 @@
   },
   "adhocQuery": "AdHocQuery",
   "auditTrails": "Audit Trails",
+  "bulkImport": {
+    "description": "Download a template, fill it in, and upload it to create records in bulk.",
+    "unknownType": "Unknown import type \"{{name}}\".",
+    "importTitle": "{{name}} Import",
+    "types": {
+      "offices": "Offices",
+      "users": "Users",
+      "groups": "Groups",
+      "centers": "Centers",
+      "clients": "Clients",
+      "employees": "Employees",
+      "guarantors": "Guarantors",
+      "journalEntries": "Journal Entries",
+      "loanAccounts": "Loan Accounts",
+      "savingsAccounts": "Savings Accounts",
+      "fixedDepositAccounts": "Fixed Deposit Accounts",
+      "recurringDepositAccounts": "Recurring Deposit Accounts",
+      "chartOfAccounts": "Chart of Accounts",
+      "shareAccounts": "Share Accounts",
+      "loanRepayments": "Loan Repayments",
+      "savingsTransactions": "Savings Transactions",
+      "fixedDepositTransactions": "Fixed Deposit Transactions",
+      "recurringDepositTransactions": "Recurring Deposit Transactions"
+    },
+    "legalForms": {
+      "person": "Person",
+      "entity": "Entity"
+    },
+    "download": {
+      "heading": "1. Download the template",
+      "office": "Office",
+      "allOffices": "All offices",
+      "staff": "Staff",
+      "allStaff": "All staff",
+      "selectOfficeFirst": "Select an office first",
+      "noStaff": "No staff in this office",
+      "legalForm": "Legal Form*",
+      "selectLegalForm": "Select a legal form",
+      "button": "Download Template",
+      "downloading": "Downloading..."
+    },
+    "upload": {
+      "heading": "2. Upload the filled file",
+      "file": "File (.xls)*",
+      "legalFormNote": "The file is imported with the legal form selected on the left.",
+      "button": "Upload",
+      "uploading": "Uploading...",
+      "uploaded": "{{fileName}} was uploaded. Fineract imports it in the background; use Refresh to see the result."
+    },
+    "imports": {
+      "heading": "Imports",
+      "refresh": "Refresh",
+      "count_one": "{{count}} import",
+      "count_other": "{{count}} imports",
+      "empty": "No imports yet",
+      "downloadFile": "Download {{name}}",
+      "columns": {
+        "name": "Name",
+        "importTime": "Import Time",
+        "endTime": "End Time",
+        "completed": "Completed",
+        "total": "Total",
+        "success": "Success",
+        "failed": "Failed",
+        "file": "File"
+      }
+    },
+    "errors": {
+      "loadImports": "Failed to load the imports.",
+      "loadOffices": "Failed to load the offices.",
+      "loadStaff": "Failed to load the staff.",
+      "templateLegalForm": "Select a legal form for the clients template.",
+      "uploadLegalForm": "Select the legal form the clients file was made for.",
+      "downloadTemplate": "Failed to download the template.",
+      "upload": "Failed to upload the file.",
+      "downloadFile": "Failed to download the import file."
+    }
+  },
   "bulkLoanReassignment": "Bulk Loan Reassignment",
   "collateralManagement": "Collateral Management",
   "configurations": "Configurations",
