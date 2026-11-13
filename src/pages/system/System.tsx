@@ -25,6 +25,7 @@ import {
   faTools,
   faUsers,
   faTachometerAlt,
+  faInfoCircle,
   faArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -84,6 +85,11 @@ const systemItems = [
     icon: faTachometerAlt,
     name: 'Manage Dashboards',
     path: '/system/manage-dashboards',
+  },
+  {
+    icon: faInfoCircle,
+    name: 'System Information',
+    path: '/system/system-information',
   },
 ]
 

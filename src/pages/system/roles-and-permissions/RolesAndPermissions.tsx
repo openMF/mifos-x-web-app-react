@@ -178,12 +178,19 @@ const RolesAndPermissions = () => {
                   {'missing in OpenApi'}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {role.description && (
-                    <PenSquare
-                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                      onClick={() => navigate(`/system/roles/${role.id}/edit`)}
-                    />
-                  )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    aria-label={
+                      role.name ? `Edit role ${role.name}` : 'Edit role'
+                    }
+                    onClick={() =>
+                      navigate(`/system/roles-and-permissions/${role.id}/edit`)
+                    }
+                  >
+                    <PenSquare className="text-blue-600 hover:text-blue-800" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

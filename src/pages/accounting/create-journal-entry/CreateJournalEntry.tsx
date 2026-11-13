@@ -164,6 +164,16 @@ const CreateJournalEntry = () => {
       transactionDate: formData.date,
       dateFormat: 'yyyy-MM-dd',
       locale: 'en',
+      referenceNumber: formData.refNo,
+      paymentTypeId: formData.paymentType
+        ? parseInt(formData.paymentType)
+        : undefined,
+      accountNumber: formData.accNo,
+      checkNumber: formData.chequeNo,
+      routingCode: formData.routingCode,
+      receiptNumber: formData.receiptNo,
+      bankNumber: formData.bankNo,
+      comments: formData.comments,
       debits: debits.map(d => ({
         glAccountId: parseInt(d.glAccountId),
         amount: parseFloat(d.amount),
@@ -436,7 +446,7 @@ const CreateJournalEntry = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate('/accounting/journal-entries/create')}
+              onClick={() => navigate('/accounting')}
             >
               Cancel
             </Button>
