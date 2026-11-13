@@ -570,6 +570,8 @@
   "reports": {
     "allEngines": "Todos",
     "filterByEngine": "Filtrar por motor",
-    "matchCount": "{{shown}} / {{total}}"
+    "matchCount": "{{shown}} / {{total}}",
+    "other": "Otros",
+    "run": "Ejecutar"
   }
 }

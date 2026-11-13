@@ -118,3 +118,44 @@ export const CLOSE_CLIENT_SELECTORS: CloseClientSelectors = {
   confirmButton: 'button[type="submit"]',
   cancelButton: 'button[data-testid="cancel-button"]',
 }
+
+// ---------------------------------------------------------------------------
+// Logout confirmation (MXWAR-186)
+// ---------------------------------------------------------------------------
+
+/**
+ * Selector contract for the sign-out confirmation gate.
+ *
+ * The confirmation surface is a Radix `AlertDialog`, which already exposes
+ * `role="alertdialog"` and names its two controls through their visible text.
+ * The dialog and its buttons are therefore addressed by role, not by
+ * `data-testid`. The buttons are only ever resolved *inside* the dialog
+ * locator, so the affirmative control cannot match the navbar user menu's own
+ * "Sign Out" entry.
+ *
+ * `sidebarLogoutButton` deliberately keeps its test id: the navbar user menu
+ * renders its own "Sign Out" control, so a name-based lookup for the sidebar
+ * trigger would be ambiguous.
+ */
+export interface LogoutSelectors {
+  sidebarLogoutButton: string
+  /** ARIA role of the confirmation surface (`AlertDialogContent`). */
+  dialogRole: 'alertdialog'
+  /** Accessible-name pattern for the navbar user-menu trigger (sr-only label). */
+  navbarUserMenuButton: string
+  /** Accessible-name pattern for the "Sign Out" entry in the navbar user menu. */
+  navbarSignOutItem: string
+  /** Accessible-name pattern for the affirmative button, scoped to the dialog. */
+  confirmButtonName: string
+  /** Accessible-name pattern for the dismiss button, scoped to the dialog. */
+  cancelButtonName: string
+}
+
+export const LOGOUT_SELECTORS: LogoutSelectors = {
+  sidebarLogoutButton: '[data-testid="sidebar-logout"]',
+  dialogRole: 'alertdialog',
+  navbarUserMenuButton: 'user menu',
+  navbarSignOutItem: 'sign\\s*out',
+  confirmButtonName: 'sign\\s*out',
+  cancelButtonName: 'cancel',
+}

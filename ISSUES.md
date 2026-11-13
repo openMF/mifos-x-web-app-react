@@ -346,6 +346,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 - `GetProvisioningCriteriaCriteriaIdResponse` has `provisioningcriteria`, but the response sends the categories as `definitions`
 - `retrieveProvisioningCriteria` has no `template` parameter; `?template=true` adds `selectedLoanProducts` and `glAccounts`, which the edit page needs
 
+### `/jobs`
+
+- The generated client has no API class for `/jobs` (list, get, update, `executeJob`, `runhistory`); only `SchedulerApi` (`/scheduler`) exists, so the Manage Jobs pages call `/jobs` through `@/lib/axios`
+
 ## Organization: SMS Campaigns
 
 ### `/smscampaigns`, `/smscampaigns/template`, `/smscampaigns/{campaignId}`, `/smscampaigns/preview`
