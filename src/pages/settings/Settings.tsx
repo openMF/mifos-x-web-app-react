@@ -22,10 +22,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from '@/app/hook'
+import { useTheme } from '@/hooks/use-theme'
 import { persistDecimalPlaces, setDecimalPlaces } from './settingsSlice'
 
 const Settings = () => {
   const { t } = useTranslation('common')
+  const { theme, setTheme } = useTheme()
   const dispatch = useAppDispatch()
   const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
 
