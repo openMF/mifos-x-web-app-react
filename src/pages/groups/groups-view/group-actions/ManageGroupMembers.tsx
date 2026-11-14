@@ -13,21 +13,22 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 
-import { GroupsApi, type GetGroupsGroupIdResponse } from '@/fineract-api'
+import {
+  ClientSearchV2Api,
+  GroupsApi,
+  type ClientSearchData,
+  type GetGroupsGroupIdResponse,
+  type PageClientSearchData,
+  type PostGroupsGroupIdClients,
+  type PostGroupsGroupIdRequest,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 const groupsApi = new GroupsApi(getConfiguration())
-
-type LiteClient = {
-  id: number
-  displayName: string
-  officeName?: string
-  accountNo?: string
-  status?: { value?: string }
-}
+const clientSearchApi = new ClientSearchV2Api(getConfiguration())
 
 const ManageGroupMembers = () => {
   const navigate = useNavigate()
@@ -36,12 +37,14 @@ const ManageGroupMembers = () => {
   const { t: tc } = useTranslation('common')
 
   const [group, setGroup] = useState<GetGroupsGroupIdResponse>()
-  const [clientMembers, setClientMembers] = useState<LiteClient[]>([])
+  const [clientMembers, setClientMembers] = useState<ClientSearchData[]>([])
 
   // left card – autocomplete + selected client details
   const [search, setSearch] = useState('')
-  const [clientsData, setClientsData] = useState<LiteClient[]>([])
-  const [selectedClient, setSelectedClient] = useState<LiteClient | null>(null)
+  const [clientsData, setClientsData] = useState<ClientSearchData[]>([])
+  const [selectedClient, setSelectedClient] = useState<ClientSearchData | null>(
+    null
+  )
   const [busy, setBusy] = useState(false)
 
   // load group + existing members
@@ -61,7 +64,7 @@ const ManageGroupMembers = () => {
         const members = Array.from(
           (Array.isArray(dataRecord?.clientMembers)
             ? dataRecord.clientMembers
-            : []) as LiteClient[]
+            : []) as ClientSearchData[]
         )
         setClientMembers(members)
       } catch (e) {
@@ -78,8 +81,14 @@ const ManageGroupMembers = () => {
         return
       }
       try {
+        const res = await clientSearchApi.searchByText({
+          request: { text: search },
+          page: 0,
+          size: 8,
+        })
         if (!cancel) {
-          setClientsData([]) // <- replace with fetched results
+          const data: PageClientSearchData = res.data ?? {}
+          setClientsData(data.content ?? [])
         }
       } catch (e) {
         console.error('Client search failed', e)
@@ -94,7 +103,7 @@ const ManageGroupMembers = () => {
   const filteredClients = useMemo(() => {
     const q = search.toLowerCase()
     return clientsData
-      .filter(c => c.displayName.toLowerCase().includes(q))
+      .filter(c => c.displayName?.toLowerCase().includes(q))
       .slice(0, 8)
   }, [clientsData, search])
 
@@ -102,8 +111,14 @@ const ManageGroupMembers = () => {
     if (!selectedClient || !id) return
     setBusy(true)
     try {
-      // TODO: OpenAPI call to add client to group
-      // e.g. await groupsApi.addClientToGroup(Number(id), { clientId: selectedClient.id })
+      const requestBody: PostGroupsGroupIdRequest = {
+        clients: new Set<PostGroupsGroupIdClients>([{ id: selectedClient.id }]),
+      }
+      await groupsApi.activateOrGenerateCollectionSheet(
+        Number(id),
+        requestBody,
+        'associateClients'
+      )
       setClientMembers(prev => {
         if (prev.find(c => c.id === selectedClient.id)) return prev // no dupes
         return [...prev, selectedClient]
@@ -117,7 +132,7 @@ const ManageGroupMembers = () => {
     }
   }
 
-  const removeClient = async (client: LiteClient) => {
+  const removeClient = async (client: ClientSearchData) => {
     if (!id) return
     if (
       !confirm(t('manageMembers.confirmRemove', { name: client.displayName }))
@@ -125,6 +140,14 @@ const ManageGroupMembers = () => {
       return
     setBusy(true)
     try {
+      const requestBody: PostGroupsGroupIdRequest = {
+        clients: new Set<PostGroupsGroupIdClients>([{ id: client.id }]),
+      }
+      await groupsApi.activateOrGenerateCollectionSheet(
+        Number(id),
+        requestBody,
+        'disassociateClients'
+      )
       setClientMembers(prev => prev.filter(c => c.id !== client.id))
     } catch (e) {
       console.error('Failed to remove client', e)
