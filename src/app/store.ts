@@ -7,10 +7,12 @@
  */
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '@/pages/login/loginSlice'
+import settingsReducer from '@/pages/settings/settingsSlice'
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    settings: settingsReducer,
   },
 })
 
