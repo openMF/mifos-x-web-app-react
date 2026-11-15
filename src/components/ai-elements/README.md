@@ -9,6 +9,8 @@ reducer (`src/lib/copilot`) drives them.
   is allowed: a link in a prompt-injected answer could carry client data
   to that host if the officer opens it. Streamdown's link check asks the
   officer to confirm, showing the full address, before any link opens.
+  There is no Mermaid plugin: Mermaid draws its own SVG after sanitising,
+  so a diagram could load a remote image; mermaid blocks show as code.
   `message` also imports `streamdown/styles.css` (the word reveal) and the
   KaTeX stylesheet.
 - `prompt-input`: the form, textarea and submit button.

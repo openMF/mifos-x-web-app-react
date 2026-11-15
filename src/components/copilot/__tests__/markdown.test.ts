@@ -8,7 +8,10 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { safeRehypePlugins } from '@/components/ai-elements/markdown'
+import {
+  safeRehypePlugins,
+  streamdownPlugins,
+} from '@/components/ai-elements/markdown'
 
 type Node = {
   type: string
@@ -36,6 +39,14 @@ function hrefsAfterSanitising(hrefs: string[]): unknown[] {
   last()(tree)
   return tree.children![0].children!.map(a => a.properties?.href)
 }
+
+describe('markdown plugins', () => {
+  // Mermaid renders its own SVG after sanitising, so a diagram could fetch
+  // a remote image without a click.
+  it('does not render mermaid diagrams', () => {
+    expect(Object.keys(streamdownPlugins)).not.toContain('mermaid')
+  })
+})
 
 describe('answer links', () => {
   it('keeps only https and mailto targets', () => {

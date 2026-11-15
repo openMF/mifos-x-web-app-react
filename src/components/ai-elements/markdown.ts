@@ -9,12 +9,17 @@
 import { cjk } from '@streamdown/cjk'
 import { code } from '@streamdown/code'
 import { math } from '@streamdown/math'
-import { mermaid } from '@streamdown/mermaid'
 import { harden } from 'rehype-harden'
 import { defaultRehypePlugins, type StreamdownProps } from 'streamdown'
 
-/** Markdown settings shared by message answers and reasoning. */
-export const streamdownPlugins = { cjk, code, math, mermaid }
+/**
+ * Markdown settings shared by message answers and reasoning. No Mermaid:
+ * it draws its own SVG after the sanitising steps below have run, so a
+ * diagram node such as `A@{ img: "https://…" }` would fetch a remote image
+ * as soon as the answer renders. Without the plugin a mermaid block shows
+ * as plain code.
+ */
+export const streamdownPlugins = { cjk, code, math }
 
 /**
  * Every link asks the officer to confirm, showing the full address, before
