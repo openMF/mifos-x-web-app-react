@@ -51,7 +51,7 @@ const Navigation = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const res = await fineract.get('/offices')
+        const res = await fineract.get('/v1/offices')
         setOffices(res.data ?? [])
       } catch (err) {
         console.error('Failed to fetch offices', err)
@@ -68,7 +68,7 @@ const Navigation = () => {
     }
     ;(async () => {
       try {
-        const res = await fineract.get('/staff', {
+        const res = await fineract.get('/v1/staff', {
           params: { officeId: Number(selectedOfficeId) },
         })
         const list = res.data?.pageItems ?? res.data ?? []
@@ -93,7 +93,7 @@ const Navigation = () => {
     }
     ;(async () => {
       try {
-        const res = await fineract.get('/runreports/GroupNamesByStaff', {
+        const res = await fineract.get('/v1/runreports/GroupNamesByStaff', {
           params: {
             R_staffId: Number(selectedOfficerId),
             genericResultSet: false,
@@ -118,6 +118,8 @@ const Navigation = () => {
   }, [selectedOfficerId])
 
   // Groups by center
+  // The /v1/groups endpoint does not accept `centerId`, so fetch the selected
+  // center with the `groupMembers` association and use only its groups.
   useEffect(() => {
     if (!selectedCenterId) {
       setGroups([])
@@ -126,10 +128,10 @@ const Navigation = () => {
     }
     ;(async () => {
       try {
-        const res = await fineract.get('/groups', {
-          params: { centerId: Number(selectedCenterId) },
+        const res = await fineract.get(`/v1/centers/${selectedCenterId}`, {
+          params: { associations: 'groupMembers' },
         })
-        const list = res.data?.pageItems ?? []
+        const list: Record<string, unknown>[] = res.data?.groupMembers ?? []
         setGroups(
           list.map((g: Record<string, unknown>) => ({
             id: g.id as number,
@@ -144,6 +146,8 @@ const Navigation = () => {
   }, [selectedCenterId])
 
   // Clients by group
+  // The /v1/clients endpoint does not accept `groupId`, so fetch the selected
+  // group with the `clientMembers` association and use only its clients.
   useEffect(() => {
     if (!selectedGroupId) {
       setClients([])
@@ -152,10 +156,10 @@ const Navigation = () => {
     }
     ;(async () => {
       try {
-        const res = await fineract.get('/clients', {
-          params: { groupId: Number(selectedGroupId) },
+        const res = await fineract.get(`/v1/groups/${selectedGroupId}`, {
+          params: { associations: 'clientMembers' },
         })
-        const list = res.data?.pageItems ?? []
+        const list: Record<string, unknown>[] = res.data?.clientMembers ?? []
         setClients(
           list.map((c: Record<string, unknown>) => ({
             id: c.id as number,
