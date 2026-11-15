@@ -42,6 +42,7 @@ import EditClosure from '@/pages/accounting/closing-entries/EditClosure'
 import FinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/FinancialActivityMappings'
 import CreateFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/CreateFinancialActivityMappings'
 import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
+import EditFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/EditFinancialActivityMappings'
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 import CreateProvisioningEntry from '@/pages/accounting/provisioning-entries/CreateProvisioningEntry'
@@ -394,6 +395,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/financial-activity-mappings/:id"
             element={<ViewFinancialActivityMappings />}
+          />
+          <Route
+            path="/accounting/financial-activity-mappings/:id/edit"
+            element={<EditFinancialActivityMappings />}
           />
 
           {/* Accruals */}
