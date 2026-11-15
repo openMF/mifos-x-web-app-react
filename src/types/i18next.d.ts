@@ -8,6 +8,7 @@ import type groupsEn from '../locales/en-US/groups.json'
 import type organizationEn from '../locales/en-US/organization.json'
 import type productsEn from '../locales/en-US/products.json'
 import type loansEn from '../locales/en-US/loans.json'
+import type copilotEn from '../locales/en-US/copilot.json'
 
 declare module 'i18next' {
   interface CustomTypeOptions {
@@ -23,6 +24,7 @@ declare module 'i18next' {
       organization: typeof organizationEn
       products: typeof productsEn
       loans: typeof loansEn
+      copilot: typeof copilotEn
     }
   }
 }

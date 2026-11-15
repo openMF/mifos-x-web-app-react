@@ -1,0 +1,102 @@
+{
+  "brand": "Mifos X Copilot",
+  "openAssistant": "Abrir Mifos X Copilot",
+  "launcher": {
+    "working": "Mifos X Copilot está trabajando en su solicitud. Abrir Copilot.",
+    "replying": "Mifos X Copilot está respondiendo. Abrir Copilot.",
+    "minimise": "Minimizar Mifos X Copilot",
+    "unread": "Mifos X Copilot tiene una respuesta nueva. Abrir Copilot."
+  },
+  "close": "Cerrar",
+  "newChat": "Nuevo chat",
+  "minimise": "Minimizar",
+  "display": {
+    "options": "Opciones de visualización",
+    "label": "Visualización",
+    "floating": "Flotante",
+    "docked": "Acoplado al lateral",
+    "fullscreen": "Pantalla completa"
+  },
+  "description": "Pregunte por clientes, préstamos y cuentas.",
+  "status": {
+    "ready": "Su asistente de Mifos X",
+    "working": "Trabajando en su pregunta…"
+  },
+  "aiBadge": {
+    "label": "IA",
+    "title": "Escrito por IA. Verifique las cifras importantes con el expediente del cliente."
+  },
+  "greeting": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes",
+    "evening": "Buenas noches",
+    "withName": "{{greeting}}, {{name}}",
+    "question": "¿En qué puedo ayudarle hoy?"
+  },
+  "starters": {
+    "label": "Preguntas sugeridas",
+    "overdueLoans": {
+      "title": "¿Qué préstamos están vencidos esta semana?",
+      "description": "Atrasos en toda su cartera"
+    },
+    "findClient": {
+      "title": "Buscar un cliente por nombre",
+      "description": "Busque clientes y abra su perfil"
+    },
+    "savingsBalance": {
+      "title": "Consultar el saldo de ahorros de un cliente",
+      "description": "Saldos y movimientos recientes"
+    }
+  },
+  "you": "Usted",
+  "jumpToLatest": "Ir al final",
+  "input": {
+    "label": "Mensaje para Mifos X Copilot",
+    "placeholder": "Pregunte por un cliente, un préstamo o una cuenta",
+    "send": "Enviar mensaje",
+    "stop": "Detener generación",
+    "counter": "{{count}} de {{max}} caracteres"
+  },
+  "disclaimer": "Mifos X Copilot le ayuda a encontrar respuestas. Todo lo que mueve dinero sigue necesitando su aprobación.",
+  "a11y": {
+    "working": "Trabajando en su pregunta",
+    "replyReady": "Respuesta lista"
+  },
+  "trail": {
+    "thinking": "Pensando",
+    "thoughtFor": "Pensó durante {{seconds}}",
+    "thoughtBriefly": "Pensó durante unos segundos",
+    "steps": "Pasos realizados",
+    "wrote": "modificó",
+    "writing": "modificando",
+    "writeStopped": "detenido, revise el registro",
+    "stopped": "detenido",
+    "notes": "Notas de trabajo",
+    "notesCaution": "Texto de trabajo del propio asistente. No es un registro de cómo se produjo la respuesta, ni una evaluación crediticia. Verifique cada cifra con el expediente del cliente.",
+    "stepCount": "Pasos: {{count}}"
+  },
+  "approvalPending": {
+    "title": "Se necesita su confirmación: {{summary}}",
+    "body": "La confirmación de acciones desde Copilot llegará en una actualización. No se ha modificado nada."
+  },
+  "retry": "Preguntar de nuevo",
+  "actions": {
+    "copy": "Copiar respuesta",
+    "copied": "Copiado"
+  },
+  "branch": {
+    "previous": "Respuesta anterior",
+    "next": "Respuesta siguiente",
+    "page": "{{current}} de {{total}}"
+  },
+  "errors": {
+    "timedOut": "El asistente tardó demasiado en responder. Por favor, inténtelo de nuevo.",
+    "streamFailed": "No se pudo contactar con Mifos X Copilot. Por favor, inténtelo de nuevo.",
+    "sessionExpired": "Su sesión ha caducado. Por favor, inicie sesión de nuevo.",
+    "permissionDenied": "No tiene permiso para hacer eso.",
+    "rateLimited": "El asistente está ocupado en este momento. Por favor, inténtelo de nuevo en unos instantes.",
+    "toolFailed": "El sistema bancario no pudo completar ese paso. Por favor, inténtelo de nuevo.",
+    "invalidLength": "El mensaje está vacío o es demasiado largo. Por favor, acórtelo e inténtelo de nuevo.",
+    "injectionBlocked": "El mensaje parece un intento de anular las instrucciones, por lo que no se envió. Por favor, reformúlelo."
+  }
+}

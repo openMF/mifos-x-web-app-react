@@ -54,6 +54,8 @@ export interface CopilotMessage {
   cards: DisplayCard[]
   suggestions: string[]
   error?: { code: CopilotErrorCode; message?: string; retryable: boolean }
+  /** When the question was sent, in epoch ms; shown next to the message. */
+  createdAt?: number
 }
 
 export interface CopilotThread {
@@ -79,6 +81,8 @@ export type CopilotAction =
       text: string
       userMessageId: string
       assistantMessageId: string
+      /** Passed in rather than read here, so the reducer stays pure. */
+      sentAt?: number
     }
   | { type: 'decide'; decision: Decision; assistantMessageId: string }
   /** The officer pressed stop. */
@@ -119,8 +123,12 @@ export function copilotReducer(
         lastPrompt: action.text,
         messages: [
           ...thread.messages,
-          { ...emptyMessage(action.userMessageId, 'user'), text: action.text },
-          draft(action.assistantMessageId),
+          {
+            ...emptyMessage(action.userMessageId, 'user'),
+            text: action.text,
+            createdAt: action.sentAt,
+          },
+          { ...draft(action.assistantMessageId), createdAt: action.sentAt },
         ],
       }
 
