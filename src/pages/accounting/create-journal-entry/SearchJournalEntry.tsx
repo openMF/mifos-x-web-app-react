@@ -267,7 +267,9 @@ const SearchJournalEntry = () => {
                 <TableRow
                   key={entry.id}
                   onClick={() =>
-                    navigate(`/accounting/journal-entries/${entry.id}`)
+                    navigate(
+                      `/accounting/journal-entries/transactions/view/${encodeURIComponent(entry.transactionId)}`
+                    )
                   }
                   className="hover:bg-muted cursor-pointer"
                 >
