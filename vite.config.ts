@@ -61,7 +61,8 @@ export default defineConfig(({ mode }) => {
       include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
       coverage: {
         provider: 'v8',
-        reporter: ['text', 'lcov'],
+        // `json-summary` feeds the coverage table in the CI job summary.
+        reporter: ['text', 'lcov', 'json-summary'],
         include: ['src/lib/**'],
       },
     },

@@ -47,7 +47,11 @@ export default tseslint.config(
   },
   {
     // Playwright code runs in Node, not the browser.
-    files: ['playwright/**/*.ts', 'playwright.config.ts'],
+    files: [
+      'playwright/**/*.ts',
+      'playwright.config.ts',
+      'playwright.node.config.ts',
+    ],
     languageOptions: {
       globals: globals.node,
     },

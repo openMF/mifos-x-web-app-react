@@ -34,6 +34,8 @@ TypeScript enforces selector completeness and keeps framework-specific details l
 - Headless: `npm run test:e2e`
 - Headed: `npm run test:e2e:headed`
 - UI mode: `npm run test:e2e:ui`
+- Type-check this folder: `npm run typecheck:e2e` (CI runs it on every pull
+  request)
 
 ## Backend-Dependent Tests
 
@@ -47,13 +49,16 @@ It also leaves out the `integration` project described below.
 formatted with this repo's Prettier config. They talk to Fineract over REST and
 contain nothing specific to either app. Change them upstream first and copy the
 result here, so the two suites stay identical. React's defaults for the shared
-`E2E_*` variables are set in `playwright.config.ts`.
+`E2E_*` variables are set in `playwright.node.config.ts`.
 
-Two projects run this code without a browser:
+Two projects run this code without a browser. `playwright.node.config.ts`
+holds just these two and starts no web server, so use it to run them on their
+own:
 
-- `npx playwright test --project=unit` runs the helper specs. It needs no backend.
-- `npx playwright test --project=integration` runs the factory specs against a
-  live Fineract. Start one with
+- `npm run test:e2e:unit` runs the helper specs. It needs no backend, and CI
+  runs it on every pull request.
+- `npx playwright test -c playwright.node.config.ts --project=integration` runs
+  the factory specs against a live Fineract. Start one with
   `docker compose -f docker-compose-zitadel.yml up -d fineractpostgres fineract-server`
   after creating `.env.docker` from `.env.docker.sample`. It listens on
   `https://localhost:3000`, the default `E2E_FINERACT_URL`.
