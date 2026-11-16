@@ -21,9 +21,11 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@/hooks/use-theme'
 
 const Settings = () => {
   const { t } = useTranslation('common')
+  const { theme, setTheme } = useTheme()
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
@@ -118,7 +120,29 @@ const Settings = () => {
             <AccordionContent className="flex flex-col gap-6">
               <div>
                 <p className="font-semibold">{t('fields.theme')}</p>
-                {/* Replace with custom <ThemePicker /> component if needed */}
+                <Select
+                  value={theme}
+                  onValueChange={value => {
+                    if (
+                      value === 'light' ||
+                      value === 'dark' ||
+                      value === 'system'
+                    ) {
+                      setTheme(value)
+                    }
+                  }}
+                >
+                  <SelectTrigger aria-label={t('fields.theme')}>
+                    <SelectValue placeholder={t('ui.selectTheme')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">{t('ui.themeLight')}</SelectItem>
+                    <SelectItem value="dark">{t('ui.themeDark')}</SelectItem>
+                    <SelectItem value="system">
+                      {t('ui.themeSystem')}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="text-sm font-medium">

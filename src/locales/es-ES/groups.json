@@ -46,6 +46,8 @@
     "meetingFrequency": "Frecuencia de Reunión:",
     "missingInOpenAPI": "Falta en OpenApi",
     "confirmDelete": "¿Está seguro de que desea eliminar este grupo?",
+    "deleted": "Grupo eliminado correctamente.",
+    "deleteFailed": "No se pudo eliminar el grupo. Inténtelo de nuevo.",
     "tabs": {
       "general": "General",
       "notes": "Notas",

@@ -16,6 +16,7 @@ import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
 import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccounts'
 import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
 import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
+import ViewJournalEntryTransaction from '@/pages/accounting/create-journal-entry/ViewJournalEntryTransaction'
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
 import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
@@ -32,6 +33,7 @@ import NotFound from '@/pages/not-found/NotFound'
 import SearchResults from '@/pages/search/SearchResults'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
+import MigrateOpeningBalances from '@/pages/accounting/MigrateOpeningBalances'
 import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
 import AccountingRules from '@/pages/accounting/accounting-rules/AccountingRules'
 import ViewAccountingRules from '@/pages/accounting/accounting-rules/ViewAccountingRules'
@@ -42,9 +44,11 @@ import EditClosure from '@/pages/accounting/closing-entries/EditClosure'
 import FinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/FinancialActivityMappings'
 import CreateFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/CreateFinancialActivityMappings'
 import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
+import EditFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/EditFinancialActivityMappings'
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 import CreateProvisioningEntry from '@/pages/accounting/provisioning-entries/CreateProvisioningEntry'
+import ViewProvisioningEntry from '@/pages/accounting/provisioning-entries/ViewProvisioningEntry'
 import Reports from '@/pages/reports/Reports'
 import RunReports from '@/pages/reports/RunReports'
 import Users from '@/pages/users/Users'
@@ -140,6 +144,7 @@ import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/Vi
 import CreateFixedDepositProduct from '@/pages/products/fixed-deposit-products/create-fixed-deposit-product/CreateFixedDepositProduct'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
+import CreateRecurringDepositProducts from '@/pages/products/recurring-deposit-products/create-recurring-deposit-products/CreateRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
 import ManageTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ManageTaxComponents'
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
@@ -158,6 +163,7 @@ import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
 import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
+import EditRolesAndPermissions from '@/pages/system/roles-and-permissions/EditRolesAndPermissions'
 import AccountNumberPreferences from '@/pages/system/account-number-preferences/AccountNumberPreferences'
 import CreateAccountNumberPreferences from '@/pages/system/account-number-preferences/CreateAccountNumberPreferences'
 import ViewAccountNumberPreferences from '@/pages/system/account-number-preferences/ViewAccountNumberPreferences'
@@ -173,6 +179,7 @@ import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
 import AboutUs from '@/pages/system/about-us/AboutUs'
 import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
+import SystemInformation from '@/pages/system/system-information/SystemInformation'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
@@ -287,6 +294,8 @@ import CreateClients from '@/pages/clients/create-clients/CreateClients'
 import EditClients from '@/pages/clients/edit-clients/EditClients'
 import CreateSavingsAccount from '@/pages/savings/CreateSavingsAccount'
 import CreateSharesAccount from '@/pages/shares/create-shares-account/CreateSharesAccount'
+import CreateFixedDepositAccount from '@/pages/fixed-deposits/create-fixed-deposit-account/CreateFixedDepositAccount'
+import CreateRecurringDepositAccount from '@/pages/recurring-deposits/create-recurring-deposit-account/CreateRecurringDepositAccount'
 import CreateAccountingRule from '@/pages/accounting/accounting-rules/CreateAccountingRules'
 import EditAccountingRules from '@/pages/accounting/accounting-rules/EditAccountingRules'
 
@@ -308,6 +317,10 @@ const AppRoutes = () => {
 
           {/* Accounting */}
           <Route path="/accounting" element={<Accounting />} />
+          <Route
+            path="/accounting/opening-balances"
+            element={<MigrateOpeningBalances />}
+          />
 
           {/* Chart of Accounts Routes */}
           <Route
@@ -331,6 +344,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/journal-entries"
             element={<SearchJournalEntry />}
+          />
+          <Route
+            path="/accounting/journal-entries/transactions/view/:transactionId"
+            element={<ViewJournalEntryTransaction />}
           />
           <Route
             path="/accounting/journal-entries/create"
@@ -389,6 +406,10 @@ const AppRoutes = () => {
             path="/accounting/financial-activity-mappings/:id"
             element={<ViewFinancialActivityMappings />}
           />
+          <Route
+            path="/accounting/financial-activity-mappings/:id/edit"
+            element={<EditFinancialActivityMappings />}
+          />
 
           {/* Accruals */}
           <Route path="/accounting/accruals" element={<PeriodicAccruals />} />
@@ -401,6 +422,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/provisioning-entries/create"
             element={<CreateProvisioningEntry />}
+          />
+          <Route
+            path="/accounting/provisioning-entries/view/:id"
+            element={<ViewProvisioningEntry />}
           />
 
           {/* Notifications Routes */}
@@ -792,6 +817,10 @@ const AppRoutes = () => {
             element={<RecurringDepositProducts />}
           />
           <Route
+            path="/products/recurring-deposit-products/create"
+            element={<CreateRecurringDepositProducts />}
+          />
+          <Route
             path="/products/recurring-deposit-products/:id/general"
             element={<ViewRecurringDepositProducts />}
           />
@@ -878,6 +907,10 @@ const AppRoutes = () => {
             path="/system/roles-and-permissions/add"
             element={<CreateRolesAndPermissions />}
           />
+          <Route
+            path="/system/roles-and-permissions/:id/edit"
+            element={<EditRolesAndPermissions />}
+          />
 
           {/*  Account Number Preferences */}
           <Route
@@ -935,6 +968,12 @@ const AppRoutes = () => {
           <Route
             path="/system/manage-dashboards"
             element={<ManageDashboards />}
+          />
+
+          {/* System Information */}
+          <Route
+            path="/system/system-information"
+            element={<SystemInformation />}
           />
 
           {/* Institution */}
@@ -1166,6 +1205,16 @@ const AppRoutes = () => {
           <Route
             path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
             element={<SavingsAccountTransactions />}
+          />
+
+          <Route
+            path="/clients/:clientId/fixed-deposits-accounts/create"
+            element={<CreateFixedDepositAccount />}
+          />
+
+          <Route
+            path="/clients/:clientId/recurring-deposits-accounts/create"
+            element={<CreateRecurringDepositAccount />}
           />
 
           <Route

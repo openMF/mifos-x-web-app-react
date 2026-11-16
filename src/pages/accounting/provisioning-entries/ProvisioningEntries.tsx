@@ -34,6 +34,7 @@ import {
   type ProvisioningEntryData,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { datatableErrorMessage } from '@/lib/datatables-api'
 
 const provisioningEntriesApi = new ProvisioningEntriesApi(getConfiguration())
 
@@ -51,6 +52,10 @@ const ProvisioningEntries = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [recreatingEntryId, setRecreatingEntryId] = useState<number | null>(
+    null
+  )
+  const [actionError, setActionError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -88,6 +93,28 @@ const ProvisioningEntries = () => {
     }
   }, [itemsPerPage, page])
 
+  const handleRecreate = async (entryId?: number) => {
+    if (entryId === undefined || recreatingEntryId !== null) return
+
+    setRecreatingEntryId(entryId)
+    setActionError(null)
+    try {
+      await provisioningEntriesApi.modifyProvisioningEntry(
+        entryId,
+        'recreateprovisioningentry',
+        { command: 'recreateprovisioningentry' }
+      )
+      navigate(`/accounting/provisioning-entries/view/${entryId}`)
+    } catch (err) {
+      console.error('Failed to recreate provisioning entry', err)
+      setActionError(
+        datatableErrorMessage(err) ?? 'Unable to recreate provisioning entry.'
+      )
+    } finally {
+      setRecreatingEntryId(null)
+    }
+  }
+
   const filtered = entries.filter(e =>
     (e.createdUser ?? '').toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -118,6 +145,15 @@ const ProvisioningEntries = () => {
           <Plus className="mr-2" /> Create Provisioning Entry
         </Button>
       </div>
+
+      {actionError && (
+        <div
+          role="alert"
+          className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700"
+        >
+          {actionError}
+        </div>
+      )}
 
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         <Input
@@ -237,7 +273,7 @@ const ProvisioningEntries = () => {
                         size="sm"
                         onClick={() =>
                           navigate(
-                            `/accounting/provisioning-entries/${row.id}/report`
+                            `/accounting/provisioning-entries/view/${row.id}`
                           )
                         }
                       >
@@ -250,14 +286,17 @@ const ProvisioningEntries = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          navigate(
-                            `/accounting/provisioning-entries/${row.id}/recreate`
-                          )
+                        disabled={
+                          row.id === undefined ||
+                          recreatingEntryId !== null ||
+                          row.journalEntry
                         }
+                        onClick={() => handleRecreate(row.id)}
                       >
                         <RotateCcw className="mr-2 h-4 w-4" />
-                        Recreate
+                        {recreatingEntryId === row.id
+                          ? 'Recreating...'
+                          : 'Recreate'}
                       </Button>
                     </TableCell>
 

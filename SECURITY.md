@@ -7,18 +7,19 @@ We use this section to tell people about which versions of your project are curr
 | Version | Supported          |
 | ------- | ------------------ |
 | main    | :white_check_mark: |
-| < x.x   | :x:                |
+| < x.x   | :x:                 |
 
 ## Reporting a Vulnerability
 
 The Mifos community take security bugs seriously.
 We appreciate your efforts to responsibly disclose your findings, and will make every effort to acknowledge your contributions.
 
-> **Please do not report security vulnerabilities through public GitHub issues, Jira, Slack discussions, or pull requests.**
+> **Please do not report security vulnerabilities through public GitHub issues, Jira, Slack discussions, or pull requests.**.
 
 Instead, please report them by emailing:
 
 **security-disclosure@mifos.org**
+
 
 Please include as much of the following information as possible to help us triage your report more quickly:
 

@@ -183,6 +183,19 @@ export const updateRoles = async (
   await fineract.put(url('user/role'), { userId, roleKeys: roleIds })
 }
 
+/** Updates a project role in the identity provider after a Fineract role edit. */
+export const updateOidcRole = async (
+  roleId: string | number,
+  displayName: string,
+  group: string
+): Promise<void> => {
+  await fineract.put(url('role'), {
+    roleKey: String(roleId),
+    displayName,
+    group,
+  })
+}
+
 export const updateOffice = async (
   userId: string,
   officeId: string,
