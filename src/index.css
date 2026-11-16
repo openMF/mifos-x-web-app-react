@@ -7,6 +7,11 @@
  */
 @import 'tailwindcss';
 @import 'tw-animate-css';
+/* Positions the chat Panel (top-right, bottom-left, ...). In a low
+   layer, so Tailwind classes on a panel still win. */
+@import '@xyflow/react/dist/base.css' layer(base);
+/* Classes used by Streamdown, which renders Copilot answers as markdown. */
+@source '../node_modules/streamdown/dist/*.js';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -123,5 +128,23 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Shimmer: a highlight sweeping across "working" text. */
+@keyframes ai-shimmer {
+  from {
+    background-position: 100% center;
+  }
+  to {
+    background-position: 0% center;
+  }
+}
+
+/* Streamdown fades answer words in as they stream; not under reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  [data-sd-animate],
+  [data-sd-animate-marker]::marker {
+    animation: none;
   }
 }

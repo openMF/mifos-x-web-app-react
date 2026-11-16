@@ -16,6 +16,7 @@ import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
 import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccounts'
 import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
 import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
+import ViewJournalEntryTransaction from '@/pages/accounting/create-journal-entry/ViewJournalEntryTransaction'
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
 import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
@@ -32,6 +33,7 @@ import NotFound from '@/pages/not-found/NotFound'
 import SearchResults from '@/pages/search/SearchResults'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
+import MigrateOpeningBalances from '@/pages/accounting/MigrateOpeningBalances'
 import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
 import AccountingRules from '@/pages/accounting/accounting-rules/AccountingRules'
 import ViewAccountingRules from '@/pages/accounting/accounting-rules/ViewAccountingRules'
@@ -42,6 +44,7 @@ import EditClosure from '@/pages/accounting/closing-entries/EditClosure'
 import FinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/FinancialActivityMappings'
 import CreateFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/CreateFinancialActivityMappings'
 import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
+import EditFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/EditFinancialActivityMappings'
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 import CreateProvisioningEntry from '@/pages/accounting/provisioning-entries/CreateProvisioningEntry'
@@ -314,6 +317,10 @@ const AppRoutes = () => {
 
           {/* Accounting */}
           <Route path="/accounting" element={<Accounting />} />
+          <Route
+            path="/accounting/opening-balances"
+            element={<MigrateOpeningBalances />}
+          />
 
           {/* Chart of Accounts Routes */}
           <Route
@@ -337,6 +344,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/journal-entries"
             element={<SearchJournalEntry />}
+          />
+          <Route
+            path="/accounting/journal-entries/transactions/view/:transactionId"
+            element={<ViewJournalEntryTransaction />}
           />
           <Route
             path="/accounting/journal-entries/create"
@@ -394,6 +405,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/financial-activity-mappings/:id"
             element={<ViewFinancialActivityMappings />}
+          />
+          <Route
+            path="/accounting/financial-activity-mappings/:id/edit"
+            element={<EditFinancialActivityMappings />}
           />
 
           {/* Accruals */}
