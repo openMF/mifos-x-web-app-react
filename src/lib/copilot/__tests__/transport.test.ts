@@ -197,6 +197,179 @@ describe('createV1Transport', () => {
     ])
   })
 
+  it('gives up when an answer that started goes silent', async () => {
+    const encoder = new TextEncoder()
+    // One word arrives, then nothing: the stream neither continues nor ends.
+    const fetchFn = vi.fn<typeof fetch>(
+      async (_url, init) =>
+        new Response(
+          new ReadableStream({
+            start(controller) {
+              controller.enqueue(
+                encoder.encode('event: token\ndata: {"delta":"Hello"}\n\n')
+              )
+              init?.signal?.addEventListener('abort', () =>
+                controller.error(new DOMException('Aborted', 'AbortError'))
+              )
+            },
+          })
+        )
+    )
+    const events = await collect(
+      transport(fetchFn, { idleTimeoutMs: 10 }).chat({ message: 'Hi' })
+    )
+    expect(events).toEqual([
+      { type: 'RunStarted' },
+      { type: 'TextMessageContent', delta: 'Hello' },
+      { type: 'RunError', code: 'LLM_UNAVAILABLE', retryable: true },
+    ])
+  })
+
+  it('keeps waiting while an answer is still arriving', async () => {
+    const encoder = new TextEncoder()
+    const words = ['One ', 'two ', 'three ', 'four ', 'five ', 'six']
+    // A word every 50 ms for 300 ms: each gap is well inside the 200 ms idle
+    // limit, the whole answer well beyond it. Only a watchdog re-armed on
+    // every chunk lets this finish.
+    const fetchFn = vi.fn<typeof fetch>(
+      async (_url, init) =>
+        new Response(
+          new ReadableStream({
+            async start(controller) {
+              // As a real fetch does: an abort fails the body being read.
+              init?.signal?.addEventListener('abort', () =>
+                controller.error(new DOMException('Aborted', 'AbortError'))
+              )
+              for (const word of words) {
+                if (init?.signal?.aborted) return
+                controller.enqueue(
+                  encoder.encode(
+                    `event: token\ndata: ${JSON.stringify({ delta: word })}\n\n`
+                  )
+                )
+                await new Promise(resolve => setTimeout(resolve, 50))
+              }
+              if (init?.signal?.aborted) return
+              controller.enqueue(encoder.encode('event: done\ndata: {}\n\n'))
+              controller.close()
+            },
+          })
+        )
+    )
+    const events = await collect(
+      transport(fetchFn, { idleTimeoutMs: 200 }).chat({ message: 'Hi' })
+    )
+    expect(events.filter(e => e.type === 'TextMessageContent')).toHaveLength(
+      words.length
+    )
+    expect(events[events.length - 1]).toEqual({
+      type: 'RunFinished',
+      outcome: { type: 'success' },
+    })
+  })
+
+  it('does not offer a retry when a decision times out', async () => {
+    const fetchFn = vi.fn<typeof fetch>(
+      (_url, init) =>
+        new Promise((_resolve, reject) =>
+          init?.signal?.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError'))
+          )
+        )
+    )
+    const events = await collect(
+      transport(fetchFn, { firstResponseTimeoutMs: 10 }).decide(
+        'card-1',
+        'approve'
+      )
+    )
+    expect(events).toEqual([
+      { type: 'RunError', code: 'LLM_UNAVAILABLE', retryable: false },
+    ])
+    expect(fetchFn).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([502, 503, 504])(
+    'does not offer a retry when a decision gets a %i',
+    async status => {
+      const fetchFn = vi.fn<typeof fetch>(
+        async () =>
+          new Response(JSON.stringify({ retryable: true }), {
+            status,
+            headers: { 'Content-Type': 'application/json' },
+          })
+      )
+      const events = await collect(
+        transport(fetchFn).decide('card-1', 'approve')
+      )
+      expect(events).toEqual([
+        {
+          type: 'RunError',
+          code: 'LLM_UNAVAILABLE',
+          retryable: false,
+        },
+      ])
+    }
+  )
+
+  it('still offers a retry when a chat turn gets a 504', async () => {
+    const fetchFn = vi.fn<typeof fetch>(
+      async () => new Response(null, { status: 504 })
+    )
+    const events = await collect(transport(fetchFn).chat({ message: 'Hi' }))
+    expect(events).toEqual([
+      { type: 'RunError', code: 'LLM_UNAVAILABLE', retryable: true },
+    ])
+  })
+
+  it('keeps the retry a decision is refused with before anything ran', async () => {
+    const fetchFn = vi.fn<typeof fetch>(
+      async () => new Response(null, { status: 429 })
+    )
+    const events = await collect(transport(fetchFn).decide('card-1', 'approve'))
+    expect(events).toEqual([
+      { type: 'RunError', code: 'RATE_LIMITED', retryable: true },
+    ])
+  })
+
+  it('closes the connection as soon as the run is done', async () => {
+    const encoder = new TextEncoder()
+    let aborted = false
+    // 'done' arrives, then the connection is held open with nothing more.
+    const fetchFn = vi.fn<typeof fetch>(
+      async (_url, init) =>
+        new Response(
+          new ReadableStream({
+            start(controller) {
+              controller.enqueue(
+                encoder.encode(
+                  'event: token\ndata: {"delta":"Hi"}\n\n' +
+                    'event: done\ndata: {"conversation_id":"c-1"}\n\n'
+                )
+              )
+              init?.signal?.addEventListener('abort', () => {
+                aborted = true
+                controller.error(new DOMException('Aborted', 'AbortError'))
+              })
+            },
+          })
+        )
+    )
+    const events = await collect(
+      transport(fetchFn, { idleTimeoutMs: 20 }).chat({ message: 'Hi' })
+    )
+    expect(events).toEqual([
+      { type: 'RunStarted' },
+      { type: 'TextMessageContent', delta: 'Hi' },
+      {
+        type: 'RunFinished',
+        outcome: { type: 'success' },
+        conversationId: 'c-1',
+      },
+    ])
+    expect(aborted).toBe(true)
+  })
+
   it('ends silently when the officer stops the turn', async () => {
     const fetchFn = vi.fn<typeof fetch>(
       (_url, init) =>

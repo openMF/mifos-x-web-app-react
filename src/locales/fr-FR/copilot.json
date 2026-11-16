@@ -26,6 +26,10 @@
     "label": "IA",
     "title": "Rédigé par l'IA. Vérifiez les chiffres importants dans le dossier du client."
   },
+  "demoBadge": {
+    "label": "Démo",
+    "title": "Mode démonstration : ce sont des réponses d'exemple enregistrées, pas des données de vos dossiers."
+  },
   "greeting": {
     "morning": "Bonjour",
     "afternoon": "Bon après-midi",

@@ -51,9 +51,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useCopilotChat } from '@/hooks/use-copilot-chat'
-import { isTurnActive, type CopilotThread, type TurnPhase } from '@/lib/copilot'
+import {
+  copilotGatewayMode,
+  isTurnActive,
+  type CopilotThread,
+  type TurnPhase,
+} from '@/lib/copilot'
 import { cn } from '@/lib/utils'
-import { AiBadge } from './AiBadge'
+import { AiBadge, DemoBadge } from './AiBadge'
 import { Composer } from './Composer'
 import { isDisplayMode, type DisplayMode } from './copilot-ui'
 import { MessageList } from './MessageList'
@@ -191,6 +196,7 @@ export default function CopilotPanel({
                     {t('brand')}
                   </DialogPrimitive.Title>
                   <AiBadge />
+                  {copilotGatewayMode() === 'mock' && <DemoBadge />}
                 </div>
                 <DialogPrimitive.Description
                   className={cn(

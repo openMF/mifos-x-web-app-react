@@ -26,6 +26,10 @@
     "label": "IA",
     "title": "Scritto dall'IA. Verifichi le cifre importanti nella scheda del cliente."
   },
+  "demoBadge": {
+    "label": "Demo",
+    "title": "Modalità dimostrativa: sono risposte di esempio registrate, non dati dei suoi archivi."
+  },
   "greeting": {
     "morning": "Buongiorno",
     "afternoon": "Buon pomeriggio",

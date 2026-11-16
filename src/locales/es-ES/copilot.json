@@ -26,6 +26,10 @@
     "label": "IA",
     "title": "Escrito por IA. Verifique las cifras importantes con el expediente del cliente."
   },
+  "demoBadge": {
+    "label": "Demo",
+    "title": "Modo de demostración: son respuestas de ejemplo grabadas, no datos de sus registros."
+  },
   "greeting": {
     "morning": "Buenos días",
     "afternoon": "Buenas tardes",

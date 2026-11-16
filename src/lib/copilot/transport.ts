@@ -73,6 +73,12 @@ export interface V1TransportOptions {
    * answering routinely take tens of seconds, so this is long.
    */
   firstResponseTimeoutMs?: number
+  /**
+   * Longest silence allowed once the answer has started. The gateway has no
+   * watchdog of its own for a model that stops mid-answer, so without this a
+   * stalled turn would spin until the officer gave up.
+   */
+  idleTimeoutMs?: number
   /** For tests and the mock; defaults to the global fetch. */
   fetchFn?: typeof fetch
   /** For tests; defaults to crypto.randomUUID. */
@@ -80,6 +86,11 @@ export interface V1TransportOptions {
 }
 
 export const DEFAULT_FIRST_RESPONSE_TIMEOUT_MS = 60_000
+/**
+ * Generous on purpose: between two events the gateway may be waiting on a
+ * slow Fineract read and then on the model again, with nothing to send.
+ */
+export const DEFAULT_IDLE_TIMEOUT_MS = 120_000
 
 /**
  * Transport for the Copilot gateway's wire contract v1.
@@ -110,7 +121,8 @@ export function createV1Transport(
           clientMsgId: newId(),
           context,
         },
-        signal
+        signal,
+        true
       )
     },
 
@@ -123,10 +135,14 @@ export function createV1Transport(
           retryable: false,
         })
       }
+      // A decision that fails without an answer may or may not have reached
+      // the banking system. "Try again" would ask the question afresh and
+      // could raise a second card for the same payment, so it is not offered.
       return post(
         decisionPath(cardId),
         { decision, clientMsgId: newId() },
-        signal
+        signal,
+        false
       )
     },
   }
@@ -134,7 +150,10 @@ export function createV1Transport(
   async function* post(
     path: string,
     body: unknown,
-    signal?: AbortSignal
+    signal: AbortSignal | undefined,
+    // Whether the request may be made again when its outcome is unknown: a
+    // chat turn may, a decision may not.
+    repeatable: boolean
   ): AsyncGenerator<CopilotEvent> {
     // A generator runs lazily: if it was cancelled before the first read,
     // the request is never sent.
@@ -145,10 +164,18 @@ export function createV1Transport(
     const onAbort = () => controller.abort()
     signal?.addEventListener('abort', onAbort)
     let timedOut = false
-    const timer = setTimeout(() => {
-      timedOut = true
-      controller.abort()
-    }, options.firstResponseTimeoutMs ?? DEFAULT_FIRST_RESPONSE_TIMEOUT_MS)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    // One watchdog, re-armed on every chunk: first for the wait until the
+    // answer starts, then for any silence in the middle of it.
+    const allow = (ms: number) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        timedOut = true
+        controller.abort()
+      }, ms)
+    }
+    allow(options.firstResponseTimeoutMs ?? DEFAULT_FIRST_RESPONSE_TIMEOUT_MS)
+    const idleTimeoutMs = options.idleTimeoutMs ?? DEFAULT_IDLE_TIMEOUT_MS
 
     try {
       const response = await fetchFn(`${baseUrl}${path}`, {
@@ -165,7 +192,13 @@ export function createV1Transport(
 
       if (!response.ok) {
         clearTimeout(timer)
-        yield httpError(response.status, await readJson(response))
+        const error = httpError(response.status, await readJson(response))
+        // The gateway reports its own failures inside the stream, so a 5xx
+        // comes from a proxy in front of it, possibly after the decision had
+        // already reached Fineract. Not even a proxy body may offer a retry.
+        yield !repeatable && response.status >= 500
+          ? { ...error, retryable: false }
+          : error
         return
       }
       if (!response.body) {
@@ -181,11 +214,20 @@ export function createV1Transport(
       for (;;) {
         const { done, value } = await reader.read()
         if (done) break
-        clearTimeout(timer)
+        allow(idleTimeoutMs)
         for (const frame of parser.push(
           decoder.decode(value, { stream: true })
         )) {
-          yield* mapper.map(frame)
+          for (const event of mapper.map(frame)) {
+            yield event
+            // The run is over once 'done' is mapped. A connection held open
+            // after it would keep the turn busy until the idle watchdog
+            // fired and reported a second, false failure. The finally below
+            // closes it now.
+            if (event.type === 'RunFinished' || event.type === 'RunError') {
+              return
+            }
+          }
         }
       }
       for (const frame of parser.push(decoder.decode())) {
@@ -196,7 +238,11 @@ export function createV1Transport(
     } catch (error) {
       if (signal?.aborted) return
       if (timedOut) {
-        yield { type: 'RunError', code: 'LLM_UNAVAILABLE', retryable: true }
+        yield {
+          type: 'RunError',
+          code: 'LLM_UNAVAILABLE',
+          retryable: repeatable,
+        }
         return
       }
       // "Failed to fetch" is what a blocked CORS preflight, a DNS failure and

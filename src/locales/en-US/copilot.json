@@ -26,6 +26,10 @@
     "label": "AI",
     "title": "Written by AI. Check important figures against the client record."
   },
+  "demoBadge": {
+    "label": "Demo",
+    "title": "Demo mode: these are recorded sample answers, not data from your records."
+  },
   "greeting": {
     "morning": "Good morning",
     "afternoon": "Good afternoon",
