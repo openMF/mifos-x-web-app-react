@@ -34,11 +34,14 @@ import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 // API instance
 const chargesApi = new ChargesApi(getConfiguration())
 
 const Charges = () => {
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   // State for charges list
   const [charges, setCharges] = useState<GetChargesResponse[]>([])
   // Search filter
@@ -218,9 +221,13 @@ const Charges = () => {
 
                 {/* Amount */}
                 <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {charge.amount?.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  })}
+                  {charge.amount === undefined
+                    ? ''
+                    : formatDisplayNumber(
+                        charge.amount,
+                        undefined,
+                        decimalPlaces
+                      )}
                 </TableCell>
 
                 {/* Is Penalty */}

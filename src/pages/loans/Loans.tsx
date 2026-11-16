@@ -48,6 +48,8 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { LoanProductsApi, LoansApi, OfficesApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { formatDate } from '@/lib/date-utils'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayCurrency, formatDisplayNumber } from '@/lib/number-format'
 
 import {
   toRow,
@@ -187,6 +189,7 @@ const Loans = () => {
   const navigate = useNavigate()
   const { t, i18n } = useTranslation('loans')
   const { t: tc } = useTranslation('common')
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
 
   // data
   const [loans, setLoans] = useState<LoanRow[]>([])
@@ -379,27 +382,14 @@ const Loans = () => {
     return {
       money: (value?: number, currency?: LoanCurrency) => {
         if (typeof value !== 'number') return ''
-        const digits = currency?.decimalPlaces ?? 2
-        const options = {
-          minimumFractionDigits: digits,
-          maximumFractionDigits: digits,
-        }
-        try {
-          return new Intl.NumberFormat(language, {
-            ...options,
-            style: 'currency',
-            currency: currency?.code,
-          }).format(value)
-        } catch {
-          // no currency, or a code Intl does not know
-          return new Intl.NumberFormat(language, options).format(value)
-        }
+        return formatDisplayCurrency(
+          value,
+          currency?.code,
+          language,
+          decimalPlaces
+        )
       },
-      // a decimal datatable column holds up to six places, so none are cut
-      number: value =>
-        new Intl.NumberFormat(language, { maximumFractionDigits: 20 }).format(
-          value
-        ),
+      number: value => formatDisplayNumber(value, language, decimalPlaces),
       date: (value, withTime) => {
         const date = formatDate(value, language, '')
         if (!withTime) return date
@@ -410,7 +400,7 @@ const Loans = () => {
       officeName: id => (id === undefined ? '' : (officeNames.get(id) ?? '')),
       datatableRow: (table, loanId) => datatables.rows[table]?.get(loanId),
     }
-  }, [i18n.language, tc, officeNames, datatables.rows])
+  }, [i18n.language, tc, officeNames, datatables.rows, decimalPlaces])
 
   // a sort on a column that has since been hidden no longer applies
   const activeSort =

@@ -22,6 +22,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayCurrency } from '@/lib/number-format'
+import { useTranslation } from 'react-i18next'
 
 const loansApi = new LoansApi(getConfiguration())
 
@@ -33,6 +36,8 @@ const fmtDate = (d: string | null | undefined) => {
 
 const LoansRepaymentScheduleTab = () => {
   const { loanId } = useParams()
+  const { i18n } = useTranslation()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [loan, setLoan] = useState<GetLoansLoanIdResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -57,11 +62,7 @@ const LoansRepaymentScheduleTab = () => {
   const currency = (n: number | null | undefined) =>
     n == null
       ? '—'
-      : new Intl.NumberFormat(undefined, {
-          style: 'currency',
-          currency: currencyCode,
-          minimumFractionDigits: 2,
-        }).format(n)
+      : formatDisplayCurrency(n, currencyCode, i18n.language, decimalPlaces)
 
   // repayment schedule
   const schedule = loan?.repaymentSchedule
