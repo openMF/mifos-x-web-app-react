@@ -7,73 +7,18 @@
  */
 
 import { defineConfig, devices } from '@playwright/test'
+// Also sets the React defaults for the shared `E2E_*` variables.
+import { nodeProjects, sharedConfig } from './playwright.node.config'
 
 const isCI = !!process.env.CI
-// Same switch as the backend-dependent tests in `login.spec.ts`: when it is
-// set, nothing that needs a running Fineract is registered.
-const skipBackendTests = !!process.env.SKIP_BACKEND_TESTS
-
-// React defaults for the shared E2E variables. The test data layer in
-// `playwright/{fixtures,factories,utils}` is shared verbatim with the
-// openMF/web-app (Angular) suite, whose own defaults point at that
-// stack (Fineract on 8443, the app on 4200). Setting the React values
-// here, before any spec loads, keeps those files identical in both
-// repos. Playwright loads this file in every worker, so the defaults
-// reach the workers too. An explicitly exported variable still wins.
-//
-// Fineract: `docker-compose-zitadel.yml` publishes it on port 3000.
-process.env.E2E_FINERACT_URL ??= 'https://localhost:3000'
-process.env.E2E_BASE_URL ??= 'http://localhost:5173'
 
 export default defineConfig({
+  ...sharedConfig,
   testDir: './playwright/tests',
-  forbidOnly: isCI,
-  retries: isCI ? 2 : 0,
-  workers: isCI ? 1 : undefined,
-  reporter: [
-    ['html', { outputFolder: 'playwright-report', open: 'never' }],
-    ['list'],
-  ],
-  use: {
-    baseURL: process.env.E2E_BASE_URL,
-    ignoreHTTPSErrors: true,
-    trace: 'retain-on-failure',
-    video: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    navigationTimeout: 120000,
-    actionTimeout: 30000,
-    extraHTTPHeaders: {
-      Accept: 'application/json',
-    },
-  },
-  timeout: isCI ? 180000 : 120000,
   projects: [
-    {
-      // Pure-logic specs for the shared helpers: no browser, no app and
-      // no backend.
-      name: 'unit',
-      testDir: '.',
-      testMatch: [
-        /playwright\/utils\/.*\.spec\.ts/,
-        /playwright\/config\/.*\.spec\.ts/,
-        /playwright\/pages\/.*\.spec\.ts/,
-        /playwright\/fixtures\/.*\.spec\.ts/,
-        /playwright\/factories\/client\.spec\.ts/,
-        /playwright\/factories\/_shared\.spec\.ts/,
-      ],
-      use: { storageState: { cookies: [], origins: [] } },
-    },
-    // Factory specs against a live Fineract (`E2E_FINERACT_URL`). They
-    // talk to the REST API only, so no browser is started.
-    ...(skipBackendTests
-      ? []
-      : [
-          {
-            name: 'integration',
-            testDir: '.',
-            testMatch: /playwright\/factories\/.*\.factory\.spec\.ts/,
-          },
-        ]),
+    // `unit` and `integration`. They need no browser; run them on their
+    // own with `playwright.node.config.ts`, which starts no web server.
+    ...nodeProjects,
     {
       name: 'chromium',
       use: {
