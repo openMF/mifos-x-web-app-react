@@ -11,6 +11,10 @@
     "outDir": "./dist-playwright",
     "rootDir": "."
   },
-  "include": ["playwright/**/*.ts", "playwright.config.ts"],
+  "include": [
+    "playwright/**/*.ts",
+    "playwright.config.ts",
+    "playwright.node.config.ts"
+  ],
   "exclude": ["node_modules", "src"]
 }

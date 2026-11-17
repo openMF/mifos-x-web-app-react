@@ -5,35 +5,37 @@ on:
     branches:
       - dev
       - main
+  # Runs on dev too, so dev always shows whether it is green.
+  push:
+    branches:
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true
+  # A new push to a PR replaces its previous run. Runs on dev are kept, so
+  # every merged commit gets a result.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
+# The job names below are what branch rules match on. Changing one turns
+# its required check into a check that never reports.
 jobs:
-  lint-build:
-    name: Run Lint, Build and Deploy
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: 'npm'
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
 
       - name: Install dependencies
         run: npm ci
@@ -44,5 +46,68 @@ jobs:
       - name: Prettier format check
         run: npx prettier --check --ignore-unknown .
 
+  test-build:
+    name: Unit tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # openapi-generator-cli, run by `npm run build`, needs Java.
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Generates the Fineract SDK in src/fineract-api, type-checks the app
+      # and bundles it. The steps below rely on that SDK.
       - name: Build project
         run: npm run build
+
+      # `tsc -b` in the build covers the app and vite.config.ts only.
+      - name: Type-check Playwright code
+        run: npm run typecheck:e2e
+
+      - name: Run unit tests (Vitest)
+        run: npm run test:coverage
+
+      - name: Write coverage summary
+        if: ${{ !cancelled() && hashFiles('coverage/coverage-summary.json') != '' }}
+        run: |
+          {
+            echo '### Unit test coverage'
+            echo
+            echo 'Files measured: `test.coverage.include` in `vite.config.ts`.'
+            echo
+            echo '| Metric | Covered | Total | % |'
+            echo '| --- | ---: | ---: | ---: |'
+            jq -r '.total | to_entries[] | select(.key != "branchesTrue")
+              | "| \(.key) | \(.value.covered) | \(.value.total) | \(.value.pct) |"' \
+              coverage/coverage-summary.json
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      # Browser-free helper specs. This config has no `webServer`, and the
+      # specs launch no browser, so no `playwright install` is needed.
+      - name: Run Playwright helper specs
+        run: npm run test:e2e:unit
