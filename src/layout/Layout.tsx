@@ -40,9 +40,9 @@ const Layout = () => {
       <CopilotLauncher />
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <div className="flex flex-col flex-1 w-full">
+        <div className="flex min-w-0 flex-1 flex-col">
           <MfNavbar />
-          <main className="flex-1 p-6 bg-gray-50 dark:bg-zinc-900">
+          <main className="min-w-0 flex-1 p-6 bg-gray-50 dark:bg-zinc-900">
             <Outlet />
           </main>
         </div>
