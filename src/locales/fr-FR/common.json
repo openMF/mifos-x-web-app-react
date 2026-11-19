@@ -642,13 +642,16 @@
     "loanAccount": "Compte de prêt",
     "savingsAccount": "Compte d'épargne",
     "sharesAccount": "Compte d'actions",
+    "recurringDepositAccount": "Compte de dépôt récurrent",
     "tabs": {
       "general": "Général",
       "accountDetails": "Détails du compte",
       "transactions": "Transactions",
       "charges": "Frais",
       "documents": "Documents",
-      "notes": "Notes"
+      "notes": "Notes",
+      "interestRateChart": "Grille des taux d'intérêt",
+      "standingInstructions": "Ordres permanents"
     }
   }
 }

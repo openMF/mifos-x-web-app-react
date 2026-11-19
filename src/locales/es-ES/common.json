@@ -642,13 +642,16 @@
     "loanAccount": "Cuenta de préstamo",
     "savingsAccount": "Cuenta de ahorros",
     "sharesAccount": "Cuenta de acciones",
+    "recurringDepositAccount": "Cuenta de depósito recurrente",
     "tabs": {
       "general": "General",
       "accountDetails": "Detalles de cuenta",
       "transactions": "Transacciones",
       "charges": "Cargos",
       "documents": "Documentos",
-      "notes": "Notas"
+      "notes": "Notas",
+      "interestRateChart": "Tabla de tasas de interés",
+      "standingInstructions": "Instrucciones permanentes"
     }
   }
 }
