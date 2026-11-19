@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { inputToFineractDate } from '@/lib/date-utils'
 import AppSelect from '@/components/custom/select/AppSelect'
 
 const officesApi = new OfficesApi(getConfiguration())
@@ -31,14 +32,7 @@ const CreateOffices = () => {
   })
 
   // format input date to "dd MMMM yyyy"
-  const formattedDate = new Date(formData.openedOn).toLocaleDateString(
-    'en-GB',
-    {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    }
-  )
+  const formattedDate = inputToFineractDate(formData.openedOn)
 
   // fetch offices for dropdown
   useEffect(() => {

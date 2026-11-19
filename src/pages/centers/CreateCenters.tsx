@@ -17,11 +17,13 @@ import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useTranslation } from 'react-i18next'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { inputToFineractDate } from '@/lib/date-utils'
 import {
   CentersApi,
   OfficesApi,
   StaffApi,
   type GetOfficesResponse,
+  type PostCentersRequest,
   type StaffData,
 } from '@/fineract-api'
 
@@ -39,7 +41,7 @@ const CreateCenters = () => {
   const [offices, setOffices] = useState<GetOfficesResponse[]>([])
   const [staff, setStaff] = useState<StaffData[]>([])
 
-  // Form state
+  // Form state; the dates are kept as the date inputs' yyyy-MM-dd values
   const [formData, setFormData] = useState({
     name: '',
     officeId: '',
@@ -76,11 +78,18 @@ const CreateCenters = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await centersApi.create7({
+      // PostCentersRequest only has name, officeId and active (ISSUES.md)
+      const request: PostCentersRequest & {
+        submittedOnDate?: string
+        activationDate?: string
+      } = {
         ...formData,
         officeId: Number(formData.officeId),
         active: formData.active,
-      })
+        submittedOnDate: inputToFineractDate(formData.submittedOnDate),
+        activationDate: inputToFineractDate(formData.activationDate),
+      }
+      await centersApi.create7(request)
       navigate('/centers')
     } catch (err) {
       console.error('Failed to create center', err)
@@ -163,26 +172,13 @@ const CreateCenters = () => {
               <Label>{t('create.labelActivationDate')}</Label>
               <Input
                 type="date"
-                value={
-                  formData.activationDate
-                    ? new Date(formData.activationDate)
-                        .toISOString()
-                        .split('T')[0]
-                    : ''
-                }
-                onChange={e => {
-                  const val = e.target.value
+                value={formData.activationDate}
+                onChange={e =>
                   setFormData(prev => ({
                     ...prev,
-                    activationDate: val
-                      ? new Date(val).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                        })
-                      : '',
+                    activationDate: e.target.value,
                   }))
-                }}
+                }
               />
             </div>
           )}
@@ -203,26 +199,13 @@ const CreateCenters = () => {
             <Label>{t('create.labelSubmittedOn')}</Label>
             <Input
               type="date"
-              value={
-                formData.submittedOnDate
-                  ? new Date(formData.submittedOnDate)
-                      .toISOString()
-                      .split('T')[0]
-                  : ''
-              }
-              onChange={e => {
-                const val = e.target.value
+              value={formData.submittedOnDate}
+              onChange={e =>
                 setFormData(prev => ({
                   ...prev,
-                  submittedOnDate: val
-                    ? new Date(val).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    : '',
+                  submittedOnDate: e.target.value,
                 }))
-              }}
+              }
               required
             />
           </div>
