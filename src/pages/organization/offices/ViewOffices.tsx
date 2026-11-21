@@ -7,6 +7,7 @@
  */
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
@@ -14,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { OfficesApi, type GetOfficesResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
-import { format } from 'date-fns'
+import { formatDate } from '@/lib/date-utils'
 
 import EntityDatatableTab from '@/components/datatables/EntityDatatableTab'
 import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
@@ -30,6 +31,7 @@ type OfficeWithParent = GetOfficesResponse & {
 const ViewOffices = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const { t } = useTranslation(['organization', 'common'])
   const [office, setOffice] = useState<OfficeWithParent>()
   const datatables = useEntityDatatables('m_office')
 
@@ -46,15 +48,16 @@ const ViewOffices = () => {
     fetchOffice()
   }, [id])
 
-  if (!office) return <div className="p-10 text-center">Loading...</div>
+  if (!office)
+    return <div className="p-10 text-center">{t('common:actions.loading')}</div>
 
   return (
     <div className="min-h-screen px-6 py-10 bg-gray-50 dark:bg-zinc-900">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Organization', href: '/organization' },
-          { label: 'Offices', href: '/organization/offices' },
+          { label: t('common:nav.home'), href: '/home' },
+          { label: t('title'), href: '/organization' },
+          { label: t('offices.title'), href: '/organization/offices' },
           { label: `${office.id}`, current: true },
         ]}
       />
@@ -67,37 +70,26 @@ const ViewOffices = () => {
             onClick={() => navigate(`/organization/offices/${office.id}/edit`)}
           >
             <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
-            Edit
+            {t('common:actions.edit')}
           </Button>
         </div>
 
         <h2 className="text-xl font-semibold mb-6 text-zinc-800 dark:text-zinc-100">
-          Manage Office
+          {t('offices.manageOffice')}
         </h2>
 
         {/* office details */}
         <div className="grid grid-cols-2 gap-y-5 text-sm text-zinc-700 dark:text-zinc-200">
-          <div className="font-medium">Parent Office</div>
+          <div className="font-medium">{t('offices.fields.parent')}</div>
           <div>{office.parentName || '—'}</div>
 
-          <div className="font-medium">Opened On</div>
-          <div>
-            {Array.isArray(office.openingDate)
-              ? format(
-                  new Date(
-                    office.openingDate[0],
-                    office.openingDate[1] - 1,
-                    office.openingDate[2]
-                  ),
-                  'dd MMMM yyyy'
-                )
-              : '—'}
-          </div>
+          <div className="font-medium">{t('offices.fields.openingDate')}</div>
+          <div>{formatDate(office.openingDate)}</div>
 
-          <div className="font-medium">Name Decorated</div>
+          <div className="font-medium">{t('offices.fields.nameDecorated')}</div>
           <div>{office.nameDecorated || '—'}</div>
 
-          <div className="font-medium">External Id</div>
+          <div className="font-medium">{t('offices.fields.externalId')}</div>
           <div>{office.externalId || '—'}</div>
         </div>
 
@@ -126,7 +118,7 @@ const ViewOffices = () => {
             className="w-28 cursor-pointer"
             onClick={() => navigate('/organization/offices')}
           >
-            Back
+            {t('common:actions.back')}
           </Button>
         </div>
       </div>

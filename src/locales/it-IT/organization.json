@@ -288,18 +288,27 @@
     "funds": "Fondi"
   },
   "offices": {
+    "collapseAll": "Comprimi tutto",
+    "collapseOffice": "Comprimi {{name}}",
     "create": "Crea ufficio",
+    "expandAll": "Espandi tutto",
+    "expandOffice": "Espandi {{name}}",
     "fields": {
       "externalId": "ID esterno",
       "name": "Nome ufficio",
+      "nameDecorated": "Nome decorato",
       "officeName": "Nome ufficio",
       "officeNameStar": "Nome ufficio*",
       "openedOn": "Data di apertura*",
       "openingDate": "Data di apertura",
+      "parent": "Ufficio principale",
       "parentOffice": "Ufficio principale",
       "pleaseSelectOffice": "Seleziona un ufficio"
     },
+    "import": "Importa uffici",
+    "listView": "Vista elenco",
     "manage": "Gestisci uffici",
+    "manageOffice": "Gestisci ufficio",
     "messages": {
       "createError": "Impossibile creare l'ufficio",
       "createSuccess": "Ufficio creato con successo.",
@@ -307,8 +316,11 @@
       "noOffices": "Nessun ufficio trovato.",
       "updateSuccess": "Ufficio aggiornato con successo."
     },
+    "searchPlaceholder": "Cerca uffici...",
     "title": "Uffici",
-    "unnamedOffice": "Ufficio senza nome"
+    "treeView": "Vista ad albero",
+    "unnamedOffice": "Ufficio senza nome",
+    "viewToggle": "Visualizzazione uffici"
   },
   "provisioningCriteria": {
     "title": "Criteri di accantonamento prestiti",
