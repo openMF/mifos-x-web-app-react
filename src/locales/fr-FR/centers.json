@@ -116,10 +116,5 @@
     "tableOfficeName": "Nom du Bureau",
     "tableSubmittedOn": "Soumis Le",
     "noGroups": "Aucun groupe trouvé."
-  },
-  "notes": {
-    "heading": "Notes",
-    "placeholder": "Écrire une note ....",
-    "addButton": "+ Ajouter"
   }
 }

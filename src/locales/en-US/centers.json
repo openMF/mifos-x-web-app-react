@@ -116,10 +116,5 @@
     "tableOfficeName": "Office Name",
     "tableSubmittedOn": "Submitted On",
     "noGroups": "No groups found."
-  },
-  "notes": {
-    "heading": "Notes",
-    "placeholder": "Write a note ....",
-    "addButton": "+ Add"
   }
 }
