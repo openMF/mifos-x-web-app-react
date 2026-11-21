@@ -581,6 +581,25 @@
     "noIdentifiers": "Nessun identificativo",
     "identifiersLoadFailed": "Impossibile caricare gli identificativi. Riprova."
   },
+  "notes": {
+    "heading": "Note",
+    "placeholder": "Scrivi una nota...",
+    "addButton": "Aggiungi",
+    "adding": "Aggiunta in corso...",
+    "createdBy": "Creato da: {{name}}",
+    "date": "Data: {{date}}",
+    "editButton": "Modifica",
+    "saveButton": "Salva",
+    "cancelButton": "Annulla",
+    "deleteButton": "Elimina",
+    "confirmDelete": "Eliminare questa nota?",
+    "loading": "Caricamento note...",
+    "empty": "Nessuna nota aggiunta.",
+    "loadFailed": "Impossibile caricare le note.",
+    "addFailed": "Impossibile aggiungere la nota. Riprova.",
+    "updateFailed": "Impossibile aggiornare la nota. Riprova.",
+    "deleteFailed": "Impossibile eliminare la nota. Riprova."
+  },
   "search": {
     "enterQuery": "Inserisci un termine di ricerca nella barra di navigazione per trovare clienti, gruppi, centri e conti.",
     "noResultsHint": "Cerca per nome, numero di conto o ID esterno. Potrebbe essere necessario rispettare le maiuscole usate al salvataggio del nome, ad esempio \"Ada\" invece di \"ada\".",

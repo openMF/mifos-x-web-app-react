@@ -83,10 +83,5 @@
     "tableOfficeName": "Nombre de Oficina",
     "tableSubmittedOn": "Enviado El",
     "noGroups": "No se encontraron grupos."
-  },
-  "notes": {
-    "heading": "Notas",
-    "placeholder": "Escribir una nota ....",
-    "addButton": "+ Agregar"
   }
 }

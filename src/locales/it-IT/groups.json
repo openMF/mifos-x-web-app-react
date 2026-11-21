@@ -109,11 +109,6 @@
     "tableSavingAccount": "Conto di Risparmio",
     "tableLastActive": "Ultima Attività"
   },
-  "notes": {
-    "heading": "Note",
-    "placeholder": "Scrivi una nota ....",
-    "addButton": "+ Aggiungi"
-  },
   "committee": {
     "heading": "Membri Clienti",
     "addButton": "+ Aggiungi"
