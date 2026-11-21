@@ -161,6 +161,7 @@ import ViewCodes from '@/pages/system/codes/ViewCodes'
 import CreateCode from '@/pages/system/codes/CreateCode'
 import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
+import EditReports from '@/pages/system/manage-reports/EditReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
 import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
 import EditRolesAndPermissions from '@/pages/system/roles-and-permissions/EditRolesAndPermissions'
@@ -897,6 +898,7 @@ const AppRoutes = () => {
           {/* Manage Reports*/}
           <Route path="/system/reports" element={<ManageReports />} />
           <Route path="/system/reports/:id" element={<ViewReports />} />
+          <Route path="/system/reports/:id/edit" element={<EditReports />} />
 
           {/* Manage Roles and Permission */}
           <Route
