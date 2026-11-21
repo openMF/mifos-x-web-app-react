@@ -7,7 +7,7 @@
  */
 
 import { memo, useEffect, useState } from 'react'
-import { AlertCircle, Check, Copy, RotateCcw, ShieldAlert } from 'lucide-react'
+import { Check, Copy, RotateCcw, ShieldAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import MifosLogo from '@/assets/images/MifosX_logo.png'
@@ -26,7 +26,6 @@ import {
   MessageToolbar,
 } from '@/components/ai-elements/message'
 import { Suggestion, Suggestions } from '@/components/ai-elements/suggestion'
-import { Button } from '@/components/ui/button'
 import {
   isTurnActive,
   type ApprovalRequest,
@@ -37,7 +36,8 @@ import {
 import { cn } from '@/lib/utils'
 import { AiBadge } from './AiBadge'
 import { CopilotOrb } from './CopilotOrb'
-import { errorMessageKey, groupTurns, visibleText } from './copilot-ui'
+import { groupTurns, visibleText } from './copilot-ui'
+import { ErrorNotice } from './ErrorNotice'
 import { ThinkingTrail } from './ThinkingTrail'
 
 export function MessageList({
@@ -155,6 +155,13 @@ const AssistantMessage = memo(function AssistantMessage({
   const { t } = useTranslation('copilot')
   const text = visibleText(message.text, message.streaming)
   const hasActions = Boolean(text) && !message.error
+  // An answer that failed before saying or doing anything has no bubble,
+  // only its error.
+  const hasBody =
+    live ||
+    Boolean(text || message.reasoning) ||
+    message.steps.length > 0 ||
+    message.cards.length > 0
 
   return (
     <Message
@@ -174,51 +181,33 @@ const AssistantMessage = memo(function AssistantMessage({
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <MessageMeta createdAt={message.createdAt} />
-        <MessageContent className="w-full gap-3 rounded-2xl rounded-tl-md border border-zinc-200/80 bg-white/80 px-4 py-3 shadow-xs dark:border-white/10 dark:bg-white/5">
-          <ThinkingTrail message={message} live={live} />
-          {text && (
-            // Words fade in as they arrive, behind a caret, the way speech
-            // does; a finished answer is simply there.
-            <MessageResponse
-              isAnimating={message.streaming}
-              animated={WORD_FADE}
-              caret="block"
-            >
-              {text}
-            </MessageResponse>
-          )}
-          {message.cards.map((card, index) => (
-            <DataCard key={index} card={card} />
-          ))}
-          {message.error && (
-            <div
-              role="alert"
-              className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-destructive"
-            >
-              <AlertCircle
-                className="mt-0.5 size-4 shrink-0"
-                aria-hidden="true"
-              />
-              <div className="space-y-2">
-                <p>
-                  {message.error.message ||
-                    t(errorMessageKey(message.error.code))}
-                </p>
-                {retryPrompt && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onAsk(retryPrompt)}
-                  >
-                    <RotateCcw className="size-3.5" aria-hidden="true" />
-                    {t('retry')}
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-        </MessageContent>
+        {hasBody && (
+          <MessageContent className="w-full gap-3 rounded-2xl rounded-tl-md border border-zinc-200/80 bg-white/80 px-4 py-3 shadow-xs dark:border-white/10 dark:bg-white/5">
+            <ThinkingTrail message={message} live={live} />
+            {text && (
+              // Words fade in as they arrive, behind a caret, the way speech
+              // does; a finished answer is simply there.
+              <MessageResponse
+                isAnimating={message.streaming}
+                animated={WORD_FADE}
+                caret="block"
+              >
+                {text}
+              </MessageResponse>
+            )}
+            {message.cards.map((card, index) => (
+              <DataCard key={index} card={card} />
+            ))}
+          </MessageContent>
+        )}
+        {/* Beside the answer, not inside it: an error is about the turn, and
+            a box within the bubble read as part of what was said. */}
+        {message.error && (
+          <ErrorNotice
+            error={message.error}
+            onRetry={retryPrompt ? () => onAsk(retryPrompt) : undefined}
+          />
+        )}
         {/* The answer switcher stays even when this answer failed, so an
             earlier answer to the same question is still within reach. */}
         {!message.streaming && (hasActions || answerCount > 1) && (

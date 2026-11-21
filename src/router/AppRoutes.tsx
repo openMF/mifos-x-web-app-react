@@ -9,6 +9,7 @@ import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
 import Callback from '@/pages/login/Callback'
+import { lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
@@ -298,6 +299,12 @@ import CreateFixedDepositAccount from '@/pages/fixed-deposits/create-fixed-depos
 import CreateRecurringDepositAccount from '@/pages/recurring-deposits/create-recurring-deposit-account/CreateRecurringDepositAccount'
 import CreateAccountingRule from '@/pages/accounting/accounting-rules/CreateAccountingRules'
 import EditAccountingRules from '@/pages/accounting/accounting-rules/EditAccountingRules'
+
+// Development only: every Copilot state on one page, from recorded gateway
+// replies. Production builds drop this branch and its chunk entirely.
+const CopilotStates = import.meta.env.DEV
+  ? lazy(() => import('@/pages/dev/CopilotStates'))
+  : null
 
 const AppRoutes = () => {
   return (
@@ -1557,6 +1564,10 @@ const AppRoutes = () => {
           </Route>
         </Route>
       </Route>
+
+      {CopilotStates && (
+        <Route path="/dev/copilot-states" element={<CopilotStates />} />
+      )}
 
       <Route path="*" element={<NotFound />} />
     </Routes>
