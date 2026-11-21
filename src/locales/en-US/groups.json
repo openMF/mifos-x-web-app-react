@@ -109,11 +109,6 @@
     "tableSavingAccount": "Saving Account",
     "tableLastActive": "Last Active"
   },
-  "notes": {
-    "heading": "Notes",
-    "placeholder": "Write a note ....",
-    "addButton": "+ Add"
-  },
   "committee": {
     "heading": "Client Members",
     "addButton": "+ Add"
