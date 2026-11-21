@@ -53,7 +53,13 @@ export interface CopilotMessage {
   steps: ToolStep[]
   cards: DisplayCard[]
   suggestions: string[]
-  error?: { code: CopilotErrorCode; message?: string; retryable: boolean }
+  error?: {
+    code: CopilotErrorCode
+    message?: string
+    retryable: boolean
+    /** A decision that may or may not have run; see the RunError event. */
+    outcomeUnknown?: boolean
+  }
   /** When the question was sent, in epoch ms; shown next to the message. */
   createdAt?: number
 }
@@ -257,6 +263,7 @@ function applyEvent(thread: CopilotThread, event: CopilotEvent): CopilotThread {
               code: event.code,
               message: event.message,
               retryable: event.retryable,
+              ...(event.outcomeUnknown ? { outcomeUnknown: true } : {}),
             },
           })
         )

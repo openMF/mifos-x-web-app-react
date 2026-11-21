@@ -268,7 +268,7 @@ describe('createV1Transport', () => {
     })
   })
 
-  it('does not offer a retry when a decision times out', async () => {
+  it('tells the officer to check the account when a decision times out', async () => {
     const fetchFn = vi.fn<typeof fetch>(
       (_url, init) =>
         new Promise((_resolve, reject) =>
@@ -284,33 +284,104 @@ describe('createV1Transport', () => {
       )
     )
     expect(events).toEqual([
-      { type: 'RunError', code: 'LLM_UNAVAILABLE', retryable: false },
+      {
+        type: 'RunError',
+        code: 'LLM_UNAVAILABLE',
+        retryable: false,
+        outcomeUnknown: true,
+      },
     ])
     expect(fetchFn).toHaveBeenCalledTimes(1)
   })
 
-  it.each([502, 503, 504])(
-    'does not offer a retry when a decision gets a %i',
-    async status => {
+  it.each([
+    [500, 'INTERNAL'],
+    [502, 'LLM_UNAVAILABLE'],
+    [503, 'LLM_UNAVAILABLE'],
+    [504, 'LLM_UNAVAILABLE'],
+  ] as const)(
+    'ignores the proxy body when a decision gets a %i',
+    async (status, code) => {
+      // A proxy body could otherwise offer a retry, word the message, or
+      // claim an expired session, which would put the card back.
       const fetchFn = vi.fn<typeof fetch>(
         async () =>
-          new Response(JSON.stringify({ retryable: true }), {
-            status,
-            headers: { 'Content-Type': 'application/json' },
-          })
+          new Response(
+            JSON.stringify({
+              code: 'AUTH_EXPIRED',
+              message: 'Please try again.',
+              retryable: true,
+            }),
+            { status, headers: { 'Content-Type': 'application/json' } }
+          )
       )
       const events = await collect(
         transport(fetchFn).decide('card-1', 'approve')
       )
       expect(events).toEqual([
-        {
-          type: 'RunError',
-          code: 'LLM_UNAVAILABLE',
-          retryable: false,
-        },
+        { type: 'RunError', code, retryable: false, outcomeUnknown: true },
       ])
     }
   )
+
+  it('marks a decision whose connection was lost as unknown', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const fetchFn = vi.fn<typeof fetch>(async () => {
+      throw new TypeError('Failed to fetch')
+    })
+    const events = await collect(transport(fetchFn).decide('card-1', 'approve'))
+    expect(events).toEqual([
+      {
+        type: 'RunError',
+        code: 'INTERNAL',
+        retryable: false,
+        outcomeUnknown: true,
+      },
+    ])
+    error.mockRestore()
+  })
+
+  it('marks a decision whose answer was cut off as unknown', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () =>
+      streamed('event: token\ndata: {"delta":"Posting"}\n\n')
+    )
+    const events = await collect(transport(fetchFn).decide('card-1', 'approve'))
+    expect(events[events.length - 1]).toEqual({
+      type: 'RunError',
+      code: 'INTERNAL',
+      retryable: false,
+      outcomeUnknown: true,
+    })
+  })
+
+  it('keeps an error the gateway reported on a decision as it is', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () =>
+      streamed(
+        'event: error\ndata: {"code":"TOOL_FAILED","message":"Rejected"}\n\n' +
+          'event: done\ndata: {"conversation_id":"c-1"}\n\n'
+      )
+    )
+    const events = await collect(transport(fetchFn).decide('card-1', 'approve'))
+    expect(events[events.length - 1]).toEqual({
+      type: 'RunError',
+      code: 'TOOL_FAILED',
+      message: 'Rejected',
+      retryable: false,
+      conversationId: 'c-1',
+    })
+  })
+
+  it('does not mark a chat answer that was cut off', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () =>
+      streamed('event: token\ndata: {"delta":"The"}\n\n')
+    )
+    const events = await collect(transport(fetchFn).chat({ message: 'Hi' }))
+    expect(events[events.length - 1]).toEqual({
+      type: 'RunError',
+      code: 'INTERNAL',
+      retryable: false,
+    })
+  })
 
   it('still offers a retry when a chat turn gets a 504', async () => {
     const fetchFn = vi.fn<typeof fetch>(

@@ -100,6 +100,7 @@
     "permissionDenied": "Vous n'avez pas l'autorisation d'effectuer cette action.",
     "rateLimited": "L'assistant est occupé pour le moment. Veuillez réessayer dans un instant.",
     "toolFailed": "Le système bancaire n'a pas pu terminer cette étape. Veuillez réessayer.",
+    "decisionUnconfirmed": "Aucune réponse n'est arrivée : cette modification a peut-être été effectuée, ou peut-être pas. Vérifiez le compte avant de réessayer.",
     "invalidLength": "Le message est vide ou trop long. Veuillez le raccourcir et réessayer.",
     "injectionBlocked": "Le message ressemble à une tentative de contournement des instructions, il n'a donc pas été envoyé. Veuillez le reformuler."
   }

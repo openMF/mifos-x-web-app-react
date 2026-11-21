@@ -202,7 +202,12 @@ const AssistantMessage = memo(function AssistantMessage({
               <div className="space-y-2">
                 <p>
                   {message.error.message ||
-                    t(errorMessageKey(message.error.code))}
+                    t(
+                      errorMessageKey(
+                        message.error.code,
+                        message.error.outcomeUnknown
+                      )
+                    )}
                 </p>
                 {retryPrompt && (
                   <Button

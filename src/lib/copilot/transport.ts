@@ -16,6 +16,8 @@ import {
   httpError,
 } from './v1-protocol'
 
+type RunError = Extract<CopilotEvent, { type: 'RunError' }>
+
 /**
  * What the officer is looking at, attached to every turn so "this loan"
  * means something. The gateway puts it in the model's prompt and never uses
@@ -137,7 +139,8 @@ export function createV1Transport(
       }
       // A decision that fails without an answer may or may not have reached
       // the banking system. "Try again" would ask the question afresh and
-      // could raise a second card for the same payment, so it is not offered.
+      // could raise a second card for the same payment, so it is not offered,
+      // and the officer is told to check the account first.
       return post(
         decisionPath(cardId),
         { decision, clientMsgId: newId() },
@@ -176,6 +179,18 @@ export function createV1Transport(
     }
     allow(options.firstResponseTimeoutMs ?? DEFAULT_FIRST_RESPONSE_TIMEOUT_MS)
     const idleTimeoutMs = options.idleTimeoutMs ?? DEFAULT_IDLE_TIMEOUT_MS
+    // A failure the gateway did not report itself. A chat turn may be asked
+    // again. A decision's write may already have run, so the officer is told
+    // so instead of being offered a retry.
+    const unanswered = (error: RunError): RunError =>
+      repeatable
+        ? error
+        : {
+            type: 'RunError',
+            code: error.code,
+            retryable: false,
+            outcomeUnknown: true,
+          }
 
     try {
       const response = await fetchFn(`${baseUrl}${path}`, {
@@ -192,17 +207,25 @@ export function createV1Transport(
 
       if (!response.ok) {
         clearTimeout(timer)
-        const error = httpError(response.status, await readJson(response))
         // The gateway reports its own failures inside the stream, so a 5xx
         // comes from a proxy in front of it, possibly after the decision had
-        // already reached Fineract. Not even a proxy body may offer a retry.
-        yield !repeatable && response.status >= 500
-          ? { ...error, retryable: false }
-          : error
+        // already reached Fineract. Its body is not the gateway's word, so
+        // on a decision it may not offer a retry, supply the message, or
+        // claim an expired session, which would put the card back.
+        const payload = await readJson(response)
+        if (response.status >= 500 && !repeatable) {
+          yield unanswered(httpError(response.status, null))
+        } else {
+          yield httpError(response.status, payload)
+        }
         return
       }
       if (!response.body) {
-        yield { type: 'RunError', code: 'INTERNAL', retryable: false }
+        yield unanswered({
+          type: 'RunError',
+          code: 'INTERNAL',
+          retryable: false,
+        })
         return
       }
 
@@ -234,23 +257,28 @@ export function createV1Transport(
         yield* mapper.map(frame)
       }
       for (const frame of parser.flush()) yield* mapper.map(frame)
-      yield* mapper.end()
+      for (const event of mapper.end()) {
+        yield mapper.cutOff && event.type === 'RunError'
+          ? unanswered(event)
+          : event
+      }
     } catch (error) {
       if (signal?.aborted) return
       if (timedOut) {
-        yield {
+        yield unanswered({
           type: 'RunError',
           code: 'LLM_UNAVAILABLE',
-          retryable: repeatable,
-        }
+          retryable: true,
+        })
         return
       }
       // "Failed to fetch" is what a blocked CORS preflight, a DNS failure and
       // an unreachable host all look like from here. It helps whoever
       // configures the deployment, so it goes to the console; the officer is
-      // told the assistant could not be reached.
+      // told the assistant could not be reached, or, on a decision, to check
+      // the account.
       console.error('Copilot transport failed', error)
-      yield { type: 'RunError', code: 'INTERNAL', retryable: false }
+      yield unanswered({ type: 'RunError', code: 'INTERNAL', retryable: false })
     } finally {
       clearTimeout(timer)
       signal?.removeEventListener('abort', onAbort)

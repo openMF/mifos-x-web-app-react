@@ -42,13 +42,22 @@ export type CopilotErrorKey =
   | 'errors.permissionDenied'
   | 'errors.rateLimited'
   | 'errors.toolFailed'
+  | 'errors.decisionUnconfirmed'
 
 /**
  * The translated message for an error the gateway did not describe itself.
  * The browser's own wording ("Failed to fetch") is never shown: it tells an
  * officer nothing they can act on.
+ *
+ * A decision whose outcome is unknown gets its own message: "Please try
+ * again" would lead the officer to ask afresh and raise a second card for a
+ * payment that may already have been made.
  */
-export function errorMessageKey(code: CopilotErrorCode): CopilotErrorKey {
+export function errorMessageKey(
+  code: CopilotErrorCode,
+  outcomeUnknown = false
+): CopilotErrorKey {
+  if (outcomeUnknown) return 'errors.decisionUnconfirmed'
   switch (code) {
     case 'LLM_UNAVAILABLE':
       return 'errors.timedOut'

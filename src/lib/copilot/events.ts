@@ -120,5 +120,11 @@ export type CopilotEvent =
       message?: string
       /** Whether asking again may work, as judged by the gateway. */
       retryable: boolean
+      /**
+       * A decision failed before the gateway said how it went: it timed out,
+       * a proxy answered instead, or the connection was lost. The write may
+       * or may not have reached the banking system.
+       */
+      outcomeUnknown?: boolean
       conversationId?: string
     }
