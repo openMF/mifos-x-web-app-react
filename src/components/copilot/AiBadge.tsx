@@ -23,3 +23,23 @@ export function AiBadge() {
     </span>
   )
 }
+
+/**
+ * Shown when the deployment runs on recorded answers, so a sample client or
+ * balance is never taken for a real one.
+ */
+export function DemoBadge() {
+  const { t } = useTranslation('copilot')
+  return (
+    <span
+      title={t('demoBadge.title')}
+      className="inline-flex h-4 shrink-0 items-center rounded-sm border border-amber-500/30 bg-amber-500/5 px-1 text-[10px] leading-none font-semibold tracking-wide text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400"
+    >
+      {/* Screen readers get the full sentence rather than the capitals. */}
+      <span aria-hidden="true" className="uppercase">
+        {t('demoBadge.label')}
+      </span>
+      <span className="sr-only">{t('demoBadge.title')}</span>
+    </span>
+  )
+}

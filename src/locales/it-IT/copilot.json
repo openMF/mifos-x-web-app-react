@@ -26,6 +26,10 @@
     "label": "IA",
     "title": "Scritto dall'IA. Verifichi le cifre importanti nella scheda del cliente."
   },
+  "demoBadge": {
+    "label": "Demo",
+    "title": "Modalità dimostrativa: sono risposte di esempio registrate, non dati dei suoi archivi."
+  },
   "greeting": {
     "morning": "Buongiorno",
     "afternoon": "Buon pomeriggio",
@@ -96,6 +100,7 @@
     "permissionDenied": "Non hai il permesso di farlo.",
     "rateLimited": "L'assistente è occupato in questo momento. Riprova tra poco.",
     "toolFailed": "Il sistema bancario non è riuscito a completare questo passaggio. Riprova.",
+    "decisionUnconfirmed": "Non è arrivata alcuna risposta, quindi questa modifica potrebbe essere stata eseguita oppure no. Controlla il conto prima di riprovare.",
     "invalidLength": "Il messaggio è vuoto o troppo lungo. Accorcialo e riprova.",
     "injectionBlocked": "Il messaggio sembra un tentativo di aggirare le istruzioni, quindi non è stato inviato. Riformulalo."
   }
