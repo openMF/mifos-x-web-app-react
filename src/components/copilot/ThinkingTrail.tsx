@@ -7,7 +7,14 @@
  */
 
 import { useState } from 'react'
-import { Check, CircleSlash, ListChecks, Loader2, PenLine } from 'lucide-react'
+import {
+  BrainIcon,
+  Check,
+  CircleSlash,
+  ListChecks,
+  Loader2,
+  PenLine,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -63,7 +70,17 @@ export function ThinkingTrail({
 
   return (
     <>
-      {(thinking || reasoning) && (
+      {thinking && !reasoning && (
+        // Nothing to open yet, so not a button: an expander that controls
+        // nothing tells a screen reader there is something to read.
+        <p className="flex w-fit items-center gap-2 text-sm text-muted-foreground">
+          <BrainIcon className="size-4" aria-hidden="true" />
+          <Shimmer as="span" duration={1}>
+            {t('trail.thinking')}
+          </Shimmer>
+        </p>
+      )}
+      {reasoning && (
         <Reasoning
           isStreaming={thinking}
           duration={

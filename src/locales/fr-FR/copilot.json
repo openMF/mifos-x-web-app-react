@@ -89,6 +89,14 @@
     "next": "Réponse suivante",
     "page": "{{current}} sur {{total}}"
   },
+  "errorTitle": {
+    "busy": "Occupé pour le moment",
+    "modelUnavailable": "Modèle d'IA indisponible",
+    "stepFailed": "Une étape n'a pas abouti",
+    "sessionExpired": "Session expirée",
+    "notAllowed": "Impossible de continuer",
+    "failed": "Un problème est survenu"
+  },
   "errors": {
     "timedOut": "L'assistant a mis trop de temps à répondre. Veuillez réessayer.",
     "streamFailed": "Mifos X Copilot est injoignable. Veuillez réessayer.",
