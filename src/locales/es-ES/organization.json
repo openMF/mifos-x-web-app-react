@@ -288,18 +288,27 @@
     "funds": "Fondos"
   },
   "offices": {
+    "collapseAll": "Contraer todo",
+    "collapseOffice": "Contraer {{name}}",
     "create": "Crear oficina",
+    "expandAll": "Expandir todo",
+    "expandOffice": "Expandir {{name}}",
     "fields": {
       "externalId": "Id. externo",
       "name": "Nombre de la oficina",
+      "nameDecorated": "Nombre decorado",
       "officeName": "Nombre de la oficina",
       "officeNameStar": "Nombre de la oficina*",
       "openedOn": "Fecha de apertura*",
       "openingDate": "Fecha de apertura",
+      "parent": "Oficina padre",
       "parentOffice": "Oficina padre*",
       "pleaseSelectOffice": "Seleccione una oficina"
     },
+    "import": "Importar oficinas",
+    "listView": "Vista de lista",
     "manage": "Gestionar oficinas",
+    "manageOffice": "Gestionar oficina",
     "messages": {
       "createError": "Error al crear la oficina",
       "createSuccess": "Oficina creada exitosamente.",
@@ -307,8 +316,11 @@
       "noOffices": "No se encontraron oficinas.",
       "updateSuccess": "Oficina actualizada exitosamente."
     },
+    "searchPlaceholder": "Buscar oficinas...",
     "title": "Oficinas",
-    "unnamedOffice": "Oficina sin nombre"
+    "treeView": "Vista de árbol",
+    "unnamedOffice": "Oficina sin nombre",
+    "viewToggle": "Vista de oficinas"
   },
   "provisioningCriteria": {
     "title": "Criterios de provisión de préstamos",
