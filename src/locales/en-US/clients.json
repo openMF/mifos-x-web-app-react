@@ -132,6 +132,26 @@
       "failedFetchReasons": "Failed to fetch closure reasons."
     }
   },
+  "createCollateral": {
+    "title": "Create Collateral",
+    "collateralType": "Collateral Product / Type",
+    "selectCollateral": "Select Collateral Product",
+    "noCollateralFound": "No collateral products available",
+    "basePrice": "Base Price",
+    "pctToBase": "Pct to Base",
+    "quantity": "Quantity",
+    "total": "Total",
+    "totalCollateralValue": "Total Collateral Value",
+    "confirm": "Submit",
+    "cancel": "Cancel",
+    "errors": {
+      "failedFetchClient": "Failed to fetch client details.",
+      "failedFetchTemplate": "Failed to load collateral products template.",
+      "collateralRequired": "Please select a collateral product.",
+      "quantityMin": "Quantity must be at least 1.",
+      "failedCreate": "Failed to create client collateral."
+    }
+  },
   "view": {
     "status": "Status:",
     "office": "Office",
