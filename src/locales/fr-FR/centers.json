@@ -64,12 +64,28 @@
   },
   "success": {
     "centerActivated": "Centre activé avec succès.",
-    "centerClosed": "Centre fermé avec succès."
+    "centerClosed": "Centre fermé avec succès.",
+    "staffAssigned": "Personnel affecté avec succès."
   },
   "errors": {
     "failedActivateCenter": "Échec de l'activation du centre.",
     "failedCloseCenter": "Échec de la fermeture du centre.",
     "failedFetchCenter": "Échec du chargement des détails du centre."
+  },
+  "assignStaff": {
+    "title": "Affecter du personnel",
+    "labelStaff": "Personnel*",
+    "selectStaff": "Sélectionner le personnel",
+    "loadingStaff": "Chargement du personnel...",
+    "noStaffFound": "Aucun personnel trouvé",
+    "noStaffAvailable": "Aucun membre du personnel disponible pour le bureau de ce centre.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "errors": {
+      "failedFetchCenter": "Échec du chargement des détails du centre.",
+      "staffRequired": "Veuillez sélectionner un membre du personnel.",
+      "failedAssignStaff": "Échec de l'affectation du personnel."
+    }
   },
   "view": {
     "centerName": "Nom du Centre :",
