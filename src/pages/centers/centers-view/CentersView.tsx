@@ -93,10 +93,14 @@ const CentersView = () => {
   const isActive =
     Boolean(center.active) ||
     statusVal === 'groupingStatusType.active' ||
-    center.status?.description === 'Active'
+    center.status?.description === 'Active' ||
+    (center.status as { value?: string } | undefined)?.value === 'Active' ||
+    center.status?.id === 300
   const isClosed =
     statusVal === 'groupingStatusType.closed' ||
-    center.status?.description === 'Closed'
+    center.status?.description === 'Closed' ||
+    (center.status as { value?: string } | undefined)?.value === 'Closed' ||
+    center.status?.id === 600
   const isPending =
     statusVal === 'groupingStatusType.pending' ||
     center.status?.description === 'Pending' ||
@@ -148,7 +152,12 @@ const CentersView = () => {
 
         // Assign/unassign staff
         ...(!hasStaff
-          ? [{ label: t('view.menu.assignStaff'), path: 'email' }]
+          ? [
+              {
+                label: t('view.menu.assignStaff'),
+                path: `centers/${center.id}/actions/assign-staff`,
+              },
+            ]
           : [{ label: t('view.menu.unassignStaff'), path: 'email' }]),
 
         // Delete only if active
