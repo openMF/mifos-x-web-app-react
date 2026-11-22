@@ -292,8 +292,7 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.createCollateral'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${client?.id}/actions/create-collateral`,
                     },
                     {
                       label: t('view.menu.survey'),

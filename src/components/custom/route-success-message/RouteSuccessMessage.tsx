@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils'
 /** Router state a page can be navigated to with, to confirm what just happened */
 export type RouteSuccessState = {
   successMessage?: string
+  message?: string
 }
 
 interface RouteSuccessMessageProps {
@@ -35,7 +36,8 @@ const RouteSuccessMessage = ({ className }: RouteSuccessMessageProps) => {
   const messagePath = useRef<string | null>(null)
 
   useEffect(() => {
-    const { successMessage } = (location.state ?? {}) as RouteSuccessState
+    const state = (location.state ?? {}) as RouteSuccessState
+    const successMessage = state.successMessage ?? state.message
     const currentPath = `${location.pathname}${location.search}`
     if (!successMessage) {
       // Moving elsewhere, such as to another client tab, dismisses the message
