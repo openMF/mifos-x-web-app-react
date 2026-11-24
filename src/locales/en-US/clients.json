@@ -48,7 +48,8 @@
     "familyMemberUpdated": "Family member updated successfully.",
     "familyMemberDeleted": "Family member deleted successfully.",
     "fixedDepositAccountCreated": "Fixed deposit account created successfully.",
-    "recurringDepositAccountCreated": "Recurring deposit account created successfully."
+    "recurringDepositAccountCreated": "Recurring deposit account created successfully.",
+    "chargeAdded": "Client charge added successfully."
   },
   "title": "Clients",
   "unnamedClient": "Unnamed Client",
@@ -70,6 +71,24 @@
       "dateRequired": "Please enter an activation date.",
       "dateInFuture": "The activation date cannot be in the future.",
       "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
+  },
+  "addCharge": {
+    "title": "Add Client Charge",
+    "charge": "Charge",
+    "amount": "Amount",
+    "chargeCalculation": "Charge Calculation",
+    "chargeTimeType": "Charge time type",
+    "dueDate": "Due for collection on",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "errors": {
+      "chargeRequired": "Please select a charge.",
+      "amountPositive": "Amount must be greater than zero.",
+      "dueDateRequired": "Please select a due date.",
+      "dueDateBeforeActivation": "The due date cannot be before the activation date.",
+      "failedAddCharge": "Failed to add charge to client.",
+      "failedLoadTemplate": "Failed to load charge options."
     }
   },
   "assignStaff": {

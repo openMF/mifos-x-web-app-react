@@ -213,6 +213,15 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 ---
 
+## Tasks
+
+### `/checker-inbox-and-tasks/checker-inbox`
+
+- `retrieveCommands` (GET `/makercheckers`) typed as `AuditData[]`, which has none of the fields of the entries (`id`, `actionName`, `entityName`, `resourceId`, `maker`, `madeOnDate`, `processingResult` and more)
+- `AppUserData` (in `appUsers` of GET `/makercheckers/searchtemplate`) missing `id`, `username`
+
+---
+
 ## Admin Templates
 
 ### `/templates/template`
@@ -292,6 +301,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 ### `/clients/{id}/charges/{chargeId}`
 
 - `GetClientsChargesPageItems` missing `clientTransactionDatas`
+
+### `/clients/{id}/charges`
+
+- `PostClientsClientIdChargesRequest` declares `amount` as `integer` (`int32`), but Fineract processes charge amounts as `BigDecimal` (allowing decimal values).
 
 ### `/clients/template`
 
