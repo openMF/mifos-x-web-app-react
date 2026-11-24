@@ -57,8 +57,26 @@ export default defineConfig(({ mode }) => {
     },
     test: {
       globals: true,
-      environment: 'node',
-      include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+      projects: [
+        {
+          extends: true,
+          test: {
+            name: 'unit',
+            environment: 'node',
+            include: ['src/**/*.test.ts'],
+          },
+        },
+        {
+          // Components, rendered into a simulated browser page.
+          extends: true,
+          test: {
+            name: 'dom',
+            environment: 'jsdom',
+            include: ['src/**/*.test.tsx'],
+            setupFiles: ['src/test/setup-dom.ts'],
+          },
+        },
+      ],
       coverage: {
         provider: 'v8',
         // `json-summary` feeds the coverage table in the CI job summary.

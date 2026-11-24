@@ -48,7 +48,8 @@
     "familyMemberUpdated": "Miembro de familia actualizado exitosamente.",
     "familyMemberDeleted": "Miembro de familia eliminado exitosamente.",
     "fixedDepositAccountCreated": "Cuenta de depósito a plazo fijo creada correctamente.",
-    "recurringDepositAccountCreated": "Cuenta de depósito recurrente creada correctamente."
+    "recurringDepositAccountCreated": "Cuenta de depósito recurrente creada correctamente.",
+    "chargeAdded": "Cargo del cliente agregado exitosamente."
   },
   "title": "Clientes",
   "unnamedClient": "Cliente sin nombre",
@@ -70,6 +71,24 @@
       "dateRequired": "Por favor ingrese una fecha de activación.",
       "dateInFuture": "La fecha de activación no puede ser futura.",
       "dateBeforeSubmitted": "La fecha de activación no puede ser anterior a la fecha de envío."
+    }
+  },
+  "addCharge": {
+    "title": "Agregar Cargo al Cliente",
+    "charge": "Cargo",
+    "amount": "Monto",
+    "chargeCalculation": "Cálculo de Cargo",
+    "chargeTimeType": "Tipo de tiempo de cargo",
+    "dueDate": "Vence para cobro en",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "errors": {
+      "chargeRequired": "Por favor seleccione un cargo.",
+      "amountPositive": "El monto debe ser mayor que cero.",
+      "dueDateRequired": "Por favor seleccione una fecha de vencimiento.",
+      "dueDateBeforeActivation": "La fecha de vencimiento no puede ser anterior a la fecha de activación.",
+      "failedAddCharge": "Error al agregar el cargo al cliente.",
+      "failedLoadTemplate": "Error al cargar las opciones de cargos."
     }
   },
   "assignStaff": {

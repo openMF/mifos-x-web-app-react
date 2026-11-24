@@ -6,19 +6,36 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import {
+  approved,
+  confirmationExpired,
+  loanSummary,
+  overdueNotAvailable,
+  rateLimited,
+  rejected,
+  repaymentSchedule,
+  toSse,
+  writeCard,
+  type MockCommand,
+  type RecordedFrame,
+} from './recordings'
 import { createV1Transport, type CopilotTransport } from './transport'
 
 /**
  * A stand-in gateway for development, demos and tests.
  *
- * It answers with recorded wire contract v1 frames through a fake fetch, so
- * mock mode runs the same parser and translator as a real gateway: the only
- * difference between the two is where the bytes come from.
+ * It answers with recorded wire contract v1 frames (see `recordings.ts`)
+ * through a fake fetch, so mock mode runs the same parser and translator as
+ * a real gateway: the only difference between the two is where the bytes
+ * come from. The recordings follow what the real gateway sends, so the demo
+ * never promises more than a live one can do.
  *
  * Replies are picked from the message:
- *   mentions a repayment, approval or disbursement  -> an approval card
- *   mentions an error or failure                     -> a retryable error
- *   anything else                                    -> a read-only answer
+ *   mentions an error or failure                  -> a retryable error
+ *   mentions a schedule                           -> a schedule, as a table
+ *   mentions disbursing, approving or a repayment -> a card to confirm
+ *   mentions overdue loans, arrears or portfolio  -> "no tool for that yet"
+ *   anything else                                 -> a loan summary
  */
 export interface MockOptions {
   /** Pause between frames, so streaming is visible. 0 in tests. */
@@ -41,6 +58,9 @@ export function createMockFetch({
   delayMs = 25,
 }: MockOptions = {}): typeof fetch {
   let cardSequence = 0
+  // Cards still awaiting a decision, as the gateway holds them: each can be
+  // decided once, and a new question discards it.
+  const pending = new Map<string, MockCommand>()
 
   return async (input, init) => {
     const url = String(input instanceof Request ? input.url : input)
@@ -48,191 +68,47 @@ export function createMockFetch({
     const signal = init?.signal ?? undefined
     if (signal?.aborted) throw abortError()
 
-    let frames: string[]
-    const decision = /\/actions\/[^/]+\/decision$/.test(url)
+    let frames: RecordedFrame[]
+    const decision = url.match(/\/actions\/([^/]+)\/decision$/)
     if (decision) {
-      frames = body.decision === 'approve' ? approved() : rejected()
+      const command = pending.get(decodeURIComponent(decision[1]))
+      pending.clear()
+      if (!command) frames = confirmationExpired()
+      else if (body.decision === 'approve') frames = approved(command)
+      else frames = rejected()
     } else {
+      pending.clear()
       const message = String(body.message ?? '')
+      const command = commandIn(message)
       if (/\b(error|fail(ed|ure)?)\b/i.test(message)) {
-        frames = failure()
-      } else if (/\b(repay(ment)?|approve|disburse(ment)?)\b/i.test(message)) {
+        frames = rateLimited()
+      } else if (/\bschedule\b/i.test(message)) {
+        // Before writes: "the repayment schedule" is a question, not a
+        // repayment.
+        frames = repaymentSchedule()
+      } else if (command) {
         cardSequence += 1
-        frames = approval(`mock-card-${cardSequence}`)
-      } else if (/\b(overdue|portfolio)\b/i.test(message)) {
-        frames = overdueReport()
+        const cardId = `mock-card-${cardSequence}`
+        pending.set(cardId, command)
+        frames = writeCard(command, cardId)
+      } else if (/\b(overdue|arrears?|portfolio)\b/i.test(message)) {
+        frames = overdueNotAvailable()
       } else {
-        frames = answer()
+        frames = loanSummary()
       }
     }
-    return new Response(stream(frames, delayMs, signal), {
+    return new Response(stream(frames.map(toSse), delayMs, signal), {
       status: 200,
       headers: { 'Content-Type': 'text/event-stream' },
     })
   }
 }
 
-const CONVERSATION_ID = 'mock-conversation'
-
-function answer(): string[] {
-  return [
-    sse('thinking', { phase: 'start' }),
-    ...words('The officer wants a summary of the loan.').map(delta =>
-      sse('thinking', { phase: 'delta', delta })
-    ),
-    sse('thinking', { phase: 'end', elapsed_ms: 900 }),
-    sse('tool_call', {
-      tool: 'get_loan',
-      label: 'Looking up the loan',
-      phase: 'started',
-      read_only: true,
-    }),
-    sse('tool_call', {
-      tool: 'get_loan',
-      label: 'Looked up the loan',
-      phase: 'finished',
-      read_only: true,
-      duration_ms: 420,
-    }),
-    ...tokens(
-      'Loan 000000004521 for Rajesh Kumar is active. The outstanding ' +
-        'balance is INR 42,000.00 and the next instalment of INR 3,500.00 ' +
-        'is due on 21 August 2026. No payments are overdue.'
-    ),
-    sse('suggest', {
-      items: ['Show the repayment schedule', 'Record a repayment'],
-    }),
-    sse('done', { conversation_id: CONVERSATION_ID }),
-  ]
-}
-
-/** A formatted answer: heading, list, table and code, to show markdown. */
-function overdueReport(): string[] {
-  return [
-    sse('tool_call', {
-      tool: 'search_loans',
-      label: 'Searching overdue loans',
-      phase: 'started',
-      read_only: true,
-    }),
-    sse('tool_call', {
-      tool: 'search_loans',
-      label: 'Found 3 overdue loans',
-      phase: 'finished',
-      read_only: true,
-      duration_ms: 640,
-    }),
-    ...tokens(
-      '### Overdue loans this week\n\n' +
-        '**3 loans** are overdue, **INR 18,750.00** in total.\n\n' +
-        '| Loan | Client | Overdue | Days |\n' +
-        '| --- | --- | ---: | ---: |\n' +
-        '| 000000004521 | Rajesh Kumar | INR 3,500.00 | 4 |\n' +
-        '| 000000004610 | Maria Lopez | INR 7,250.00 | 9 |\n' +
-        '| 000000004702 | Amina Yusuf | INR 8,000.00 | 12 |\n\n' +
-        'Suggested next steps:\n\n' +
-        '1. Call **Amina Yusuf** first: the oldest arrears.\n' +
-        '2. Check whether *Maria Lopez* has a rescheduling request.\n' +
-        '3. Send reminders to the rest.\n\n' +
-        'Report filter used: `status = overdue AND days > 0`'
-    ),
-    sse('suggest', {
-      items: ['Show the oldest overdue loan', 'Find a client by name'],
-    }),
-    sse('done', { conversation_id: CONVERSATION_ID }),
-  ]
-}
-
-/** Ends without 'done': the turn is paused until the officer decides. */
-function approval(cardId: string): string[] {
-  return [
-    sse('tool_call', {
-      tool: 'get_loan',
-      label: 'Looking up the loan',
-      phase: 'started',
-      read_only: true,
-    }),
-    sse('tool_call', {
-      tool: 'get_loan',
-      label: 'Looked up the loan',
-      phase: 'finished',
-      read_only: true,
-      duration_ms: 380,
-    }),
-    ...tokens('Please confirm the repayment below before I record it.'),
-    sse('action_card', {
-      card_id: cardId,
-      tool: 'make_loan_repayment',
-      args: {
-        loanId: 4521,
-        transactionAmount: 1500,
-        transactionDate: '2026-08-21',
-      },
-      rows: {
-        Client: 'Rajesh Kumar',
-        Account: '000000004521',
-        Amount: 'INR 1,500.00',
-        Date: '21 August 2026',
-      },
-      human_summary: 'Record a repayment of INR 1,500.00 on loan 000000004521',
-      idempotency_key: `${cardId}-key`,
-      expires_at: new Date(Date.now() + 5 * 60_000).toISOString(),
-    }),
-  ]
-}
-
-function approved(): string[] {
-  return [
-    sse('tool_call', {
-      tool: 'make_loan_repayment',
-      label: 'Recording the repayment',
-      phase: 'started',
-      read_only: false,
-    }),
-    sse('tool_call', {
-      tool: 'make_loan_repayment',
-      label: 'Recorded the repayment',
-      phase: 'finished',
-      read_only: false,
-      duration_ms: 610,
-    }),
-    ...tokens(
-      '✔ Executed: Record a repayment of INR 1,500.00 on loan ' +
-        '000000004521\n\nThe outstanding balance is now INR 40,500.00.'
-    ),
-    sse('done', { conversation_id: CONVERSATION_ID }),
-  ]
-}
-
-function rejected(): string[] {
-  return [
-    ...tokens('Understood. Nothing was recorded on the loan.'),
-    sse('done', { conversation_id: CONVERSATION_ID }),
-  ]
-}
-
-function failure(): string[] {
-  return [
-    sse('error', {
-      code: 'RATE_LIMITED',
-      message: 'The assistant is busy. Please try again in a moment.',
-      retryable: true,
-    }),
-    sse('done', { conversation_id: CONVERSATION_ID }),
-  ]
-}
-
-function sse(event: string, data: unknown): string {
-  return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`
-}
-
-/** Word by word, the way a model streams. */
-function tokens(text: string): string[] {
-  return words(text).map(delta => sse('token', { delta }))
-}
-
-function words(text: string): string[] {
-  return text.match(/\S+\s*|\s+/g) ?? []
+function commandIn(message: string): MockCommand | null {
+  if (/\bdisburse(ment)?\b/i.test(message)) return 'disburse'
+  if (/\bapprove\b/i.test(message)) return 'approve'
+  if (/\brepay(ment)?\b/i.test(message)) return 'repayment'
+  return null
 }
 
 function stream(

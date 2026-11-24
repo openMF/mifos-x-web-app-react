@@ -89,6 +89,14 @@
     "next": "Next answer",
     "page": "{{current}} of {{total}}"
   },
+  "errorTitle": {
+    "busy": "Busy right now",
+    "modelUnavailable": "AI model unavailable",
+    "stepFailed": "A step didn't finish",
+    "sessionExpired": "Session expired",
+    "notAllowed": "Couldn't go ahead",
+    "failed": "Something went wrong"
+  },
   "errors": {
     "timedOut": "The assistant took too long to respond. Please try again.",
     "streamFailed": "Could not reach Mifos X Copilot. Please try again.",

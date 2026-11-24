@@ -48,7 +48,8 @@
     "familyMemberUpdated": "Membro della famiglia aggiornato con successo.",
     "familyMemberDeleted": "Membro della famiglia eliminato con successo.",
     "fixedDepositAccountCreated": "Conto di deposito a termine creato correttamente.",
-    "recurringDepositAccountCreated": "Conto di deposito ricorrente creato correttamente."
+    "recurringDepositAccountCreated": "Conto di deposito ricorrente creato correttamente.",
+    "chargeAdded": "Commissione del cliente aggiunta con successo."
   },
   "title": "Clienti",
   "unnamedClient": "Cliente senza nome",
@@ -70,6 +71,24 @@
       "dateRequired": "Inserisci una data di attivazione.",
       "dateInFuture": "La data di attivazione non può essere nel futuro.",
       "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
+  "addCharge": {
+    "title": "Aggiungi Commissione Cliente",
+    "charge": "Commissione",
+    "amount": "Importo",
+    "chargeCalculation": "Calcolo della Commissione",
+    "chargeTimeType": "Tipo di tempo della commissione",
+    "dueDate": "Scadenza per la riscossione il",
+    "cancel": "Annulla",
+    "submit": "Invia",
+    "errors": {
+      "chargeRequired": "Seleziona una commissione.",
+      "amountPositive": "L'importo deve essere maggiore di zero.",
+      "dueDateRequired": "Seleziona una data di scadenza.",
+      "dueDateBeforeActivation": "La data di scadenza non può essere antecedente alla data di attivazione.",
+      "failedAddCharge": "Impossibile aggiungere la commissione al cliente.",
+      "failedLoadTemplate": "Impossibile caricare le opzioni delle commissioni."
     }
   },
   "assignStaff": {

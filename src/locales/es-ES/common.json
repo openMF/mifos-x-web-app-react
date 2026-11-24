@@ -581,6 +581,25 @@
     "noIdentifiers": "No hay identificadores",
     "identifiersLoadFailed": "No se pudieron cargar los identificadores. Inténtelo de nuevo."
   },
+  "notes": {
+    "heading": "Notas",
+    "placeholder": "Escribir una nota...",
+    "addButton": "Agregar",
+    "adding": "Agregando...",
+    "createdBy": "Creado por: {{name}}",
+    "date": "Fecha: {{date}}",
+    "editButton": "Editar",
+    "saveButton": "Guardar",
+    "cancelButton": "Cancelar",
+    "deleteButton": "Eliminar",
+    "confirmDelete": "¿Eliminar esta nota?",
+    "loading": "Cargando notas...",
+    "empty": "No se han agregado notas.",
+    "loadFailed": "No se pudieron cargar las notas.",
+    "addFailed": "No se pudo agregar la nota. Por favor, inténtelo de nuevo.",
+    "updateFailed": "No se pudo actualizar la nota. Por favor, inténtelo de nuevo.",
+    "deleteFailed": "No se pudo eliminar la nota. Por favor, inténtelo de nuevo."
+  },
   "search": {
     "enterQuery": "Introduzca un término de búsqueda en la barra de navegación para encontrar clientes, grupos, centros y cuentas.",
     "noResultsHint": "Busque por nombre, número de cuenta o identificador externo. Es posible que los nombres deban coincidir con las mayúsculas usadas al guardarlos, por ejemplo \"Ada\" en lugar de \"ada\".",

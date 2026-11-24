@@ -89,6 +89,14 @@
     "next": "Respuesta siguiente",
     "page": "{{current}} de {{total}}"
   },
+  "errorTitle": {
+    "busy": "Ocupado en este momento",
+    "modelUnavailable": "Modelo de IA no disponible",
+    "stepFailed": "Un paso no se completó",
+    "sessionExpired": "Sesión caducada",
+    "notAllowed": "No se pudo continuar",
+    "failed": "Algo salió mal"
+  },
   "errors": {
     "timedOut": "El asistente tardó demasiado en responder. Por favor, inténtelo de nuevo.",
     "streamFailed": "No se pudo contactar con Mifos X Copilot. Por favor, inténtelo de nuevo.",
