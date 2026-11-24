@@ -1,0 +1,59 @@
+{
+  "menu": {
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "withdrawnByClient": "Retirée par le client",
+    "delete": "Supprimer",
+    "undoApproval": "Annuler l'approbation",
+    "activate": "Activer",
+    "addCharge": "Ajouter des frais",
+    "assignStaff": "Affecter un employé",
+    "deposit": "Dépôt",
+    "withdrawal": "Retrait",
+    "blockAccount": "Bloquer le compte",
+    "unblockAccount": "Débloquer le compte",
+    "blockDeposit": "Bloquer les dépôts",
+    "unblockDeposit": "Débloquer les dépôts",
+    "blockWithdrawal": "Bloquer les retraits",
+    "unblockWithdrawal": "Débloquer les retraits",
+    "holdAmount": "Bloquer un montant",
+    "calculateInterest": "Calculer les intérêts",
+    "postInterest": "Comptabiliser les intérêts",
+    "postInterestAsOn": "Comptabiliser les intérêts à date",
+    "close": "Clôturer",
+    "more": "Plus",
+    "noActions": "Aucune action"
+  },
+  "confirm": {
+    "delete": "Supprimer cette demande d'épargne ? Cette action est irréversible.",
+    "unblockAccount": "Débloquer ce compte d'épargne ? Les dépôts et les retraits seront de nouveau autorisés.",
+    "unblockDeposit": "Débloquer les dépôts sur ce compte d'épargne ?",
+    "unblockWithdrawal": "Débloquer les retraits sur ce compte d'épargne ?",
+    "calculateInterest": "Calculer les intérêts gagnés sur ce compte jusqu'à aujourd'hui ? Rien n'est comptabilisé sur le compte.",
+    "postInterest": "Comptabiliser les intérêts gagnés sur ce compte jusqu'à aujourd'hui ?"
+  },
+  "fields": {
+    "withdrawnOnDate": "Retirée le",
+    "closedOnDate": "Clôturé le",
+    "transactionDate": "Date de la transaction",
+    "amount": "Montant",
+    "reason": "Motif",
+    "reasonPlaceholder": "Sélectionnez le motif",
+    "reasonFreeText": "Saisissez le motif",
+    "note": "Note",
+    "withdrawBalance": "Retirer le solde",
+    "postInterestValidationOnClosure": "Vérifier que les intérêts sont comptabilisés jusqu'à la date de clôture",
+    "paymentType": "Type de paiement",
+    "paymentTypePlaceholder": "Sélectionnez le type de paiement"
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "submit": "Envoyer",
+    "confirm": "Confirmer",
+    "retry": "Réessayer"
+  },
+  "errors": {
+    "failed": "L'action a échoué. Veuillez réessayer.",
+    "loadPaymentTypes": "Impossible de charger les types de paiement."
+  }
+}

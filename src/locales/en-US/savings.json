@@ -1,0 +1,59 @@
+{
+  "menu": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "withdrawnByClient": "Withdrawn by Client",
+    "delete": "Delete",
+    "undoApproval": "Undo Approval",
+    "activate": "Activate",
+    "addCharge": "Add Charge",
+    "assignStaff": "Assign Staff",
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal",
+    "blockAccount": "Block Account",
+    "unblockAccount": "Unblock Account",
+    "blockDeposit": "Block Deposit",
+    "unblockDeposit": "Unblock Deposit",
+    "blockWithdrawal": "Block Withdrawal",
+    "unblockWithdrawal": "Unblock Withdrawal",
+    "holdAmount": "Hold Amount",
+    "calculateInterest": "Calculate Interest",
+    "postInterest": "Post Interest",
+    "postInterestAsOn": "Post Interest As On",
+    "close": "Close",
+    "more": "More",
+    "noActions": "No actions"
+  },
+  "confirm": {
+    "delete": "Delete this savings application? This can't be undone.",
+    "unblockAccount": "Unblock this savings account? Deposits and withdrawals will be allowed again.",
+    "unblockDeposit": "Unblock deposits on this savings account?",
+    "unblockWithdrawal": "Unblock withdrawals on this savings account?",
+    "calculateInterest": "Calculate the interest earned on this account up to today? Nothing is posted to the account.",
+    "postInterest": "Post the interest earned on this account up to today?"
+  },
+  "fields": {
+    "withdrawnOnDate": "Withdrawn On",
+    "closedOnDate": "Closed On",
+    "transactionDate": "Transaction Date",
+    "amount": "Amount",
+    "reason": "Reason",
+    "reasonPlaceholder": "Select reason",
+    "reasonFreeText": "Enter the reason",
+    "note": "Note",
+    "withdrawBalance": "Withdraw balance",
+    "postInterestValidationOnClosure": "Check that interest is posted up to the closing date",
+    "paymentType": "Payment Type",
+    "paymentTypePlaceholder": "Select payment type"
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "retry": "Retry"
+  },
+  "errors": {
+    "failed": "The action failed. Please try again.",
+    "loadPaymentTypes": "Couldn't load the payment types."
+  }
+}

@@ -18,11 +18,14 @@ import { datatableErrorMessage } from '@/lib/datatables-api'
 import { useBusinessDateState } from '@/lib/business-date'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
+import { useSavingsAccountPath } from '../useSavingsAccountPath'
+
 const savingsApi = new SavingsAccountApi(getConfiguration())
 
 const ActivateSavingsAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Activate' })
-  const { groupId, accountId } = useParams()
+  const { accountId } = useParams()
+  const accountPath = useSavingsAccountPath()
   const navigate = useNavigate()
 
   // Defaults to the business date, like the Angular web app.
@@ -31,8 +34,8 @@ const ActivateSavingsAccount = () => {
   const [error, setError] = useState<string | null>(null)
 
   const backToAccount = () => {
-    if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
+    if (accountPath) {
+      navigate(`${accountPath}/general`)
     } else {
       navigate(-1)
     }

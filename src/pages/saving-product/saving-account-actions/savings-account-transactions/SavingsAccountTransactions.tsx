@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
@@ -18,6 +18,8 @@ import { SavingsAccountTransactionsApi } from '@/fineract-api'
 import { datatableErrorMessage } from '@/lib/datatables-api'
 import { dateArrayToInputValue, todayInputValue } from '@/lib/date-utils'
 import { getConfiguration } from '@/lib/fineract-openapi'
+
+import { useSavingsAccountPath } from '../useSavingsAccountPath'
 
 const savingsTransactionsApi = new SavingsAccountTransactionsApi(
   getConfiguration()
@@ -31,13 +33,19 @@ type TransactionTemplate = {
   paymentTypeOptions?: Array<{ id?: number; name?: string }>
 }
 
-const SavingsAccountTransactions = () => {
+interface SavingsAccountTransactionsProps {
+  /** The Deposit and Withdrawal routes share this page; each passes its command. */
+  command: 'deposit' | 'withdrawal'
+}
+
+const SavingsAccountTransactions = ({
+  command,
+}: SavingsAccountTransactionsProps) => {
   const breadcrumbs = useAccountBreadcrumbs()
-  const { groupId, accountId } = useParams()
+  const { accountId } = useParams()
+  const accountPath = useSavingsAccountPath()
   const navigate = useNavigate()
-  // The Deposit and Withdrawal routes share this page.
-  const isWithdrawal = useLocation().pathname.endsWith('/Withdrawal')
-  const command = isWithdrawal ? 'withdrawal' : 'deposit'
+  const isWithdrawal = command === 'withdrawal'
 
   // Defaults to today until the template returns the business date.
   const [transactionDate, setTransactionDate] = useState(todayInputValue())
@@ -79,8 +87,8 @@ const SavingsAccountTransactions = () => {
   }, [accountId])
 
   const backToAccount = () => {
-    if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
+    if (accountPath) {
+      navigate(`${accountPath}/general`)
     } else {
       navigate(-1)
     }

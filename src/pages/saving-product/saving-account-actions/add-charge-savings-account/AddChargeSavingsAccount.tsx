@@ -6,23 +6,25 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 import { Button } from '@/components/ui/button'
 
+import { useSavingsAccountPath } from '../useSavingsAccountPath'
+
 const AddChargeSavingsAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Add Charge' })
-  const { groupId, accountId } = useParams()
+  const accountPath = useSavingsAccountPath()
   const navigate = useNavigate()
 
   const [chargeId, setChargeId] = useState<string>('')
 
   const backToAccount = () => {
-    if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
+    if (accountPath) {
+      navigate(`${accountPath}/general`)
     } else {
       navigate(-1)
     }

@@ -9,7 +9,7 @@ import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
 import Callback from '@/pages/login/Callback'
-import { lazy } from 'react'
+import { Fragment, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
@@ -239,7 +239,7 @@ import AddChargeSavingsAccount from '@/pages/saving-product/saving-account-actio
 import SavingsAccountAssignStaff from '@/pages/saving-product/saving-account-actions/savings-account-assign-staff/SavingsAccountAssignStaff'
 import ActivateSavingsAccount from '@/pages/saving-product/saving-account-actions/activate-savings-account/ActivateSavingsAccount'
 import SavingsAccountTransactions from '@/pages/saving-product/saving-account-actions/savings-account-transactions/SavingsAccountTransactions'
-import ManageSavingsAccount from '@/pages/saving-product/saving-account-actions/manage-savings-account/ManageSavingsAccount'
+import SavingsAccountCommand from '@/pages/saving-product/saving-account-actions/savings-account-command/SavingsAccountCommand'
 import UndoApprovalSavingsAccount from '@/pages/saving-product/saving-account-actions/undo-approval-savings-account/UndoApprovalSavingsAccount'
 import LoansView from '@/pages/loans/loans-view/LoansView'
 import LoansGeneralTab from '@/pages/loans/loans-view/general-tab/LoansGeneralTab'
@@ -1178,44 +1178,6 @@ const AppRoutes = () => {
             path="/clients/:id/savings-accounts/create"
             element={<CreateSavingsAccount />}
           />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId"
-            element={<SavingsAccountView />}
-          >
-            <Route path="general" element={<SavingProductGeneralTab />} />
-            <Route
-              path="transactions"
-              element={<SavingProductTransactionTab />}
-            />
-            <Route path="charges" element={<SavingProductChargesTab />} />
-            <Route path="documents" element={<SavingsDocumentsTab />} />
-            <Route path="notes" element={<SavingsNotesTab />} />
-          </Route>
-
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Approve"
-            element={<ApproveSavingAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Reject"
-            element={<RejectSavingsAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/AddCharge"
-            element={<AddChargeSavingsAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/AssignStaff"
-            element={<SavingsAccountAssignStaff />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Activate"
-            element={<ActivateSavingsAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
-            element={<SavingsAccountTransactions />}
-          />
 
           <Route
             path="/clients/:clientId/fixed-deposits-accounts/create"
@@ -1463,95 +1425,60 @@ const AppRoutes = () => {
           </Route>
 
           {/* Savings Product */}
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId"
-            element={<SavingsAccountView />}
-          >
-            <Route path="general" element={<SavingProductGeneralTab />} />
-            <Route
-              path="transactions"
-              element={<SavingProductTransactionTab />}
-            />
-            <Route path="charges" element={<SavingProductChargesTab />} />
-            <Route path="documents" element={<SavingsDocumentsTab />} />
-            <Route path="notes" element={<SavingsNotesTab />} />
-          </Route>
-
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/Approve"
-            element={<ApproveSavingAccount />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/Reject"
-            element={<RejectSavingsAccount />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/AddCharge"
-            element={<AddChargeSavingsAccount />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/AssignStaff"
-            element={<SavingsAccountAssignStaff />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/Activate"
-            element={<ActivateSavingsAccount />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/Deposit"
-            element={<SavingsAccountTransactions />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/Withdrawal"
-            element={<SavingsAccountTransactions />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/HoldAmount"
-            element={<ManageSavingsAccount />}
-          />
-          <Route
-            path="/groups/:groupId/savings-accounts/:accountId/actions/UndoApproval"
-            element={<UndoApprovalSavingsAccount />}
-          />
-
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId"
-            element={<SavingsAccountView />}
-          >
-            <Route path="general" element={<SavingProductGeneralTab />} />
-            <Route
-              path="transactions"
-              element={<SavingProductTransactionTab />}
-            />
-            <Route path="charges" element={<SavingProductChargesTab />} />
-            <Route path="documents" element={<SavingsDocumentsTab />} />
-            <Route path="notes" element={<SavingsNotesTab />} />
-          </Route>
-
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Approve"
-            element={<ApproveSavingAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Reject"
-            element={<RejectSavingsAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/AddCharge"
-            element={<AddChargeSavingsAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/AssignStaff"
-            element={<SavingsAccountAssignStaff />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Activate"
-            element={<ActivateSavingsAccount />}
-          />
-          <Route
-            path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
-            element={<SavingsAccountTransactions />}
-          />
+          {(['clients', 'groups'] as const).map(owner => {
+            const account = `/${owner}/:groupId/savings-accounts/:accountId`
+            return (
+              <Fragment key={`savings-${owner}`}>
+                <Route path={account} element={<SavingsAccountView />}>
+                  <Route path="general" element={<SavingProductGeneralTab />} />
+                  <Route
+                    path="transactions"
+                    element={<SavingProductTransactionTab />}
+                  />
+                  <Route path="charges" element={<SavingProductChargesTab />} />
+                  <Route path="documents" element={<SavingsDocumentsTab />} />
+                  <Route path="notes" element={<SavingsNotesTab />} />
+                </Route>
+                <Route
+                  path={`${account}/actions/Approve`}
+                  element={<ApproveSavingAccount />}
+                />
+                <Route
+                  path={`${account}/actions/Reject`}
+                  element={<RejectSavingsAccount />}
+                />
+                <Route
+                  path={`${account}/actions/AddCharge`}
+                  element={<AddChargeSavingsAccount />}
+                />
+                <Route
+                  path={`${account}/actions/AssignStaff`}
+                  element={<SavingsAccountAssignStaff />}
+                />
+                <Route
+                  path={`${account}/actions/Activate`}
+                  element={<ActivateSavingsAccount />}
+                />
+                <Route
+                  path={`${account}/actions/UndoApproval`}
+                  element={<UndoApprovalSavingsAccount />}
+                />
+                <Route
+                  path={`${account}/actions/Deposit`}
+                  element={<SavingsAccountTransactions command="deposit" />}
+                />
+                <Route
+                  path={`${account}/actions/Withdrawal`}
+                  element={<SavingsAccountTransactions command="withdrawal" />}
+                />
+                {/* Close, interest, block/unblock, hold, withdraw and delete */}
+                <Route
+                  path={`${account}/actions/:action`}
+                  element={<SavingsAccountCommand />}
+                />
+              </Fragment>
+            )
+          })}
 
           {/* Loans */}
           <Route

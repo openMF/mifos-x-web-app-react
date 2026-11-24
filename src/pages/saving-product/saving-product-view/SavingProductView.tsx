@@ -6,7 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
@@ -24,109 +25,18 @@ import { faCircle, faMoneyBill } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'lucide-react'
 
+import {
+  buildSavingsMenu,
+  savingsAccountBasePath,
+  type SavingsAccountSubStatus,
+} from '../saving-account-actions/savings-account-menu'
+
 const savingsApi = new SavingsAccountApi(getConfiguration())
-
-// Define a reusable menu item type
-type MenuItem = {
-  label: string
-  path?: string
-  disabled?: boolean
-  children?: MenuItem[]
-}
-
-// Helper function to build action menu items based on account status
-function buildSavingsMenu(
-  status: {
-    pendingApproval?: boolean
-    submittedAndPendingApproval?: boolean
-    approved?: boolean
-    active?: boolean
-    value?: string
-  },
-  groupId?: string,
-  accountId?: string
-): MenuItem[] {
-  // Normalize booleans and status code for easier checks
-  const isPending = !!(
-    status.pendingApproval ||
-    status.submittedAndPendingApproval ||
-    String(status.value || '')
-      .toLowerCase()
-      .includes('pending')
-  )
-  const isApproved = !!(
-    (status.approved && !status.active) ||
-    String(status.value || '').toLowerCase() === 'approved'
-  )
-  const isActive = !!status.active
-
-  // Build base path for action links
-  const base = `groups/${groupId}/savings-accounts/${accountId}/actions`
-  const link = (name: string) => `${base}/${name.replace(/\s+/g, '')}`
-
-  // Return different menu options depending on account status
-  if (isPending) {
-    return [
-      { label: 'Modify Application', path: link('Modify Application') },
-      { label: 'Approve', path: link('Approve') },
-      {
-        label: 'More',
-        children: [
-          { label: 'Reject', path: link('Reject') },
-          { label: 'Withdrawn by Client', path: link('Withdrawn by Client') },
-          { label: 'Add Charge', path: link('Add Charge') },
-          { label: 'Delete', path: link('Delete') },
-          { label: 'Assign Staff', path: link('Assign Staff') },
-        ],
-      },
-    ]
-  }
-
-  if (isApproved) {
-    return [
-      { label: 'Undo Approval', path: link('Undo Approval') },
-      { label: 'Activate', path: link('Activate') },
-      { label: 'Add Charge', path: link('Add Charge') },
-      {
-        label: 'More',
-        children: [{ label: 'Assign Staff', path: link('Assign Staff') }],
-      },
-    ]
-  }
-
-  if (isActive) {
-    return [
-      { label: 'Deposit', path: link('Deposit') },
-      { label: 'Block Deposit', path: link('Block Deposit') },
-      { label: 'Withdrawal', path: link('Withdrawal') },
-      { label: 'Block Withdrawal', path: link('Block Withdrawal') },
-      { label: 'Block Account', path: link('Block Account') },
-      { label: 'Hold Amount', path: link('Hold Amount') },
-      { label: 'Calculate Interest', path: link('Calculate Interest') },
-      { label: 'Post Interest As On', path: link('Post Interest As On') },
-      {
-        label: 'More',
-        children: [
-          { label: 'Post Interest', path: link('Post Interest') },
-          { label: 'Add Charge', path: link('Add Charge') },
-          { label: 'Close', path: link('Close') },
-          { label: 'Assign Staff', path: link('Assign Staff') },
-        ],
-      },
-    ]
-  }
-
-  // Default (when no known status matches)
-  return [
-    {
-      label: 'More',
-      children: [{ label: 'Assign Staff', path: link('Assign Staff') }],
-    },
-  ]
-}
 
 const SavingsAccountView = () => {
   const { groupId, accountId } = useParams()
+  const { pathname } = useLocation()
+  const { t } = useTranslation('savings')
   const [acct, setAcct] = useState<SavingsAccountData | null>(null)
 
   // Fetch savings account details on mount / when accountId changes
@@ -180,11 +90,17 @@ const SavingsAccountView = () => {
     accountLabel: acct?.accountNo,
   })
 
+  // Links stay under the client or group that owns the account
+  const base =
+    savingsAccountBasePath(pathname) ??
+    `groups/${groupId}/savings-accounts/${accountId}`
+
   // Build action menu items
-  const actions = buildSavingsMenu(s || {}, groupId, accountId)
+  const subStatus = ((acct as { subStatus?: SavingsAccountSubStatus } | null)
+    ?.subStatus ?? {}) as SavingsAccountSubStatus
+  const actions = buildSavingsMenu(s, subStatus, base, key => t(`menu.${key}`))
 
   // Tab navigation for sub-sections
-  const base = `groups/${groupId}/savings-accounts/${accountId}`
   const tabs = [
     { label: 'General', href: `${base}/general` },
     { label: 'Transactions', href: `${base}/transactions` },
@@ -244,7 +160,7 @@ const SavingsAccountView = () => {
               options={
                 actions.length
                   ? actions
-                  : [{ label: 'No actions', disabled: true }]
+                  : [{ label: t('menu.noActions'), disabled: true }]
               }
             />
           </div>
