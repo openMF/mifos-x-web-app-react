@@ -20,9 +20,13 @@
   "dividends": "Dividends",
   "errors": {
     "failedApproveLoans": "Failed to approve loans.",
+    "failedApproveReschedule": "Failed to approve rescheduled loan requests.",
     "failedDisburseLoans": "Failed to disburse loans.",
     "failedLoadLoans": "Failed to load loans. Please try again.",
+    "failedLoadReschedule": "Failed to load rescheduled loan requests. Please try again.",
     "failedLoadSavings": "Failed to load savings accounts. Please try again.",
+    "failedRefreshReschedule": "Rescheduled loan requests were updated, but the list could not be refreshed. Please try again.",
+    "failedRejectReschedule": "Failed to reject rescheduled loan requests.",
     "noLoansSelectedApproval": "No loans selected for approval.",
     "noLoansSelectedDisbursal": "No loans selected for disbursal."
   },
@@ -118,6 +122,24 @@
   "redeemShares": "Redeem Shares",
   "repaymentSchedule": "Repayment Schedule",
   "reschedule": "Reschedule",
+  "rescheduleDialog": {
+    "approveDescription_one": "Are you sure you want to approve {{count}} selected reschedule request?",
+    "approveDescription_other": "Are you sure you want to approve {{count}} selected reschedule requests?",
+    "approveTitle": "Approve Rescheduled Loans",
+    "rejectDescription_one": "Are you sure you want to reject {{count}} selected reschedule request?",
+    "rejectDescription_other": "Are you sure you want to reject {{count}} selected reschedule requests?",
+    "rejectTitle": "Reject Rescheduled Loans"
+  },
+  "rescheduleTable": {
+    "client": "Client",
+    "filterByName": "Filter by name",
+    "loanAccountNumber": "Loan Account #",
+    "noMatching": "No rescheduled loan requests matching your filter.",
+    "noPending": "No pending reschedule requests.",
+    "requestNumber": "Reschedule Request #",
+    "rescheduleFrom": "Reschedule From",
+    "rescheduleReason": "Reschedule Reason"
+  },
   "savings": "Savings",
   "savingsAccount": "Savings Account",
   "sellLoan": "Sell Loan",
@@ -127,7 +149,9 @@
     "loanApproved": "Loan approved successfully.",
     "loanDisbursed": "Loan disbursed successfully.",
     "loansApproved": "Loans approved successfully.",
-    "loansDisbursed": "Selected loans disbursed successfully."
+    "loansDisbursed": "Selected loans disbursed successfully.",
+    "rescheduleApproved": "Selected rescheduled loan requests approved successfully.",
+    "rescheduleRejected": "Selected rescheduled loan requests rejected successfully."
   },
   "termVariations": "Term Variations",
   "title": "Loans",
