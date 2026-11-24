@@ -293,6 +293,10 @@ This document tracks missing or incorrect fields in the OpenAPI-generated interf
 
 - `GetClientsChargesPageItems` missing `clientTransactionDatas`
 
+### `/clients/{id}/charges`
+
+- `PostClientsClientIdChargesRequest` declares `amount` as `integer` (`int32`), but Fineract processes charge amounts as `BigDecimal` (allowing decimal values).
+
 ### `/clients/template`
 
 - `GetClientsTemplateResponse` missing `genderOptions`, `clientTypeOptions`, `clientClassificationOptions`
