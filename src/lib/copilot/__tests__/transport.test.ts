@@ -324,6 +324,22 @@ describe('createV1Transport', () => {
     }
   )
 
+  it('reports a 5xx decision at once, without waiting on a body held open', async () => {
+    const fetchFn = vi.fn<typeof fetch>(
+      async () =>
+        new Response(new ReadableStream({ start() {} }), { status: 502 })
+    )
+    const events = await collect(transport(fetchFn).decide('card-1', 'approve'))
+    expect(events).toEqual([
+      {
+        type: 'RunError',
+        code: 'LLM_UNAVAILABLE',
+        retryable: false,
+        outcomeUnknown: true,
+      },
+    ])
+  })
+
   it('marks a decision whose connection was lost as unknown', async () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     const fetchFn = vi.fn<typeof fetch>(async () => {

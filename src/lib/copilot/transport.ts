@@ -211,12 +211,13 @@ export function createV1Transport(
         // comes from a proxy in front of it, possibly after the decision had
         // already reached Fineract. Its body is not the gateway's word, so
         // on a decision it may not offer a retry, supply the message, or
-        // claim an expired session, which would put the card back.
-        const payload = await readJson(response)
+        // claim an expired session, which would put the card back. Its body
+        // is not read either: a proxy that holds it open would leave the
+        // decision pending, with the watchdog already cleared.
         if (response.status >= 500 && !repeatable) {
           yield unanswered(httpError(response.status, null))
         } else {
-          yield httpError(response.status, payload)
+          yield httpError(response.status, await readJson(response))
         }
         return
       }
