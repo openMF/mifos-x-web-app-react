@@ -13,6 +13,7 @@ import {
   dayPart,
   elapsedSeconds,
   errorMessageKey,
+  errorPresentation,
   groupTurns,
   isDisplayMode,
   replyArrived,
@@ -41,6 +42,24 @@ describe('canUseCopilot', () => {
     expect(canUseCopilot(true, undefined)).toBe(true)
     expect(canUseCopilot(true, null)).toBe(true)
   })
+})
+
+describe('errorPresentation', () => {
+  it.each([
+    ['RATE_LIMITED', true, 'wait', 'errorTitle.busy'],
+    ['LLM_UNAVAILABLE', true, 'wait', 'errorTitle.modelUnavailable'],
+    ['LLM_UNAVAILABLE', false, 'blocked', 'errorTitle.modelUnavailable'],
+    ['TOOL_FAILED', true, 'wait', 'errorTitle.stepFailed'],
+    ['TOOL_FAILED', false, 'blocked', 'errorTitle.stepFailed'],
+    ['AUTH_EXPIRED', true, 'signIn', 'errorTitle.sessionExpired'],
+    ['PERMISSION_DENIED', false, 'blocked', 'errorTitle.notAllowed'],
+    ['INTERNAL', false, 'blocked', 'errorTitle.failed'],
+  ] as const)(
+    '%s (retryable: %s) is %s, titled %s',
+    (code, retryable, tone, titleKey) => {
+      expect(errorPresentation(code, retryable)).toEqual({ tone, titleKey })
+    }
+  )
 })
 
 describe('errorMessageKey', () => {

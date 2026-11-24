@@ -581,6 +581,25 @@
     "noIdentifiers": "Aucun identifiant",
     "identifiersLoadFailed": "Impossible de charger les identifiants. Veuillez réessayer."
   },
+  "notes": {
+    "heading": "Remarques",
+    "placeholder": "Écrire une note...",
+    "addButton": "Ajouter",
+    "adding": "Ajout en cours...",
+    "createdBy": "Créé par : {{name}}",
+    "date": "Date : {{date}}",
+    "editButton": "Modifier",
+    "saveButton": "Enregistrer",
+    "cancelButton": "Annuler",
+    "deleteButton": "Supprimer",
+    "confirmDelete": "Supprimer cette note ?",
+    "loading": "Chargement des notes...",
+    "empty": "Aucune note n'a été ajoutée.",
+    "loadFailed": "Impossible de charger les notes.",
+    "addFailed": "Impossible d'ajouter la note. Veuillez réessayer.",
+    "updateFailed": "Impossible de mettre à jour la note. Veuillez réessayer.",
+    "deleteFailed": "Impossible de supprimer la note. Veuillez réessayer."
+  },
   "search": {
     "enterQuery": "Saisissez un terme dans la barre de navigation pour trouver des clients, des groupes, des centres et des comptes.",
     "noResultsHint": "Recherchez par nom, numéro de compte ou identifiant externe. Les noms doivent parfois respecter les majuscules utilisées lors de leur enregistrement, par exemple « Ada » au lieu de « ada ».",

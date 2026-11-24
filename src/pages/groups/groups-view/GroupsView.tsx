@@ -6,7 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
-import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
+import RouteSuccessMessage, {
+  type RouteSuccessState,
+} from '@/components/custom/route-success-message/RouteSuccessMessage'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
@@ -93,6 +95,7 @@ const GroupsView = () => {
   }, [id])
 
   const isActive = group?.status?.value === 'Active' || Boolean(group?.active)
+  const isPending = group?.status?.value === 'Pending'
   const hasMembers =
     Array.isArray(group?.clientMembers) && group.clientMembers.length > 0
   const hasCalendar = Boolean(group?.collectionMeetingCalendar)
@@ -107,7 +110,7 @@ const GroupsView = () => {
       children?: { label: string; path?: string; onClick?: () => void }[]
     }[] = []
 
-    if (!isActive && hasPerm('UPDATE_GROUP')) {
+    if (isPending && hasPerm('UPDATE_GROUP')) {
       opts.push({
         label: t('view.menu.activate'),
         path: `groups/${group?.id}/actions/activate`,
@@ -254,6 +257,7 @@ const GroupsView = () => {
     group,
     id,
     isActive,
+    isPending,
     hasMembers,
     hasCalendar,
     hasStaff,
@@ -288,6 +292,8 @@ const GroupsView = () => {
           ...(activeTabLabel ? [{ label: activeTabLabel }] : []),
         ]}
       />
+
+      <RouteSuccessMessage className="mt-6" />
 
       {deleteError && (
         <div className="mt-6 text-sm text-red-600" role="alert">

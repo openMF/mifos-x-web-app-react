@@ -75,6 +75,43 @@ export function errorMessageKey(
 }
 
 /**
+ * How serious an error is, which sets how it looks. Waiting will fix a
+ * busy or slow service, so it is not shown as a failure; signing in fixes an
+ * expired session; anything else is a real stop.
+ */
+export type ErrorTone = 'wait' | 'signIn' | 'blocked'
+
+export type CopilotErrorTitleKey =
+  | 'errorTitle.busy'
+  | 'errorTitle.modelUnavailable'
+  | 'errorTitle.stepFailed'
+  | 'errorTitle.sessionExpired'
+  | 'errorTitle.notAllowed'
+  | 'errorTitle.failed'
+
+/** The tone and short title for an error, from its code and the gateway's verdict. */
+export function errorPresentation(
+  code: CopilotErrorCode,
+  retryable: boolean
+): { tone: ErrorTone; titleKey: CopilotErrorTitleKey } {
+  const tone: ErrorTone = retryable ? 'wait' : 'blocked'
+  switch (code) {
+    case 'AUTH_EXPIRED':
+      return { tone: 'signIn', titleKey: 'errorTitle.sessionExpired' }
+    case 'RATE_LIMITED':
+      return { tone: 'wait', titleKey: 'errorTitle.busy' }
+    case 'LLM_UNAVAILABLE':
+      return { tone, titleKey: 'errorTitle.modelUnavailable' }
+    case 'TOOL_FAILED':
+      return { tone, titleKey: 'errorTitle.stepFailed' }
+    case 'PERMISSION_DENIED':
+      return { tone: 'blocked', titleKey: 'errorTitle.notAllowed' }
+    default:
+      return { tone, titleKey: 'errorTitle.failed' }
+  }
+}
+
+/**
  * The part of an answer to show. While it streams, a ```suggest block the
  * model is still writing is hidden: it becomes the chips once the answer is
  * finished, and should never flash up as raw text.
