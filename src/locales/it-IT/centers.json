@@ -32,10 +32,60 @@
     "placeholderExternalId": "Inserisci id esterno",
     "breadcrumb": "Modifica"
   },
+  "activate": {
+    "title": "Attiva Centro",
+    "labelActivationDate": "Data di Attivazione*",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Inserisci una data di attivazione.",
+      "dateInFuture": "La data di attivazione non può essere nel futuro.",
+      "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
   "close": {
+    "title": "Chiudi Centro",
     "heading": "Chiudi Centro",
-    "labelClosedOn": "Data di chiusura*",
-    "breadcrumb": "Chiudi"
+    "labelClosedOnDate": "Data di chiusura*",
+    "labelClosureReason": "Motivo della Chiusura*",
+    "selectClosureReason": "Seleziona il motivo della chiusura",
+    "noReasonsFound": "Nessun motivo di chiusura disponibile",
+    "noReasonsAvailable": "Nessun motivo di chiusura configurato. Configurare i motivi di chiusura in Amministrazione > Sistema > Gestisci Codici.",
+    "breadcrumb": "Chiudi",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Si prega di inserire una data di chiusura.",
+      "dateInFuture": "La data di chiusura non può essere nel futuro.",
+      "dateBeforeActivated": "La data di chiusura non può essere antecedente alla data di attivazione.",
+      "reasonRequired": "Si prega di selezionare un motivo di chiusura.",
+      "failedFetchReasons": "Impossibile recuperare i motivi di chiusura."
+    }
+  },
+  "success": {
+    "centerActivated": "Centro attivato con successo.",
+    "centerClosed": "Centro chiuso con successo.",
+    "staffAssigned": "Personale assegnato con successo."
+  },
+  "errors": {
+    "failedActivateCenter": "Impossibile attivare il centro.",
+    "failedCloseCenter": "Impossibile chiudere il centro.",
+    "failedFetchCenter": "Impossibile caricare i dettagli del centro."
+  },
+  "assignStaff": {
+    "title": "Assegna personale",
+    "labelStaff": "Personale*",
+    "selectStaff": "Seleziona personale",
+    "loadingStaff": "Caricamento personale...",
+    "noStaffFound": "Nessun personale trovato",
+    "noStaffAvailable": "Nessun membro del personale disponibile per l'ufficio di questo centro.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "failedFetchCenter": "Impossibile caricare i dettagli del centro.",
+      "staffRequired": "Seleziona un membro del personale.",
+      "failedAssignStaff": "Impossibile assegnare il personale."
+    }
   },
   "view": {
     "centerName": "Nome Centro :",
@@ -47,7 +97,6 @@
     "meetingFrequency": "Frequenza Riunioni:",
     "missingInOpenAPI": "Mancante in OpenAPI",
     "confirmDelete": "Sei sicuro di voler eliminare questo centro?",
-    "activateTodo": "DA FARE: attivare il centro",
     "tabs": {
       "general": "Generale",
       "notes": "Note"

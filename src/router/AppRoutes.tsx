@@ -185,6 +185,8 @@ import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
 import CloseCenters from '@/pages/centers/CloseCenters'
+import ActivateCenters from '@/pages/centers/ActivateCenters'
+import CenterAssignStaff from '@/pages/centers/centers-view/center-actions/CenterAssignStaff'
 import CentersView from '@/pages/centers/centers-view/CentersView'
 import CentersGeneralTab from '@/pages/centers/centers-view/general-tab/CentersGeneralTab'
 import CentersNotesTab from '@/pages/centers/centers-view/notes-tab/CentersNotesTab'
@@ -194,6 +196,7 @@ import EditGroups from '@/pages/groups/groups-view/group-actions/EditGroups'
 import TransferClients from '@/pages/groups/groups-view/group-actions/TransferClients'
 import ManageGroupMembers from '@/pages/groups/groups-view/group-actions/ManageGroupMembers'
 import AttachMeeting from '@/pages/groups/groups-view/group-actions/AttachMeeting'
+import ActivateGroup from '@/pages/groups/groups-view/group-actions/ActivateGroup'
 import GroupsAddRoleCommitteeTab from '@/pages/groups/groups-view/commitee-tab/GroupsAddRoleCommiteeTab'
 import GroupsView from '@/pages/groups/groups-view/GroupsView'
 import GroupsGeneralTab from '@/pages/groups/groups-view/general-tab/GroupsGeneralTab'
@@ -252,6 +255,7 @@ import Clients from '@/pages/clients/Clients'
 import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
+import AddClientCharge from '@/pages/clients/clients-view/charges/AddClientCharge'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
 import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
@@ -1008,6 +1012,10 @@ const AppRoutes = () => {
             element={<TransferClient />}
           />
           <Route path="/clients/:id/actions/close" element={<CloseClient />} />
+          <Route
+            path="/clients/:id/actions/add-charge"
+            element={<AddClientCharge />}
+          />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="personal-data" element={<ClientsPersonalDataTab />} />
@@ -1294,6 +1302,10 @@ const AppRoutes = () => {
           <Route path="/groups/create" element={<CreateGroups />} />
           <Route path="/groups/:id/edit" element={<EditGroups />} />
           <Route
+            path="/groups/:id/actions/activate"
+            element={<ActivateGroup />}
+          />
+          <Route
             path="/groups/:id/actions/transfer-clients"
             element={<TransferClients />}
           />
@@ -1441,7 +1453,15 @@ const AppRoutes = () => {
           <Route path="/centers" element={<Centers />} />
           <Route path="/centers/create" element={<CreateCenters />} />
           <Route path="centers/:id/edit" element={<EditCenters />} />
+          <Route
+            path="/centers/:id/actions/activate"
+            element={<ActivateCenters />}
+          />
           <Route path="/centers/:id/actions/close" element={<CloseCenters />} />
+          <Route
+            path="/centers/:id/actions/assign-staff"
+            element={<CenterAssignStaff />}
+          />
           <Route path="/centers/:id" element={<CentersView />}>
             <Route path="general" element={<CentersGeneralTab />} />
             <Route path="notes" element={<CentersNotesTab />} />
