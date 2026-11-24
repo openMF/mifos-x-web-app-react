@@ -288,18 +288,27 @@
     "funds": "Funds"
   },
   "offices": {
+    "collapseAll": "Collapse All",
+    "collapseOffice": "Collapse {{name}}",
     "create": "Create Office",
+    "expandAll": "Expand All",
+    "expandOffice": "Expand {{name}}",
     "fields": {
       "externalId": "External ID",
       "name": "Office Name",
+      "nameDecorated": "Name Decorated",
       "officeName": "Office Name",
       "officeNameStar": "Office Name*",
       "openedOn": "Opened On*",
       "openingDate": "Opened On",
+      "parent": "Parent Office",
       "parentOffice": "Parent Office*",
       "pleaseSelectOffice": "Please select an Office"
     },
+    "import": "Import Offices",
+    "listView": "List View",
     "manage": "Manage Offices",
+    "manageOffice": "Manage Office",
     "messages": {
       "createError": "Failed to create office",
       "createSuccess": "Office created successfully.",
@@ -307,8 +316,11 @@
       "noOffices": "No offices found.",
       "updateSuccess": "Office updated successfully."
     },
+    "searchPlaceholder": "Search Offices...",
     "title": "Offices",
-    "unnamedOffice": "Unnamed Office"
+    "treeView": "Tree View",
+    "unnamedOffice": "Unnamed Office",
+    "viewToggle": "Offices view"
   },
   "provisioningCriteria": {
     "title": "Loan Provisioning Criteria",
