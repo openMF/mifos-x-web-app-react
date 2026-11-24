@@ -567,6 +567,8 @@
     "actions": "Actions",
     "upload": "Téléverser",
     "uploading": "Téléversement...",
+    "uploadFailed": "Échec du téléversement du document. Veuillez réessayer.",
+    "emptyFileError": "Le fichier sélectionné est vide (0 octet). Veuillez choisir un fichier valide.",
     "cancel": "Annuler",
     "download": "Télécharger",
     "delete": "Supprimer",

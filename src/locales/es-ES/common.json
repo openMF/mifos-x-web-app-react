@@ -567,6 +567,8 @@
     "actions": "Acciones",
     "upload": "Subir",
     "uploading": "Subiendo...",
+    "uploadFailed": "Error al cargar el documento. Por favor, inténtelo de nuevo.",
+    "emptyFileError": "El archivo seleccionado está vacío (0 bytes). Por favor, elija un archivo válido.",
     "cancel": "Cancelar",
     "download": "Descargar",
     "delete": "Eliminar",
