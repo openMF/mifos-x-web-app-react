@@ -17,11 +17,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useCopilotActions, useCopilotState } from '@/hooks/use-copilot'
 import { useCopilotDisplayMode } from '@/hooks/use-copilot-display-mode'
-import { copilotGatewayMode, isTurnActive, type TurnPhase } from '@/lib/copilot'
+import { copilotGatewayMode } from '@/lib/copilot'
 import { envConfig } from '@/lib/env-config'
 import { cn } from '@/lib/utils'
-import { canUseCopilot, replyArrived } from './copilot-ui'
+import {
+  canUseCopilot,
+  launcherStatus,
+  type LauncherStatus,
+} from './copilot-ui'
 
 const loadPanel = () => import('./CopilotPanel')
 // The panel is only downloaded once someone opens it, so a deployment that
@@ -59,48 +64,43 @@ export function CopilotLauncher() {
   return <Launcher />
 }
 
+/** What the closed button says for each status. */
+const STATUS_LABEL = {
+  idle: 'openAssistant',
+  working: 'launcher.working',
+  replying: 'launcher.replying',
+  ready: 'launcher.unread',
+  approval: 'launcher.approval',
+} as const satisfies Record<LauncherStatus, string>
+
 /**
  * Always in the same place, and it stays there while the panel is open:
- * one press opens the panel, the next minimises it. A dot says a reply
- * arrived while the panel was closed.
+ * one press opens the panel, the next minimises it. While the panel is
+ * closed it says what the Copilot is doing: a ring while it works, a dot
+ * when a reply is waiting, an amber dot when a confirmation is.
  */
 function Launcher() {
   const { t } = useTranslation('copilot')
   const buttonRef = useRef<HTMLButtonElement>(null)
   const panelId = useId()
-  const [open, setOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [phase, setPhase] = useState<TurnPhase>('idle')
-  const [unread, setUnread] = useState(false)
+  const { thread, open, unread } = useCopilotState()
+  const { setOpen } = useCopilotActions()
+  // The panel's code is fetched on first open, then kept for the session.
+  const [mounted, setMounted] = useState(open)
   const [mode, setMode] = useCopilotDisplayMode()
 
-  // A turn keeps running after the panel is minimised; when it ends, the
-  // officer is told there is something to read.
-  const previousPhase = useRef(phase)
-  useEffect(() => {
-    const was = previousPhase.current
-    previousPhase.current = phase
-    if (!open && replyArrived(was, phase)) setUnread(true)
-  }, [phase, open])
-
   const changeOpen = (next: boolean) => {
-    if (next) {
-      setMounted(true)
-      setUnread(false)
-    }
+    if (next) setMounted(true)
     setOpen(next)
   }
 
-  const working = isTurnActive(phase)
-  const label = open
-    ? t('launcher.minimise')
-    : unread
-      ? t('launcher.unread')
-      : phase === 'thinking'
-        ? t('launcher.working')
-        : phase === 'streaming'
-          ? t('launcher.replying')
-          : t('openAssistant')
+  const status = launcherStatus({
+    phase: thread.phase,
+    unread,
+    approvalPending: thread.pendingApproval !== null,
+  })
+  const working = status === 'working' || status === 'replying'
+  const label = open ? t('launcher.minimise') : t(STATUS_LABEL[status])
 
   return (
     <>
@@ -150,10 +150,14 @@ function Launcher() {
                 className="pointer-events-none absolute -inset-1 rounded-full border-2 border-[#1074b9]/25 border-t-[#1074b9] motion-safe:animate-spin"
               />
             )}
-            {unread && !open && (
+            {(status === 'ready' || status === 'approval') && !open && (
               <span
                 aria-hidden="true"
-                className="absolute top-0.5 right-0.5 size-3 rounded-full bg-red-500 ring-2 ring-white dark:ring-zinc-800"
+                data-status={status}
+                className={cn(
+                  'absolute top-0.5 right-0.5 size-3 rounded-full ring-2 ring-white dark:ring-zinc-800',
+                  status === 'approval' ? 'bg-amber-500' : 'bg-red-500'
+                )}
               />
             )}
           </button>
@@ -166,7 +170,6 @@ function Launcher() {
             id={panelId}
             open={open}
             onOpenChange={changeOpen}
-            onPhaseChange={setPhase}
             mode={mode}
             onModeChange={setMode}
             returnFocusRef={buttonRef}

@@ -5,7 +5,8 @@
     "working": "Mifos X Copilot traite votre demande. Ouvrir Copilot.",
     "replying": "Mifos X Copilot répond. Ouvrir Copilot.",
     "minimise": "Réduire Mifos X Copilot",
-    "unread": "Mifos X Copilot a une nouvelle réponse. Ouvrir Copilot."
+    "unread": "Mifos X Copilot a une nouvelle réponse. Ouvrir Copilot.",
+    "approval": "Mifos X Copilot attend votre confirmation. Ouvrir Copilot."
   },
   "close": "Fermer",
   "newChat": "Nouvelle discussion",
@@ -54,6 +55,7 @@
   },
   "you": "Vous",
   "jumpToLatest": "Aller au plus récent",
+  "newDivider": "Nouveau",
   "input": {
     "label": "Message pour Mifos X Copilot",
     "placeholder": "Posez une question sur un client, un prêt ou un compte",
@@ -64,7 +66,8 @@
   "disclaimer": "Mifos X Copilot vous aide à trouver des réponses. Toute opération qui déplace de l'argent requiert toujours votre validation.",
   "a11y": {
     "working": "Traitement de votre question",
-    "replyReady": "Réponse prête"
+    "replyReady": "Réponse prête",
+    "approvalNeeded": "Votre confirmation est nécessaire"
   },
   "trail": {
     "thinking": "Réflexion",

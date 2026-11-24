@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { memo, useEffect, useState } from 'react'
+import { Fragment, memo, useDeferredValue, useEffect, useState } from 'react'
 import { Check, Copy, RotateCcw, ShieldAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -40,13 +40,19 @@ import { groupTurns, visibleText } from './copilot-ui'
 import { ErrorNotice } from './ErrorNotice'
 import { ThinkingTrail } from './ThinkingTrail'
 
+/** Marks the "New" divider, so the panel can open the conversation there. */
+export const NEW_DIVIDER_ATTRIBUTE = 'data-copilot-new'
+
 export function MessageList({
   thread,
   onAsk,
+  newFrom,
 }: {
   thread: CopilotThread
   /** Send a question: a suggestion chip, or the last question again. */
   onAsk: (text: string) => void
+  /** The first answer that arrived while the panel was closed. */
+  newFrom?: string
 }) {
   const { t } = useTranslation('copilot')
   const active = isTurnActive(thread.phase)
@@ -56,54 +62,82 @@ export function MessageList({
     <>
       {groupTurns(thread.messages).map(turn => {
         const newest = turn.answers[turn.answers.length - 1]
+        const id = turn.question?.id ?? turn.answers[0].id
+        const isNew =
+          newFrom !== undefined &&
+          (turn.question?.id === newFrom ||
+            turn.answers.some(answer => answer.id === newFrom))
         return (
-          <MessageBranch
-            // A new answer remounts the turn, so it opens on that answer.
-            key={`${turn.question?.id ?? turn.answers[0].id}-${turn.answers.length}`}
-            defaultBranch={Math.max(0, turn.answers.length - 1)}
-            className="gap-4"
-          >
-            {turn.question && <UserMessage text={turn.question.text} />}
-            {turn.answers.length > 0 && (
-              <MessageBranchContent>
-                {turn.answers.map(message => (
-                  <AssistantMessage
-                    key={message.id}
-                    message={message}
-                    live={message.streaming && active}
-                    retryPrompt={
-                      message === last && message.error?.retryable
-                        ? thread.lastPrompt
-                        : undefined
-                    }
-                    askAgainPrompt={
-                      message === newest &&
-                      message === last &&
-                      thread.phase === 'idle' &&
-                      !message.error
-                        ? turn.question?.text
-                        : undefined
-                    }
-                    onAsk={onAsk}
-                    answerCount={turn.answers.length}
-                    showSuggestions={
-                      message === last && thread.phase === 'idle'
-                    }
-                    branchLabels={{
-                      previous: t('branch.previous'),
-                      next: t('branch.next'),
-                    }}
-                  />
-                ))}
-              </MessageBranchContent>
-            )}
-          </MessageBranch>
+          <Fragment key={id}>
+            {isNew && <NewDivider />}
+            <MessageBranch
+              // A new answer remounts the turn, so it opens on that answer.
+              key={`${id}-${turn.answers.length}`}
+              defaultBranch={Math.max(0, turn.answers.length - 1)}
+              className="gap-4"
+            >
+              {turn.question && <UserMessage text={turn.question.text} />}
+              {turn.answers.length > 0 && (
+                <MessageBranchContent>
+                  {turn.answers.map(message => (
+                    <AssistantMessage
+                      key={message.id}
+                      message={message}
+                      live={message.streaming && active}
+                      retryPrompt={
+                        message === last && message.error?.retryable
+                          ? thread.lastPrompt
+                          : undefined
+                      }
+                      askAgainPrompt={
+                        message === newest &&
+                        message === last &&
+                        thread.phase === 'idle' &&
+                        !message.error
+                          ? turn.question?.text
+                          : undefined
+                      }
+                      onAsk={onAsk}
+                      answerCount={turn.answers.length}
+                      showSuggestions={
+                        message === last && thread.phase === 'idle'
+                      }
+                      branchLabels={{
+                        previous: t('branch.previous'),
+                        next: t('branch.next'),
+                      }}
+                    />
+                  ))}
+                </MessageBranchContent>
+              )}
+            </MessageBranch>
+          </Fragment>
         )
       })}
       {thread.phase === 'awaitingApproval' && thread.pendingApproval && (
         <ApprovalNote approval={thread.pendingApproval} />
       )}
     </>
+  )
+}
+
+/**
+ * Where the answers that came while the panel was closed begin. Read as a
+ * separator named "New", so a screen reader announces where they start.
+ */
+function NewDivider() {
+  const { t } = useTranslation('copilot')
+  return (
+    <div
+      {...{ [NEW_DIVIDER_ATTRIBUTE]: '' }}
+      role="separator"
+      aria-label={t('newDivider')}
+      className="flex items-center gap-3 text-xs font-medium text-[#1074b9] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-500 dark:text-sky-300"
+    >
+      <span className="h-px flex-1 bg-[#1074b9]/30 dark:bg-sky-400/30" />
+      <span aria-hidden="true">{t('newDivider')}</span>
+      <span className="h-px flex-1 bg-[#1074b9]/30 dark:bg-sky-400/30" />
+    </div>
   )
 }
 
@@ -153,7 +187,14 @@ const AssistantMessage = memo(function AssistantMessage({
   branchLabels: { previous: string; next: string }
 }) {
   const { t } = useTranslation('copilot')
-  const text = visibleText(message.text, message.streaming)
+  // While it streams, the answer's markdown is redrawn at a lower priority
+  // than typing and scrolling, so a long table cannot make the page stutter.
+  // A finished answer is shown exactly as it is.
+  const deferred = useDeferredValue(message.text)
+  const text = visibleText(
+    message.streaming ? deferred : message.text,
+    message.streaming
+  )
   const hasActions = Boolean(text) && !message.error
   // An answer that failed before saying or doing anything has no bubble,
   // only its error.

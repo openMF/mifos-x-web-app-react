@@ -5,7 +5,8 @@
     "working": "Mifos X Copilot está trabajando en su solicitud. Abrir Copilot.",
     "replying": "Mifos X Copilot está respondiendo. Abrir Copilot.",
     "minimise": "Minimizar Mifos X Copilot",
-    "unread": "Mifos X Copilot tiene una respuesta nueva. Abrir Copilot."
+    "unread": "Mifos X Copilot tiene una respuesta nueva. Abrir Copilot.",
+    "approval": "Mifos X Copilot necesita su confirmación. Abrir Copilot."
   },
   "close": "Cerrar",
   "newChat": "Nuevo chat",
@@ -54,6 +55,7 @@
   },
   "you": "Usted",
   "jumpToLatest": "Ir al final",
+  "newDivider": "Nuevo",
   "input": {
     "label": "Mensaje para Mifos X Copilot",
     "placeholder": "Pregunte por un cliente, un préstamo o una cuenta",
@@ -64,7 +66,8 @@
   "disclaimer": "Mifos X Copilot le ayuda a encontrar respuestas. Todo lo que mueve dinero sigue necesitando su aprobación.",
   "a11y": {
     "working": "Trabajando en su pregunta",
-    "replyReady": "Respuesta lista"
+    "replyReady": "Respuesta lista",
+    "approvalNeeded": "Se necesita su confirmación"
   },
   "trail": {
     "thinking": "Pensando",

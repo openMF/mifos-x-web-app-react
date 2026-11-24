@@ -178,6 +178,44 @@ export function replyArrived(previous: TurnPhase, next: TurnPhase): boolean {
   return isTurnActive(previous) && !isTurnActive(next)
 }
 
+/**
+ * What the closed launcher says. A confirmation waiting outranks everything:
+ * it expires, and nothing else here does.
+ */
+export type LauncherStatus =
+  | 'idle'
+  | 'working'
+  | 'replying'
+  | 'ready'
+  | 'approval'
+
+export function launcherStatus({
+  phase,
+  unread,
+  approvalPending,
+}: {
+  phase: TurnPhase
+  unread: boolean
+  approvalPending: boolean
+}): LauncherStatus {
+  if (phase === 'awaitingApproval' && approvalPending) return 'approval'
+  if (phase === 'thinking') return 'working'
+  if (phase === 'streaming') return 'replying'
+  return unread ? 'ready' : 'idle'
+}
+
+/**
+ * The first answer a turn added, given how many messages the conversation
+ * had before it: where "New" goes when the officer comes back. Undefined
+ * when the turn left no answer, such as one stopped before anything came.
+ */
+export function firstNewAnswer(
+  messages: readonly CopilotMessage[],
+  countBefore: number
+): string | undefined {
+  return messages.slice(countBefore).find(m => m.role === 'assistant')?.id
+}
+
 export type DayPart = 'morning' | 'afternoon' | 'evening'
 
 /** Which greeting fits the hour on the officer's own clock (0 to 23). */
