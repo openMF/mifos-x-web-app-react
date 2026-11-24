@@ -5,6 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Label } from '@/components/ui/label'
@@ -25,6 +26,7 @@ interface SelectProps {
   selectOptions: { id: number | string; name: string }[]
   selectClassname?: string
   selectEmptyMessage?: string
+  disabled?: boolean
 }
 
 const AppSelect = ({
@@ -35,14 +37,20 @@ const AppSelect = ({
   selectOptions,
   selectClassname = 'w-full md:w-[48%] space-y-2',
   selectEmptyMessage,
+  disabled = false,
 }: SelectProps) => {
   const { t } = useTranslation('common')
+  const selectId = useId()
 
   return (
     <div className={`${selectClassname}`}>
-      <Label>{selectLabel}</Label>
-      <Select value={selectValue} onValueChange={selectOnChange}>
-        <SelectTrigger className="w-full">
+      <Label htmlFor={selectId}>{selectLabel}</Label>
+      <Select
+        value={selectValue}
+        onValueChange={selectOnChange}
+        disabled={disabled}
+      >
+        <SelectTrigger id={selectId} className="w-full">
           <SelectValue placeholder={selectPlaceholder} />
         </SelectTrigger>
         <SelectContent>
