@@ -66,13 +66,14 @@ describe('getBackendOrigin', () => {
 })
 
 describe('createCopilotTransport', () => {
-  it('uses the mock when configured as mock or left empty', async () => {
+  it('serves recorded answers only when asked for by name', async () => {
     const fetchFn = vi.fn()
     vi.stubGlobal('fetch', fetchFn)
-    for (const url of ['mock', '']) {
-      const { createCopilotTransport } = await load({
+    for (const url of ['mock', ' MOCK ']) {
+      const { createCopilotTransport, copilotGatewayMode } = await load({
         MIFOS_COPILOT_MCP_BASE_URL: url,
       })
+      expect(copilotGatewayMode()).toBe('mock')
       const events = await collect(
         createCopilotTransport().chat({ message: 'error please' })
       )
@@ -84,13 +85,17 @@ describe('createCopilotTransport', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 
-  it('refuses a cleartext gateway so the credential is never exposed', async () => {
+  it.each([
+    ['an empty gateway URL', ''],
+    ['a cleartext gateway', 'http://copilot.example.org'],
+  ])('is off for %s, with no recorded answers', async (_name, url) => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     const fetchFn = vi.fn()
     vi.stubGlobal('fetch', fetchFn)
-    const { createCopilotTransport } = await load({
-      MIFOS_COPILOT_MCP_BASE_URL: 'http://copilot.example.org',
+    const { createCopilotTransport, copilotGatewayMode } = await load({
+      MIFOS_COPILOT_MCP_BASE_URL: url,
     })
+    expect(copilotGatewayMode()).toBe('off')
     expect(
       await collect(createCopilotTransport().chat({ message: 'Hi' }))
     ).toEqual([{ type: 'RunError', code: 'INTERNAL', retryable: false }])

@@ -270,6 +270,28 @@ describe('copilotReducer', () => {
     expect(thread.pendingApproval).toBeNull()
   })
 
+  it('records that a decision may or may not have run', () => {
+    const thread = run(
+      initialThread,
+      send,
+      { type: 'RunFinished', outcome: { type: 'interrupt', approval } },
+      { type: 'decide', decision: 'approve', assistantMessageId: 'a2' },
+      {
+        type: 'RunError',
+        code: 'LLM_UNAVAILABLE',
+        retryable: false,
+        outcomeUnknown: true,
+      }
+    )
+    expect(thread.pendingApproval).toBeNull()
+    expect(last(thread).error).toEqual({
+      code: 'LLM_UNAVAILABLE',
+      message: undefined,
+      retryable: false,
+      outcomeUnknown: true,
+    })
+  })
+
   it('stops on cancel and drops events that arrive afterwards', () => {
     const thread = run(
       initialThread,

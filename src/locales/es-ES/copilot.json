@@ -26,6 +26,10 @@
     "label": "IA",
     "title": "Escrito por IA. Verifique las cifras importantes con el expediente del cliente."
   },
+  "demoBadge": {
+    "label": "Demo",
+    "title": "Modo de demostración: son respuestas de ejemplo grabadas, no datos de sus registros."
+  },
   "greeting": {
     "morning": "Buenos días",
     "afternoon": "Buenas tardes",
@@ -104,6 +108,7 @@
     "permissionDenied": "No tiene permiso para hacer eso.",
     "rateLimited": "El asistente está ocupado en este momento. Por favor, inténtelo de nuevo en unos instantes.",
     "toolFailed": "El sistema bancario no pudo completar ese paso. Por favor, inténtelo de nuevo.",
+    "decisionUnconfirmed": "No llegó ninguna respuesta, así que es posible que este cambio se haya realizado o no. Revise la cuenta antes de volver a intentarlo.",
     "invalidLength": "El mensaje está vacío o es demasiado largo. Por favor, acórtelo e inténtelo de nuevo.",
     "injectionBlocked": "El mensaje parece un intento de anular las instrucciones, por lo que no se envió. Por favor, reformúlelo."
   }

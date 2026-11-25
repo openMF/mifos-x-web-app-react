@@ -10,7 +10,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { MessageList } from '@/components/copilot/MessageList'
-import type { CopilotThread } from '@/lib/copilot'
+import { copilotReducer, type CopilotThread } from '@/lib/copilot'
 import {
   approved,
   loanSummary,
@@ -99,5 +99,32 @@ describe('MessageList', () => {
     expect(receipt.textContent).toContain('Loan account')
     expect(receipt.textContent).toContain('000004521')
     expect(screen.queryByRole('status')).toBeNull()
+  })
+
+  it('asks the officer to check the account, not to retry, when a decision got no answer', () => {
+    const sent = replay(
+      [
+        { ask: REPAY, frames: writeCard('repayment', 'card-1') },
+        { decide: 'approve', frames: [] },
+      ],
+      { last: 0 }
+    )
+    // What the transport reports when a decision's stream dies unanswered.
+    renderThread(
+      copilotReducer(sent, {
+        type: 'event',
+        event: {
+          type: 'RunError',
+          code: 'INTERNAL',
+          retryable: false,
+          outcomeUnknown: true,
+        },
+      })
+    )
+
+    expect(screen.getByRole('alert').textContent).toContain(
+      'Check the account before you try again.'
+    )
+    expect(screen.queryByRole('button', { name: 'Ask again' })).toBeNull()
   })
 })

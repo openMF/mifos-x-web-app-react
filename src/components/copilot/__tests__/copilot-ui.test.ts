@@ -74,6 +74,13 @@ describe('errorMessageKey', () => {
   ] as const)('maps %s to %s', (code, key) => {
     expect(errorMessageKey(code)).toBe(key)
   })
+
+  it.each(['LLM_UNAVAILABLE', 'INTERNAL'] as const)(
+    'asks for the account to be checked when a decision on %s may have run',
+    code => {
+      expect(errorMessageKey(code, true)).toBe('errors.decisionUnconfirmed')
+    }
+  )
 })
 
 describe('visibleText', () => {
