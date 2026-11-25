@@ -7,7 +7,7 @@
  */
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '@/pages/login/loginSlice'
+import { loginUser, RENEW_PASSWORD } from '@/pages/login/loginSlice'
 import { type RootState, type AppDispatch } from '@/app/store'
 
 import mainImg from '@/assets/images/cover_image_resized.webp'
@@ -86,13 +86,16 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isDockerProxy) {
       localStorage.setItem('mifosServer', server)
     }
     setTenantId(tenant)
-    dispatch(loginUser(form))
+    const result = await dispatch(loginUser(form))
+    if (loginUser.rejected.match(result) && result.payload === RENEW_PASSWORD) {
+      navigate('/renew-password')
+    }
   }
 
   const handleServerChange = (value: string) => {

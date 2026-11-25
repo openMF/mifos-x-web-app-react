@@ -9,6 +9,7 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import auth from '@/locales/en-US/auth.json'
 import common from '@/locales/en-US/common.json'
 import copilot from '@/locales/en-US/copilot.json'
 
@@ -22,9 +23,9 @@ import copilot from '@/locales/en-US/copilot.json'
 void i18next.use(initReactI18next).init({
   lng: 'en-US',
   fallbackLng: 'en-US',
-  ns: ['common', 'copilot'],
+  ns: ['auth', 'common', 'copilot'],
   defaultNS: 'common',
-  resources: { 'en-US': { common, copilot } },
+  resources: { 'en-US': { auth, common, copilot } },
   interpolation: { escapeValue: false },
 })
 

@@ -11,24 +11,23 @@ import {
   getApiBaseUrl,
   getAuthHeaders,
   getDefaultHeaders,
+  getServerUrl,
 } from '@/lib/http-client'
 import { envConfig } from '@/lib/env-config'
 import { isSecureUrl } from '@/lib/secure-url'
+import {
+  getOutdatedUserId,
+  isPasswordOutdatedError,
+  PASSWORD_EXPIRED_EVENT,
+  type PasswordExpiredDetail,
+} from '@/lib/password-renewal'
 import {
   endOidcSession,
   isOidcSessionEstablished,
   renewOidcSession,
 } from '@/lib/oidc-session'
 
-/**
- * The Fineract server the app talks to. Behind the Docker/nginx or Vite
- * reverse-proxy (empty envConfig.apiUrl) that is this page's own origin.
- */
-export const getServerUrl = (): string => {
-  if (!envConfig.apiUrl) return window.location.origin
-  const rawServer = localStorage.getItem('mifosServer') || envConfig.apiUrl
-  return rawServer.trim().replace(/\/+$/, '')
-}
+export { getServerUrl }
 
 const getBaseURL = () => `${getServerUrl()}/fineract-provider/api/`
 
@@ -48,6 +47,11 @@ fineract.interceptors.request.use(config => {
     config.headers?.Authorization ?? config.headers?.authorization
   if (suppliedAuth) {
     delete authHeaders.Authorization
+  }
+  // Likewise a caller-supplied tenant: a flow bound to one account (see
+  // requestTo) must not follow another tab to a different tenant.
+  if (config.headers?.['Fineract-Platform-TenantId']) {
+    delete authHeaders['Fineract-Platform-TenantId']
   }
 
   Object.assign(config.headers, authHeaders)
@@ -112,6 +116,41 @@ const isPublicEndpoint = (url?: string): boolean => {
   return PUBLIC_ENDPOINTS.some(endpoint => pathname.endsWith(endpoint))
 }
 
+/**
+ * The password expired during a password session: Fineract now refuses every
+ * request until it is changed. Axios runs outside the router, so the
+ * signed-in layout listens for this and opens the renewal page. The change
+ * request itself is never refused this way, and a bearer session changes its
+ * password at the identity provider instead.
+ */
+const announcePasswordExpired = (error: AxiosError): Promise<never> => {
+  const sent = String(
+    error.config?.headers?.Authorization ??
+      error.config?.headers?.authorization ??
+      ''
+  )
+  if (sent.startsWith('Basic ')) {
+    const detail: PasswordExpiredDetail = {
+      userId: getOutdatedUserId(error),
+      authorization: sent,
+      tenant: String(
+        error.config?.headers?.['Fineract-Platform-TenantId'] ?? ''
+      ),
+    }
+    window.dispatchEvent(new CustomEvent(PASSWORD_EXPIRED_EVENT, { detail }))
+  }
+  return Promise.reject(error)
+}
+
+// Most pages call Fineract through the generated clients, which use the
+// global axios instance rather than this one, so the expiry check is
+// registered there as well.
+axios.interceptors.response.use(undefined, (error: AxiosError) =>
+  isPasswordOutdatedError(error)
+    ? announcePasswordExpired(error)
+    : Promise.reject(error)
+)
+
 /** Requests already retried once, so a persistent 401 cannot loop. */
 type RetriableConfig = InternalAxiosRequestConfig & { _retried?: boolean }
 
@@ -129,6 +168,8 @@ fineract.interceptors.response.use(
   response => response,
   async (error: AxiosError) => {
     const config = error.config as RetriableConfig | undefined
+
+    if (isPasswordOutdatedError(error)) return announcePasswordExpired(error)
 
     if (error.response?.status !== 401 || !config) {
       return Promise.reject(error)

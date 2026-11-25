@@ -6,15 +6,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import fineract from '@/lib/axios'
-import { getTenantId } from '@/lib/http-client'
+import { captureTarget, requestTo, type RequestTarget } from '@/lib/http-client'
 
-export const loginFineract = async (username: string, password: string) => {
+/** Signs in at the given server and tenant, by default the stored ones. */
+export const loginFineract = async (
+  username: string,
+  password: string,
+  target: RequestTarget = captureTarget()
+) => {
+  const { url, headers } = requestTo(target, '/v1/authentication')
   const response = await fineract.post(
-    '/v1/authentication',
+    url,
     { username, password },
     {
+      headers,
       params: {
-        tenantIdentifier: getTenantId(),
+        tenantIdentifier: target.tenant,
       },
     }
   )

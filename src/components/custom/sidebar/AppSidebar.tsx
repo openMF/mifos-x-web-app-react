@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useLogout } from '@/hooks/use-logout'
+import { getSignedInUser, getTenantId } from '@/lib/http-client'
 import { useFrequentlyAccessed } from '@/hooks/use-frequently-accessed'
 import { LogoutConfirmDialog } from '@/components/custom/logout/LogoutConfirmDialog'
 import type { ParseKeys } from 'i18next'
@@ -152,7 +153,10 @@ export const AppSidebar = () => {
             <User className="w-6 h-6 text-gray-500 dark:text-gray-300" />
           </div>
           <p className="text-base text-gray-500 dark:text-gray-400">
-            default / mifos
+            {/* The signed-in user; an OIDC session stores no username here. */}
+            {[getTenantId(), getSignedInUser()?.username]
+              .filter(Boolean)
+              .join(' / ')}
           </p>
 
           <div className="flex space-x-4 mt-2">

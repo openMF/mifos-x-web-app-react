@@ -12,6 +12,7 @@ import Callback from '@/pages/login/Callback'
 import { lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
+import RenewPassword from '@/pages/login/RenewPassword'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
 import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
 import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccounts'
@@ -319,6 +320,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/callback" element={<Callback />} />
+      <Route path="/renew-password" element={<RenewPassword />} />
 
       <Route element={<ProtectedRoutes />}>
         {/* Login Route */}

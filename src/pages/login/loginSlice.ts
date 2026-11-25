@@ -7,7 +7,20 @@
  */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { loginFineract } from '@/pages/login/loginApi'
-import { clearOidcToken, hasSession } from '@/lib/http-client'
+import {
+  captureTarget,
+  clearAuthToken,
+  clearOidcToken,
+  hasSession,
+  setBasicCredentials,
+  setSignedInUser,
+  type SignedInUser,
+} from '@/lib/http-client'
+import {
+  clearPendingRenewal,
+  getSignInRenewal,
+  setPendingRenewal,
+} from '@/lib/password-renewal'
 
 interface AuthState {
   loading: boolean
@@ -23,26 +36,60 @@ const initialState: AuthState = {
   isAuthenticated: hasSession(),
 }
 
+/** Rejection value when Fineract wants a new password before sign-in. */
+export const RENEW_PASSWORD = 'renewPassword'
+
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (
     { username, password }: { username: string; password: string },
     thunkAPI
   ) => {
+    // Where this sign-in goes, read once: the renewal it may lead to must go
+    // to the same server and tenant even if another tab changes them.
+    const target = captureTarget()
+    let data: Record<string, unknown>
     try {
-      const data = await loginFineract(username, password)
-      const encoded = btoa(`${username}:${password}`)
-      localStorage.setItem('mifosToken', encoded)
-      // Password sign-in replaces any OIDC session: getAuthHeaders prefers the
-      // OIDC token, so leaving it behind would keep calling Fineract as the
-      // previously signed-in user.
-      clearOidcToken()
-
-      return data
-    } catch (_err: unknown) {
-      // Reserved for future use
+      data = await loginFineract(username, password, target)
+    } catch (err: unknown) {
+      const renewal = getSignInRenewal(
+        { error: err },
+        username,
+        password,
+        target
+      )
+      if (renewal) {
+        setPendingRenewal(renewal)
+        return thunkAPI.rejectWithValue(RENEW_PASSWORD)
+      }
       return thunkAPI.rejectWithValue('Login failed')
     }
+
+    const renewal = getSignInRenewal({ data }, username, password, target)
+    if (renewal) {
+      setPendingRenewal(renewal)
+      return thunkAPI.rejectWithValue(RENEW_PASSWORD)
+    }
+
+    clearPendingRenewal()
+    setBasicCredentials(username, password)
+    if (typeof data.userId === 'number') {
+      setSignedInUser({
+        userId: data.userId,
+        username: String(data.username ?? username),
+        officeName:
+          typeof data.officeName === 'string' ? data.officeName : undefined,
+        roles: Array.isArray(data.roles)
+          ? (data.roles as SignedInUser['roles'])
+          : undefined,
+      })
+    }
+    // Password sign-in replaces any OIDC session: getAuthHeaders prefers the
+    // OIDC token, so leaving it behind would keep calling Fineract as the
+    // previously signed-in user.
+    clearOidcToken()
+
+    return data
   }
 )
 
@@ -53,8 +100,9 @@ const authSlice = createSlice({
     logout: state => {
       state.user = null
       state.isAuthenticated = false
-      localStorage.removeItem('mifosToken')
+      clearAuthToken()
       clearOidcToken()
+      clearPendingRenewal()
     },
   },
   extraReducers: builder => {
@@ -70,7 +118,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
-        state.error = action.payload as string
+        // Not a failure: the sign-in page moves on to the renewal page.
+        state.error =
+          action.payload === RENEW_PASSWORD ? null : (action.payload as string)
       })
   },
 })

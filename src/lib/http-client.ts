@@ -91,8 +91,74 @@ export const clearOidcToken = (): void => {
   localStorage.removeItem(OIDC_EXPIRES_AT_KEY)
 }
 
+/**
+ * Base64 of the text's UTF-8 bytes. btoa alone only takes Latin-1 and throws
+ * on a password with, say, € or Cyrillic letters, which Fineract accepts.
+ */
+export const encodeBase64Utf8 = (text: string): string => {
+  let binary = ''
+  for (const byte of new TextEncoder().encode(text)) {
+    binary += String.fromCharCode(byte)
+  }
+  return btoa(binary)
+}
+
+/** The text encodeBase64Utf8 encoded. Throws on input that is not Base64. */
+export const decodeBase64Utf8 = (encoded: string): string =>
+  new TextDecoder().decode(
+    Uint8Array.from(atob(encoded), char => char.charCodeAt(0))
+  )
+
+/**
+ * The Basic credential for username:password. Spring Security reads it as
+ * UTF-8, and Fineract builds base64EncodedAuthenticationKey the same way.
+ */
+export const encodeBasicCredential = (
+  username: string,
+  password: string
+): string => encodeBase64Utf8(`${username}:${password}`)
+
+/** Stores the Basic credential for a password sign-in. */
+export const setBasicCredentials = (username: string, password: string) => {
+  localStorage.setItem(TOKEN_KEY, encodeBasicCredential(username, password))
+}
+
 export const clearAuthToken = (): void => {
   localStorage.removeItem(TOKEN_KEY)
+  clearSignedInUser()
+}
+
+/**
+ * Who signed in with a password, from Fineract's /authentication response.
+ * Kept so it survives a reload: changing your own password needs the user id,
+ * which nothing else in the app knows.
+ */
+const USER_KEY = 'mifosUser'
+
+export interface SignedInUser {
+  userId: number
+  username: string
+  officeName?: string
+  roles?: { id?: number; name?: string; description?: string }[]
+}
+
+export const setSignedInUser = (user: SignedInUser): void => {
+  localStorage.setItem(USER_KEY, JSON.stringify(user))
+}
+
+export const getSignedInUser = (): SignedInUser | null => {
+  const raw = localStorage.getItem(USER_KEY)
+  if (!raw) return null
+  try {
+    const user = JSON.parse(raw) as SignedInUser
+    return typeof user?.userId === 'number' && user.username ? user : null
+  } catch {
+    return null
+  }
+}
+
+export const clearSignedInUser = (): void => {
+  localStorage.removeItem(USER_KEY)
 }
 
 /** True when either sign-in flow has produced a credential for Fineract. */
@@ -179,3 +245,44 @@ export const getApiBaseUrl = (): string => {
   const base = url ? url.replace(/\/$/, '') : ''
   return `${base}${provider}${version}`
 }
+
+/**
+ * The Fineract server the app talks to. Behind the Docker/nginx or Vite
+ * reverse-proxy (empty envConfig.apiUrl) that is this page's own origin.
+ */
+export const getServerUrl = (): string => {
+  if (!envConfig.apiUrl) return window.location.origin
+  const rawServer = localStorage.getItem('mifosServer') || envConfig.apiUrl
+  return rawServer.trim().replace(/\/+$/, '')
+}
+
+/**
+ * Where a request goes. Every request reads the server and tenant from
+ * storage when it is sent, and another tab can change both meanwhile, so a
+ * flow that must reach one account captures them once and sends there.
+ */
+export interface RequestTarget {
+  server: string
+  tenant: string
+}
+
+export const captureTarget = (): RequestTarget => ({
+  server: getServerUrl(),
+  tenant: getTenantId(),
+})
+
+/**
+ * URL and headers for a request to that target. When the server is chosen
+ * at sign-in the URL is absolute, since Axios then ignores the base URL the
+ * request interceptor sets; behind the proxy it is always this origin. The
+ * interceptor keeps a tenant header given here.
+ */
+export const requestTo = (
+  target: RequestTarget,
+  path: string
+): { url: string; headers: Record<string, string> } => ({
+  url: envConfig.apiUrl
+    ? `${target.server}${envConfig.apiProvider}${envConfig.apiVersion}/${path.replace(/^\/+/, '')}`
+    : path,
+  headers: { 'Fineract-Platform-TenantId': target.tenant },
+})
