@@ -227,6 +227,7 @@ import WriteOffPage from '@/pages/loans/loans-view/loan-account-actions/write-of
 import CloseAsRescheduled from '@/pages/loans/loans-view/loan-account-actions/close-as-rescheduled/CloseAsRescheduled'
 import LoansAccountClose from '@/pages/loans/loans-view/loan-account-actions/loans-account-close/LoansAccountClose'
 import SellLoan from '@/pages/loans/loans-view/loan-account-actions/sell-loan/SellLoan'
+import AttachLoanOriginator from '@/pages/loans/loans-view/loan-account-actions/attach-loan-originator/AttachLoanOriginator'
 import SavingsAccountView from '@/pages/saving-product/saving-product-view/SavingProductView'
 import SavingProductGeneralTab from '@/pages/saving-product/saving-product-view/general-tab/SavingProductGeneralTab'
 import SavingProductTransactionTab from '@/pages/saving-product/saving-product-view/transaction-tab/SavingProductTransactionTab'
@@ -250,6 +251,7 @@ import LoansCollateralTab from '@/pages/loans/loans-view/loan-collateral-tab/Loa
 import LoansTermVariationsTab from '@/pages/loans/loans-view/loan-term-variations-tab/LoansTermVariationsTab'
 import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/LoansDocumentsTab'
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
+import LoansOriginatorsTab from '@/pages/loans/loans-view/loan-originators-tab/LoansOriginatorsTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
 import Loans from '@/pages/loans/Loans'
@@ -1173,6 +1175,10 @@ const AppRoutes = () => {
             path="/clients/:clientId/loans-accounts/:loanId/actions/SellLoan"
             element={<SellLoan />}
           />
+          <Route
+            path="/clients/:clientId/loans-accounts/:loanId/actions/AttachLoanOriginator"
+            element={<AttachLoanOriginator />}
+          />
 
           <Route
             path="/clients/:clientId/charges/:chargeId"
@@ -1448,6 +1454,10 @@ const AppRoutes = () => {
             path="/groups/:groupId/loans-accounts/:loanId/actions/SellLoan"
             element={<SellLoan />}
           />
+          <Route
+            path="/groups/:groupId/loans-accounts/:loanId/actions/AttachLoanOriginator"
+            element={<AttachLoanOriginator />}
+          />
 
           {/* Centers */}
           <Route path="/centers" element={<Centers />} />
@@ -1577,6 +1587,7 @@ const AppRoutes = () => {
             />
             <Route path="loan-documents" element={<LoansDocumentsTab />} />
             <Route path="notes" element={<LoansNotesTab />} />
+            <Route path="originators" element={<LoansOriginatorsTab />} />
             <Route
               path="datatables/:datatableName"
               element={<LoanDatatableTab />}
