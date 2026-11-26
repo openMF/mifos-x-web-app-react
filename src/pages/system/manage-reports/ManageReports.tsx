@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -172,11 +172,27 @@ const ManageReports = () => {
           <TableBody>
             {paginated.map(report => (
               <TableRow
-                key={report.reportName}
+                key={report.id ?? report.reportName}
                 className="text-base hover:bg-muted cursor-pointer"
-                onClick={() => navigate(`/system/reports/${report.reportName}`)}
+                onClick={() => {
+                  if (report.id !== undefined) {
+                    navigate(`/system/reports/${report.id}`)
+                  }
+                }}
               >
-                <TableCell className="px-6 py-4">{report.reportName}</TableCell>
+                <TableCell className="px-6 py-4">
+                  {report.id !== undefined ? (
+                    <Link
+                      to={`/system/reports/${report.id}`}
+                      onClick={event => event.stopPropagation()}
+                      className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      {report.reportName}
+                    </Link>
+                  ) : (
+                    report.reportName
+                  )}
+                </TableCell>
                 <TableCell className="px-6 py-4">
                   {report.reportType || '—'}
                 </TableCell>
