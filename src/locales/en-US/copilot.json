@@ -50,6 +50,54 @@
     "savingsBalance": {
       "title": "Check a client's savings balance",
       "description": "Balances and recent transactions"
+    },
+    "loanSchedule": {
+      "title": "Check repayment schedule",
+      "description": "Installments, dates, and amounts due"
+    },
+    "loanForeclosure": {
+      "title": "Simulate foreclosure",
+      "description": "Calculate payoff and outstanding balance"
+    },
+    "loanWaiver": {
+      "title": "Calculate interest waiver",
+      "description": "Interest and penalty relief options"
+    },
+    "clientSummary": {
+      "title": "Summarize client profile",
+      "description": "Overview of accounts and activity"
+    },
+    "clientOverdue": {
+      "title": "Check overdue loans",
+      "description": "Outstanding arrears across client accounts"
+    },
+    "clientAccounts": {
+      "title": "List all active accounts",
+      "description": "Loans, savings, and share accounts"
+    },
+    "savingsBalanceDetail": {
+      "title": "Check balance and holds",
+      "description": "Available balance, holds, and interest"
+    },
+    "savingsTransactions": {
+      "title": "Show recent transactions",
+      "description": "Latest deposits, withdrawals, and fees"
+    },
+    "savingsCalculateInterest": {
+      "title": "Calculate accrued interest",
+      "description": "Review interest accrued for posting"
+    },
+    "glAccountBalances": {
+      "title": "Check GL account balances",
+      "description": "Review debits and credits across ledgers"
+    },
+    "recentJournalEntries": {
+      "title": "Show recent journal entries",
+      "description": "Filter entries by date and GL account"
+    },
+    "reconcileDiscrepancies": {
+      "title": "Check unposted transactions",
+      "description": "Audit periodic accruals and closures"
     }
   },
   "you": "You",

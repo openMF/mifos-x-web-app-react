@@ -10,6 +10,7 @@ import { Outlet, useParams } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
+import { useSetCopilotEntity } from '@/hooks/use-copilot-context'
 import Dropdown from '@/components/custom/navbar/Dropdown'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import { useEntityDatatables } from '@/components/datatables/useEntityDatatables'
@@ -371,6 +372,7 @@ const LoansView = () => {
 
   // fetch loan data
   useEffect(() => {
+    setLoan(undefined)
     if (!loanId) return
     ;(async () => {
       try {
@@ -382,6 +384,16 @@ const LoansView = () => {
       }
     })()
   }, [loanId])
+
+  useSetCopilotEntity(
+    loan
+      ? {
+          clientName: loan.clientName ?? loan.group?.name ?? null,
+          clientId: loan.clientId ?? null,
+          loanId: loan.id ?? (loanId ? Number(loanId) : null),
+        }
+      : null
+  )
 
   // status handling
   const s = loan?.status ?? loan?.loanStatus ?? ({} as GetLoansLoanIdStatus)

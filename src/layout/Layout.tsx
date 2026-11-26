@@ -16,6 +16,7 @@ import { useTheme } from '@/hooks/use-theme'
 import { useLogout } from '@/hooks/use-logout'
 import SessionTimeout from '@/components/custom/session/SessionTimeout'
 import { CopilotLauncher } from '@/components/copilot/CopilotLauncher'
+import { CopilotContextProvider } from '@/hooks/use-copilot-context'
 
 const LayoutShortcuts = () => {
   const navigate = useNavigate()
@@ -34,20 +35,22 @@ const LayoutShortcuts = () => {
 const Layout = () => {
   useTheme()
   return (
-    <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
-      <LayoutShortcuts />
-      <SessionTimeout />
-      <CopilotLauncher />
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <MfNavbar />
-          <main className="min-w-0 flex-1 p-6 bg-gray-50 dark:bg-zinc-900">
-            <Outlet />
-          </main>
+    <CopilotContextProvider>
+      <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
+        <LayoutShortcuts />
+        <SessionTimeout />
+        <CopilotLauncher />
+        <div className="flex min-h-screen w-full">
+          <AppSidebar />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <MfNavbar />
+            <main className="min-w-0 flex-1 p-6 bg-gray-50 dark:bg-zinc-900">
+              <Outlet />
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </CopilotContextProvider>
   )
 }
 

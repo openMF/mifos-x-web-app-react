@@ -50,6 +50,54 @@
     "savingsBalance": {
       "title": "Consultar el saldo de ahorros de un cliente",
       "description": "Saldos y movimientos recientes"
+    },
+    "loanSchedule": {
+      "title": "Consultar calendario de pagos",
+      "description": "Cuotas, fechas y montos vencidos"
+    },
+    "loanForeclosure": {
+      "title": "Simular liquidación anticipada",
+      "description": "Calcular saldo pendiente y liquidación"
+    },
+    "loanWaiver": {
+      "title": "Calcular condonación de intereses",
+      "description": "Opciones de condonación de intereses y penalizaciones"
+    },
+    "clientSummary": {
+      "title": "Resumir perfil del cliente",
+      "description": "Resumen de cuentas y actividad"
+    },
+    "clientOverdue": {
+      "title": "Consultar préstamos vencidos",
+      "description": "Atrasos pendientes en las cuentas del cliente"
+    },
+    "clientAccounts": {
+      "title": "Listar cuentas activas",
+      "description": "Préstamos, cuentas de ahorro y acciones"
+    },
+    "savingsBalanceDetail": {
+      "title": "Consultar saldo y retenciones",
+      "description": "Saldo disponible, retenciones e intereses"
+    },
+    "savingsTransactions": {
+      "title": "Mostrar transacciones recientes",
+      "description": "Últimos depósitos, retiros y cargos"
+    },
+    "savingsCalculateInterest": {
+      "title": "Calcular interés acumulado",
+      "description": "Revisar intereses acumulados para contabilización"
+    },
+    "glAccountBalances": {
+      "title": "Consultar saldos de cuentas contables",
+      "description": "Revisar débitos y créditos en los libros mayores"
+    },
+    "recentJournalEntries": {
+      "title": "Mostrar asientos contables recientes",
+      "description": "Filtrar asientos por fecha y cuenta"
+    },
+    "reconcileDiscrepancies": {
+      "title": "Verificar transacciones pendientes",
+      "description": "Auditar devengos periódicos y cierres"
     }
   },
   "you": "Usted",

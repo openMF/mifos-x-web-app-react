@@ -6,28 +6,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {
-  ArrowRight,
-  PiggyBank,
-  Search,
-  TriangleAlert,
-  type LucideIcon,
-} from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useCopilotContext } from '@/hooks/use-copilot-context'
+import type { CopilotContext } from '@/lib/copilot'
 import { CopilotOrb } from './CopilotOrb'
 import { dayPart } from './copilot-ui'
 import type { OrbState } from './orb/orb-state'
-
-/** Three at most, so the choice is quick to take in. */
-const STARTERS: {
-  key: 'overdueLoans' | 'findClient' | 'savingsBalance'
-  icon: LucideIcon
-}[] = [
-  { key: 'overdueLoans', icon: TriangleAlert },
-  { key: 'findClient', icon: Search },
-  { key: 'savingsBalance', icon: PiggyBank },
-]
+import { getStartersForScreen } from './welcome-starters'
 
 /** Each part arrives a beat after the one above it. */
 const RISE =
@@ -39,6 +26,7 @@ export function WelcomeScreen({
   name,
   orbState,
   spacious,
+  context: explicitContext,
 }: {
   onAsk: (text: string) => void
   /** The signed-in officer, when the app knows who it is. */
@@ -46,8 +34,13 @@ export function WelcomeScreen({
   orbState: OrbState
   /** True when the panel fills the screen and there is room to breathe. */
   spacious: boolean
+  /** Active Copilot context for dynamic screen-aware starter prompts */
+  context?: CopilotContext
 }) {
   const { t } = useTranslation('copilot')
+  const detectedContext = useCopilotContext()
+  const context = explicitContext ?? detectedContext
+  const starters = getStartersForScreen(context?.screen)
   const greeting = t(`greeting.${dayPart(new Date().getHours())}`)
 
   return (
@@ -76,7 +69,7 @@ export function WelcomeScreen({
         className="grid w-full gap-2 @2xl/copilot:grid-cols-3 @2xl/copilot:gap-3"
         aria-label={t('starters.label')}
       >
-        {STARTERS.map(({ key, icon: Icon }, index) => (
+        {starters.map(({ key, icon: Icon }, index) => (
           <li
             key={key}
             style={{ animationDelay: `${240 + index * 90}ms` }}

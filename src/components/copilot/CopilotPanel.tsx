@@ -108,7 +108,7 @@ export default function CopilotPanel({
   returnFocusRef: RefObject<HTMLButtonElement | null>
 }) {
   const { t } = useTranslation('copilot')
-  const { thread, send, stop, reset } = useCopilotChat()
+  const { thread, send, stop, reset, context } = useCopilotChat()
   const busy = isTurnActive(thread.phase)
   const username = useAppSelector(
     state => (state.auth.user as { username?: unknown } | null)?.username
@@ -294,6 +294,7 @@ export default function CopilotPanel({
                   name={typeof username === 'string' ? username : undefined}
                   orbState={orbStateFor(thread.phase, typing)}
                   spacious={mode === 'fullscreen'}
+                  context={context}
                 />
               </div>
             ) : (

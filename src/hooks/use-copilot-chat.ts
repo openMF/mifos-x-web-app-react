@@ -7,15 +7,16 @@
  */
 
 import { useCallback, useEffect, useReducer, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { useAppSelector } from '@/app/hook'
+import { useCopilotContext } from '@/hooks/use-copilot-context'
 import {
   copilotReducer,
   createCopilotTransport,
   initialThread,
   isTurnActive,
   sanitizeInput,
+  type CopilotContext,
   type CopilotEvent,
   type CopilotThread,
   type CopilotTransport,
@@ -36,15 +37,18 @@ export type SendResult =
  * using this hook. It is cleared on sign-out, so the next officer on a shared
  * machine never sees the previous one's questions.
  */
-export function useCopilotChat() {
+export function useCopilotChat(explicitContext?: Partial<CopilotContext>) {
   const [thread, dispatch] = useReducer(copilotReducer, initialThread)
-  const { i18n } = useTranslation()
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
+  const copilotContext = useCopilotContext()
 
-  // Read inside callbacks, so they always see the latest turn without being
-  // recreated on every streamed word.
+  // Read inside callbacks, so they always see the latest turn and active screen context
+  // without being recreated on every streamed word.
   const threadRef = useRef<CopilotThread>(thread)
   threadRef.current = thread
+
+  const contextRef = useRef<CopilotContext>(copilotContext)
+  contextRef.current = { ...copilotContext, ...explicitContext }
 
   const transportRef = useRef<CopilotTransport | null>(null)
   const controllerRef = useRef<AbortController | null>(null)
@@ -97,7 +101,7 @@ export function useCopilotChat() {
           {
             message: result.text,
             conversationId: threadRef.current.conversationId,
-            context: { language: i18n.language.split('-')[0] },
+            context: contextRef.current,
           },
           controller.signal
         ),
@@ -105,7 +109,7 @@ export function useCopilotChat() {
       )
       return { sent: true }
     },
-    [consume, i18n.language]
+    [consume]
   )
 
   const stop = useCallback(() => {
@@ -128,7 +132,7 @@ export function useCopilotChat() {
   }, [isAuthenticated, reset])
   useEffect(() => () => controllerRef.current?.abort(), [])
 
-  return { thread, send, stop, reset }
+  return { thread, send, stop, reset, context: copilotContext }
 }
 
 function newId(): string {

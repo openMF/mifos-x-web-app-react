@@ -33,6 +33,7 @@ export {
   sanitizeInput,
   type SanitizeResult,
 } from './input-sanitizer'
+export { detectContextFromPath } from './context-detector'
 
 export { gatewayMode, type GatewayMode } from './gateway-mode'
 

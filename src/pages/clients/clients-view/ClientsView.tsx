@@ -14,6 +14,7 @@ import { Building2, Menu } from 'lucide-react'
 import { ClientApi, type GetClientsClientIdResponse } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import { useSetCopilotEntity } from '@/hooks/use-copilot-context'
 import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import AppTabs from '@/components/custom/tabs/AppTabs'
 import {
@@ -100,6 +101,7 @@ const ClientsView = () => {
   const isActive = client?.status?.id === 300
 
   useEffect(() => {
+    setClient(undefined)
     const fetchClient = async () => {
       try {
         const res = await clientsApi.retrieveOne11(Number(id))
@@ -110,6 +112,15 @@ const ClientsView = () => {
     }
     fetchClient()
   }, [id])
+
+  useSetCopilotEntity(
+    client
+      ? {
+          clientName: client.displayName,
+          clientId: client.id ?? (id ? Number(id) : null),
+        }
+      : null
+  )
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">

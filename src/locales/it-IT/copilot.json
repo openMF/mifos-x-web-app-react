@@ -50,6 +50,54 @@
     "savingsBalance": {
       "title": "Controlla il saldo di risparmio di un cliente",
       "description": "Saldi e movimenti recenti"
+    },
+    "loanSchedule": {
+      "title": "Controlla il piano di ammortamento",
+      "description": "Rate, scadenze e importi dovuti"
+    },
+    "loanForeclosure": {
+      "title": "Simula estinzione anticipata",
+      "description": "Calcola saldo residuo e liquidazione"
+    },
+    "loanWaiver": {
+      "title": "Calcola sgravio degli interessi",
+      "description": "Opzioni di esonero da interessi e penali"
+    },
+    "clientSummary": {
+      "title": "Riepiloga profilo cliente",
+      "description": "Panoramica di conti e attività"
+    },
+    "clientOverdue": {
+      "title": "Controlla prestiti in ritardo",
+      "description": "Arretrati in sospeso sui conti del cliente"
+    },
+    "clientAccounts": {
+      "title": "Elenca tutti i conti attivi",
+      "description": "Prestiti, risparmi e quote azionarie"
+    },
+    "savingsBalanceDetail": {
+      "title": "Controlla saldo e blocchi",
+      "description": "Saldo disponibile, blocchi e interessi"
+    },
+    "savingsTransactions": {
+      "title": "Mostra transazioni recenti",
+      "description": "Ultimi versamenti, prelievi e commissioni"
+    },
+    "savingsCalculateInterest": {
+      "title": "Calcola interessi maturati",
+      "description": "Verifica interessi maturati da contabilizzare"
+    },
+    "glAccountBalances": {
+      "title": "Controlla saldi conti mastro",
+      "description": "Verifica dare e avere nei mastri contabili"
+    },
+    "recentJournalEntries": {
+      "title": "Mostra scritture contabili recenti",
+      "description": "Filtra registrazioni per data e conto"
+    },
+    "reconcileDiscrepancies": {
+      "title": "Controlla scritture non registrate",
+      "description": "Verifica ratei periodici e chiusure"
     }
   },
   "you": "Tu",
