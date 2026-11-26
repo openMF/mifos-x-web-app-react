@@ -48,12 +48,31 @@ type Row = {
   transactionId: string
   transactionDate: string
   type: string
+  debit: number | null
+  credit: number | null
   createdBy: string
   submittedOn: string
   accountCode: string
   accountName: string
   currency: string
+  currencyPrecision?: number
 }
+
+const getOptionValue = (value: unknown): string => {
+  if (typeof value === 'string') return value
+  if (value && typeof value === 'object' && 'value' in value) {
+    return typeof value.value === 'string' ? value.value : ''
+  }
+  return ''
+}
+
+const formatAmount = (amount: number | null, precision = 2): string =>
+  amount === null
+    ? '-'
+    : amount.toLocaleString('en-US', {
+        minimumFractionDigits: precision,
+        maximumFractionDigits: precision,
+      })
 
 const SearchJournalEntry = () => {
   const navigate = useNavigate()
@@ -97,48 +116,75 @@ const SearchJournalEntry = () => {
             : (rawData ?? [])
         // Normalize each item into the table shape you render
         const mapped: Row[] = (Array.isArray(items) ? items : []).map(
-          (r: Record<string, unknown>) => ({
-            id: (r.id ?? r.entryId ?? r.transactionId ?? '') as number | string,
-            office: (r.officeName ??
-              (r.office as Record<string, unknown> | undefined)?.name ??
-              '') as string,
-            transactionId: (r.transactionId ?? '') as string,
-            transactionDate:
-              // Fineract often returns dates as arrays [yyyy, mm, dd]
-              Array.isArray(r.transactionDate) && r.transactionDate.length >= 3
-                ? new Date(
-                    r.transactionDate[0] as number,
-                    ((r.transactionDate[1] as number) ?? 1) - 1,
-                    r.transactionDate[2] as number
-                  ).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                  })
-                : ((r.transactionDate ?? '') as string),
-            type: ((r.entryType ?? r.type ?? '') as string).toString(),
-            createdBy: (r.createdByUserName ?? r.createdBy ?? '') as string,
-            submittedOn:
-              Array.isArray(r.submittedOnDate) && r.submittedOnDate.length >= 3
-                ? new Date(
-                    r.submittedOnDate[0] as number,
-                    ((r.submittedOnDate[1] as number) ?? 1) - 1,
-                    r.submittedOnDate[2] as number
-                  ).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                  })
-                : ((r.submittedOnDate ?? '') as string),
-            accountCode: (r.accountCode ??
-              r.glAccountCode ??
-              r.glCode ??
-              '') as string,
-            accountName: (r.accountName ?? r.glAccountName ?? '') as string,
-            currency: (r.currencyCode ??
-              (r.currency as Record<string, unknown> | undefined)?.code ??
-              '') as string,
-          })
+          (r: Record<string, unknown>) => {
+            const amount = r.amount == null ? null : Number(r.amount)
+            const entryType = getOptionValue(r.entryType).toUpperCase()
+
+            return {
+              id: (r.id ?? r.entryId ?? r.transactionId ?? '') as
+                | number
+                | string,
+              office: (r.officeName ??
+                (r.office as Record<string, unknown> | undefined)?.name ??
+                '') as string,
+              transactionId: (r.transactionId ?? '') as string,
+              transactionDate:
+                // Fineract often returns dates as arrays [yyyy, mm, dd]
+                Array.isArray(r.transactionDate) &&
+                r.transactionDate.length >= 3
+                  ? new Date(
+                      r.transactionDate[0] as number,
+                      ((r.transactionDate[1] as number) ?? 1) - 1,
+                      r.transactionDate[2] as number
+                    ).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : ((r.transactionDate ?? '') as string),
+              type:
+                getOptionValue(r.glAccountType) ||
+                getOptionValue(r.type) ||
+                (typeof r.type === 'string' ? r.type : ''),
+              debit:
+                entryType === 'DEBIT' &&
+                amount !== null &&
+                Number.isFinite(amount)
+                  ? amount
+                  : null,
+              credit:
+                entryType === 'CREDIT' &&
+                amount !== null &&
+                Number.isFinite(amount)
+                  ? amount
+                  : null,
+              createdBy: (r.createdByUserName ?? r.createdBy ?? '') as string,
+              submittedOn:
+                Array.isArray(r.submittedOnDate) &&
+                r.submittedOnDate.length >= 3
+                  ? new Date(
+                      r.submittedOnDate[0] as number,
+                      ((r.submittedOnDate[1] as number) ?? 1) - 1,
+                      r.submittedOnDate[2] as number
+                    ).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : ((r.submittedOnDate ?? '') as string),
+              accountCode: (r.accountCode ??
+                r.glAccountCode ??
+                r.glCode ??
+                '') as string,
+              accountName: (r.accountName ?? r.glAccountName ?? '') as string,
+              currency: (r.currencyCode ??
+                (r.currency as Record<string, unknown> | undefined)?.code ??
+                '') as string,
+              currencyPrecision: (
+                r.currency as Record<string, unknown> | undefined
+              )?.decimalPlaces as number | undefined,
+            }
+          }
         )
 
         setEntries(mapped)
@@ -233,7 +279,7 @@ const SearchJournalEntry = () => {
       </div>
 
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-x-auto">
-        <Table className="w-full table-fixed">
+        <Table className="min-w-[1400px] w-full table-fixed">
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
             Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
             of {totalPages}
@@ -241,7 +287,7 @@ const SearchJournalEntry = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[60px]">ID</TableHead>
-              <TableHead className="w-[60px]">Office</TableHead>
+              <TableHead className="w-[100px]">Office</TableHead>
               <TableHead className="w-[110px]">Transaction ID</TableHead>
               <TableHead className="w-[120px]">Transaction Date</TableHead>
               <TableHead className="w-[60px]">Type</TableHead>
@@ -250,13 +296,15 @@ const SearchJournalEntry = () => {
               <TableHead className="w-[120px]">Account Code</TableHead>
               <TableHead className="w-[220px]">Account Name</TableHead>
               <TableHead className="w-[80px]">Currency</TableHead>
+              <TableHead className="w-[140px] text-right">Debit</TableHead>
+              <TableHead className="w-[140px] text-right">Credit</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginated.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={10}
+                  colSpan={12}
                   className="text-center text-gray-500 py-6"
                 >
                   No journal entries found.
@@ -267,14 +315,16 @@ const SearchJournalEntry = () => {
                 <TableRow
                   key={entry.id}
                   onClick={() =>
-                    navigate(`/accounting/journal-entries/${entry.id}`)
+                    navigate(
+                      `/accounting/journal-entries/transactions/view/${encodeURIComponent(entry.transactionId)}`
+                    )
                   }
                   className="hover:bg-muted cursor-pointer"
                 >
                   <TableCell className="whitespace-pre-wrap break-words">
                     {entry.id}
                   </TableCell>
-                  <TableCell className="whitespace-pre-wrap break-words">
+                  <TableCell className="whitespace-normal break-words">
                     {entry.office}
                   </TableCell>
                   <TableCell className="whitespace-pre-wrap break-words">
@@ -300,6 +350,12 @@ const SearchJournalEntry = () => {
                   </TableCell>
                   <TableCell className="whitespace-pre-wrap break-words">
                     {entry.currency}
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-blue-700 dark:text-blue-400">
+                    {formatAmount(entry.debit, entry.currencyPrecision)}
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-green-700 dark:text-green-400">
+                    {formatAmount(entry.credit, entry.currencyPrecision)}
                   </TableCell>
                 </TableRow>
               ))

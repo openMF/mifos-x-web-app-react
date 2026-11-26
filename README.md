@@ -193,6 +193,73 @@ VITE_FINERACT_PLUGIN_OIDC_ENABLED=false
 
 ---
 
+## 🤖 Copilot (Optional)
+
+Mifos X Copilot is an AI assistant panel. It is off by default and needs the
+Copilot gateway from [openMF/mcp-mifosx](https://github.com/openMF/mcp-mifosx/tree/main/gateway).
+The web app only talks to that gateway, with the signed-in officer's own
+credential. It never holds an AI key and never chooses the AI model.
+
+| Variable                          | Description                                 | Default |
+| --------------------------------- | ------------------------------------------- | ------- |
+| `VITE_MIFOS_ENABLE_COPILOT`       | Turn the Copilot on                         | `false` |
+| `VITE_MIFOS_COPILOT_MCP_BASE_URL` | Gateway URL (`https`, or `mock` for a demo) | (empty) |
+
+The launcher appears only when the Copilot is on **and** the gateway URL is
+set. With the URL empty, or not `https`, it stays hidden and the browser
+console says why. `http://localhost` is accepted by the dev server only.
+
+### Try it without a gateway
+
+```bash
+# .env.development.local
+VITE_MIFOS_ENABLE_COPILOT=true
+VITE_MIFOS_COPILOT_MCP_BASE_URL=mock
+```
+
+`mock` plays recorded sample answers and marks the panel **Demo**. Nothing in
+them comes from Fineract, so do not use it in production.
+
+### Run it with the gateway
+
+In a checkout of `openMF/mcp-mifosx` (Java 21+):
+
+```bash
+cd gateway
+
+# Allow this app's dev server, and point at the same Fineract this app uses
+export COPILOT_ALLOWED_ORIGINS=http://localhost:5173
+export FINERACT_BASE_URL=https://your-fineract-host
+
+./mvnw spring-boot:run                                  # scripted AI, real Fineract reads
+COPILOT_LLM_PROVIDER=groq COPILOT_LLM_API_KEY=gsk_... ./mvnw spring-boot:run
+COPILOT_LLM_PROVIDER=ollama COPILOT_LLM_MODEL=qwen3:8b ./mvnw spring-boot:run   # model on your machine
+```
+
+Then, in this app:
+
+```bash
+# .env.development.local
+VITE_MIFOS_ENABLE_COPILOT=true
+VITE_MIFOS_COPILOT_MCP_BASE_URL=http://localhost:8090
+```
+
+Things that commonly go wrong:
+
+- **Nothing happens, CORS error in the console:** the app's origin is missing
+  from `COPILOT_ALLOWED_ORIGINS`.
+- **"Configuration mismatch":** the gateway's `FINERACT_BASE_URL` is a
+  different server from the one this app signed in to. They must match, so the
+  Copilot can never act on another institution's data.
+- **Every lookup fails:** the gateway's `FINERACT_API_PATH` does not match how
+  that Fineract publishes its API.
+
+The AI provider and model (`COPILOT_LLM_PROVIDER`, `COPILOT_LLM_MODEL`,
+`COPILOT_LLM_API_KEY`, `COPILOT_LLM_BASE_URL`) are gateway settings; see the
+gateway README.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome to improve the project.

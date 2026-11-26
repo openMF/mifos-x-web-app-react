@@ -42,6 +42,7 @@ import { envConfig } from '@/lib/env-config'
 import { getTenantId, getTenantOptions, setTenantId } from '@/lib/http-client'
 import { isOidcUsable } from '@/lib/oidc-config'
 import OidcLoginButton from '@/pages/login/OidcLoginButton'
+import { useTheme } from '@/hooks/use-theme'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -102,18 +103,10 @@ const Login = () => {
     setTenant(value)
   }
 
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const savedTheme = localStorage.getItem('theme')
-    return (savedTheme as 'light' | 'dark') || 'light'
-  })
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('theme', theme)
-  }, [theme])
+  const { isDark: darkThemeActive, setTheme } = useTheme()
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
+    setTheme(darkThemeActive ? 'light' : 'dark')
   }
 
   return (
@@ -185,7 +178,7 @@ const Login = () => {
           <LanguageSwitcher className="w-[140px] dark:bg-zinc-800 dark:text-white" />
 
           <Button onClick={toggleTheme} variant="outline">
-            {theme === 'light' ? (
+            {!darkThemeActive ? (
               <Moon className="w-5 h-5" />
             ) : (
               <Sun className="w-5 h-5" />
@@ -195,7 +188,7 @@ const Login = () => {
 
         <div className="lg:h-[90%] flex flex-col items-center w-full max-w-md mx-auto">
           <img
-            src={theme === 'dark' ? mifosLogoDark : mifosLogoLight}
+            src={darkThemeActive ? mifosLogoDark : mifosLogoLight}
             alt="mifosLogo"
             className="h-[130px] m-6"
           />

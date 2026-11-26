@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import {
   Table,
@@ -33,7 +34,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ChevronDown, ChevronRight, Plus, Upload } from 'lucide-react'
-import { format } from 'date-fns'
+import { formatDate } from '@/lib/date-utils'
 
 const officesApi = new OfficesApi(getConfiguration())
 
@@ -81,6 +82,7 @@ const Offices = () => {
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const navigate = useNavigate()
+  const { t } = useTranslation(['organization', 'common'])
 
   // fetch all offices
   useEffect(() => {
@@ -144,7 +146,10 @@ const Offices = () => {
           {hasChildren ? (
             <button
               type="button"
-              aria-label={`${isCollapsed ? 'Expand' : 'Collapse'} ${node.name}`}
+              aria-label={t(
+                isCollapsed ? 'offices.expandOffice' : 'offices.collapseOffice',
+                { name: node.name }
+              )}
               aria-expanded={!isCollapsed}
               className="p-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-700"
               onClick={() => toggleNode(id)}
@@ -177,9 +182,9 @@ const Offices = () => {
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'Organization', href: '/organization' },
-          { label: 'Manage Offices', current: true },
+          { label: t('common:nav.home'), href: '/home' },
+          { label: t('title'), href: '/organization' },
+          { label: t('offices.manage'), current: true },
         ]}
       />
 
@@ -192,13 +197,13 @@ const Offices = () => {
             if (value === 'list' || value === 'tree') setView(value)
           }}
           className="border rounded-md"
-          aria-label="Offices view"
+          aria-label={t('offices.viewToggle')}
         >
           <ToggleGroupItem value="list" className="px-4">
-            List View
+            {t('offices.listView')}
           </ToggleGroupItem>
           <ToggleGroupItem value="tree" className="px-4">
-            Tree View
+            {t('offices.treeView')}
           </ToggleGroupItem>
         </ToggleGroup>
 
@@ -206,14 +211,14 @@ const Offices = () => {
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
           onClick={() => navigate('/organization/offices/create')}
         >
-          <Plus className="mr-2" /> Create Office
+          <Plus className="mr-2" /> {t('offices.create')}
         </Button>
 
         <Button
           className="bg-[#1074b9] hover:bg-[#1074c9] cursor-pointer px-6 py-3 text-base text-white"
           onClick={() => navigate('/organization/offices/import')}
         >
-          <Upload className="mr-2" /> Import Offices
+          <Upload className="mr-2" /> {t('offices.import')}
         </Button>
       </div>
 
@@ -221,14 +226,16 @@ const Offices = () => {
         <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6 p-6">
           <div className="flex gap-3 mb-4">
             <Button variant="outline" size="sm" onClick={expandAll}>
-              Expand All
+              {t('offices.expandAll')}
             </Button>
             <Button variant="outline" size="sm" onClick={collapseAll}>
-              Collapse All
+              {t('offices.collapseAll')}
             </Button>
           </div>
           {tree.length === 0 ? (
-            <div className="text-gray-500">No offices.</div>
+            <div className="text-gray-500">
+              {t('offices.messages.noOffices')}
+            </div>
           ) : (
             <ul>{tree.map(node => renderNode(node, 0))}</ul>
           )}
@@ -240,7 +247,7 @@ const Offices = () => {
           {/* search + pagination controls */}
           <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
             <Input
-              placeholder="Search Offices..."
+              placeholder={t('offices.searchPlaceholder')}
               value={searchTerm}
               onChange={e => {
                 setSearchTerm(e.target.value)
@@ -255,7 +262,9 @@ const Offices = () => {
                 onValueChange={handleItemsPerPageChange}
               >
                 <SelectTrigger className="w-[140px] h-11 text-base">
-                  <SelectValue placeholder="Items per page" />
+                  <SelectValue
+                    placeholder={t('common:pagination.itemsPerPage')}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="5">5</SelectItem>
@@ -271,7 +280,7 @@ const Offices = () => {
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
               >
-                Prev
+                {t('common:actions.prev')}
               </Button>
 
               <Button
@@ -280,7 +289,7 @@ const Offices = () => {
                 disabled={page === totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                Next
+                {t('common:actions.next')}
               </Button>
             </div>
           </div>
@@ -289,15 +298,27 @@ const Offices = () => {
           <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm mt-6">
             <Table>
               <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-                Showing {paginated.length} of {filtered.length} items • Page{' '}
-                {page} of {totalPages}
+                {t('common:pagination.showing', {
+                  current: paginated.length,
+                  total: filtered.length,
+                  page,
+                  pages: totalPages,
+                })}
               </TableCaption>
               <TableHeader>
                 <TableRow className="text-base">
-                  <TableHead className="px-6 py-4">Office Name</TableHead>
-                  <TableHead className="px-6 py-4">External ID</TableHead>
-                  <TableHead className="px-6 py-4">Parent Office</TableHead>
-                  <TableHead className="px-6 py-4">Opened On</TableHead>
+                  <TableHead className="px-6 py-4">
+                    {t('offices.fields.name')}
+                  </TableHead>
+                  <TableHead className="px-6 py-4">
+                    {t('offices.fields.externalId')}
+                  </TableHead>
+                  <TableHead className="px-6 py-4">
+                    {t('offices.fields.parent')}
+                  </TableHead>
+                  <TableHead className="px-6 py-4">
+                    {t('offices.fields.openingDate')}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -319,16 +340,7 @@ const Offices = () => {
                       {office.parentName || '—'}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                      {Array.isArray(office.openingDate)
-                        ? format(
-                            new Date(
-                              office.openingDate[0],
-                              office.openingDate[1] - 1,
-                              office.openingDate[2]
-                            ),
-                            'dd MMMM yyyy'
-                          )
-                        : '—'}
+                      {formatDate(office.openingDate)}
                     </TableCell>
                   </TableRow>
                 ))}

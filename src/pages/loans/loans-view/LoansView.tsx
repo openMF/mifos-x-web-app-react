@@ -60,6 +60,8 @@ const granted = new Set<string>([
   'INTEREST_PAYMENT_WAIVER',
   'PAYOUT_REFUND',
   'MERCHANT_ISSUED_REFUND',
+  'ATTACH_LOAN_ORIGINATOR',
+  'DETACH_LOAN_ORIGINATOR',
 ])
 const hasPerm = (p: string) => granted.has(p)
 
@@ -116,6 +118,11 @@ function buildLoanMenu(loan: ExtendedLoan, groupId?: string, loanId?: string) {
         'UPDATE_LOAN'
       )
       add('Reject', `loans-accounts/${id}/actions/Reject`, 'REJECT_LOAN')
+      add(
+        'Attach Loan Originator',
+        `loans-accounts/${id}/actions/AttachLoanOriginator`,
+        'ATTACH_LOAN_ORIGINATOR'
+      )
 
       const more = compact([
         allow(
@@ -424,6 +431,7 @@ const LoansView = () => {
     { label: 'Term Variations', href: `${base}/term-variations` },
     { label: 'Loan Documents', href: `${base}/loan-documents` },
     { label: 'Notes', href: `${base}/notes` },
+    { label: 'Originators', href: `${base}/originators` },
     ...datatables.map(datatable => ({
       label: datatable.label,
       href: `${base}/datatables/${encodeURIComponent(datatable.name)}`,
@@ -476,7 +484,12 @@ const LoansView = () => {
       {/* tabs + outlet */}
       <AppTabs tabs={tabs} />
       <div className="bg-white dark:bg-zinc-800 rounded-b-lg border p-6 border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Outlet />
+        <Outlet
+          context={{
+            loan,
+            canDetachOriginator: hasPerm('DETACH_LOAN_ORIGINATOR'),
+          }}
+        />
       </div>
     </div>
   )

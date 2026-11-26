@@ -23,6 +23,17 @@ const financialApi = new MappingFinancialActivitiesToAccountsApi(
   getConfiguration()
 )
 
+const glAccountOptionKeys: Record<
+  NonNullable<FinancialActivityData['mappedGLAccountType']>,
+  string
+> = {
+  ASSET: 'assetAccountOptions',
+  LIABILITY: 'liabilityAccountOptions',
+  EQUITY: 'equityAccountOptions',
+  INCOME: 'incomeAccountOptions',
+  EXPENSE: 'expenseAccountOptions',
+}
+
 const CreateFinancialActivityMappings = () => {
   const navigate = useNavigate()
 
@@ -67,8 +78,9 @@ const CreateFinancialActivityMappings = () => {
 
     // pick the right GL array from glAccountOptions map
     const glOptions = template?.glAccountOptions ?? {}
-    let list: GLAccountData[] = []
-    if (accountType) list = glOptions[accountType] ?? []
+    const list = accountType
+      ? (glOptions[glAccountOptionKeys[accountType]] ?? [])
+      : []
 
     setGlList(list)
   }

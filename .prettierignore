@@ -18,6 +18,10 @@ pnpm-lock.yaml
 # Coverage
 coverage/
 
+# Synced from openMF/mifos-tools by a bot, which resets them without running Prettier
+SECURITY.md
+CODE_OF_CONDUCT.md
+
 # Generated docs
 docs/
 

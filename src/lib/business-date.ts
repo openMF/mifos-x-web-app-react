@@ -14,27 +14,35 @@ import { dateArrayToInputValue, todayInputValue } from '@/lib/date-utils'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 /**
+ * The business date as yyyy-MM-dd, or null when business dates are turned
+ * off: GET /businessdate/BUSINESS_DATE keeps returning the last business date
+ * after `enable-business-date` is turned off, so it is only used while the
+ * setting is on.
+ */
+export async function currentBusinessDate(): Promise<string | null> {
+  const configuration = getConfiguration()
+  const setting = await new GlobalConfigurationApi(
+    configuration
+  ).retrieveOneByName('enable-business-date')
+  if (!setting.data?.enabled) return null
+  const businessDate = await new BusinessDateManagementApi(
+    configuration
+  ).getBusinessDate('BUSINESS_DATE')
+  // Fineract sends the date as [year, month, day], though the SDK types it as a string.
+  return (
+    dateArrayToInputValue(businessDate.data?.date as unknown as number[]) ||
+    null
+  )
+}
+
+/**
  * The business date as yyyy-MM-dd, for a date input's default value, like the
  * Angular web app. Falls back to today when business dates are turned off (or
- * can't be read): GET /businessdate/BUSINESS_DATE keeps returning the last
- * business date after `enable-business-date` is turned off, so it is only used
- * while the setting is on.
+ * can't be read).
  */
 export async function businessDateInputValue(): Promise<string> {
   try {
-    const configuration = getConfiguration()
-    const setting = await new GlobalConfigurationApi(
-      configuration
-    ).retrieveOneByName('enable-business-date')
-    if (!setting.data?.enabled) return todayInputValue()
-    const businessDate = await new BusinessDateManagementApi(
-      configuration
-    ).getBusinessDate('BUSINESS_DATE')
-    // Fineract sends the date as [year, month, day], though the SDK types it as a string.
-    return (
-      dateArrayToInputValue(businessDate.data?.date as unknown as number[]) ||
-      todayInputValue()
-    )
+    return (await currentBusinessDate()) || todayInputValue()
   } catch (e) {
     console.error('business date failed', e)
     return todayInputValue()

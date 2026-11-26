@@ -288,18 +288,27 @@
     "funds": "Funds"
   },
   "offices": {
+    "collapseAll": "Collapse All",
+    "collapseOffice": "Collapse {{name}}",
     "create": "Create Office",
+    "expandAll": "Expand All",
+    "expandOffice": "Expand {{name}}",
     "fields": {
       "externalId": "External ID",
       "name": "Office Name",
+      "nameDecorated": "Name Decorated",
       "officeName": "Office Name",
       "officeNameStar": "Office Name*",
       "openedOn": "Opened On*",
       "openingDate": "Opened On",
+      "parent": "Parent Office",
       "parentOffice": "Parent Office*",
       "pleaseSelectOffice": "Please select an Office"
     },
+    "import": "Import Offices",
+    "listView": "List View",
     "manage": "Manage Offices",
+    "manageOffice": "Manage Office",
     "messages": {
       "createError": "Failed to create office",
       "createSuccess": "Office created successfully.",
@@ -307,8 +316,11 @@
       "noOffices": "No offices found.",
       "updateSuccess": "Office updated successfully."
     },
+    "searchPlaceholder": "Search Offices...",
     "title": "Offices",
-    "unnamedOffice": "Unnamed Office"
+    "treeView": "Tree View",
+    "unnamedOffice": "Unnamed Office",
+    "viewToggle": "Offices view"
   },
   "provisioningCriteria": {
     "title": "Loan Provisioning Criteria",
@@ -502,6 +514,30 @@
     "fundSaved": "Fund saved successfully.",
     "officeCreated": "Office created successfully!",
     "officeSaved": "Office saved successfully."
+  },
+  "systemInformation": {
+    "fields": {
+      "businessDate": "Current Business Date",
+      "fineract": "Apache Fineract®",
+      "name": "Name",
+      "renderTime": "Render Time",
+      "server": "Server",
+      "tenant": "Tenant",
+      "username": "Username",
+      "webApp": "Mifos® WebApp"
+    },
+    "licensing": {
+      "codeOfConduct": "Mifos <codeOfConductLink>Code of Conduct</codeOfConductLink> to abide by when collaborating in the community.",
+      "contributorAgreement": "<contributorAgreementLink>Mifos Contributor Agreement</contributorAgreementLink>",
+      "distribution": "The open source Mifos X distribution powered by Apache Fineract (including web apps, mobile apps, and business intelligence engine) is licensed under the <mplLink>Mozilla Public License, v2.0</mplLink>.",
+      "externalSoftware": "Considerations to factor in when <externalSoftwareLink>adding external software to Mifos</externalSoftwareLink>.",
+      "fineract": "The <fineractLink>Apache Fineract</fineractLink> platform is licensed under the <apacheLicenseLink>Apache License, Version 2.0</apacheLicenseLink>. The Mifos Initiative was the guiding force behind Apache Fineract, launching it as Mifos X in 2011 and contributing to Apache in 2016 with graduation to a top-level project of the Apache Software Foundation in 2017.",
+      "howToLicense": "<licenseCodeLink>How to properly license Mifos code that you are contributing.</licenseCodeLink>",
+      "legacy": "Our legacy codebase (Mifos 2) is governed by the <apacheLicenseLink>Apache 2.0 License</apacheLicenseLink>. Please read the following to learn how to correctly adhere to the terms of the license.",
+      "licenseFaq": "Implications of what this means when modifying the source code can be found in the <licenseFaqLink>Apache License FAQs</licenseFaqLink>",
+      "title": "Software Licensing"
+    },
+    "title": "System Information"
   },
   "tellerCashierManagement": "Teller / Cashier Management",
   "title": "Organization",

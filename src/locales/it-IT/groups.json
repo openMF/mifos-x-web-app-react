@@ -46,6 +46,8 @@
     "meetingFrequency": "Frequenza Riunioni:",
     "missingInOpenAPI": "Mancante in OpenApi",
     "confirmDelete": "Sei sicuro di voler eliminare questo gruppo?",
+    "deleted": "Gruppo eliminato correttamente.",
+    "deleteFailed": "Impossibile eliminare il gruppo. Riprova.",
     "tabs": {
       "general": "Generale",
       "notes": "Note",
@@ -107,11 +109,6 @@
     "tableSavingAccount": "Conto di Risparmio",
     "tableLastActive": "Ultima Attività"
   },
-  "notes": {
-    "heading": "Note",
-    "placeholder": "Scrivi una nota ....",
-    "addButton": "+ Aggiungi"
-  },
   "committee": {
     "heading": "Membri Clienti",
     "addButton": "+ Aggiungi"
@@ -166,5 +163,23 @@
     "placeholderDestinationGroup": "Seleziona gruppo di destinazione",
     "placeholderInputGroup": "Inserisci ID del gruppo di destinazione",
     "groupFallback": "Gruppo {{id}}"
+  },
+  "activate": {
+    "title": "Attiva Gruppo",
+    "labelActivationDate": "Data di attivazione*",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "errors": {
+      "dateRequired": "Inserisci una data di attivazione.",
+      "dateInFuture": "La data di attivazione non può essere nel futuro.",
+      "dateBeforeSubmitted": "La data di attivazione non può essere precedente alla data di invio."
+    }
+  },
+  "errors": {
+    "failedActivateGroup": "Impossibile attivare il gruppo.",
+    "failedFetchGroup": "Impossibile caricare i dettagli del gruppo."
+  },
+  "success": {
+    "groupActivated": "Gruppo attivato con successo."
   }
 }

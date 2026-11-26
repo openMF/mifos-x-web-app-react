@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
 import {
@@ -52,6 +53,8 @@ const ViewRecurringDepositProducts = () => {
           { label: recurrProduct?.name ?? 'View', current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mb-4" />
 
       {/* Main card */}
       <div className="bg-white dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-700 shadow-sm">

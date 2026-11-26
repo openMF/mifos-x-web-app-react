@@ -46,6 +46,8 @@
     "meetingFrequency": "Meeting Frequency:",
     "missingInOpenAPI": "Missing in OpenApi",
     "confirmDelete": "Are you sure you want to delete this group?",
+    "deleted": "Group deleted successfully.",
+    "deleteFailed": "Failed to delete the group. Please try again.",
     "tabs": {
       "general": "General",
       "notes": "Notes",
@@ -107,11 +109,6 @@
     "tableSavingAccount": "Saving Account",
     "tableLastActive": "Last Active"
   },
-  "notes": {
-    "heading": "Notes",
-    "placeholder": "Write a note ....",
-    "addButton": "+ Add"
-  },
   "committee": {
     "heading": "Client Members",
     "addButton": "+ Add"
@@ -166,5 +163,23 @@
     "placeholderDestinationGroup": "Select destination group",
     "placeholderInputGroup": "Enter destination group ID",
     "groupFallback": "Group {{id}}"
+  },
+  "activate": {
+    "title": "Activate Group",
+    "labelActivationDate": "Activation Date*",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "errors": {
+      "dateRequired": "Please enter an activation date.",
+      "dateInFuture": "The activation date cannot be in the future.",
+      "dateBeforeSubmitted": "The activation date cannot be before the submitted on date."
+    }
+  },
+  "errors": {
+    "failedActivateGroup": "Failed to activate group.",
+    "failedFetchGroup": "Failed to load group details."
+  },
+  "success": {
+    "groupActivated": "Group activated successfully."
   }
 }

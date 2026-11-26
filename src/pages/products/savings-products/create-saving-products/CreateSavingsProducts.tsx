@@ -145,7 +145,6 @@ const CreateSavingsProducts = () => {
           onSubmit={handleSubmit}
           onCancel={() => navigate('/products/saving-products')}
           isLoading={isLoading}
-          submitLabel="Submit"
         />
       </div>
     </div>

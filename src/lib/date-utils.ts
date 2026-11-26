@@ -5,6 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import i18next from 'i18next'
 
 /**
  * Formats a date value using the given locale.
@@ -16,12 +17,13 @@
  *  - undefined / null
  *
  * @param date     The raw date value (array, string, Date, or nullish)
- * @param locale   BCP-47 locale string (e.g. 'en-US', 'es-ES') — use i18n.language
+ * @param locale   BCP-47 locale string (e.g. 'en-US', 'es-ES'); defaults to the
+ *                 language selected in the app
  * @param fallback Value to return when date is missing/invalid (default: '—')
  */
 export function formatDate(
   date: number[] | string | Date | undefined | null,
-  locale = 'en',
+  locale = i18next.resolvedLanguage ?? 'en',
   fallback = '—'
 ): string {
   if (!date) return fallback

@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 
 import { getConfiguration } from '@/lib/fineract-openapi'
 import {
@@ -78,6 +79,8 @@ const RecurringDepositProducts = () => {
           { label: 'Recurring Deposit Products', current: true },
         ]}
       />
+
+      <RouteSuccessMessage className="mb-4" />
 
       <div className="mb-6">
         <Button

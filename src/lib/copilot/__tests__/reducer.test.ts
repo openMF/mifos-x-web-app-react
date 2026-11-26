@@ -66,6 +66,13 @@ describe('copilotReducer', () => {
     ])
   })
 
+  it('stamps the question and its answer with the time it was sent', () => {
+    const thread = run(initialThread, { ...send, sentAt: 1_700_000_000_000 })
+    expect(thread.messages.map(m => m.createdAt)).toEqual([
+      1_700_000_000_000, 1_700_000_000_000,
+    ])
+  })
+
   it('builds the answer as text arrives and finishes it', () => {
     const thread = run(
       initialThread,
@@ -261,6 +268,28 @@ describe('copilotReducer', () => {
       { type: 'RunError', code: 'LLM_UNAVAILABLE', retryable: true }
     )
     expect(thread.pendingApproval).toBeNull()
+  })
+
+  it('records that a decision may or may not have run', () => {
+    const thread = run(
+      initialThread,
+      send,
+      { type: 'RunFinished', outcome: { type: 'interrupt', approval } },
+      { type: 'decide', decision: 'approve', assistantMessageId: 'a2' },
+      {
+        type: 'RunError',
+        code: 'LLM_UNAVAILABLE',
+        retryable: false,
+        outcomeUnknown: true,
+      }
+    )
+    expect(thread.pendingApproval).toBeNull()
+    expect(last(thread).error).toEqual({
+      code: 'LLM_UNAVAILABLE',
+      message: undefined,
+      retryable: false,
+      outcomeUnknown: true,
+    })
   })
 
   it('stops on cancel and drops events that arrive afterwards', () => {

@@ -9,6 +9,7 @@ import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
 import Callback from '@/pages/login/Callback'
+import { lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import ChartOfAccounts from '@/pages/accounting/chart-of-accounts/ChartOfAccounts'
@@ -16,6 +17,7 @@ import ViewGlAccounts from '@/pages/accounting/chart-of-accounts/ViewGlAccounts'
 import CreateGlAccounts from '@/pages/accounting/chart-of-accounts/CreateGlAccounts'
 import EditGlAccounts from '@/pages/accounting/chart-of-accounts/EditGlAccounts'
 import CreateJournalEntry from '@/pages/accounting/create-journal-entry/CreateJournalEntry'
+import ViewJournalEntryTransaction from '@/pages/accounting/create-journal-entry/ViewJournalEntryTransaction'
 import FrequentPostings from '@/pages/accounting/frequent-postings/FrequentPostings'
 import Notifications from '@/pages/notifications/Notifications'
 import Dashboard from '@/pages/home/dashboard/Dashboard'
@@ -32,6 +34,7 @@ import NotFound from '@/pages/not-found/NotFound'
 import SearchResults from '@/pages/search/SearchResults'
 import Settings from '@/pages/settings/Settings'
 import Accounting from '@/pages/accounting/Accounting'
+import MigrateOpeningBalances from '@/pages/accounting/MigrateOpeningBalances'
 import SearchJournalEntry from '@/pages/accounting/create-journal-entry/SearchJournalEntry'
 import AccountingRules from '@/pages/accounting/accounting-rules/AccountingRules'
 import ViewAccountingRules from '@/pages/accounting/accounting-rules/ViewAccountingRules'
@@ -42,9 +45,11 @@ import EditClosure from '@/pages/accounting/closing-entries/EditClosure'
 import FinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/FinancialActivityMappings'
 import CreateFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/CreateFinancialActivityMappings'
 import ViewFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/ViewFinancialActivityMappings'
+import EditFinancialActivityMappings from '@/pages/accounting/financial-activity-mappings/EditFinancialActivityMappings'
 import PeriodicAccruals from '@/pages/accounting/periodic-accruals/PeriodicAccruals'
 import ProvisioningEntries from '@/pages/accounting/provisioning-entries/ProvisioningEntries'
 import CreateProvisioningEntry from '@/pages/accounting/provisioning-entries/CreateProvisioningEntry'
+import ViewProvisioningEntry from '@/pages/accounting/provisioning-entries/ViewProvisioningEntry'
 import Reports from '@/pages/reports/Reports'
 import RunReports from '@/pages/reports/RunReports'
 import Users from '@/pages/users/Users'
@@ -137,8 +142,10 @@ import ProductsMix from '@/pages/products/products-mix/ProductsMix'
 import CreateProductMix from '@/pages/products/products-mix/CreateProductMix'
 import FixedDepositProducts from '@/pages/products/fixed-deposit-products/FixedDepositProducts'
 import ViewFixedDepositProducts from '@/pages/products/fixed-deposit-products/ViewFixedDepositProducts'
+import CreateFixedDepositProduct from '@/pages/products/fixed-deposit-products/create-fixed-deposit-product/CreateFixedDepositProduct'
 import RecurringDepositProducts from '@/pages/products/recurring-deposit-products/RecurringDepositProducts'
 import ViewRecurringDepositProducts from '@/pages/products/recurring-deposit-products/ViewRecurringDepositProducts'
+import CreateRecurringDepositProducts from '@/pages/products/recurring-deposit-products/create-recurring-deposit-products/CreateRecurringDepositProducts'
 import ManageTaxConfigurations from '@/pages/products/manage-tax-configurations/ManageTaxConfigurations'
 import ManageTaxComponents from '@/pages/products/manage-tax-configurations/manage-tax-components/ManageTaxComponents'
 import ManageTaxGroups from '@/pages/products/manage-tax-configurations/manage-tax-groups/ManageTaxGroups'
@@ -155,8 +162,10 @@ import ViewCodes from '@/pages/system/codes/ViewCodes'
 import CreateCode from '@/pages/system/codes/CreateCode'
 import ManageReports from '@/pages/system/manage-reports/ManageReports'
 import ViewReports from '@/pages/system/manage-reports/ViewReports'
+import EditReports from '@/pages/system/manage-reports/EditReports'
 import RolesAndPermissions from '@/pages/system/roles-and-permissions/RolesAndPermissions'
 import CreateRolesAndPermissions from '@/pages/system/roles-and-permissions/CreateRolesAndPermissions'
+import EditRolesAndPermissions from '@/pages/system/roles-and-permissions/EditRolesAndPermissions'
 import AccountNumberPreferences from '@/pages/system/account-number-preferences/AccountNumberPreferences'
 import CreateAccountNumberPreferences from '@/pages/system/account-number-preferences/CreateAccountNumberPreferences'
 import ViewAccountNumberPreferences from '@/pages/system/account-number-preferences/ViewAccountNumberPreferences'
@@ -172,10 +181,14 @@ import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
 import AboutUs from '@/pages/system/about-us/AboutUs'
 import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
+import SystemInformation from '@/pages/system/system-information/SystemInformation'
 import Centers from '@/pages/centers/Centers'
 import CreateCenters from '@/pages/centers/CreateCenters'
 import EditCenters from '@/pages/centers/EditCenters'
 import CloseCenters from '@/pages/centers/CloseCenters'
+import ActivateCenters from '@/pages/centers/ActivateCenters'
+import CenterAssignStaff from '@/pages/centers/centers-view/center-actions/CenterAssignStaff'
+import AttachCenterMeeting from '@/pages/centers/centers-view/center-actions/AttachCenterMeeting'
 import CentersView from '@/pages/centers/centers-view/CentersView'
 import CentersGeneralTab from '@/pages/centers/centers-view/general-tab/CentersGeneralTab'
 import CentersNotesTab from '@/pages/centers/centers-view/notes-tab/CentersNotesTab'
@@ -185,6 +198,7 @@ import EditGroups from '@/pages/groups/groups-view/group-actions/EditGroups'
 import TransferClients from '@/pages/groups/groups-view/group-actions/TransferClients'
 import ManageGroupMembers from '@/pages/groups/groups-view/group-actions/ManageGroupMembers'
 import AttachMeeting from '@/pages/groups/groups-view/group-actions/AttachMeeting'
+import ActivateGroup from '@/pages/groups/groups-view/group-actions/ActivateGroup'
 import GroupsAddRoleCommitteeTab from '@/pages/groups/groups-view/commitee-tab/GroupsAddRoleCommiteeTab'
 import GroupsView from '@/pages/groups/groups-view/GroupsView'
 import GroupsGeneralTab from '@/pages/groups/groups-view/general-tab/GroupsGeneralTab'
@@ -215,6 +229,7 @@ import WriteOffPage from '@/pages/loans/loans-view/loan-account-actions/write-of
 import CloseAsRescheduled from '@/pages/loans/loans-view/loan-account-actions/close-as-rescheduled/CloseAsRescheduled'
 import LoansAccountClose from '@/pages/loans/loans-view/loan-account-actions/loans-account-close/LoansAccountClose'
 import SellLoan from '@/pages/loans/loans-view/loan-account-actions/sell-loan/SellLoan'
+import AttachLoanOriginator from '@/pages/loans/loans-view/loan-account-actions/attach-loan-originator/AttachLoanOriginator'
 import SavingsAccountView from '@/pages/saving-product/saving-product-view/SavingProductView'
 import SavingProductGeneralTab from '@/pages/saving-product/saving-product-view/general-tab/SavingProductGeneralTab'
 import SavingProductTransactionTab from '@/pages/saving-product/saving-product-view/transaction-tab/SavingProductTransactionTab'
@@ -238,11 +253,13 @@ import LoansCollateralTab from '@/pages/loans/loans-view/loan-collateral-tab/Loa
 import LoansTermVariationsTab from '@/pages/loans/loans-view/loan-term-variations-tab/LoansTermVariationsTab'
 import LoansDocumentsTab from '@/pages/loans/loans-view/loan-documents-tab/LoansDocumentsTab'
 import LoansNotesTab from '@/pages/loans/loans-view/notes-tab/LoansNotesTab'
+import LoansOriginatorsTab from '@/pages/loans/loans-view/loan-originators-tab/LoansOriginatorsTab'
 import ViewCharge from '@/pages/clients/clients-view/charges/view-charge/ViewCharge'
 import Clients from '@/pages/clients/Clients'
 import Loans from '@/pages/loans/Loans'
 import ClientsView from '@/pages/clients/clients-view/ClientsView'
 import ActivateClient from '@/pages/clients/clients-view/client-actions/ActivateClient'
+import AddClientCharge from '@/pages/clients/clients-view/charges/AddClientCharge'
 import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/ClientAssignStaff'
 import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
@@ -286,8 +303,16 @@ import CreateClients from '@/pages/clients/create-clients/CreateClients'
 import EditClients from '@/pages/clients/edit-clients/EditClients'
 import CreateSavingsAccount from '@/pages/savings/CreateSavingsAccount'
 import CreateSharesAccount from '@/pages/shares/create-shares-account/CreateSharesAccount'
+import CreateFixedDepositAccount from '@/pages/fixed-deposits/create-fixed-deposit-account/CreateFixedDepositAccount'
+import CreateRecurringDepositAccount from '@/pages/recurring-deposits/create-recurring-deposit-account/CreateRecurringDepositAccount'
 import CreateAccountingRule from '@/pages/accounting/accounting-rules/CreateAccountingRules'
 import EditAccountingRules from '@/pages/accounting/accounting-rules/EditAccountingRules'
+
+// Development only: every Copilot state on one page, from recorded gateway
+// replies. Production builds drop this branch and its chunk entirely.
+const CopilotStates = import.meta.env.DEV
+  ? lazy(() => import('@/pages/dev/CopilotStates'))
+  : null
 
 const AppRoutes = () => {
   return (
@@ -307,6 +332,10 @@ const AppRoutes = () => {
 
           {/* Accounting */}
           <Route path="/accounting" element={<Accounting />} />
+          <Route
+            path="/accounting/opening-balances"
+            element={<MigrateOpeningBalances />}
+          />
 
           {/* Chart of Accounts Routes */}
           <Route
@@ -330,6 +359,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/journal-entries"
             element={<SearchJournalEntry />}
+          />
+          <Route
+            path="/accounting/journal-entries/transactions/view/:transactionId"
+            element={<ViewJournalEntryTransaction />}
           />
           <Route
             path="/accounting/journal-entries/create"
@@ -388,6 +421,10 @@ const AppRoutes = () => {
             path="/accounting/financial-activity-mappings/:id"
             element={<ViewFinancialActivityMappings />}
           />
+          <Route
+            path="/accounting/financial-activity-mappings/:id/edit"
+            element={<EditFinancialActivityMappings />}
+          />
 
           {/* Accruals */}
           <Route path="/accounting/accruals" element={<PeriodicAccruals />} />
@@ -400,6 +437,10 @@ const AppRoutes = () => {
           <Route
             path="/accounting/provisioning-entries/create"
             element={<CreateProvisioningEntry />}
+          />
+          <Route
+            path="/accounting/provisioning-entries/view/:id"
+            element={<ViewProvisioningEntry />}
           />
 
           {/* Notifications Routes */}
@@ -777,6 +818,10 @@ const AppRoutes = () => {
             element={<FixedDepositProducts />}
           />
           <Route
+            path="/products/fixed-deposit-products/create"
+            element={<CreateFixedDepositProduct />}
+          />
+          <Route
             path="/products/fixed-deposit-products/:id/general"
             element={<ViewFixedDepositProducts />}
           />
@@ -785,6 +830,10 @@ const AppRoutes = () => {
           <Route
             path="/products/recurring-deposit-products"
             element={<RecurringDepositProducts />}
+          />
+          <Route
+            path="/products/recurring-deposit-products/create"
+            element={<CreateRecurringDepositProducts />}
           />
           <Route
             path="/products/recurring-deposit-products/:id/general"
@@ -863,6 +912,7 @@ const AppRoutes = () => {
           {/* Manage Reports*/}
           <Route path="/system/reports" element={<ManageReports />} />
           <Route path="/system/reports/:id" element={<ViewReports />} />
+          <Route path="/system/reports/:id/edit" element={<EditReports />} />
 
           {/* Manage Roles and Permission */}
           <Route
@@ -872,6 +922,10 @@ const AppRoutes = () => {
           <Route
             path="/system/roles-and-permissions/add"
             element={<CreateRolesAndPermissions />}
+          />
+          <Route
+            path="/system/roles-and-permissions/:id/edit"
+            element={<EditRolesAndPermissions />}
           />
 
           {/*  Account Number Preferences */}
@@ -932,6 +986,12 @@ const AppRoutes = () => {
             element={<ManageDashboards />}
           />
 
+          {/* System Information */}
+          <Route
+            path="/system/system-information"
+            element={<SystemInformation />}
+          />
+
           {/* Institution */}
 
           {/* Loans list */}
@@ -957,6 +1017,10 @@ const AppRoutes = () => {
             element={<TransferClient />}
           />
           <Route path="/clients/:id/actions/close" element={<CloseClient />} />
+          <Route
+            path="/clients/:id/actions/add-charge"
+            element={<AddClientCharge />}
+          />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
             <Route path="personal-data" element={<ClientsPersonalDataTab />} />
@@ -1114,6 +1178,10 @@ const AppRoutes = () => {
             path="/clients/:clientId/loans-accounts/:loanId/actions/SellLoan"
             element={<SellLoan />}
           />
+          <Route
+            path="/clients/:clientId/loans-accounts/:loanId/actions/AttachLoanOriginator"
+            element={<AttachLoanOriginator />}
+          />
 
           <Route
             path="/clients/:clientId/charges/:chargeId"
@@ -1161,6 +1229,16 @@ const AppRoutes = () => {
           <Route
             path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
             element={<SavingsAccountTransactions />}
+          />
+
+          <Route
+            path="/clients/:clientId/fixed-deposits-accounts/create"
+            element={<CreateFixedDepositAccount />}
+          />
+
+          <Route
+            path="/clients/:clientId/recurring-deposits-accounts/create"
+            element={<CreateRecurringDepositAccount />}
           />
 
           <Route
@@ -1232,6 +1310,10 @@ const AppRoutes = () => {
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/create" element={<CreateGroups />} />
           <Route path="/groups/:id/edit" element={<EditGroups />} />
+          <Route
+            path="/groups/:id/actions/activate"
+            element={<ActivateGroup />}
+          />
           <Route
             path="/groups/:id/actions/transfer-clients"
             element={<TransferClients />}
@@ -1375,12 +1457,28 @@ const AppRoutes = () => {
             path="/groups/:groupId/loans-accounts/:loanId/actions/SellLoan"
             element={<SellLoan />}
           />
+          <Route
+            path="/groups/:groupId/loans-accounts/:loanId/actions/AttachLoanOriginator"
+            element={<AttachLoanOriginator />}
+          />
 
           {/* Centers */}
           <Route path="/centers" element={<Centers />} />
           <Route path="/centers/create" element={<CreateCenters />} />
           <Route path="centers/:id/edit" element={<EditCenters />} />
+          <Route
+            path="/centers/:id/actions/activate"
+            element={<ActivateCenters />}
+          />
           <Route path="/centers/:id/actions/close" element={<CloseCenters />} />
+          <Route
+            path="/centers/:id/actions/assign-staff"
+            element={<CenterAssignStaff />}
+          />
+          <Route
+            path="/centers/:id/actions/attach-meeting"
+            element={<AttachCenterMeeting />}
+          />
           <Route path="/centers/:id" element={<CentersView />}>
             <Route path="general" element={<CentersGeneralTab />} />
             <Route path="notes" element={<CentersNotesTab />} />
@@ -1496,6 +1594,7 @@ const AppRoutes = () => {
             />
             <Route path="loan-documents" element={<LoansDocumentsTab />} />
             <Route path="notes" element={<LoansNotesTab />} />
+            <Route path="originators" element={<LoansOriginatorsTab />} />
             <Route
               path="datatables/:datatableName"
               element={<LoanDatatableTab />}
@@ -1503,6 +1602,10 @@ const AppRoutes = () => {
           </Route>
         </Route>
       </Route>
+
+      {CopilotStates && (
+        <Route path="/dev/copilot-states" element={<CopilotStates />} />
+      )}
 
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/select'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
+import RouteSuccessMessage from '@/components/custom/route-success-message/RouteSuccessMessage'
 import { GroupsApi, type GetGroupsPageItems } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { useTranslation } from 'react-i18next'
@@ -135,6 +136,8 @@ const Groups = () => {
           { label: t('title'), href: '/groups' },
         ]}
       />
+
+      <RouteSuccessMessage className="mb-6" />
 
       {/* Add Group Button */}
       <div className="mb-6">

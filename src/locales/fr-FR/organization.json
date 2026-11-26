@@ -288,18 +288,27 @@
     "funds": "Fonds"
   },
   "offices": {
+    "collapseAll": "Tout réduire",
+    "collapseOffice": "Réduire {{name}}",
     "create": "Créer une agence",
+    "expandAll": "Tout développer",
+    "expandOffice": "Développer {{name}}",
     "fields": {
       "externalId": "Identifiant externe",
       "name": "Nom de l'agence",
+      "nameDecorated": "Nom décoré",
       "officeName": "Nom de l'agence",
       "officeNameStar": "Nom de l'agence*",
       "openedOn": "Date d'ouverture*",
       "openingDate": "Date d'ouverture",
+      "parent": "Agence parente",
       "parentOffice": "Agence parente",
       "pleaseSelectOffice": "Veuillez sélectionner une agence"
     },
+    "import": "Importer des agences",
+    "listView": "Vue en liste",
     "manage": "Gérer les agences",
+    "manageOffice": "Gérer l'agence",
     "messages": {
       "createError": "Échec de la création de l'agence",
       "createSuccess": "Agence créée avec succès.",
@@ -307,8 +316,11 @@
       "noOffices": "Aucune agence trouvée.",
       "updateSuccess": "Agence mise à jour avec succès."
     },
+    "searchPlaceholder": "Rechercher des agences...",
     "title": "Agences",
-    "unnamedOffice": "Agence sans nom"
+    "treeView": "Vue arborescente",
+    "unnamedOffice": "Agence sans nom",
+    "viewToggle": "Affichage des agences"
   },
   "provisioningCriteria": {
     "title": "Critères de provisionnement des prêts",
@@ -502,6 +514,30 @@
     "fundSaved": "Fonds enregistré avec succès.",
     "officeCreated": "Agence créée avec succès.",
     "officeSaved": "Agence enregistrée avec succès."
+  },
+  "systemInformation": {
+    "fields": {
+      "businessDate": "Date d'ouverture actuelle",
+      "fineract": "Apache Fineract®",
+      "name": "Nom",
+      "renderTime": "Temps de rendu",
+      "server": "Serveur",
+      "tenant": "Locataire",
+      "username": "Nom d'utilisateur",
+      "webApp": "Mifos® WebApp"
+    },
+    "licensing": {
+      "codeOfConduct": "<codeOfConductLink>Code de Conduite</codeOfConductLink> de Mifos à respecter lors de la collaboration dans la communauté.",
+      "contributorAgreement": "<contributorAgreementLink>Accord de Contributeur Mifos</contributorAgreementLink>",
+      "distribution": "La distribution open source Mifos X alimentée par Apache Fineract (y compris les applications web, les applications mobiles et le moteur de business intelligence) est sous licence <mplLink>Licence Publique Mozilla, v2.0</mplLink>.",
+      "externalSoftware": "Considérations à prendre en compte lors de l'<externalSoftwareLink>ajout de logiciels externes à Mifos</externalSoftwareLink>.",
+      "fineract": "La plateforme <fineractLink>Apache Fineract</fineractLink> est sous licence <apacheLicenseLink>Licence Apache, Version 2.0</apacheLicenseLink>. L'Initiative Mifos a été la force motrice derrière Apache Fineract, le lançant sous le nom de Mifos X en 2011 et contribuant à Apache en 2016 avec l'obtention du statut de projet de premier niveau de l'Apache Software Foundation en 2017.",
+      "howToLicense": "<licenseCodeLink>Comment licencier correctement le code Mifos que vous contribuez.</licenseCodeLink>",
+      "legacy": "Notre base de code héritée (Mifos 2) est régie par la <apacheLicenseLink>Licence Apache 2.0</apacheLicenseLink>. Veuillez lire ce qui suit pour apprendre comment adhérer correctement aux termes de la licence.",
+      "licenseFaq": "Les implications de ce que cela signifie lors de la modification du code source peuvent être trouvées dans les <licenseFaqLink>FAQ sur la Licence Apache</licenseFaqLink>",
+      "title": "Licence de Logiciels"
+    },
+    "title": "Informations Système"
   },
   "tellerCashierManagement": "Gestion des caissiers",
   "title": "Organisation",
