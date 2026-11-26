@@ -8,8 +8,8 @@
 
 import { envConfig } from '@/lib/env-config'
 import { getAuthHeaders } from '@/lib/http-client'
-import { isSecureUrl } from '@/lib/secure-url'
 import type { CopilotEvent } from './events'
+import { gatewayMode, type GatewayMode } from './gateway-mode'
 import { createMockTransport } from './mock'
 import { createV1Transport, type CopilotTransport } from './transport'
 
@@ -34,27 +34,34 @@ export {
   type SanitizeResult,
 } from './input-sanitizer'
 
+export { gatewayMode, type GatewayMode } from './gateway-mode'
+
+/** What this deployment's gateway setting allows; see gatewayMode. */
+export function copilotGatewayMode(): GatewayMode {
+  return gatewayMode(envConfig.copilotGatewayUrl)
+}
+
 /**
- * The transport this deployment is configured for: the mock when the gateway
- * URL is 'mock' or empty, otherwise the gateway itself, called with the
- * signed-in officer's credential so Fineract's permissions and audit trail
- * apply to everything the assistant does.
+ * The transport this deployment is configured for: the gateway itself,
+ * called with the signed-in officer's credential so Fineract's permissions
+ * and audit trail apply to everything the assistant does, or the mock when
+ * the gateway URL is the word 'mock'.
  */
 export function createCopilotTransport(): CopilotTransport {
-  const url = envConfig.copilotGatewayUrl.trim()
-  if (!url || url === 'mock') return createMockTransport()
+  const mode = copilotGatewayMode()
+  if (mode === 'mock') return createMockTransport()
 
-  // The officer's credential travels with every call, so a cleartext gateway
-  // would expose it. Fail closed, as getAuthHeaders does for Fineract.
-  if (!isSecureUrl(url)) {
+  // The launcher is hidden in this state, so this is only reached if
+  // something else asks for a transport. Fail closed: no request is made.
+  if (mode === 'off') {
     console.error(
-      'Copilot disabled: the gateway URL is not https, so the credential would be sent in cleartext.'
+      'Copilot unavailable: MIFOS_COPILOT_MCP_BASE_URL is empty, or is not https, so the credential would be sent in cleartext.'
     )
     return unavailableTransport()
   }
 
   return createV1Transport({
-    baseUrl: url,
+    baseUrl: envConfig.copilotGatewayUrl.trim(),
     // The same credential and tenant every Fineract call from this screen
     // carries, so the assistant acts in the tenant signed in to.
     getHeaders: getAuthHeaders,

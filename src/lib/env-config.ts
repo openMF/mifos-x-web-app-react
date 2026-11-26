@@ -109,14 +109,15 @@ export const envConfig = {
     ).toLowerCase() === 'true',
 
   /**
-   * Base URL of the Copilot gateway (openMF/mcp-mifosx/gateway). The literal
-   * value 'mock', or an empty value, serves recorded responses so the
-   * assistant can be developed without a gateway.
+   * Base URL of the Copilot gateway (openMF/mcp-mifosx/gateway). Empty means
+   * the Copilot is not configured and is not offered, even when switched on.
+   * The literal value 'mock' serves recorded answers, for development and
+   * demonstrations only.
    */
   copilotGatewayUrl: env(
     'MIFOS_COPILOT_MCP_BASE_URL',
     'VITE_MIFOS_COPILOT_MCP_BASE_URL',
-    'mock'
+    ''
   ),
 
   /**

@@ -89,7 +89,8 @@ export function ErrorNotice({
           {t(titleKey)}
         </p>
         <p className="mt-0.5 leading-5 text-zinc-700 dark:text-zinc-300">
-          {error.message || t(errorMessageKey(error.code))}
+          {error.message ||
+            t(errorMessageKey(error.code, error.outcomeUnknown))}
         </p>
         {onRetry && (
           <Button

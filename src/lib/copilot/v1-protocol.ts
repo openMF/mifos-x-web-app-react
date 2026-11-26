@@ -96,6 +96,8 @@ export class V1EventMapper {
   private approval: ApprovalRequest | null = null
   private error: RunError | null = null
   private finished = false
+  /** Set by end() when the stream closed before the run ended. */
+  cutOff = false
 
   map(frame: SseFrame): CopilotEvent[] {
     if (this.finished) return []
@@ -150,6 +152,7 @@ export class V1EventMapper {
       // Closing without 'done' or a card means the answer was cut off.
       // Reporting it as complete would present half an answer as a whole one.
       this.error = { type: 'RunError', code: 'INTERNAL', retryable: false }
+      this.cutOff = true
     }
     return this.finish(undefined)
   }

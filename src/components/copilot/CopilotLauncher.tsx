@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useCopilotDisplayMode } from '@/hooks/use-copilot-display-mode'
-import { isTurnActive, type TurnPhase } from '@/lib/copilot'
+import { copilotGatewayMode, isTurnActive, type TurnPhase } from '@/lib/copilot'
 import { envConfig } from '@/lib/env-config'
 import { cn } from '@/lib/utils'
 import { canUseCopilot, replyArrived } from './copilot-ui'
@@ -36,12 +36,25 @@ const ICON_HIDDEN = 'scale-25 opacity-0 blur-[4px]'
 
 /**
  * The floating Copilot button, bottom right on every page, shown only where
- * the Copilot is switched on and allowed.
+ * the Copilot is switched on, has a gateway to talk to, and is allowed.
  */
 export function CopilotLauncher() {
   const permissions = useAppSelector(
     state => (state.auth.user as { permissions?: unknown } | null)?.permissions
   )
+  // Switched on but with no usable gateway: say so once, for whoever set the
+  // deployment up, and offer nothing. Recorded answers are never a fallback.
+  const unconfigured =
+    envConfig.copilotEnabled && copilotGatewayMode() === 'off'
+  useEffect(() => {
+    if (unconfigured) {
+      console.warn(
+        'Copilot is enabled but hidden: set MIFOS_COPILOT_MCP_BASE_URL to the https URL of the gateway.'
+      )
+    }
+  }, [unconfigured])
+
+  if (unconfigured) return null
   if (!canUseCopilot(envConfig.copilotEnabled, permissions)) return null
   return <Launcher />
 }

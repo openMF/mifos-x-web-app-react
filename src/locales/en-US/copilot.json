@@ -26,6 +26,10 @@
     "label": "AI",
     "title": "Written by AI. Check important figures against the client record."
   },
+  "demoBadge": {
+    "label": "Demo",
+    "title": "Demo mode: these are recorded sample answers, not data from your records."
+  },
   "greeting": {
     "morning": "Good morning",
     "afternoon": "Good afternoon",
@@ -104,6 +108,7 @@
     "permissionDenied": "You do not have permission to do that.",
     "rateLimited": "The assistant is busy right now. Please try again in a moment.",
     "toolFailed": "The banking system could not complete that step. Please try again.",
+    "decisionUnconfirmed": "No answer came back, so this change may or may not have been made. Check the account before you try again.",
     "invalidLength": "That message is empty or too long. Please shorten it and try again.",
     "injectionBlocked": "That message looks like an instruction-override attempt, so it was not sent. Please rephrase it."
   }
