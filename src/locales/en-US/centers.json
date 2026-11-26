@@ -65,7 +65,8 @@
   "success": {
     "centerActivated": "Center activated successfully.",
     "centerClosed": "Center closed successfully.",
-    "staffAssigned": "Staff assigned successfully."
+    "staffAssigned": "Staff assigned successfully.",
+    "meetingAttached": "Meeting attached successfully."
   },
   "errors": {
     "failedActivateCenter": "Failed to activate center.",
@@ -85,6 +86,37 @@
       "failedFetchCenter": "Failed to load center details.",
       "staffRequired": "Please select a staff member.",
       "failedAssignStaff": "Failed to assign staff."
+    }
+  },
+  "attachMeeting": {
+    "heading": "Attach Meeting",
+    "labelStartDate": "Meeting Start Date*",
+    "labelRepeats": "Repeats?",
+    "labelFrequency": "Repetition Frequency",
+    "labelInterval": "Repetition Interval",
+    "labelRepeatsOnDay": "Repeats on Day*",
+    "placeholderFrequency": "Select frequency",
+    "placeholderInterval": "Select interval",
+    "placeholderRepeatsOnDay": "Select day",
+    "frequency": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "errors": {
+      "dateRequired": "Please enter a meeting start date.",
+      "dayRequired": "Please select a day for weekly repetition.",
+      "failedAttachMeeting": "Failed to attach meeting to center."
     }
   },
   "view": {

@@ -186,7 +186,12 @@ const CentersView = () => {
 
         // Attach meeting only if active and no calendar yet
         ...(isActive && !hasCal
-          ? [{ label: t('view.menu.attachMeeting'), path: 'meeting' }]
+          ? [
+              {
+                label: t('view.menu.attachMeeting'),
+                path: `centers/${center.id}/actions/attach-meeting`,
+              },
+            ]
           : []),
 
         // Disabled history option

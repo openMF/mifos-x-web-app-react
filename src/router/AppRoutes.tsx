@@ -188,6 +188,7 @@ import EditCenters from '@/pages/centers/EditCenters'
 import CloseCenters from '@/pages/centers/CloseCenters'
 import ActivateCenters from '@/pages/centers/ActivateCenters'
 import CenterAssignStaff from '@/pages/centers/centers-view/center-actions/CenterAssignStaff'
+import AttachCenterMeeting from '@/pages/centers/centers-view/center-actions/AttachCenterMeeting'
 import CentersView from '@/pages/centers/centers-view/CentersView'
 import CentersGeneralTab from '@/pages/centers/centers-view/general-tab/CentersGeneralTab'
 import CentersNotesTab from '@/pages/centers/centers-view/notes-tab/CentersNotesTab'
@@ -1473,6 +1474,10 @@ const AppRoutes = () => {
           <Route
             path="/centers/:id/actions/assign-staff"
             element={<CenterAssignStaff />}
+          />
+          <Route
+            path="/centers/:id/actions/attach-meeting"
+            element={<AttachCenterMeeting />}
           />
           <Route path="/centers/:id" element={<CentersView />}>
             <Route path="general" element={<CentersGeneralTab />} />
