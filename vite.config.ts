@@ -52,6 +52,14 @@ export default defineConfig(({ mode }) => {
           target: fineractUrl,
           changeOrigin: true,
           secure: false, // allow self-signed certs
+          // Fineract answers a refused credential or two-factor token with
+          // "WWW-Authenticate: Basic", which makes the browser open its own
+          // sign-in prompt over the app. The app handles the 401 itself.
+          configure: proxy => {
+            proxy.on('proxyRes', response => {
+              delete response.headers['www-authenticate']
+            })
+          },
         },
       },
     },

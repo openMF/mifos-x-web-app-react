@@ -73,7 +73,6 @@ const systemItems = [
     icon: faKey,
     name: 'Two-Factor Authentication',
     path: '/system/two-factor-auth',
-    disabled: true,
   },
   {
     icon: faAnchor,

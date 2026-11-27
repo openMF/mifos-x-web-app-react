@@ -9,7 +9,10 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useAppDispatch } from '@/app/hook'
+import fineract from '@/lib/axios'
+import { getAuthToken, getTwoFactorToken } from '@/lib/http-client'
 import { getOidcUserManager } from '@/lib/oidc-config'
+import { invalidateAccessToken } from '@/lib/two-factor'
 import { logout } from '@/pages/login/loginSlice'
 
 /**
@@ -35,6 +38,15 @@ export const useLogout = () => {
     // session exists: the token is dropped as soon as it expires, and a
     // sign-out after that point still has to reach the provider.
     const oidcUser = await manager?.getUser().catch(() => null)
+
+    // A two-factor token stays valid at Fineract until it expires (a day, or
+    // a week with "Remember me"), so end it there before it is forgotten
+    // here. This never blocks the sign-out for long.
+    const authKey = getAuthToken()
+    const twoFactorToken = getTwoFactorToken()
+    if (authKey && twoFactorToken) {
+      await invalidateAccessToken(fineract, authKey, twoFactorToken)
+    }
 
     dispatch(logout())
 
