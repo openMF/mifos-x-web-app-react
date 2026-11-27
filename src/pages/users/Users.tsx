@@ -39,6 +39,7 @@ const usersApi = new UsersApi(getConfiguration()) // API
 const Users = () => {
   const navigate = useNavigate()
   const [users, setUsers] = useState<GetUsersResponse[] | null>(null) // all users
+  const [error, setError] = useState(false)
   const [searchTerm, setSearchTerm] = useState('') // search query
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const Users = () => {
         setUsers(res.data)
       } catch (err) {
         console.error('Failed to fetch User details', err)
+        setError(true)
       }
     }
     fetchUsers()
@@ -56,17 +58,23 @@ const Users = () => {
   const [page, setPage] = useState(1) // current page
   const [itemsPerPage, setItemsPerPage] = useState(10) // rows per page
 
-  // filter by first/last name
+  const normalizeSearchText = (value: string | null | undefined) =>
+    (value ?? '').trim().toLowerCase().replace(/\s+/g, ' ')
+  const term = normalizeSearchText(searchTerm)
   const filtered =
-    users?.filter(
-      (user: AppUser) =>
-        (user.firstname?.toLowerCase() ?? '').includes(
-          searchTerm.toLowerCase()
-        ) ||
-        (user.lastname?.toLowerCase() ?? '').includes(searchTerm.toLowerCase())
-    ) ?? []
+    users?.filter((user: AppUser) => {
+      const firstName = normalizeSearchText(user.firstname)
+      const lastName = normalizeSearchText(user.lastname)
+      const fullName = `${firstName} ${lastName}`.trim()
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage) // total pages
+      return (
+        firstName.includes(term) ||
+        lastName.includes(term) ||
+        fullName.includes(term)
+      )
+    }) ?? []
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage)) // total pages
   const paginated = filtered.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
@@ -102,7 +110,10 @@ const Users = () => {
         <AppSearch
           placeholder="Search accounts"
           searchItem={searchTerm}
-          setsearchItem={setSearchTerm}
+          setsearchItem={value => {
+            setSearchTerm(value)
+            setPage(1)
+          }}
         />
 
         <div className="flex items-center gap-2">
@@ -171,32 +182,58 @@ const Users = () => {
           </TableHeader>
 
           <TableBody>
-            {paginated.map(user => (
-              <TableRow
-                key={user.id}
-                className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
-                onClick={() => navigate(`/appusers/${user.id}`)} // navigate to user details
-              >
-                <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
-                  {user.username}
-                </TableCell>
-                <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
-                  {user.firstname}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {user.lastname}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {user.email}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {user.officeName}
-                </TableCell>
-                <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
-                  {'Missing in OpenApi'}
+            {users === null && !error && (
+              <TableRow>
+                <TableCell colSpan={6} className="px-6 py-6 text-center">
+                  Loading users...
                 </TableCell>
               </TableRow>
-            ))}
+            )}
+            {error && (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="px-6 py-6 text-center text-red-600"
+                >
+                  Failed to load users.
+                </TableCell>
+              </TableRow>
+            )}
+            {users !== null && !error && filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="px-6 py-6 text-center">
+                  No matching users found.
+                </TableCell>
+              </TableRow>
+            )}
+            {users !== null &&
+              !error &&
+              paginated.map(user => (
+                <TableRow
+                  key={user.id}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-base"
+                  onClick={() => navigate(`/appusers/${user.id}`)} // navigate to user details
+                >
+                  <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
+                    {user.username}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 font-medium text-zinc-800 dark:text-zinc-100">
+                    {user.firstname}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {user.lastname}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {user.email}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {user.officeName}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-zinc-700 dark:text-zinc-200">
+                    {'Missing in OpenApi'}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>
