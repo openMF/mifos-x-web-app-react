@@ -93,6 +93,8 @@ import ViewLoanProvisioningCriteria from '@/pages/organization/loan-provisioning
 import EditLoanProvisioningCriteria from '@/pages/organization/loan-provisioning-criteria/EditLoanProvisioningCriteria'
 import EntityDataTableChecks from '@/pages/organization/entity-data-table-checks/EntityDataTableChecks'
 import CreateEntityDataTableCheck from '@/pages/organization/entity-data-table-checks/CreateEntityDataTableCheck'
+import BulkImport from '@/pages/organization/bulk-import/BulkImport'
+import ViewBulkImport from '@/pages/organization/bulk-import/ViewBulkImport'
 import Payment from '@/pages/organization/payment-types/PaymentTypes'
 import CreatePaymentTypes from '@/pages/organization/payment-types/CreatePaymentTypes'
 import AdhocQuery from '@/pages/organization/adhoc-query/AdhocQuery'
@@ -631,6 +633,13 @@ const AppRoutes = () => {
           <Route
             path="/organization/data-checks/create"
             element={<CreateEntityDataTableCheck />}
+          />
+
+          {/* Bulk Import */}
+          <Route path="/organization/bulk-import" element={<BulkImport />} />
+          <Route
+            path="/organization/bulk-import/:importName"
+            element={<ViewBulkImport />}
           />
 
           {/* Payment Types */}
