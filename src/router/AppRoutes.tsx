@@ -172,6 +172,9 @@ import ViewAccountNumberPreferences from '@/pages/system/account-number-preferen
 import EntityToEntityMapping from '@/pages/system/entity-to-entity-mapping/EntityToEntityMapping'
 import ManageExternalEvents from '@/pages/system/manage-external-events/ManageExternalEvents'
 import ManageHooks from '@/pages/system/manage-hooks/ManageHooks'
+import CreateHook from '@/pages/system/manage-hooks/CreateHook'
+import ViewHook from '@/pages/system/manage-hooks/ViewHook'
+import EditHook from '@/pages/system/manage-hooks/EditHook'
 import MakerChecker from '@/pages/system/maker-checker/MakerChecker'
 import SchedulerJobs from '@/pages/system/scheduler-jobs/SchedulerJobs'
 import EditSchedulerJob from '@/pages/system/scheduler-jobs/EditSchedulerJob'
@@ -969,6 +972,9 @@ const AppRoutes = () => {
             element={<SchedulerJobHistory />}
           />
           <Route path="/system/hooks" element={<ManageHooks />} />
+          <Route path="/system/hooks/create" element={<CreateHook />} />
+          <Route path="/system/hooks/:id" element={<ViewHook />} />
+          <Route path="/system/hooks/:id/edit" element={<EditHook />} />
 
           {/* Manage Hooks */}
           <Route path="/system/configurations" element={<Configurations />} />

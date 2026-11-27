@@ -102,6 +102,59 @@
     },
     "title": "Gérer les fonds"
   },
+  "hooks": {
+    "actions": {
+      "add": "Ajouter",
+      "confirm": "Confirmer",
+      "deleting": "Suppression..."
+    },
+    "create": "Créer un hook",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer le hook « {{name}} » ?",
+    "edit": "Modifier le hook",
+    "errors": {
+      "addEvent": "Ajoutez au moins un événement.",
+      "create": "Échec de la création du hook.",
+      "delete": "Échec de la suppression du hook.",
+      "duplicateEvent": "Cet événement figure déjà dans la liste.",
+      "enterField": "Veuillez saisir {{field}}.",
+      "enterName": "Veuillez saisir un nom de hook.",
+      "loadHook": "Échec du chargement du hook.",
+      "loadHooks": "Échec du chargement des hooks.",
+      "loadTemplates": "Échec du chargement des modèles de hook.",
+      "selectTemplate": "Sélectionnez un modèle de hook.",
+      "update": "Échec de la mise à jour du hook."
+    },
+    "events": {
+      "empty": "Aucun événement pour l'instant",
+      "help": "Le hook est appelé lorsque l'un de ces événements se produit.",
+      "remove": "Retirer {{entity}} {{action}}",
+      "title": "Événements"
+    },
+    "fields": {
+      "action": "Action",
+      "group": "Groupe",
+      "name": "Nom du hook",
+      "nameRequired": "Nom du hook*",
+      "template": "Modèle de hook",
+      "templateRequired": "Modèle de hook*"
+    },
+    "list": {
+      "empty": "0 sur 0",
+      "search": "Rechercher des hooks..."
+    },
+    "placeholders": {
+      "action": "Sélectionnez une action",
+      "entity": "Sélectionnez une entité",
+      "group": "Sélectionnez un groupe",
+      "template": "Sélectionnez un modèle"
+    },
+    "secretHidden": "Défini (masqué)",
+    "settings": "Paramètres {{template}}",
+    "status": {
+      "disabled": "Désactivé",
+      "enabled": "Activé"
+    }
+  },
   "investors": "Investisseurs",
   "jobs": {
     "edit": {

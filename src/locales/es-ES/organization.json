@@ -102,6 +102,59 @@
     },
     "title": "Gestionar fondos"
   },
+  "hooks": {
+    "actions": {
+      "add": "Añadir",
+      "confirm": "Confirmar",
+      "deleting": "Eliminando..."
+    },
+    "create": "Crear hook",
+    "deleteConfirm": "¿Está seguro de que desea eliminar el hook \"{{name}}\"?",
+    "edit": "Editar hook",
+    "errors": {
+      "addEvent": "Añada al menos un evento.",
+      "create": "Error al crear el hook.",
+      "delete": "Error al eliminar el hook.",
+      "duplicateEvent": "Ese evento ya está en la lista.",
+      "enterField": "Por favor, introduzca {{field}}.",
+      "enterName": "Por favor, introduzca un nombre para el hook.",
+      "loadHook": "Error al cargar el hook.",
+      "loadHooks": "Error al cargar los hooks.",
+      "loadTemplates": "Error al cargar las plantillas de hook.",
+      "selectTemplate": "Seleccione una plantilla de hook.",
+      "update": "Error al actualizar el hook."
+    },
+    "events": {
+      "empty": "Aún no hay eventos",
+      "help": "El hook se invoca cuando ocurre alguno de estos eventos.",
+      "remove": "Quitar {{entity}} {{action}}",
+      "title": "Eventos"
+    },
+    "fields": {
+      "action": "Acción",
+      "group": "Grupo",
+      "name": "Nombre del hook",
+      "nameRequired": "Nombre del hook*",
+      "template": "Plantilla de hook",
+      "templateRequired": "Plantilla de hook*"
+    },
+    "list": {
+      "empty": "0 de 0",
+      "search": "Buscar hooks..."
+    },
+    "placeholders": {
+      "action": "Seleccione una acción",
+      "entity": "Seleccione una entidad",
+      "group": "Seleccione un grupo",
+      "template": "Seleccione una plantilla"
+    },
+    "secretHidden": "Configurado (oculto)",
+    "settings": "Configuración de {{template}}",
+    "status": {
+      "disabled": "Deshabilitado",
+      "enabled": "Habilitado"
+    }
+  },
   "investors": "Inversores",
   "jobs": {
     "edit": {

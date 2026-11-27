@@ -5,8 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
@@ -28,21 +29,44 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import fineract from '@/lib/axios'
+
+import { apiErrorMessage, type Hook, type HookRequestError } from './types'
 
 type HookRow = {
+  id?: number
   template: string
   name: string
   enabled: boolean
 }
 
 const ManageHooks = () => {
+  const { t } = useTranslation(['organization', 'common'])
   const navigate = useNavigate()
 
-  // Local state
-  const [rows] = useState<HookRow[]>([])
+  const [rows, setRows] = useState<HookRow[]>([])
+  const [error, setError] = useState<HookRequestError | null>(null)
   const [filter, setFilter] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await fineract.get<Hook[]>('v1/hooks')
+        setRows(
+          (res.data ?? []).map(h => ({
+            id: h.id,
+            template: h.name ?? '',
+            name: h.displayName ?? '',
+            enabled: Boolean(h.isActive),
+          }))
+        )
+      } catch (err) {
+        setError({ message: apiErrorMessage(err), fallback: 'loadHooks' })
+      }
+    })()
+  }, [])
 
   // Filter + pagination
   const filtered = rows.filter(
@@ -66,9 +90,9 @@ const ManageHooks = () => {
       {/* Breadcrumbs */}
       <AppBreadCrumbs
         items={[
-          { label: 'Home', href: '/home' },
-          { label: 'System', href: '/system' },
-          { label: 'Manage Hooks', current: true },
+          { label: t('common:nav.home'), href: '/home' },
+          { label: t('common:nav.system'), href: '/system' },
+          { label: t('manageHooks'), current: true },
         ]}
       />
 
@@ -78,17 +102,17 @@ const ManageHooks = () => {
           className="bg-[#1074b9] hover:bg-[#1074c9] px-6 py-3 text-base text-white"
           onClick={() => navigate('/system/hooks/create')}
         >
-          <Plus className="mr-2" /> Create Hook
+          <Plus className="mr-2" /> {t('hooks.create')}
         </Button>
       </div>
 
       {/* Search + pagination controls */}
       <div className="mb-2 text-sm text-zinc-600 dark:text-zinc-300">
-        Filter
+        {t('common:actions.filter')}
       </div>
       <div className="flex flex-wrap justify-between items-center gap-6 mb-6">
         <Input
-          placeholder="Search hooks..."
+          placeholder={t('hooks.list.search')}
           value={filter}
           onChange={e => {
             setFilter(e.target.value)
@@ -100,7 +124,7 @@ const ManageHooks = () => {
         <div className="flex items-center gap-2">
           <Select value={itemsPerPage.toString()} onValueChange={onPerPage}>
             <SelectTrigger className="w-[140px] h-11 text-base">
-              <SelectValue placeholder="Items per page" />
+              <SelectValue placeholder={t('common:pagination.itemsPerPage')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="5">5</SelectItem>
@@ -116,7 +140,7 @@ const ManageHooks = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
-            Prev
+            {t('common:actions.prev')}
           </Button>
           <Button
             variant="outline"
@@ -124,24 +148,40 @@ const ManageHooks = () => {
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {t('common:actions.next')}
           </Button>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-6 rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+          {error.message ?? t(`hooks.errors.${error.fallback}`)}
+        </div>
+      )}
 
       {/* Hooks table */}
       <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm">
         <Table>
           <TableCaption className="text-sm text-gray-500 dark:text-gray-400 pt-6 pb-2">
-            Showing {paginated.length} of {filtered.length} items • Page {page}{' '}
-            of {totalPages}
+            {t('common:pagination.showing', {
+              current: paginated.length,
+              total: filtered.length,
+              page,
+              pages: totalPages,
+            })}
           </TableCaption>
 
           <TableHeader>
             <TableRow className="text-base">
-              <TableHead className="px-6 py-4">Hook Template</TableHead>
-              <TableHead className="px-6 py-4">Hook Name</TableHead>
-              <TableHead className="px-6 py-4">Status</TableHead>
+              <TableHead className="px-6 py-4">
+                {t('hooks.fields.template')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('hooks.fields.name')}
+              </TableHead>
+              <TableHead className="px-6 py-4">
+                {t('common:fields.status')}
+              </TableHead>
             </TableRow>
           </TableHeader>
 
@@ -152,19 +192,31 @@ const ManageHooks = () => {
                   colSpan={3}
                   className="text-center py-10 text-zinc-500"
                 >
-                  0 of 0
+                  {t('hooks.list.empty')}
                 </TableCell>
               </TableRow>
             ) : (
               paginated.map((r, i) => (
                 <TableRow
                   key={`${r.template}-${r.name}-${i}`}
-                  className="text-base"
+                  className="text-base hover:bg-muted cursor-pointer"
+                  onClick={() => navigate(`/system/hooks/${r.id}`)}
                 >
                   <TableCell className="px-6 py-4">{r.template}</TableCell>
-                  <TableCell className="px-6 py-4">{r.name}</TableCell>
                   <TableCell className="px-6 py-4">
-                    {r.enabled ? 'Enabled' : 'Disabled'}
+                    {/* A link too, so the hook opens from the keyboard */}
+                    <Link
+                      to={`/system/hooks/${r.id}`}
+                      className="hover:underline"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      {r.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {r.enabled
+                      ? t('hooks.status.enabled')
+                      : t('hooks.status.disabled')}
                   </TableCell>
                 </TableRow>
               ))
