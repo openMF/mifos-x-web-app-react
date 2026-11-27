@@ -11,9 +11,26 @@ import { defineConfig, devices } from '@playwright/test'
 import { nodeProjects, sharedConfig } from './playwright.node.config'
 
 const isCI = !!process.env.CI
+// Set when `npm run build` has already produced dist/, as in the e2e
+// workflow, which builds in its own step so the build's time and output
+// show there and do not count against the webServer timeout.
+const isPrebuilt = !!process.env.E2E_PREBUILT
+
+// `--strictPort`, so a busy port fails the run instead of serving the app
+// on another port the tests would not find.
+const previewCommand = 'npx vite preview --port 5173 --strictPort'
+
+const webServerCommand = isPrebuilt
+  ? previewCommand
+  : isCI
+    ? `npm run build && ${previewCommand}`
+    : 'npm run dev'
 
 export default defineConfig({
   ...sharedConfig,
+  // Checks that Fineract and the app are ready before any spec runs, and
+  // prints the Fineract logs if not. CI only, as in openMF/web-app.
+  globalSetup: isCI ? './playwright/global-setup.ts' : undefined,
   testDir: './playwright/tests',
   projects: [
     // `unit` and `integration`. They need no browser; run them on their
@@ -30,9 +47,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: isCI
-      ? 'npm run build && npx vite preview --port 5173'
-      : 'npm run dev',
+    command: webServerCommand,
     url: 'http://localhost:5173',
     reuseExistingServer: !isCI,
     timeout: 180000,

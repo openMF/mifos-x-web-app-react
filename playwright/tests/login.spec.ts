@@ -87,18 +87,22 @@ test.describe('Login Page', () => {
     expect(await loginPage.getPasswordInputType()).toBe('password')
   })
 
-  test('should persist server and tenant values on submit', async () => {
+  // The suite runs the app behind its same-origin proxy (the Vite dev and
+  // preview servers, or nginx in Docker), where FINERACT_API_URL is empty.
+  // There the login page stores the tenant but no server: a stored server
+  // would send requests past the proxy (see Login.tsx and lib/axios.ts).
+  test('should persist the tenant but no server override on submit', async () => {
     await loginPage.fillField(loginPage.usernameInput, 'mifos')
     await loginPage.fillField(loginPage.passwordInput, 'password')
 
     await loginPage.submitLoginForm()
 
     await expect
-      .poll(async () => loginPage.getLocalStorageValue('mifosServer'))
-      .toBeTruthy()
-    await expect
       .poll(async () => loginPage.getLocalStorageValue('mifosTenant'))
       .toBe('default')
+    // The submit handler writes the server before the tenant, so once the
+    // tenant is stored, a server would be too.
+    expect(await loginPage.getLocalStorageValue('mifosServer')).toBeNull()
   })
 
   test('should show forgot password action', async () => {
