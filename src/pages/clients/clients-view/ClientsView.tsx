@@ -330,8 +330,7 @@ const ClientsView = () => {
                     },
                     {
                       label: t('view.menu.viewStandingInstructions'),
-                      path: 'signature',
-                      disabled: true,
+                      path: `clients/${id}/standing-instructions`,
                     },
                   ],
                 },

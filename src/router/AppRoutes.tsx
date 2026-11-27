@@ -264,6 +264,7 @@ import ClientAssignStaff from '@/pages/clients/clients-view/client-actions/Clien
 import ClientUnassignStaff from '@/pages/clients/clients-view/client-actions/ClientUnassignStaff'
 import TransferClient from '@/pages/clients/clients-view/client-actions/TransferClient'
 import CloseClient from '@/pages/clients/clients-view/client-actions/CloseClient'
+import ClientStandingInstructions from '@/pages/clients/clients-view/standing-instructions/ClientStandingInstructions'
 import ClientsGeneralTab from '@/pages/clients/clients-view/general-tab/ClientsGeneralTab'
 import ClientNotesTab from '@/pages/clients/clients-view/notes-tab/ClientsNotesTab'
 import ClientsFamilyMembersAddTab from '@/pages/clients/clients-view/family-members-tab/ClientsFamilyMembersAddTab'
@@ -1020,6 +1021,10 @@ const AppRoutes = () => {
           <Route
             path="/clients/:id/actions/add-charge"
             element={<AddClientCharge />}
+          />
+          <Route
+            path="/clients/:id/standing-instructions"
+            element={<ClientStandingInstructions />}
           />
           <Route path="/clients/:id" element={<ClientsView />}>
             <Route path="general" element={<ClientsGeneralTab />} />
