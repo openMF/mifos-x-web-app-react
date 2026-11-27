@@ -50,6 +50,54 @@
     "savingsBalance": {
       "title": "Consulter le solde d'épargne d'un client",
       "description": "Soldes et opérations récentes"
+    },
+    "loanSchedule": {
+      "title": "Vérifier l'échéancier de remboursement",
+      "description": "Échéances, dates et montants dus"
+    },
+    "loanForeclosure": {
+      "title": "Simuler le remboursement anticipé",
+      "description": "Calculer le solde restant dû et le règlement"
+    },
+    "loanWaiver": {
+      "title": "Calculer la dispense d'intérêts",
+      "description": "Options d'exonération d'intérêts et pénalités"
+    },
+    "clientSummary": {
+      "title": "Résumer le profil du client",
+      "description": "Vue d'ensemble des comptes et activités"
+    },
+    "clientOverdue": {
+      "title": "Vérifier les prêts en retard",
+      "description": "Arriérés impayés sur les comptes du client"
+    },
+    "clientAccounts": {
+      "title": "Lister tous les comptes actifs",
+      "description": "Prêts, épargne et comptes de parts"
+    },
+    "savingsBalanceDetail": {
+      "title": "Vérifier le solde et les blocages",
+      "description": "Solde disponible, retenues et intérêts"
+    },
+    "savingsTransactions": {
+      "title": "Afficher les transactions récentes",
+      "description": "Derniers dépôts, retraits et frais"
+    },
+    "savingsCalculateInterest": {
+      "title": "Calculer les intérêts courus",
+      "description": "Vérifier les intérêts à comptabiliser"
+    },
+    "glAccountBalances": {
+      "title": "Vérifier les soldes des comptes du grand livre",
+      "description": "Examiner les débits et crédits"
+    },
+    "recentJournalEntries": {
+      "title": "Afficher les écritures de journal récentes",
+      "description": "Filtrer les écritures par date et compte"
+    },
+    "reconcileDiscrepancies": {
+      "title": "Vérifier les écritures non validées",
+      "description": "Auditer les régularisations périodiques et clôtures"
     }
   },
   "you": "Vous",
