@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom'
 import type { GetLoansLoanIdResponse } from '@/fineract-api'
 import { LoansApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayCurrency } from '@/lib/number-format'
 
 const loansApi = new LoansApi(getConfiguration())
 
@@ -22,17 +24,13 @@ type ExtendedLoan = GetLoansLoanIdResponse & {
   disbursedAmount?: number
 }
 
-function formatCurrency(n: number | null | undefined, code: string) {
+function formatCurrency(
+  n: number | null | undefined,
+  code: string,
+  decimalPlaces: number
+) {
   if (n === null || n === undefined) return 'Not Provided'
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: code,
-      minimumFractionDigits: 2,
-    }).format(n)
-  } catch {
-    return String(n)
-  }
+  return formatDisplayCurrency(n, code, undefined, decimalPlaces)
 }
 
 function formatDate(d: string | null | undefined) {
@@ -60,6 +58,7 @@ const Row = ({
 
 const LoansGeneralTab = () => {
   const { loanId } = useParams()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [loan, setLoan] = useState<ExtendedLoan | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -136,16 +135,16 @@ const LoansGeneralTab = () => {
         <Row label="Loan Purpose:" value={loanPurpose} />
         <Row
           label="Proposed Amount:"
-          value={formatCurrency(proposedAmount, currencyCode)}
+          value={formatCurrency(proposedAmount, currencyCode, decimalPlaces)}
           shaded
         />
         <Row
           label="Approved Amount:"
-          value={formatCurrency(approvedAmount, currencyCode)}
+          value={formatCurrency(approvedAmount, currencyCode, decimalPlaces)}
         />
         <Row
           label="Disburse Amount:"
-          value={formatCurrency(disbursedAmount, currencyCode)}
+          value={formatCurrency(disbursedAmount, currencyCode, decimalPlaces)}
           shaded
         />
         <Row
@@ -153,7 +152,7 @@ const LoansGeneralTab = () => {
           value={
             arrearsBy === null
               ? 'Not Provided'
-              : formatCurrency(arrearsBy, currencyCode)
+              : formatCurrency(arrearsBy, currencyCode, decimalPlaces)
           }
         />
       </section>

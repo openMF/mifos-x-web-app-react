@@ -11,6 +11,8 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { RunReportsApi } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 const reports = new RunReportsApi(getConfiguration())
 const reportNames = {
@@ -31,6 +33,7 @@ type Props = { officeId: number; kind: keyof typeof reportNames }
 
 export default function ReportSummary({ officeId, kind }: Props) {
   const { t, i18n } = useTranslation('common')
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
   const [rows, setRows] = useState<[string, number][]>([])
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [attempt, setAttempt] = useState(0)
@@ -65,9 +68,8 @@ export default function ReportSummary({ officeId, kind }: Props) {
     }
   }, [officeId, kind, attempt])
 
-  const number = new Intl.NumberFormat(i18n.language, {
-    maximumFractionDigits: 2,
-  })
+  const number = (value: number) =>
+    formatDisplayNumber(value, i18n.language, decimalPlaces)
   const max = Math.max(0, ...rows.map(([, value]) => value))
 
   return (
@@ -132,7 +134,7 @@ export default function ReportSummary({ officeId, kind }: Props) {
                     : key.replace(/([a-z])([A-Z])/g, '$1 $2')}
                 </dt>
                 <dd className="text-xl font-semibold leading-none tracking-tight tabular-nums 2xl:text-2xl">
-                  {number.format(value)}
+                  {number(value)}
                 </dd>
                 <div
                   className="h-1 overflow-hidden rounded-full bg-muted"

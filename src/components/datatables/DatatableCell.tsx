@@ -17,6 +17,8 @@ import { formatDate } from '@/lib/date-utils'
 import { isJsonColumn, unwrapJsonCell } from '@/lib/datatable-json'
 import { codeValuesOf } from '@/lib/datatables-api'
 import JsonTreeView from '@/components/custom/json/JsonTreeView'
+import { useAppSelector } from '@/app/hook'
+import { formatDisplayNumber } from '@/lib/number-format'
 
 const EMPTY = '—'
 
@@ -40,6 +42,7 @@ const DatatableCell = ({
   compact = false,
 }: DatatableCellProps) => {
   const { i18n } = useTranslation()
+  const decimalPlaces = useAppSelector(state => state.settings.decimalPlaces)
 
   if (isJsonColumn(header)) {
     // No label: every surface that renders a cell already names the column
@@ -82,20 +85,25 @@ const DatatableCell = ({
       )
     }
 
-    case DisplayType.Integer:
-    case DisplayType.Decimal:
-    case DisplayType.Float: {
+    case DisplayType.Integer: {
       const numeric = Number(value)
-      // Intl rounds to three fraction digits by default, but a Decimal column
-      // is DECIMAL(19,6): 0.0125 would be shown as 0.013. Twenty digits shows
-      // every digit the value has without padding it.
       return (
         <span>
           {Number.isNaN(numeric)
             ? String(value)
-            : new Intl.NumberFormat(i18n.language, {
-                maximumFractionDigits: 20,
-              }).format(numeric)}
+            : new Intl.NumberFormat(i18n.language).format(numeric)}
+        </span>
+      )
+    }
+
+    case DisplayType.Decimal:
+    case DisplayType.Float: {
+      const numeric = Number(value)
+      return (
+        <span>
+          {Number.isNaN(numeric)
+            ? String(value)
+            : formatDisplayNumber(numeric, i18n.language, decimalPlaces)}
         </span>
       )
     }
