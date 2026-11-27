@@ -35,7 +35,25 @@ export function formatDate(
     d = new Date(date[0], (date[1] ?? 1) - 1, date[2] ?? 1)
   } else if (typeof date === 'string') {
     if (!date.trim()) return fallback
-    d = new Date(date)
+    // new Date('2026-11-27') is midnight UTC, which is the day before west of
+    // UTC, so a plain yyyy-MM-dd date is read as a local date instead
+    const ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date.trim())
+    if (ymd) {
+      const [year, month, day] = [+ymd[1], +ymd[2] - 1, +ymd[3]]
+      // setFullYear avoids the constructor mapping years 0-99 to 1900-1999
+      d = new Date(2000, 0, 1)
+      d.setFullYear(year, month, day)
+      // month 13 or day 32 would roll over into another date
+      if (
+        d.getFullYear() !== year ||
+        d.getMonth() !== month ||
+        d.getDate() !== day
+      ) {
+        return fallback
+      }
+    } else {
+      d = new Date(date)
+    }
   } else {
     d = date
   }
