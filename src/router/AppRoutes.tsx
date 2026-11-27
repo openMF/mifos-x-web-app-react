@@ -1230,6 +1230,14 @@ const AppRoutes = () => {
             path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
             element={<SavingsAccountTransactions />}
           />
+          <Route
+            path="/clients/:groupId/savings-accounts/:accountId/actions/Withdrawal"
+            element={<SavingsAccountTransactions />}
+          />
+          <Route
+            path="/clients/:groupId/savings-accounts/:accountId/actions/UndoApproval"
+            element={<UndoApprovalSavingsAccount />}
+          />
 
           <Route
             path="/clients/:clientId/fixed-deposits-accounts/create"
@@ -1573,6 +1581,14 @@ const AppRoutes = () => {
           <Route
             path="/clients/:groupId/savings-accounts/:accountId/actions/Deposit"
             element={<SavingsAccountTransactions />}
+          />
+          <Route
+            path="/clients/:groupId/savings-accounts/:accountId/actions/Withdrawal"
+            element={<SavingsAccountTransactions />}
+          />
+          <Route
+            path="/clients/:groupId/savings-accounts/:accountId/actions/UndoApproval"
+            element={<UndoApprovalSavingsAccount />}
           />
 
           {/* Loans */}
