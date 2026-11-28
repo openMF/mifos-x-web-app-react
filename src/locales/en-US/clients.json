@@ -1,4 +1,4 @@
-{
+﻿{
   "addCenter": "Add Center",
   "addClient": "Add Client",
   "addGroup": "Add Group",
@@ -12,9 +12,8 @@
   "errors": {
     "failedActivateClient": "Failed to activate client.",
     "failedCloseClient": "Failed to close client.",
-    "failedFetchClient": "Failed to load client details.",
-    "failedApproveClients": "Failed to approve one or more clients.",
     "failedFetchClient": "Failed to fetch client details.",
+    "failedApproveClients": "Failed to approve one or more clients.",
     "failedLoadCenters": "Failed to load centers. Please try again.",
     "failedLoadClients": "Failed to load clients. Please try again.",
     "failedLoadGroups": "Failed to load groups. Please try again.",
@@ -127,7 +126,7 @@
     "cancel": "Cancel",
     "errors": {
       "officeRequired": "Please select a destination office.",
-      "destinationSameAsCurrent": "Destination office cannot be the same as the client's current office.",
+      "destinationSameAsCurrent": "Destination office cannot be the same as the client\u0027s current office.",
       "dateRequired": "Please enter a transfer date.",
       "dateInFuture": "The transfer date cannot be in the future.",
       "dateBeforeActivated": "The transfer date cannot be before the activation date.",
@@ -432,23 +431,23 @@
     "questions": {
       "pepIntro": "Please indicate whether any of the shareholders or authorized representatives of the legal entity meet any of the following conditions:",
       "pepQuestion1": "Does the legal representative or any of the partners or shareholders of the legal entity currently hold, or did they hold during the immediately preceding year, any prominent public office in Mexico or abroad?",
-      "pepQuestion2": "Does the spouse, or any relative by blood or affinity up to the second degree, of the Legal Representative or of any partner or shareholder of the legal entity currently hold—or did they hold during the immediately preceding year—any prominent public office at the federal, state, municipal, or district level in Mexico or in any foreign country?",
+      "pepQuestion2": "Does the spouse, or any relative by blood or affinity up to the second degree, of the Legal Representative or of any partner or shareholder of the legal entity currently holdâ€”or did they hold during the immediately preceding yearâ€”any prominent public office at the federal, state, municipal, or district level in Mexico or in any foreign country?",
       "resourceProviderQuestion1": "Do you declare, under penalty of perjury, that the transactions you intend to carry out with INSTITUTION NAME are being conducted on your own behalf and that said transactions are not being executed for the account or on behalf of a third party, whether an individual or a legal entity?",
-      "resourceProviderQuestion2": "Will any third party regularly contribute funds to the account opened with the Entity—or towards the fulfillment of obligations arising from the contract established with it—without being the holder of said contract or receiving the economic benefits derived therefrom?",
+      "resourceProviderQuestion2": "Will any third party regularly contribute funds to the account opened with the Entityâ€”or towards the fulfillment of obligations arising from the contract established with itâ€”without being the holder of said contract or receiving the economic benefits derived therefrom?",
       "uboInterview": "Interview for Ultimate Beneficial Owners: collect the information of individuals or legal entities that directly or indirectly own or control the legal entity.",
       "resourceProviderInterview": "Interview for Resource Providers: collect the information of third parties who regularly contribute resources to the account or contract.",
       "controllingPersonQuestion1": "Do any of the partners or shareholders identified by the legal representative as individuals exercising control over the legal entity currently hold, or did they hold during the immediately preceding year, any prominent public office at the federal, state, or municipal level in Mexico or in a foreign country?",
-      "controllingPersonQuestion2": "Does the spouse—or any relative by blood or affinity up to the second degree—of any of the partners or shareholders identified by the legal representative as the natural persons exercising control over the legal entity currently hold, or did they hold during the immediately preceding year, a prominent public office at the federal, state, or municipal level in Mexico or in a foreign country?"
+      "controllingPersonQuestion2": "Does the spouseâ€”or any relative by blood or affinity up to the second degreeâ€”of any of the partners or shareholders identified by the legal representative as the natural persons exercising control over the legal entity currently hold, or did they hold during the immediately preceding year, a prominent public office at the federal, state, or municipal level in Mexico or in a foreign country?"
     },
     "record": "Record {{number}}",
     "yes": "Yes",
     "no": "No",
-    "loading": "Loading…",
+    "loading": "Loadingâ€¦",
     "loadFailed": "Could not load the general data for this client.",
     "entityOnly": "General data is available for legal entity clients only."
   },
   "personalData": {
-    "loading": "Loading…",
+    "loading": "Loadingâ€¦",
     "loadFailed": "The personal data of this client could not be loaded.",
     "unassigned": "Unassigned",
     "noClassification": "No classification data available",
@@ -619,7 +618,7 @@
       "required": "{{field}} is required.",
       "positive": "{{field}} must be greater than zero.",
       "submittedInFuture": "The submitted on date cannot be in the future.",
-      "outsideChart": "The submitted on date must be within the dates of the product's interest rate chart.",
+      "outsideChart": "The submitted on date must be within the dates of the product\u0027s interest rate chart.",
       "periodBelowMin": "The deposit period cannot be less than the minimum deposit term ({{min}}).",
       "periodAboveMax": "The deposit period cannot be more than the maximum deposit term ({{max}}).",
       "chargeAmount": "Enter an amount for the charge {{charge}}.",
@@ -713,7 +712,7 @@
       "required": "{{field}} is required.",
       "positive": "{{field}} must be greater than zero.",
       "submittedInFuture": "The submitted on date cannot be in the future.",
-      "outsideChart": "The submitted on date must be within the dates of the product's interest rate chart.",
+      "outsideChart": "The submitted on date must be within the dates of the product\u0027s interest rate chart.",
       "periodBelowMin": "The deposit period cannot be less than the minimum deposit term ({{min}}).",
       "periodAboveMax": "The deposit period cannot be more than the maximum deposit term ({{max}}).",
       "chargeAmount": "Enter an amount for the charge {{charge}}.",
@@ -728,5 +727,30 @@
       "productFailed": "Could not load the selected product.",
       "createFailed": "Failed to create the recurring deposit account."
     }
-  }
+  },
+  "person": "Person",
+  "statusClosed": "Closed",
+  "statusPending": "Pending",
+  "importClients": "Import clients",
+  "kpiPendingReview": "Pending review",
+  "closedOn": "Closed",
+  "statusTransfer": "Transfer in progress",
+  "kpiTotalClients": "Total clients",
+  "clientCount_one": "{{count}} client",
+  "submittedOn": "Submitted",
+  "activatedOn": "Activated",
+  "statusActive": "Active",
+  "statusRejected": "Rejected",
+  "searchPlaceholder": "Search by client name, external ID, mobile",
+  "kpiActive": "Active",
+  "allStatuses": "All statuses",
+  "kpiClosed": "Closed",
+  "statusWithdrawn": "Withdrawn",
+  "showClosedAccounts": "Show closed accounts",
+  "entity": "Entity",
+  "clientCount": "{{count}} clients",
+  "createClient": "Create client",
+  "legalForm": "Legal Form",
+  "allTypes": "All types",
+  "clearFilter": "Clear filter"
 }
