@@ -50,18 +50,17 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useCopilotChat } from '@/hooks/use-copilot-chat'
+import { useCopilotActions, useCopilotState } from '@/hooks/use-copilot'
 import {
   copilotGatewayMode,
   isTurnActive,
   type CopilotThread,
-  type TurnPhase,
 } from '@/lib/copilot'
 import { cn } from '@/lib/utils'
 import { AiBadge, DemoBadge } from './AiBadge'
 import { Composer } from './Composer'
 import { isDisplayMode, type DisplayMode } from './copilot-ui'
-import { MessageList } from './MessageList'
+import { MessageList, NEW_DIVIDER_ATTRIBUTE } from './MessageList'
 import { orbStateFor } from './orb/orb-state'
 import { WelcomeScreen } from './WelcomeScreen'
 
@@ -86,14 +85,14 @@ const MODE_ICONS = {
  * The Copilot window.
  *
  * Non-modal: the page stays usable around it, so an officer can keep looking
- * at the loan they are asking about. It stays mounted while closed, so the
- * conversation survives minimising; it ends on sign-out.
+ * at the loan they are asking about. The conversation lives in
+ * `CopilotProvider`, not here, so closing the panel or moving to another
+ * page loses nothing; it ends on sign-out.
  */
 export default function CopilotPanel({
   id,
   open,
   onOpenChange,
-  onPhaseChange,
   mode,
   onModeChange,
   returnFocusRef,
@@ -101,22 +100,18 @@ export default function CopilotPanel({
   id: string
   open: boolean
   onOpenChange: (open: boolean) => void
-  /** Lets the launcher say whether a turn is running while the panel is shut. */
-  onPhaseChange: (phase: TurnPhase) => void
   mode: DisplayMode
   onModeChange: (mode: DisplayMode) => void
   returnFocusRef: RefObject<HTMLButtonElement | null>
 }) {
   const { t } = useTranslation('copilot')
-  const { thread, send, stop, reset } = useCopilotChat()
+  const { thread, draft, newFrom } = useCopilotState()
+  const { send, stop, reset, setDraft } = useCopilotActions()
   const busy = isTurnActive(thread.phase)
   const username = useAppSelector(
     state => (state.auth.user as { username?: unknown } | null)?.username
   )
 
-  // The unsent question. Kept here, not in the box, so it survives the
-  // panel being minimised and opened again.
-  const [draft, setDraft] = useState('')
   // Whether there is a draft in the box: the orb leans in while there is.
   const [typing, setTyping] = useState(false)
 
@@ -144,7 +139,27 @@ export default function CopilotPanel({
     [sendAndFollow]
   )
 
-  useEffect(() => onPhaseChange(thread.phase), [thread.phase, onPhaseChange])
+  // Coming back to answers that arrived while the panel was closed, the
+  // conversation opens at the first of them, under "New", not at the end.
+  // Fixed while the panel is open; a new question or chat clears `newFrom`,
+  // and the conversation goes back to following the latest answer.
+  const openAtNew = useRef(newFrom)
+  if (!open) openAtNew.current = newFrom
+  useEffect(() => {
+    if (!open || !openAtNew.current) return
+    const frame = requestAnimationFrame(() => {
+      const scroller = conversationRef.current?.scrollRef.current
+      const divider = scroller?.querySelector<HTMLElement>(
+        `[${NEW_DIVIDER_ATTRIBUTE}]`
+      )
+      if (!scroller || !divider) return
+      const offset =
+        divider.getBoundingClientRect().top -
+        scroller.getBoundingClientRect().top
+      scroller.scrollTop = Math.max(0, scroller.scrollTop + offset - 12)
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [open])
 
   const announcement = useAnnouncement(thread)
   const empty = !thread.messages.length
@@ -297,9 +312,18 @@ export default function CopilotPanel({
                 />
               </div>
             ) : (
-              <Conversation contextRef={conversationRef} className="min-h-0">
+              <Conversation
+                contextRef={conversationRef}
+                // Opening at "New" means not starting at the end.
+                initial={openAtNew.current && newFrom ? false : 'smooth'}
+                className="min-h-0"
+              >
                 <ConversationContent className="mx-auto w-full max-w-3xl gap-6 px-4 py-5">
-                  <MessageList thread={thread} onAsk={ask} />
+                  <MessageList
+                    thread={thread}
+                    onAsk={ask}
+                    newFrom={newFrom ?? undefined}
+                  />
                 </ConversationContent>
                 <ConversationScrollButton label={t('jumpToLatest')} />
               </Conversation>

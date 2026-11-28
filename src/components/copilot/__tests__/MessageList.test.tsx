@@ -24,9 +24,9 @@ import {
 const ASK = 'Summarise loan 000004521'
 const REPAY = 'Record a repayment of 1,500'
 
-function renderThread(thread: CopilotThread) {
+function renderThread(thread: CopilotThread, newFrom?: string) {
   const onAsk = vi.fn()
-  render(<MessageList thread={thread} onAsk={onAsk} />)
+  render(<MessageList thread={thread} onAsk={onAsk} newFrom={newFrom} />)
   return onAsk
 }
 
@@ -126,5 +126,25 @@ describe('MessageList', () => {
       'Check the account before you try again.'
     )
     expect(screen.queryByRole('button', { name: 'Ask again' })).toBeNull()
+  })
+
+  it('puts "New" above the question whose answer arrived while the panel was closed', () => {
+    const thread = turns(
+      { ask: ASK, frames: loanSummary() },
+      { ask: REPAY, frames: rateLimited() }
+    )
+    renderThread(thread, thread.messages[3].id)
+
+    const divider = screen.getByRole('separator', { name: 'New' })
+    const order = (node: Node) =>
+      divider.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING
+    expect(order(screen.getByText(ASK))).toBe(0)
+    expect(order(screen.getByText(REPAY))).not.toBe(0)
+  })
+
+  it('shows no "New" divider when nothing arrived unseen', () => {
+    renderThread(turns({ ask: ASK, frames: loanSummary() }))
+
+    expect(screen.queryByRole('separator', { name: 'New' })).toBeNull()
   })
 })

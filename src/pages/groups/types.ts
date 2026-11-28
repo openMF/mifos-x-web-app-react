@@ -64,4 +64,6 @@ export interface ClientMember {
   id?: number
   displayName?: string
   officeName?: string
+  accountNo?: string
+  status?: { code?: string; value?: string }
 }

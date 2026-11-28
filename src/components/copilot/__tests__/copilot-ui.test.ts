@@ -15,7 +15,9 @@ import {
   errorMessageKey,
   errorPresentation,
   groupTurns,
+  firstNewAnswer,
   isDisplayMode,
+  launcherStatus,
   replyArrived,
   visibleText,
 } from '../copilot-ui'
@@ -172,6 +174,63 @@ describe('replyArrived', () => {
     expect(replyArrived('idle', 'thinking')).toBe(false)
     expect(replyArrived('thinking', 'streaming')).toBe(false)
     expect(replyArrived('idle', 'idle')).toBe(false)
+  })
+})
+
+describe('launcherStatus', () => {
+  const status = (
+    phase: Parameters<typeof launcherStatus>[0]['phase'],
+    unread = false,
+    approvalPending = false
+  ) => launcherStatus({ phase, unread, approvalPending })
+
+  it('says what a running turn is doing', () => {
+    expect(status('thinking')).toBe('working')
+    expect(status('streaming')).toBe('replying')
+  })
+
+  it('puts a waiting confirmation above an unread reply', () => {
+    expect(status('awaitingApproval', true, true)).toBe('approval')
+    // Without the card itself, there is nothing to confirm.
+    expect(status('awaitingApproval', true, false)).toBe('ready')
+  })
+
+  it('shows a reply, or an error, as ready until it is seen', () => {
+    expect(status('idle', true)).toBe('ready')
+    expect(status('error', true)).toBe('ready')
+    expect(status('idle')).toBe('idle')
+    expect(status('error')).toBe('idle')
+  })
+})
+
+describe('firstNewAnswer', () => {
+  const message = (id: string, role: 'user' | 'assistant'): CopilotMessage => ({
+    id,
+    role,
+    text: id,
+    streaming: false,
+    steps: [],
+    cards: [],
+    suggestions: [],
+  })
+  const thread = [
+    message('q1', 'user'),
+    message('a1', 'assistant'),
+    message('q2', 'user'),
+    message('a2', 'assistant'),
+  ]
+
+  it('finds the first answer the turn added, past its question', () => {
+    expect(firstNewAnswer(thread, 2)).toBe('a2')
+  })
+
+  it("finds an answer added on its own, such as a decision's", () => {
+    expect(firstNewAnswer(thread, 3)).toBe('a2')
+  })
+
+  it('is undefined when the turn left no answer', () => {
+    expect(firstNewAnswer(thread, 4)).toBeUndefined()
+    expect(firstNewAnswer(thread.slice(0, 3), 2)).toBeUndefined()
   })
 })
 
