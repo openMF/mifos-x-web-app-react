@@ -34,7 +34,7 @@ const LayoutShortcuts = () => {
 const Layout = () => {
   useTheme()
   return (
-    <SidebarProvider style={{ '--sidebar-width': '18rem' } as CSSProperties}>
+    <SidebarProvider style={{ '--sidebar-width': '255px' } as CSSProperties}>
       <LayoutShortcuts />
       <SessionTimeout />
       <CopilotLauncher />
