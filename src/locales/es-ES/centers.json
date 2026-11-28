@@ -65,7 +65,8 @@
   "success": {
     "centerActivated": "Centro activado con éxito.",
     "centerClosed": "Centro cerrado con éxito.",
-    "staffAssigned": "Personal asignado exitosamente."
+    "staffAssigned": "Personal asignado exitosamente.",
+    "meetingAttached": "Reunión adjuntada exitosamente."
   },
   "errors": {
     "failedActivateCenter": "Error al activar el centro.",
@@ -85,6 +86,37 @@
       "failedFetchCenter": "Error al obtener los detalles del centro.",
       "staffRequired": "Por favor seleccione un miembro del personal.",
       "failedAssignStaff": "Error al asignar personal."
+    }
+  },
+  "attachMeeting": {
+    "heading": "Adjuntar reunión",
+    "labelStartDate": "Fecha de inicio de la reunión*",
+    "labelRepeats": "¿Se repite?",
+    "labelFrequency": "Frecuencia de repetición",
+    "labelInterval": "Intervalo de repetición",
+    "labelRepeatsOnDay": "Se repite el día*",
+    "placeholderFrequency": "Seleccionar frecuencia",
+    "placeholderInterval": "Seleccionar intervalo",
+    "placeholderRepeatsOnDay": "Seleccionar día",
+    "frequency": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    },
+    "weekdays": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "errors": {
+      "dateRequired": "Por favor ingrese una fecha de inicio de la reunión.",
+      "dayRequired": "Por favor seleccione un día para la repetición semanal.",
+      "failedAttachMeeting": "Error al adjuntar la reunión al centro."
     }
   },
   "view": {
