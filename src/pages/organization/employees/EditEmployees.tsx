@@ -14,8 +14,14 @@ import { Label } from '@/components/ui/label'
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import AppSelect from '@/components/custom/select/AppSelect'
 
-import { OfficesApi, StaffApi, type GetOfficesResponse } from '@/fineract-api'
+import {
+  OfficesApi,
+  StaffApi,
+  type GetOfficesResponse,
+  type PutStaffRequest,
+} from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import { apiErrorMessage } from '@/pages/organization/loan-originators/types'
 
 const officesApi = new OfficesApi(getConfiguration())
 const staffApi = new StaffApi(getConfiguration())
@@ -34,6 +40,12 @@ const EditEmployees = () => {
     isActive: true,
     joiningDate: '', // yyyy-MM-dd
   })
+  const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  // Submitting before the employee is loaded would overwrite it with the empty defaults
+  const [loaded, setLoaded] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [loadAttempt, setLoadAttempt] = useState(0)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,13 +78,19 @@ const EditEmployees = () => {
             isActive: emp.isActive !== false,
             joiningDate: toInputDate(emp.joiningDate),
           })
+          setLoaded(true)
         }
       } catch (err) {
-        console.error('Failed to fetch employee data', err)
+        setLoadError(apiErrorMessage(err, 'Failed to load the employee.'))
       }
     }
     fetchData()
-  }, [id])
+  }, [id, loadAttempt])
+
+  const retryLoad = () => {
+    setLoadError(null)
+    setLoadAttempt(n => n + 1)
+  }
 
   const handleChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -80,21 +98,27 @@ const EditEmployees = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    const _formattedDate = formData.joiningDate // Reserved for future use
-      ? new Date(formData.joiningDate).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric',
-        })
-      : undefined
-
+    if (!id || !loaded || submitting) return
+    setSubmitting(true)
+    setError(null)
     try {
-      alert('Employee updated successfully!')
+      // The generated PutStaffRequest only has externalId and isLoanOfficer
+      const request: PutStaffRequest & Record<string, unknown> = {
+        officeId: Number(formData.officeId),
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        isLoanOfficer: formData.isLoanOfficer,
+        mobileNo: formData.mobileNo,
+        isActive: formData.isActive,
+        joiningDate: formData.joiningDate,
+        dateFormat: 'yyyy-MM-dd',
+        locale: 'en',
+      }
+      await staffApi.update7(Number(id), request)
       navigate('/organization/employees')
     } catch (err) {
-      console.error('Failed to update employee', err)
-      alert('Failed to update employee')
+      setError(apiErrorMessage(err, 'Failed to update employee.'))
+      setSubmitting(false)
     }
   }
 
@@ -113,6 +137,21 @@ const EditEmployees = () => {
       <div className="bg-white dark:bg-zinc-900 rounded-md border p-8 shadow max-w-xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">Edit Employee</h2>
 
+        {error && (
+          <div className="mb-6 rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+            {error}
+          </div>
+        )}
+
+        {loadError && (
+          <div className="mb-6 flex items-center justify-between gap-4 rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300">
+            <span>{loadError}</span>
+            <Button type="button" variant="outline" onClick={retryLoad}>
+              Retry
+            </Button>
+          </div>
+        )}
+
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Office */}
           <div className="w-full space-y-2">
@@ -120,7 +159,11 @@ const EditEmployees = () => {
               selectLabel="Office*"
               selectPlaceholder="Select Office"
               selectValue={formData.officeId}
-              selectOnChange={val => handleChange('officeId', val)}
+              // Radix Select can report '' for the prefilled office; an
+              // employee always has an office, so that is ignored
+              selectOnChange={val => {
+                if (val) handleChange('officeId', val)
+              }}
               selectClassname="w-full space-y-2"
               selectOptions={offices.map(o => ({
                 id: o.id?.toString() || '',
@@ -205,9 +248,10 @@ const EditEmployees = () => {
             </Button>
             <Button
               type="submit"
+              disabled={submitting || !loaded}
               className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
             >
-              Submit
+              {submitting ? 'Submitting...' : 'Submit'}
             </Button>
           </div>
         </form>
