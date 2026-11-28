@@ -20,9 +20,13 @@
   "dividends": "Dividendi",
   "errors": {
     "failedApproveLoans": "Impossibile approvare i prestiti.",
+    "failedApproveReschedule": "Impossibile approvare le richieste di rischedulazione del prestito.",
     "failedDisburseLoans": "Impossibile erogare i prestiti.",
     "failedLoadLoans": "Impossibile caricare i prestiti. Riprova.",
+    "failedLoadReschedule": "Impossibile caricare le richieste di rischedulazione del prestito. Riprova.",
     "failedLoadSavings": "Impossibile caricare i conti risparmio. Riprova.",
+    "failedRefreshReschedule": "Le richieste di rischedulazione sono state aggiornate, ma non è stato possibile aggiornare l'elenco. Riprova.",
+    "failedRejectReschedule": "Impossibile rifiutare le richieste di rischedulazione del prestito.",
     "noLoansSelectedApproval": "Nessun prestito selezionato per l'approvazione.",
     "noLoansSelectedDisbursal": "Nessun prestito selezionato per l'erogazione."
   },
@@ -118,6 +122,24 @@
   "redeemShares": "Riscatta azioni",
   "repaymentSchedule": "Piano di rimborso",
   "reschedule": "Riprogramma",
+  "rescheduleDialog": {
+    "approveDescription_one": "Sei sicuro di voler approvare {{count}} richiesta di rischedulazione selezionata?",
+    "approveDescription_other": "Sei sicuro di voler approvare {{count}} richieste di rischedulazione selezionate?",
+    "approveTitle": "Approva prestiti rischedulati",
+    "rejectDescription_one": "Sei sicuro di voler rifiutare {{count}} richiesta di rischedulazione selezionata?",
+    "rejectDescription_other": "Sei sicuro di voler rifiutare {{count}} richieste di rischedulazione selezionate?",
+    "rejectTitle": "Rifiuta prestiti rischedulati"
+  },
+  "rescheduleTable": {
+    "client": "Cliente",
+    "filterByName": "Filtra per nome",
+    "loanAccountNumber": "N. conto prestito",
+    "noMatching": "Nessuna richiesta di rischedulazione del prestito corrisponde al tuo filtro.",
+    "noPending": "Nessuna richiesta di rischedulazione in sospeso.",
+    "requestNumber": "N. richiesta di rischedulazione",
+    "rescheduleFrom": "Rischedula da",
+    "rescheduleReason": "Motivo della rischedulazione"
+  },
   "savings": "Risparmi",
   "savingsAccount": "Conto risparmio",
   "sellLoan": "Vendi prestito",
@@ -127,7 +149,9 @@
     "loanApproved": "Prestito approvato con successo.",
     "loanDisbursed": "Prestito erogato con successo.",
     "loansApproved": "Prestiti approvati con successo.",
-    "loansDisbursed": "Prestiti selezionati erogati con successo."
+    "loansDisbursed": "Prestiti selezionati erogati con successo.",
+    "rescheduleApproved": "Richieste di rischedulazione del prestito selezionate approvate con successo.",
+    "rescheduleRejected": "Richieste di rischedulazione del prestito selezionate rifiutate con successo."
   },
   "termVariations": "Variazioni dei termini",
   "title": "Prestiti",

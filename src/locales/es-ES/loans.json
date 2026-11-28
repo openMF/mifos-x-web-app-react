@@ -20,9 +20,13 @@
   "dividends": "Dividendos",
   "errors": {
     "failedApproveLoans": "Error al aprobar los préstamos.",
+    "failedApproveReschedule": "Error al aprobar las solicitudes de reprogramación de préstamos.",
     "failedDisburseLoans": "Error al desembolsar los préstamos.",
     "failedLoadLoans": "Error al cargar préstamos. Por favor, inténtelo de nuevo.",
+    "failedLoadReschedule": "Error al cargar las solicitudes de reprogramación de préstamos. Por favor, inténtelo de nuevo.",
     "failedLoadSavings": "Error al cargar cuentas de ahorros. Por favor, inténtelo de nuevo.",
+    "failedRefreshReschedule": "Las solicitudes de reprogramación se actualizaron, pero no se pudo actualizar la lista. Por favor, inténtelo de nuevo.",
+    "failedRejectReschedule": "Error al rechazar las solicitudes de reprogramación de préstamos.",
     "noLoansSelectedApproval": "No se seleccionaron préstamos para aprobación.",
     "noLoansSelectedDisbursal": "No se seleccionaron préstamos para desembolso."
   },
@@ -118,6 +122,24 @@
   "redeemShares": "Canjear acciones",
   "repaymentSchedule": "Calendario de reembolso",
   "reschedule": "Reprogramar",
+  "rescheduleDialog": {
+    "approveDescription_one": "¿Está seguro de que desea aprobar {{count}} solicitud de reprogramación seleccionada?",
+    "approveDescription_other": "¿Está seguro de que desea aprobar {{count}} solicitudes de reprogramación seleccionadas?",
+    "approveTitle": "Aprobar préstamos reprogramados",
+    "rejectDescription_one": "¿Está seguro de que desea rechazar {{count}} solicitud de reprogramación seleccionada?",
+    "rejectDescription_other": "¿Está seguro de que desea rechazar {{count}} solicitudes de reprogramación seleccionadas?",
+    "rejectTitle": "Rechazar préstamos reprogramados"
+  },
+  "rescheduleTable": {
+    "client": "Cliente",
+    "filterByName": "Filtrar por nombre",
+    "loanAccountNumber": "N.º de cuenta de préstamo",
+    "noMatching": "No hay solicitudes de reprogramación de préstamos que coincidan con su filtro.",
+    "noPending": "No hay solicitudes de reprogramación pendientes.",
+    "requestNumber": "N.º de solicitud de reprogramación",
+    "rescheduleFrom": "Reprogramar desde",
+    "rescheduleReason": "Motivo de reprogramación"
+  },
   "savings": "Ahorros",
   "savingsAccount": "Cuenta de ahorros",
   "sellLoan": "Vender préstamo",
@@ -127,7 +149,9 @@
     "loanApproved": "Préstamo aprobado exitosamente.",
     "loanDisbursed": "Préstamo desembolsado exitosamente.",
     "loansApproved": "Préstamos aprobados exitosamente.",
-    "loansDisbursed": "Préstamos seleccionados desembolsados exitosamente."
+    "loansDisbursed": "Préstamos seleccionados desembolsados exitosamente.",
+    "rescheduleApproved": "Solicitudes de reprogramación de préstamos aprobadas exitosamente.",
+    "rescheduleRejected": "Solicitudes de reprogramación de préstamos rechazadas exitosamente."
   },
   "termVariations": "Variaciones de plazos",
   "title": "Préstamos",

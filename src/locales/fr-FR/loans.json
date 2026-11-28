@@ -20,9 +20,13 @@
   "dividends": "Dividendes",
   "errors": {
     "failedApproveLoans": "Échec de l'approbation des prêts.",
+    "failedApproveReschedule": "Échec de l'approbation des demandes de rééchelonnement de prêt.",
     "failedDisburseLoans": "Échec du décaissement des prêts.",
     "failedLoadLoans": "Échec du chargement des prêts. Veuillez réessayer.",
+    "failedLoadReschedule": "Échec du chargement des demandes de rééchelonnement de prêt. Veuillez réessayer.",
     "failedLoadSavings": "Échec du chargement des comptes d'épargne. Veuillez réessayer.",
+    "failedRefreshReschedule": "Les demandes de rééchelonnement ont été mises à jour, mais la liste n'a pas pu être actualisée. Veuillez réessayer.",
+    "failedRejectReschedule": "Échec du rejet des demandes de rééchelonnement de prêt.",
     "noLoansSelectedApproval": "Aucun prêt sélectionné pour approbation.",
     "noLoansSelectedDisbursal": "Aucun prêt sélectionné pour décaissement."
   },
@@ -118,6 +122,24 @@
   "redeemShares": "Racheter des actions",
   "repaymentSchedule": "Échéancier de remboursement",
   "reschedule": "Reprogrammer",
+  "rescheduleDialog": {
+    "approveDescription_one": "Êtes-vous sûr de vouloir approuver {{count}} demande de rééchelonnement sélectionnée ?",
+    "approveDescription_other": "Êtes-vous sûr de vouloir approuver {{count}} demandes de rééchelonnement sélectionnées ?",
+    "approveTitle": "Approuver les prêts rééchelonnés",
+    "rejectDescription_one": "Êtes-vous sûr de vouloir rejeter {{count}} demande de rééchelonnement sélectionnée ?",
+    "rejectDescription_other": "Êtes-vous sûr de vouloir rejeter {{count}} demandes de rééchelonnement sélectionnées ?",
+    "rejectTitle": "Rejeter les prêts rééchelonnés"
+  },
+  "rescheduleTable": {
+    "client": "Client",
+    "filterByName": "Filtrer par nom",
+    "loanAccountNumber": "N° de compte de prêt",
+    "noMatching": "Aucune demande de rééchelonnement de prêt ne correspond à votre filtre.",
+    "noPending": "Aucune demande de rééchelonnement en attente.",
+    "requestNumber": "N° de demande de rééchelonnement",
+    "rescheduleFrom": "Rééchelonner à partir de",
+    "rescheduleReason": "Motif du rééchelonnement"
+  },
   "savings": "Épargne",
   "savingsAccount": "Compte d'épargne",
   "sellLoan": "Vendre le prêt",
@@ -127,7 +149,9 @@
     "loanApproved": "Prêt approuvé avec succès.",
     "loanDisbursed": "Prêt décaissé avec succès.",
     "loansApproved": "Prêts approuvés avec succès.",
-    "loansDisbursed": "Prêts sélectionnés décaissés avec succès."
+    "loansDisbursed": "Prêts sélectionnés décaissés avec succès.",
+    "rescheduleApproved": "Demandes de rééchelonnement de prêt sélectionnées approuvées avec succès.",
+    "rescheduleRejected": "Demandes de rééchelonnement de prêt sélectionnées rejetées avec succès."
   },
   "termVariations": "Variations des conditions",
   "title": "Prêts",
