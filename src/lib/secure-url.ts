@@ -20,7 +20,9 @@ export const isSecureUrl = (value: string): boolean => {
 
   // A protocol-relative reference ("//example.com") looks relative but points
   // at another authority, so it must never take the same-origin shortcut.
-  if (value.startsWith('//')) return false
+  // Mixed-slash references ("/\\example.com") also resolve to another authority.
+  if (value.startsWith('//') || value.startsWith('/\\')) return false
+  if (/[\t\n\r]/.test(value)) return false
 
   // Genuinely relative URLs (same-origin, e.g. behind the nginx proxy) are
   // governed by the page origin rather than by configuration.
