@@ -372,7 +372,7 @@ const GroupsView = () => {
       />
 
       <div className="bg-white dark:bg-zinc-800 rounded-b-lg border p-6 border-zinc-200 dark:border-zinc-700 shadow-sm">
-        <Outlet />
+        <Outlet context={{ group }} />
       </div>
     </div>
   )
