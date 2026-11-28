@@ -1,0 +1,83 @@
+# =============================================================================
+# E2E backend: Apache Fineract + PostgreSQL
+# =============================================================================
+#
+# The backend the Playwright suite runs against, in CI and locally. The app
+# itself is not a service here: Playwright's `webServer` serves the build with
+# `vite preview`, whose proxy sends /fineract-provider to Fineract on port 3000.
+#
+#   docker compose -f docker-compose.e2e.yml up -d --wait --wait-timeout 600
+#
+# `--wait` matters: no service here depends on Fineract, so without it `up -d`
+# returns before Fineract has finished its first boot.
+#
+# Fineract, its config in config/e2e and the database setup match the
+# openMF/web-app (Angular) e2e stack, so both suites and the test data layer
+# they share run against the same backend.
+# =============================================================================
+
+# Its own project name, so it can run next to the web-app stack, whose
+# containers use the same service names. Address services through compose
+# (`docker compose -f docker-compose.e2e.yml logs fineract`), not by container.
+name: mifos-react-e2e
+
+services:
+  db:
+    image: postgres:18.4-alpine
+    environment:
+      POSTGRES_USER: postgres
+      # Well-known Fineract E2E password, the same as in config/e2e/fineract.env.
+      # Intentionally committed, not a secret.
+      POSTGRES_PASSWORD: skdcnwauicn2ucnaecasdsajdnizucawencascdca
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./config/e2e/postgresql-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # No published port: only Fineract talks to the database.
+    mem_limit: 768m
+    shm_size: 256m
+    # Every run starts from an empty database.
+    tmpfs:
+      - /var/lib/postgresql/data
+    command: >
+      postgres
+        -c shared_buffers=128MB
+        -c work_mem=4MB
+        -c maintenance_work_mem=64MB
+
+  fineract:
+    # Pinned by digest, the same build openMF/web-app tests against. A moving
+    # tag would let two runs of the same code test different backends, and
+    # Fineract's seed data is part of what the suite relies on. This is the
+    # multi-arch manifest list digest, so amd64 and arm64 each resolve their
+    # own image. Set FINERACT_IMAGE to try another build on purpose.
+    image: ${FINERACT_IMAGE:-apache/fineract:7ac780192@sha256:c3722d8475e140949b6bbec505833f0b5e5a6c27f8f8bd8d2ac38ff7df20fa05}
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./config/e2e/fineract.env
+    environment:
+      JAVA_TOOL_OPTIONS: >-
+        -Xmx1536m -Xms512m
+        -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+        -Djava.security.egd=file:/dev/./urandom
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'wget -qO- --no-check-certificate https://localhost:8443/fineract-provider/actuator/health || exit 1',
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 60
+      start_period: 120s
+    # Host port 3000 is what the React defaults expect: the Vite proxy in
+    # vite.config.ts and E2E_FINERACT_URL in playwright.node.config.ts.
+    ports:
+      - '3000:8443'
+    mem_limit: 2g
