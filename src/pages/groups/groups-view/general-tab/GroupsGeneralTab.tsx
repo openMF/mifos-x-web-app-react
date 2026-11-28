@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 
 import {
   GroupsApi,
@@ -14,6 +14,7 @@ import {
   type GetGroupsGroupIdAccountsResponse,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
+import type { ExtendedGroupResponse } from '@/pages/groups/types'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -29,6 +30,13 @@ import { Check, Undo2, ArrowUp, ArrowDown, CheckCircle } from 'lucide-react'
 
 const runReportApi = new RunReportsApi(getConfiguration())
 const accountApi = new GroupsApi(getConfiguration())
+
+const memberStatusColor = (code?: string) =>
+  code === 'clientStatusType.active'
+    ? 'bg-green-500'
+    : code === 'clientStatusType.pending'
+      ? 'bg-yellow-500'
+      : 'bg-zinc-400'
 
 const GroupsGeneralTab = () => {
   const navigate = useNavigate()
@@ -66,6 +74,12 @@ const GroupsGeneralTab = () => {
       }
     })()
   }, [id])
+
+  // client members come from the group loaded by GroupsView
+  const outlet = useOutletContext<
+    { group?: ExtendedGroupResponse } | undefined
+  >()
+  const clientMembers = outlet?.group?.clientMembers ?? []
 
   // organize accounts from response
   const loanAccounts = Array.from(accounts?.loanAccounts ?? [])
@@ -132,7 +146,56 @@ const GroupsGeneralTab = () => {
         </div>
       </div>
 
-      {/* TODO: Client members should be passed from parent GroupsView which has group.clientMembers */}
+      {/*Client Members*/}
+      <div>
+        <h2 className="text-lg font-semibold mb-2">
+          {t('general.clientMembers')}
+        </h2>
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('general.tableName')}</TableHead>
+                <TableHead>{t('general.tableAccountNo')}</TableHead>
+                <TableHead>{t('general.tableOffice')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {clientMembers.map(client => (
+                <TableRow
+                  key={client.id}
+                  onClick={() => navigate(`/clients/${client.id}/general`)}
+                  className="cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                >
+                  <TableCell className="flex items-center gap-2">
+                    <span
+                      className={`inline-block w-3 h-3 rounded-sm ${memberStatusColor(
+                        client.status?.code
+                      )}`}
+                      title={client.status?.value || tc('status.unknown')}
+                    />
+                    <span>{client.displayName}</span>
+                  </TableCell>
+                  <TableCell>{client.accountNo}</TableCell>
+                  <TableCell>{client.officeName}</TableCell>
+                </TableRow>
+              ))}
+              {clientMembers.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="py-6 text-center text-zinc-500"
+                  >
+                    {outlet?.group
+                      ? t('manageMembers.noMembers')
+                      : tc('actions.loading')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
 
       {/*Loan Accounts*/}
       <div>
