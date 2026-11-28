@@ -91,9 +91,134 @@ export const clearOidcToken = (): void => {
   localStorage.removeItem(OIDC_EXPIRES_AT_KEY)
 }
 
+/** Stores an encoded Basic credential (base64 of username:password). */
+export const setBasicToken = (token: string): void => {
+  localStorage.setItem(TOKEN_KEY, token)
+}
+
+/** The username a Basic credential (base64 of username:password) is for. */
+export const usernameFromBasicToken = (token: string): string | null => {
+  try {
+    const bytes = Uint8Array.from(atob(token), char => char.charCodeAt(0))
+    const decoded = new TextDecoder().decode(bytes)
+    const separator = decoded.indexOf(':')
+    return separator > 0 ? decoded.slice(0, separator) : null
+  } catch {
+    return null
+  }
+}
+
 export const clearAuthToken = (): void => {
   localStorage.removeItem(TOKEN_KEY)
+  clearTwoFactorState()
 }
+
+/**
+ * Two-factor authentication. When Fineract runs with
+ * fineract.security.2fa.enabled, a password sign-in is only half of it: every
+ * request also needs the access token Fineract gives for a valid one-time
+ * code, in the Fineract-Platform-TFA-Token header. The token belongs to the
+ * stored Basic credential, so it is kept beside it and dropped with it.
+ */
+export const TWO_FACTOR_HEADER = 'Fineract-Platform-TFA-Token'
+const TFA_TOKEN_KEY = 'mifosTwoFactorToken'
+/**
+ * Set when the stored password session went through two-factor verification.
+ * It outlives the token, so once the token expires the app asks for a new
+ * code instead of sending requests Fineract will refuse.
+ */
+const TFA_REQUIRED_KEY = 'mifosTwoFactorRequired'
+
+export interface StoredTwoFactorToken {
+  token: string
+  /** Epoch milliseconds, as Fineract reports it. */
+  validTo: number
+}
+
+/**
+ * Where the token is kept, as in the Angular web app: with "Remember me" in
+ * localStorage, so it survives closing the browser for as long as Fineract's
+ * extended token lasts; otherwise in sessionStorage, so closing the browser
+ * ends the verification and the next visit asks for a new code. Other tabs
+ * of the same browser session get it through two-factor-sync.
+ */
+const tokenStores = (): Storage[] =>
+  typeof sessionStorage === 'undefined'
+    ? [localStorage]
+    : [sessionStorage, localStorage]
+
+const readToken = (store: Storage): StoredTwoFactorToken | null => {
+  const raw = store.getItem(TFA_TOKEN_KEY)
+  if (!raw) return null
+  try {
+    const stored = JSON.parse(raw) as StoredTwoFactorToken
+    if (
+      typeof stored?.token === 'string' &&
+      stored.token &&
+      typeof stored.validTo === 'number' &&
+      stored.validTo > Date.now()
+    ) {
+      return { token: stored.token, validTo: stored.validTo }
+    }
+  } catch {
+    // Unreadable: treated like an expired token.
+  }
+  store.removeItem(TFA_TOKEN_KEY)
+  return null
+}
+
+/** The stored two-factor access token and its expiry, or null. */
+export const getStoredTwoFactorToken = (): StoredTwoFactorToken | null => {
+  for (const store of tokenStores()) {
+    const stored = readToken(store)
+    if (stored) return stored
+  }
+  return null
+}
+
+/** The stored two-factor access token, or null once it has expired. */
+export const getTwoFactorToken = (): string | null =>
+  getStoredTwoFactorToken()?.token ?? null
+
+export const setTwoFactorToken = (
+  token: string,
+  validTo: number,
+  remember = false
+): void => {
+  const stored: StoredTwoFactorToken = { token, validTo }
+  clearTwoFactorToken()
+  const store =
+    remember || typeof sessionStorage === 'undefined'
+      ? localStorage
+      : sessionStorage
+  store.setItem(TFA_TOKEN_KEY, JSON.stringify(stored))
+  localStorage.setItem(TFA_REQUIRED_KEY, remember ? 'remembered' : 'true')
+}
+
+/** True when the session was verified with "Remember me". */
+export const isTwoFactorRemembered = (): boolean =>
+  localStorage.getItem(TFA_REQUIRED_KEY) === 'remembered'
+
+/** Drops the access token but remembers that this session needs one. */
+export const clearTwoFactorToken = (): void => {
+  for (const store of tokenStores()) store.removeItem(TFA_TOKEN_KEY)
+}
+
+/** Drops everything two-factor: for sign-out and for a new sign-in. */
+export const clearTwoFactorState = (): void => {
+  clearTwoFactorToken()
+  localStorage.removeItem(TFA_REQUIRED_KEY)
+}
+
+/**
+ * True when the stored password session needs a new two-factor code before
+ * Fineract accepts anything: it was verified once, and that token is gone.
+ */
+export const needsTwoFactorVerification = (): boolean =>
+  !getOidcToken() &&
+  !!getAuthToken() &&
+  !!localStorage.getItem(TFA_REQUIRED_KEY) &&
+  !getTwoFactorToken()
 
 /** True when either sign-in flow has produced a credential for Fineract. */
 export const hasSession = (): boolean => {
@@ -126,6 +251,13 @@ export const getAuthHeaders = (): Record<string, string> => {
   const token = getAuthToken()
   if (token) {
     headers.Authorization = `Basic ${token}`
+    // Only with the password credential it was issued for. It travels with
+    // the same requests as that password, so it needs no stricter transport
+    // rule than the password itself.
+    const twoFactorToken = getTwoFactorToken()
+    if (twoFactorToken) {
+      headers[TWO_FACTOR_HEADER] = twoFactorToken
+    }
   }
 
   return headers

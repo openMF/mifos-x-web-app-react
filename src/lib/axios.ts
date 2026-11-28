@@ -11,9 +11,14 @@ import {
   getApiBaseUrl,
   getAuthHeaders,
   getDefaultHeaders,
+  TWO_FACTOR_HEADER,
 } from '@/lib/http-client'
 import { envConfig } from '@/lib/env-config'
 import { isSecureUrl } from '@/lib/secure-url'
+import {
+  announceTwoFactorRequired,
+  isTwoFactorRejection,
+} from '@/lib/two-factor'
 import {
   endOidcSession,
   isOidcSessionEstablished,
@@ -48,6 +53,9 @@ fineract.interceptors.request.use(config => {
     config.headers?.Authorization ?? config.headers?.authorization
   if (suppliedAuth) {
     delete authHeaders.Authorization
+    // The stored two-factor token belongs to the stored credential, not to
+    // the one supplied here.
+    delete authHeaders[TWO_FACTOR_HEADER]
   }
 
   Object.assign(config.headers, authHeaders)
@@ -112,6 +120,15 @@ const isPublicEndpoint = (url?: string): boolean => {
   return PUBLIC_ENDPOINTS.some(endpoint => pathname.endsWith(endpoint))
 }
 
+// Most pages call Fineract through the generated clients, which use the
+// global axios instance rather than this one, so a refused two-factor token
+// is recognised there as well.
+axios.interceptors.response.use(undefined, (error: AxiosError) =>
+  isTwoFactorRejection(error)
+    ? announceTwoFactorRequired(error)
+    : Promise.reject(error)
+)
+
 /** Requests already retried once, so a persistent 401 cannot loop. */
 type RetriableConfig = InternalAxiosRequestConfig & { _retried?: boolean }
 
@@ -129,6 +146,10 @@ fineract.interceptors.response.use(
   response => response,
   async (error: AxiosError) => {
     const config = error.config as RetriableConfig | undefined
+
+    // A password session whose two-factor token is missing or refused: the
+    // user enters a new code rather than being signed out.
+    if (isTwoFactorRejection(error)) return announceTwoFactorRequired(error)
 
     if (error.response?.status !== 401 || !config) {
       return Promise.reject(error)

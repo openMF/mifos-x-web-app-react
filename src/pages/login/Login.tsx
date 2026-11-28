@@ -7,7 +7,7 @@
  */
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '@/pages/login/loginSlice'
+import { loginUser, TWO_FACTOR } from '@/pages/login/loginSlice'
 import { type RootState, type AppDispatch } from '@/app/store'
 
 import mainImg from '@/assets/images/cover_image_resized.webp'
@@ -81,18 +81,23 @@ const Login = () => {
     return tenantOptions.includes(stored) ? stored : tenantOptions[0]
   })
   const [showPassword, setShowPassword] = useState(false)
+  // Asks Fineract for its longer-lived two-factor token.
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isDockerProxy) {
       localStorage.setItem('mifosServer', server)
     }
     setTenantId(tenant)
-    dispatch(loginUser(form))
+    const result = await dispatch(loginUser({ ...form, rememberMe }))
+    if (loginUser.rejected.match(result) && result.payload === TWO_FACTOR) {
+      navigate('/two-factor')
+    }
   }
 
   const handleServerChange = (value: string) => {
@@ -256,7 +261,11 @@ const Login = () => {
               </div>
 
               <div className="flex items-center space-x-2 mb-4">
-                <Checkbox id="terms" />
+                <Checkbox
+                  id="terms"
+                  checked={rememberMe}
+                  onCheckedChange={checked => setRememberMe(checked === true)}
+                />
                 <label htmlFor="terms" className="text-base dark:text-white">
                   {t('auth:login.rememberMe')}
                 </label>

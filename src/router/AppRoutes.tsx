@@ -8,6 +8,7 @@
 import Home from '@/pages/home/Home'
 import Layout from '@/layout/Layout'
 import Login from '@/pages/login/Login'
+import TwoFactorVerify from '@/pages/login/TwoFactorVerify'
 import Callback from '@/pages/login/Callback'
 import { lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
@@ -180,6 +181,7 @@ import Configurations from '@/pages/system/configurations/Configurations'
 import AuditTrails from '@/pages/system/audit-trails/AuditTrails'
 import ViewAuditTrail from '@/pages/system/audit-trails/ViewAuditTrail'
 import AboutUs from '@/pages/system/about-us/AboutUs'
+import TwoFactorConfiguration from '@/pages/system/two-factor-configuration/TwoFactorConfiguration'
 import ManageDashboards from '@/pages/system/manage-dashboards/ManageDashboards'
 import SystemInformation from '@/pages/system/system-information/SystemInformation'
 import Centers from '@/pages/centers/Centers'
@@ -319,6 +321,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/callback" element={<Callback />} />
+      <Route path="/two-factor" element={<TwoFactorVerify />} />
 
       <Route element={<ProtectedRoutes />}>
         {/* Login Route */}
@@ -979,6 +982,10 @@ const AppRoutes = () => {
 
           {/* About Us */}
           <Route path="/system/about-us" element={<AboutUs />} />
+          <Route
+            path="/system/two-factor-auth"
+            element={<TwoFactorConfiguration />}
+          />
 
           {/* Manage Dashboards */}
           <Route
