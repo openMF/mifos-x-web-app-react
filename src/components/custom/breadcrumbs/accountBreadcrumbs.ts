@@ -16,13 +16,18 @@ export interface AccountCrumb {
 }
 
 type OwnerSegment = 'clients' | 'groups'
-type AccountSegment = 'loans-accounts' | 'savings-accounts' | 'shares-accounts'
+type AccountSegment =
+  | 'loans-accounts'
+  | 'savings-accounts'
+  | 'shares-accounts'
+  | 'fixed-deposits-accounts'
 
 /** Owner prefixes under which an account view route is registered in AppRoutes. */
 const ACCOUNT_VIEW_OWNERS: Record<AccountSegment, OwnerSegment[]> = {
   'loans-accounts': ['groups'],
   'savings-accounts': ['clients', 'groups'],
   'shares-accounts': ['clients'],
+  'fixed-deposits-accounts': ['clients'],
 }
 
 type LabelKey = ParseKeys<'common'>
@@ -37,13 +42,13 @@ const ACCOUNT_LABELS: Record<AccountSegment, LabelKey> = {
   'loans-accounts': 'breadcrumbs.loanAccount',
   'savings-accounts': 'breadcrumbs.savingsAccount',
   'shares-accounts': 'breadcrumbs.sharesAccount',
+  'fixed-deposits-accounts': 'breadcrumbs.fixedDepositAccount',
 }
 
 type TabLabelKey = LabelKey | `loans:${ParseKeys<'loans'>}`
 
 /**
- * Tab routes of the loan, savings and shares account views. Tabs that already
- * have a translation in loans.json use it, so the crumb matches the tab label.
+ * Account view tab labels. Reuse existing loan translations where available.
  */
 const ACCOUNT_TAB_LABELS: Record<string, TabLabelKey> = {
   general: 'breadcrumbs.tabs.general',
@@ -57,6 +62,8 @@ const ACCOUNT_TAB_LABELS: Record<string, TabLabelKey> = {
   documents: 'breadcrumbs.tabs.documents',
   dividends: 'loans:dividends',
   notes: 'breadcrumbs.tabs.notes',
+  'interest-rate-chart': 'breadcrumbs.tabs.interestRateChart',
+  'standing-instructions': 'breadcrumbs.tabs.standingInstructions',
 }
 
 const translate = (key: LabelKey) => i18next.t(key, { ns: 'common' })
@@ -65,7 +72,7 @@ const translate = (key: LabelKey) => i18next.t(key, { ns: 'common' })
 const translateTab = (key: TabLabelKey) => i18next.t(key)
 
 const ACCOUNT_PATH =
-  /^\/(clients|groups)\/([^/]+)\/(loans-accounts|savings-accounts|shares-accounts)\/([^/]+)(?:\/actions\/([^/]+)|\/([^/]+))?/
+  /^\/(clients|groups)\/([^/]+)\/(loans-accounts|savings-accounts|shares-accounts|fixed-deposits-accounts)\/([^/]+)(?:\/actions\/([^/]+)|\/([^/]+))?/
 
 /** Turns a route segment such as `GoodwillCredit` or `Charge-Off` into `Goodwill Credit` / `Charge Off`. */
 export const humanizeSegment = (segment: string) =>

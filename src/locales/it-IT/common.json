@@ -663,13 +663,16 @@
     "loanAccount": "Conto prestito",
     "savingsAccount": "Conto di risparmio",
     "sharesAccount": "Conto azioni",
+    "fixedDepositAccount": "Conto di deposito a termine",
     "tabs": {
       "general": "Generale",
       "accountDetails": "Dettagli conto",
       "transactions": "Transazioni",
       "charges": "Commissioni",
       "documents": "Documenti",
-      "notes": "Note"
+      "notes": "Note",
+      "interestRateChart": "Tabella dei tassi di interesse",
+      "standingInstructions": "Ordini permanenti"
     }
   }
 }
