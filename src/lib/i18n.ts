@@ -27,6 +27,7 @@ i18next
       'products',
       'loans',
       'copilot',
+      'savings',
     ],
     defaultNS: 'common',
     load: 'currentOnly',

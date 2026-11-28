@@ -1,0 +1,59 @@
+{
+  "menu": {
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "withdrawnByClient": "Retirada por el cliente",
+    "delete": "Eliminar",
+    "undoApproval": "Deshacer aprobación",
+    "activate": "Activar",
+    "addCharge": "Añadir cargo",
+    "assignStaff": "Asignar personal",
+    "deposit": "Depósito",
+    "withdrawal": "Retiro",
+    "blockAccount": "Bloquear cuenta",
+    "unblockAccount": "Desbloquear cuenta",
+    "blockDeposit": "Bloquear depósitos",
+    "unblockDeposit": "Desbloquear depósitos",
+    "blockWithdrawal": "Bloquear retiros",
+    "unblockWithdrawal": "Desbloquear retiros",
+    "holdAmount": "Retener monto",
+    "calculateInterest": "Calcular intereses",
+    "postInterest": "Contabilizar intereses",
+    "postInterestAsOn": "Contabilizar intereses a fecha",
+    "close": "Cerrar",
+    "more": "Más",
+    "noActions": "Sin acciones"
+  },
+  "confirm": {
+    "delete": "¿Eliminar esta solicitud de ahorro? No se puede deshacer.",
+    "unblockAccount": "¿Desbloquear esta cuenta de ahorro? Se volverán a permitir depósitos y retiros.",
+    "unblockDeposit": "¿Desbloquear los depósitos de esta cuenta de ahorro?",
+    "unblockWithdrawal": "¿Desbloquear los retiros de esta cuenta de ahorro?",
+    "calculateInterest": "¿Calcular los intereses ganados por esta cuenta hasta hoy? No se contabiliza nada en la cuenta.",
+    "postInterest": "¿Contabilizar los intereses ganados por esta cuenta hasta hoy?"
+  },
+  "fields": {
+    "withdrawnOnDate": "Retirada el",
+    "closedOnDate": "Cerrada el",
+    "transactionDate": "Fecha de la transacción",
+    "amount": "Monto",
+    "reason": "Motivo",
+    "reasonPlaceholder": "Seleccione el motivo",
+    "reasonFreeText": "Introduzca el motivo",
+    "note": "Nota",
+    "withdrawBalance": "Retirar el saldo",
+    "postInterestValidationOnClosure": "Comprobar que los intereses están contabilizados hasta la fecha de cierre",
+    "paymentType": "Tipo de pago",
+    "paymentTypePlaceholder": "Seleccione el tipo de pago"
+  },
+  "buttons": {
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "confirm": "Confirmar",
+    "retry": "Reintentar"
+  },
+  "errors": {
+    "failed": "La acción ha fallado. Inténtelo de nuevo.",
+    "loadPaymentTypes": "No se pudieron cargar los tipos de pago."
+  }
+}

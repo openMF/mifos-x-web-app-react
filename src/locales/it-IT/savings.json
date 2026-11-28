@@ -1,0 +1,59 @@
+{
+  "menu": {
+    "approve": "Approva",
+    "reject": "Rifiuta",
+    "withdrawnByClient": "Ritirata dal cliente",
+    "delete": "Elimina",
+    "undoApproval": "Annulla approvazione",
+    "activate": "Attiva",
+    "addCharge": "Aggiungi addebito",
+    "assignStaff": "Assegna personale",
+    "deposit": "Deposito",
+    "withdrawal": "Prelievo",
+    "blockAccount": "Blocca conto",
+    "unblockAccount": "Sblocca conto",
+    "blockDeposit": "Blocca depositi",
+    "unblockDeposit": "Sblocca depositi",
+    "blockWithdrawal": "Blocca prelievi",
+    "unblockWithdrawal": "Sblocca prelievi",
+    "holdAmount": "Blocca importo",
+    "calculateInterest": "Calcola interessi",
+    "postInterest": "Registra interessi",
+    "postInterestAsOn": "Registra interessi alla data",
+    "close": "Chiudi",
+    "more": "Altro",
+    "noActions": "Nessuna azione"
+  },
+  "confirm": {
+    "delete": "Eliminare questa richiesta di risparmio? L'operazione non può essere annullata.",
+    "unblockAccount": "Sbloccare questo conto di risparmio? Depositi e prelievi saranno di nuovo consentiti.",
+    "unblockDeposit": "Sbloccare i depositi su questo conto di risparmio?",
+    "unblockWithdrawal": "Sbloccare i prelievi su questo conto di risparmio?",
+    "calculateInterest": "Calcolare gli interessi maturati su questo conto fino a oggi? Non viene registrato nulla sul conto.",
+    "postInterest": "Registrare gli interessi maturati su questo conto fino a oggi?"
+  },
+  "fields": {
+    "withdrawnOnDate": "Ritirata il",
+    "closedOnDate": "Chiuso il",
+    "transactionDate": "Data della transazione",
+    "amount": "Importo",
+    "reason": "Motivo",
+    "reasonPlaceholder": "Seleziona il motivo",
+    "reasonFreeText": "Inserisci il motivo",
+    "note": "Nota",
+    "withdrawBalance": "Preleva il saldo",
+    "postInterestValidationOnClosure": "Verifica che gli interessi siano registrati fino alla data di chiusura",
+    "paymentType": "Tipo di pagamento",
+    "paymentTypePlaceholder": "Seleziona il tipo di pagamento"
+  },
+  "buttons": {
+    "cancel": "Annulla",
+    "submit": "Invia",
+    "confirm": "Conferma",
+    "retry": "Riprova"
+  },
+  "errors": {
+    "failed": "L'azione non è riuscita. Riprova.",
+    "loadPaymentTypes": "Impossibile caricare i tipi di pagamento."
+  }
+}

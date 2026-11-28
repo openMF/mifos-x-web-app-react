@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
 import { useAccountBreadcrumbs } from '@/components/custom/breadcrumbs/accountBreadcrumbs'
@@ -15,9 +15,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+import { useSavingsAccountPath } from '../useSavingsAccountPath'
+
 const SavingsAccountAssignStaff = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Assign Staff' })
-  const { groupId, accountId } = useParams()
+  const accountPath = useSavingsAccountPath()
   const navigate = useNavigate()
 
   // form state
@@ -26,8 +28,8 @@ const SavingsAccountAssignStaff = () => {
 
   // go back to savings account general page
   const backToAccount = () => {
-    if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/general`)
+    if (accountPath) {
+      navigate(`${accountPath}/general`)
     } else {
       navigate(-1)
     }

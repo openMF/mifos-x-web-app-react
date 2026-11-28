@@ -17,11 +17,14 @@ import { SavingsAccountApi } from '@/fineract-api'
 import { datatableErrorMessage } from '@/lib/datatables-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 
+import { useSavingsAccountPath } from '../useSavingsAccountPath'
+
 const savingsApi = new SavingsAccountApi(getConfiguration())
 
 const UndoApprovalSavingsAccount = () => {
   const breadcrumbs = useAccountBreadcrumbs({ actionLabel: 'Undo Approval' })
-  const { groupId, accountId } = useParams()
+  const { accountId } = useParams()
+  const accountPath = useSavingsAccountPath()
   const navigate = useNavigate()
 
   const [note, setNote] = useState('')
@@ -30,8 +33,8 @@ const UndoApprovalSavingsAccount = () => {
   const [error, setError] = useState<string | null>(null)
 
   const backToTransactions = () => {
-    if (groupId && accountId) {
-      navigate(`/groups/${groupId}/savings-accounts/${accountId}/transactions`)
+    if (accountPath) {
+      navigate(`${accountPath}/transactions`)
     } else {
       navigate(-1)
     }
