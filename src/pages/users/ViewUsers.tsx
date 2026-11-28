@@ -32,11 +32,8 @@ import {
 import { getConfiguration } from '@/lib/fineract-openapi'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faGear,
-  faPenToSquare,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+import ChangePasswordDialog from '@/pages/users/components/ChangePasswordDialog'
 
 const usersApi = new UsersApi(getConfiguration()) // API
 
@@ -67,6 +64,7 @@ const ViewUsers = () => {
   const navigate = useNavigate()
   const { id } = useParams() // route param
   const [users, setUsers] = useState<GetUsersUserIdResponse | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   // fetch user by id
   useEffect(() => {
@@ -105,6 +103,23 @@ const ViewUsers = () => {
       />
 
       <div className="bg-white dark:bg-zinc-800 shadow-md rounded-lg p-8 max-w-2xl mx-auto">
+        {successMessage && (
+          <div
+            role="status"
+            className="mb-6 p-4 text-sm text-green-800 bg-green-50 dark:bg-green-950/40 dark:text-green-300 border border-green-200 dark:border-green-800 rounded-lg flex items-center justify-between"
+          >
+            <span>{successMessage}</span>
+            <button
+              type="button"
+              className="text-green-700 hover:text-green-900 dark:text-green-300 text-base font-bold cursor-pointer"
+              onClick={() => setSuccessMessage(null)}
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
         <div className="flex justify-between">
           <div className="flex gap-4 mb-6">
             {/* edit */}
@@ -128,7 +143,7 @@ const ViewUsers = () => {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to delete gl account
+                    Are you sure you want to delete user?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -146,30 +161,14 @@ const ViewUsers = () => {
             </AlertDialog>
 
             {/* change password */}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="bg-[#1074b9] hover:bg-[#1074c9] text-white cursor-pointer">
-                  <FontAwesomeIcon icon={faGear} />
-                  Change Password
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to delete gl account
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">
-                    Confirm
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <ChangePasswordDialog
+              userId={users?.id ? Number(users.id) : undefined}
+              username={users?.username}
+              disabled={!users?.id}
+              onSuccess={() =>
+                setSuccessMessage('Password changed successfully!')
+              }
+            />
           </div>
         </div>
 
