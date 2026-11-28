@@ -6,8 +6,26 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faDollarSign,
+  faFlag,
+  faTrash,
+  faStop,
+} from '@fortawesome/free-solid-svg-icons'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -17,23 +35,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-
 import { AppBreadCrumbs } from '@/components/custom/breadcrumbs/AppBreadCrumbs'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faDollarSign,
-  faFlag,
-  faTrash,
-  faStop,
-} from '@fortawesome/free-solid-svg-icons'
+import type { RouteSuccessState } from '@/components/custom/route-success-message/RouteSuccessMessage'
 import {
   ClientChargesApi,
   type GetClientsChargesPageItems,
 } from '@/fineract-api'
 import { getConfiguration } from '@/lib/fineract-openapi'
 import { formatDate } from '@/lib/date-utils'
-import { useTranslation } from 'react-i18next'
+import { canDeleteCharge, canPayCharge, canWaiveCharge } from './charge-actions'
 
 type ChargeTransaction = {
   id?: number
@@ -43,13 +53,16 @@ type ChargeTransaction = {
   amount?: number
   reversed?: boolean
 }
+
 type ChargeWithTransactions = GetClientsChargesPageItems & {
   clientTransactionDatas?: ChargeTransaction[]
 }
 
 const strike = (reversed?: boolean) =>
   reversed ? 'line-through opacity-50' : ''
+
 const chargeApi = new ClientChargesApi(getConfiguration())
+
 const ViewCharge = () => {
   const navigate = useNavigate()
   const { clientId, chargeId } = useParams<{
@@ -57,24 +70,139 @@ const ViewCharge = () => {
     chargeId: string
   }>()
   const [charge, setCharge] = useState<ChargeWithTransactions>()
+  const [isLoading, setIsLoading] = useState(true)
+  // Stores the error kind (not a translated string) so a language change
+  // does not re-run the fetch and reset the displayed charge.
+  const [loadError, setLoadError] = useState<'load' | 'refresh' | null>(null)
+  const [isWaiveOpen, setIsWaiveOpen] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedback, setFeedback] = useState<{
+    type: 'success' | 'error'
+    message: string
+  } | null>(null)
+  const requestIdRef = useRef(0)
+  const routeKeyRef = useRef(`${clientId ?? ''}:${chargeId ?? ''}`)
+
   const { t, i18n } = useTranslation('clients')
   const { t: tc } = useTranslation('common')
-  useEffect(() => {
-    if (!clientId || !chargeId) return
-    const fetchDetails = async () => {
+
+  const fetchDetails = useCallback(
+    async (isRefresh = false) => {
+      const reqId = ++requestIdRef.current
+      const expectedRouteKey = `${clientId ?? ''}:${chargeId ?? ''}`
+      if (!clientId || !chargeId) {
+        setCharge(undefined)
+        setIsLoading(false)
+        return
+      }
+      setIsLoading(true)
+      setLoadError(null)
       try {
         const res = await chargeApi.retrieveClientCharge(
           Number(clientId),
           Number(chargeId),
           { params: { associations: 'all' } }
         )
+        if (
+          reqId !== requestIdRef.current ||
+          expectedRouteKey !== routeKeyRef.current
+        )
+          return
         setCharge(res.data)
       } catch (err) {
+        if (
+          reqId !== requestIdRef.current ||
+          expectedRouteKey !== routeKeyRef.current
+        )
+          return
         console.error("Couldn't fetch charge details", err)
+        setCharge(undefined)
+        setLoadError(isRefresh ? 'refresh' : 'load')
+      } finally {
+        if (
+          reqId === requestIdRef.current &&
+          expectedRouteKey === routeKeyRef.current
+        ) {
+          setIsLoading(false)
+        }
+      }
+    },
+    [clientId, chargeId]
+  )
+
+  useEffect(() => {
+    routeKeyRef.current = `${clientId ?? ''}:${chargeId ?? ''}`
+    requestIdRef.current += 1
+    setCharge(undefined)
+    setFeedback(null)
+    setLoadError(null)
+    setIsWaiveOpen(false)
+    setIsDeleteOpen(false)
+    setIsSubmitting(false)
+    void fetchDetails(false)
+  }, [clientId, chargeId, fetchDetails])
+
+  const handleWaive = async () => {
+    if (!clientId || !chargeId) return
+    const expectedRouteKey = `${clientId}:${chargeId}`
+    setIsSubmitting(true)
+    setFeedback(null)
+    setLoadError(null)
+    try {
+      await chargeApi.payOrWaiveClientCharge(
+        Number(clientId),
+        Number(chargeId),
+        {},
+        'waive'
+      )
+      if (expectedRouteKey !== routeKeyRef.current) return
+      setCharge(undefined)
+      setIsWaiveOpen(false)
+      setFeedback({ type: 'success', message: t('charge.waiveSuccess') })
+      await fetchDetails(true)
+    } catch (err) {
+      if (expectedRouteKey !== routeKeyRef.current) return
+      console.error('Failed to waive charge', err)
+      setIsWaiveOpen(false)
+      setFeedback({ type: 'error', message: t('charge.waiveError') })
+    } finally {
+      if (expectedRouteKey === routeKeyRef.current) {
+        setIsSubmitting(false)
       }
     }
-    fetchDetails()
-  }, [clientId, chargeId])
+  }
+
+  const handleDelete = async () => {
+    if (!clientId || !chargeId) return
+    const expectedRouteKey = `${clientId}:${chargeId}`
+    setIsSubmitting(true)
+    setFeedback(null)
+    try {
+      await chargeApi.deleteClientCharge(Number(clientId), Number(chargeId))
+      if (expectedRouteKey !== routeKeyRef.current) return
+      setIsDeleteOpen(false)
+      navigate(`/clients/${clientId}/general`, {
+        state: {
+          successMessage: t('charge.deleteSuccess'),
+        } satisfies RouteSuccessState,
+      })
+    } catch (err) {
+      if (expectedRouteKey !== routeKeyRef.current) return
+      console.error('Failed to delete charge', err)
+      setIsDeleteOpen(false)
+      setFeedback({ type: 'error', message: t('charge.deleteError') })
+    } finally {
+      if (expectedRouteKey === routeKeyRef.current) {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
+  const canPay = canPayCharge(charge)
+  const isWaivable = canWaiveCharge(charge)
+  const isDeletable = canDeleteCharge(charge)
+  const actionsDisabled = isLoading || isSubmitting
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-7xl mx-auto text-[15px]">
@@ -88,20 +216,65 @@ const ViewCharge = () => {
         ]}
       />
 
+      {/* action feedback message */}
+      {feedback && (
+        <div
+          role={feedback.type === 'error' ? 'alert' : 'status'}
+          className={`mb-4 p-4 rounded-md text-sm font-medium ${
+            feedback.type === 'success'
+              ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800'
+              : 'bg-destructive/15 text-destructive'
+          }`}
+        >
+          {feedback.message}
+        </div>
+      )}
+
+      {loadError && (
+        <div
+          role="alert"
+          className="mb-4 flex items-center justify-between gap-4 p-4 rounded-md bg-destructive/15 text-destructive text-sm font-medium"
+        >
+          <span>
+            {loadError === 'refresh'
+              ? t('charge.refreshError')
+              : t('charge.loadError')}
+          </span>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={isLoading}
+            onClick={() => void fetchDetails(loadError === 'refresh')}
+          >
+            {t('charge.retry')}
+          </Button>
+        </div>
+      )}
+
       {/* top actions */}
-      <div className="flex  gap-3 mb-4">
+      <div className="flex gap-3 mb-4">
         <Button
           onClick={() => navigate('pay')}
-          className="bg-[#1074b9] text-white"
+          disabled={!canPay || actionsDisabled}
+          className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
         >
           <FontAwesomeIcon icon={faDollarSign} className="mr-2" />
           {t('charge.buttonPay')}
         </Button>
-        <Button onClick={() => {}} className="bg-[#1074b9] text-white">
+        <Button
+          onClick={() => setIsWaiveOpen(true)}
+          disabled={!isWaivable || actionsDisabled}
+          className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+        >
           <FontAwesomeIcon icon={faFlag} className="mr-2" />
           {t('charge.buttonWaive')}
         </Button>
-        <Button onClick={() => {}} className="bg-[#1074b9] text-white">
+        <Button
+          onClick={() => setIsDeleteOpen(true)}
+          disabled={!isDeletable || actionsDisabled}
+          variant="destructive"
+        >
           <FontAwesomeIcon icon={faTrash} className="mr-2" />
           {t('charge.buttonDelete')}
         </Button>
@@ -218,6 +391,70 @@ const ViewCharge = () => {
           </div>
         ) : null}
       </div>
+
+      {/* Waive Confirmation Dialog */}
+      <AlertDialog
+        open={isWaiveOpen}
+        onOpenChange={open => {
+          if (!isSubmitting) setIsWaiveOpen(open)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('charge.waiveDialogTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('charge.waiveDialogDesc')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>
+              {tc('actions.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={e => {
+                e.preventDefault()
+                void handleWaive()
+              }}
+              disabled={isSubmitting}
+              className="bg-[#1074b9] hover:bg-[#1074c9] text-white"
+            >
+              {isSubmitting ? tc('actions.loading') : t('charge.buttonWaive')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteOpen}
+        onOpenChange={open => {
+          if (!isSubmitting) setIsDeleteOpen(open)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('charge.deleteDialogTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('charge.deleteDialogDesc')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>
+              {tc('actions.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={e => {
+                e.preventDefault()
+                void handleDelete()
+              }}
+              disabled={isSubmitting}
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+            >
+              {isSubmitting ? tc('actions.loading') : t('charge.buttonDelete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
