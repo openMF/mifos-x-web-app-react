@@ -33,8 +33,9 @@ export type SendResult =
  * One Copilot conversation: the reducer's state, driven by the transport.
  *
  * The conversation is held in memory only and lives as long as the component
- * using this hook. It is cleared on sign-out, so the next officer on a shared
- * machine never sees the previous one's questions.
+ * using this hook: `CopilotProvider`, for the whole signed-in app. It is
+ * cleared on sign-out, so the next officer on a shared machine never sees
+ * the previous one's questions.
  */
 export function useCopilotChat() {
   const [thread, dispatch] = useReducer(copilotReducer, initialThread)
@@ -122,7 +123,7 @@ export function useCopilotChat() {
     dispatch({ type: 'reset' })
   }, [])
 
-  // Sign-out ends the conversation; so does leaving the page that holds it.
+  // Sign-out ends the conversation; so does leaving the signed-in app.
   useEffect(() => {
     if (!isAuthenticated) reset()
   }, [isAuthenticated, reset])

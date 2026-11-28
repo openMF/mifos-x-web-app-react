@@ -5,7 +5,8 @@
     "working": "Mifos X Copilot is working on your request. Open Copilot.",
     "replying": "Mifos X Copilot is replying. Open Copilot.",
     "minimise": "Minimise Mifos X Copilot",
-    "unread": "Mifos X Copilot has a new reply. Open Copilot."
+    "unread": "Mifos X Copilot has a new reply. Open Copilot.",
+    "approval": "Mifos X Copilot needs your confirmation. Open Copilot."
   },
   "close": "Close",
   "newChat": "New chat",
@@ -54,6 +55,7 @@
   },
   "you": "You",
   "jumpToLatest": "Jump to latest",
+  "newDivider": "New",
   "input": {
     "label": "Message to Mifos X Copilot",
     "placeholder": "Ask about a client, a loan or an account",
@@ -64,7 +66,8 @@
   "disclaimer": "Mifos X Copilot helps you find answers. Anything that moves money still needs your approval.",
   "a11y": {
     "working": "Working on your question",
-    "replyReady": "Reply ready"
+    "replyReady": "Reply ready",
+    "approvalNeeded": "Your confirmation is needed"
   },
   "trail": {
     "thinking": "Thinking",
