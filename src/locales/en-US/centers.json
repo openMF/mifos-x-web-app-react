@@ -27,9 +27,13 @@
   "edit": {
     "heading": "Edit Center",
     "labelName": "Name*",
+    "labelStaff": "Staff",
+    "selectStaff": "Select Staff",
     "labelExternalId": "External Id",
     "placeholderName": "Enter name",
     "placeholderExternalId": "Enter external id",
+    "errorUpdate": "Failed to update center.",
+    "retry": "Try again",
     "breadcrumb": "Edit"
   },
   "activate": {

@@ -27,9 +27,13 @@
   "edit": {
     "heading": "Modifier le Centre",
     "labelName": "Nom*",
+    "labelStaff": "Personnel",
+    "selectStaff": "Sélectionner le Personnel",
     "labelExternalId": "Id Externe",
     "placeholderName": "Saisir le nom",
     "placeholderExternalId": "Saisir l'id externe",
+    "errorUpdate": "Échec de la mise à jour du centre.",
+    "retry": "Réessayer",
     "breadcrumb": "Modifier"
   },
   "activate": {

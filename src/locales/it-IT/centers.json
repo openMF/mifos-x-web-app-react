@@ -27,9 +27,13 @@
   "edit": {
     "heading": "Modifica Centro",
     "labelName": "Nome*",
+    "labelStaff": "Personale",
+    "selectStaff": "Seleziona Personale",
     "labelExternalId": "Id Esterno",
     "placeholderName": "Inserisci nome",
     "placeholderExternalId": "Inserisci id esterno",
+    "errorUpdate": "Aggiornamento del centro non riuscito.",
+    "retry": "Riprova",
     "breadcrumb": "Modifica"
   },
   "activate": {
