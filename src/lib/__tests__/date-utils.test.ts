@@ -51,6 +51,36 @@ describe('formatDate()', () => {
       expect(result).toBe('January 15, 2024')
     })
 
+    it('reads a plain yyyy-MM-dd string as a local date, not UTC midnight', () => {
+      // As UTC midnight, the 15th shows as the 14th west of UTC
+      expect(formatDate('2024-01-15', 'en-US')).toBe('January 15, 2024')
+      expect(formatDate(' 2024-01-15 ', 'en-US')).toBe(
+        formatDate([2024, 1, 15], 'en-US')
+      )
+    })
+
+    it('keeps years below 100 in a plain yyyy-MM-dd string', () => {
+      const expected = new Intl.DateTimeFormat('en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date('0099-01-15T00:00:00'))
+      expect(formatDate('0099-01-15', 'en-US')).toBe(expected)
+      expect(formatDate('0099-01-15', 'en-US')).not.toContain('1999')
+    })
+
+    it('accepts 29 February in a leap year below 100', () => {
+      // year 0 is a leap year, 1900 is not
+      expect(formatDate('0000-02-29', 'en-US')).not.toBe('—')
+      expect(formatDate('0000-02-29', 'en-US')).toContain('29')
+    })
+
+    it('returns fallback for an out-of-range month or day in yyyy-MM-dd', () => {
+      expect(formatDate('2024-13-01', 'en-US')).toBe('—')
+      expect(formatDate('2024-02-30', 'en-US')).toBe('—')
+      expect(formatDate('2023-02-29', 'en-US')).toBe('—')
+    })
+
     it('formats a valid date array in fr-FR locale', () => {
       // Use array (local time) instead of ISO string (UTC) to avoid timezone flakiness
       const result = formatDate([2024, 1, 15], 'fr-FR')
